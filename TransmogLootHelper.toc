@@ -1,0 +1,13 @@
+## Interface: 100207
+## Title: Transmog Loot Helper
+## Author: Sluimerstand
+## IconTexture: Interface\AddOns\TransmogLootHelper\assets\tlh_icon.blp
+## Version: @project-version@
+## X-Curse-Project-ID: 
+## X-Wago-ID: 
+
+## SavedVariables: TransmogLootHelper_Settings
+## SavedVariablesPerCharacter: 
+
+Core.lua
+Database.lua
