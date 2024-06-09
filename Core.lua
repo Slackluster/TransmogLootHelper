@@ -172,10 +172,13 @@ function app.InitialiseCore()
 	app.Hidden = CreateFrame("Frame")
 	app.WeaponLoot = {}
 	app.ArmourLoot = {}
+	app.FilteredLoot = {}
 	app.WeaponRow = {}
 	app.ArmourRow = {}
+	app.FilteredRow = {}
 	app.ShowWeapons = true
 	app.ShowArmour = true
+	app.ShowFiltered = false
 	app.RecentlyWhispered = {}
 	app.ClassID = PlayerUtil.GetClassID()
 
@@ -331,6 +334,12 @@ function app.UpdateWindow()
 			row:Hide()
 		end
 	end
+	if app.FilteredRow then
+		for i, row in pairs(app.FilteredRow) do
+			row:SetParent(app.Hidden)
+			row:Hide()
+		end
+	end
 
 	-- Disable the clear button
 	app.ClearButton:Disable()
@@ -338,6 +347,7 @@ function app.UpdateWindow()
 	-- To count how many rows we end up with
 	local rowNo1 = 0
 	local rowNo2 = 0
+	local rowNo3 = 0
 	local maxLength = 0
 	app.WeaponRow = {}
 
@@ -380,8 +390,14 @@ function app.UpdateWindow()
 		local weapon1 = app.Window.Weapons:CreateFontString("ARTWORK", nil, "GameFontNormal")
 		weapon1:SetPoint("LEFT", app.Window.Weapons)
 		weapon1:SetScale(1.1)
-		weapon1:SetText("Weapons")
 		app.WeaponsHeader = weapon1
+	end
+
+	-- Update header
+	if #app.WeaponLoot >= 1 then
+		app.WeaponsHeader:SetText("Weapons ("..#app.WeaponLoot..")")
+	else
+		app.WeaponsHeader:SetText("Weapons")	
 	end
 
 	-- If there is loot to process
@@ -475,7 +491,7 @@ function app.UpdateWindow()
 				-- RMB
 				elseif button == "RightButton" then
 					-- Remove the item
-					app.WeaponLoot[lootInfo.index] = nil
+					table.remove(app.WeaponLoot, lootInfo.index)
 					-- And update the window
 					RunNextFrame(app.UpdateWindow)
 					do return end
@@ -551,9 +567,13 @@ function app.UpdateWindow()
 	
 			if app.ShowArmour == true then
 				for _, child in ipairs(children) do child:Hide() end
+				app.Window.Filtered:SetPoint("TOPLEFT", app.Window.Armour, "BOTTOMLEFT", 0, -2)
 				app.ShowArmour = false
 			else
 				for _, child in ipairs(children) do child:Show() end
+				local offset = -2
+				if #app.ArmourLoot >= 1 then offset = -16*#app.ArmourLoot end
+				app.Window.Filtered:SetPoint("TOPLEFT", app.Window.Armour, "BOTTOMLEFT", 0, offset)
 				app.ShowArmour = true
 			end
 		end)
@@ -561,14 +581,18 @@ function app.UpdateWindow()
 		local armour1 = app.Window.Armour:CreateFontString("ARTWORK", nil, "GameFontNormal")
 		armour1:SetPoint("LEFT", app.Window.Armour)
 		armour1:SetScale(1.1)
-		armour1:SetText("Armor")
 		app.ArmourHeader = armour1
 	end
 
-	-- Adjust header position
+	-- Update header
 	local offset = -2
 	if #app.WeaponLoot >= 1 then offset = -16*#app.WeaponLoot end
 	app.Window.Armour:SetPoint("TOPLEFT", app.Window.Weapons, "BOTTOMLEFT", 0, offset)
+	if #app.ArmourLoot >= 1 then
+		app.ArmourHeader:SetText("Armor ("..#app.ArmourLoot..")")
+	else
+		app.ArmourHeader:SetText("Armor")
+	end
 
 	-- If there is loot to process
 	if #app.ArmourLoot >= 1 then
@@ -661,7 +685,7 @@ function app.UpdateWindow()
 				-- RMB
 				elseif button == "RightButton" then
 					-- Remove the item
-					app.ArmourLoot[lootInfo.index] = nil
+					table.remove(app.ArmourLoot, lootInfo.index)
 					-- And update the window
 					RunNextFrame(app.UpdateWindow)
 					do return end
@@ -712,14 +736,227 @@ function app.UpdateWindow()
 		app.ClearButton:Enable()
 	end
 
+	-- Create header
+	if not app.Window.Filtered then
+		app.Window.Filtered = CreateFrame("Button", nil, app.Window.Child)
+		app.Window.Filtered:SetSize(0,16)
+		app.Window.Filtered:SetPoint("TOPLEFT", app.Window.Child, -1, 0)
+		app.Window.Filtered:SetPoint("RIGHT", app.Window.Child)
+		app.Window.Filtered:RegisterForDrag("LeftButton")
+		app.Window.Filtered:SetHighlightTexture("Interface\\QuestFrame\\UI-QuestTitleHighlight", "ADD")
+		app.Window.Filtered:SetScript("OnDragStart", function()
+			app.Window:StartMoving()
+			GameTooltip:ClearLines()
+			GameTooltip:Hide()
+		end)
+		app.Window.Filtered:SetScript("OnDragStop", function() app.SaveWindow() end)
+		app.Window.Filtered:SetScript("OnEnter", function()
+			app.WindowTooltipShow(app.LootHeaderTooltip)
+		end)
+		app.Window.Filtered:SetScript("OnLeave", function()
+			app.LootHeaderTooltip:Hide()
+		end)
+		app.Window.Filtered:SetScript("OnClick", function(self)
+			local children = {self:GetChildren()}
+
+			if app.ShowFiltered == true then
+				for _, child in ipairs(children) do child:Hide() end
+				app.ShowFiltered = false
+			else
+				for _, child in ipairs(children) do child:Show() end
+				app.ShowFiltered = true
+			end
+		end)
+		
+		local filtered1 = app.Window.Filtered:CreateFontString("ARTWORK", nil, "GameFontNormal")
+		filtered1:SetPoint("LEFT", app.Window.Filtered)
+		filtered1:SetScale(1.1)
+		app.FilteredHeader = filtered1
+	end
+
+	-- Adjust header position
+	local offset = -2
+	if #app.ArmourLoot >= 1 then offset = -16*#app.ArmourLoot end
+	app.Window.Filtered:SetPoint("TOPLEFT", app.Window.Armour, "BOTTOMLEFT", 0, offset)
+	if #app.FilteredLoot >= 1 then
+		app.FilteredHeader:SetText("Filtered ("..#app.FilteredLoot..")")
+	else
+		app.FilteredHeader:SetText("Filtered")
+	end
+
+	-- If there is loot to process
+	if #app.FilteredLoot >= 1 then
+		-- Custom comparison function based on the beginning of the string (thanks ChatGPT)
+		local customSortList = {
+			"|cffe6cc80",	-- Artifact
+			"|cffff8000",	-- Legendary
+			"|cffa335ee",	-- Epic
+			"|cff0070dd",	-- Rare
+			"|cff1eff00",	-- Uncommon
+			"|cffffffff",	-- Common
+			"|cff9d9d9d",	-- Poor (quantity 0)
+		}
+		local function customSort(a, b)
+			for _, v in ipairs(customSortList) do
+				local indexA = string.find(a.item, v, 1, true)
+				local indexB = string.find(b.item, v, 1, true)
+		
+				if indexA == 1 and indexB ~= 1 then
+					return true
+				elseif indexA ~= 1 and indexB == 1 then
+					return false
+				end
+			end
+		
+			-- If custom sort index is the same, compare alphabetically
+			return string.gsub(a.item, ".-(:%|h)", "") < string.gsub(b.item, ".-(:%|h)", "")
+		end
+
+		-- Sort loot
+		local filteredSorted = {}
+		for k, v in pairs(app.FilteredLoot) do
+			filteredSorted[#filteredSorted+1] = { item = v.item, icon = v.icon, player = v.player, playerShort = v.playerShort, color = v.color, index = k}
+		end
+		table.sort(filteredSorted, customSort)
+
+		-- Create rows
+		for _, lootInfo in ipairs(filteredSorted) do
+			rowNo3 = rowNo3 + 1
+
+			local row = CreateFrame("Button", nil, app.Window.Filtered)
+			row:SetSize(0,16)
+			row:SetHighlightTexture("Interface\\QuestFrame\\UI-QuestTitleHighlight", "ADD")
+			row:RegisterForDrag("LeftButton")
+			row:RegisterForClicks("AnyDown")
+			row:SetScript("OnDragStart", function()
+				app.Window:StartMoving()
+				GameTooltip:ClearLines()
+				GameTooltip:Hide()
+			end)
+			row:SetScript("OnDragStop", function() app.SaveWindow() end)
+			row:SetScript("OnEnter", function()
+				-- Show item tooltip if hovering over the actual row
+				GameTooltip:ClearLines()
+
+				-- Set the tooltip to either the left or right, depending on where the window is placed
+				if GetScreenWidth()/2-TransmogLootHelper_Settings["windowPosition"].width/2-app.Window:GetLeft() >= 0 then
+					GameTooltip:SetOwner(app.Window, "ANCHOR_NONE")
+					GameTooltip:SetPoint("LEFT", app.Window, "RIGHT")
+				else
+					GameTooltip:SetOwner(app.Window, "ANCHOR_NONE")
+					GameTooltip:SetPoint("RIGHT", app.Window, "LEFT")
+				end
+				GameTooltip:SetHyperlink(lootInfo.item)
+				GameTooltip:Show()
+			end)
+			row:SetScript("OnLeave", function()
+				GameTooltip:ClearLines()
+				GameTooltip:Hide()
+			end)
+			row:SetScript("OnClick", function(self, button)
+				-- LMB
+				if button == "LeftButton" then
+					-- Shift+LMB
+					if IsShiftKeyDown() == true then
+						-- Try write link to chat
+						ChatEdit_InsertLink(lootInfo.item)
+					else
+						if app.FilteredLoot[lootInfo.index].recentlyWhispered == false then
+							local msg = string.gsub(TransmogLootHelper_Settings["message"], "%%item", lootInfo.item.."|r")
+							SendChatMessage(msg, "WHISPER", "", lootInfo.player)
+
+							-- Add a timeout to prevent spamming
+							app.FilteredLoot[lootInfo.index].recentlyWhispered = true
+							C_Timer.After(30, function() app.FilteredLoot[lootInfo.index].recentlyWhispered = false end)
+						elseif app.FilteredLoot[lootInfo.index].recentlyWhispered == true then
+							app.Print("You've recently whispered this player. After 30 seconds, you may do so again.")
+						end
+					end
+				-- RMB
+				elseif button == "RightButton" then
+					-- Remove the item
+					table.remove(app.FilteredLoot, lootInfo.index)
+					-- And update the window
+					RunNextFrame(app.UpdateWindow)
+					app.Dump(app.FilteredLoot)
+					print(#app.FilteredLoot)
+					do return end
+				end
+			end)
+
+			app.FilteredRow[rowNo3] = row
+
+			local icon1 = row:CreateFontString("ARTWORK", nil, "GameFontNormal")
+			icon1:SetPoint("LEFT", row)
+			icon1:SetScale(1.2)
+			icon1:SetText("|T"..(lootInfo.icon or "Interface\\Icons\\inv_misc_questionmark")..":0|t")
+
+			local text2 = row:CreateFontString("ARTWORK", nil, "GameFontNormal")
+			text2:SetPoint("CENTER", icon1)
+			text2:SetPoint("RIGHT", app.Window.Child)
+			text2:SetJustifyH("RIGHT")
+			text2:SetTextColor(1, 1, 1)
+			text2:SetText("|c"..lootInfo.color..lootInfo.playerShort)
+
+			local text1 = row:CreateFontString("ARTWORK", nil, "GameFontNormal")
+			text1:SetPoint("LEFT", icon1, "RIGHT", 3, 0)
+			text1:SetPoint("RIGHT", text2, "LEFT")
+			text1:SetTextColor(1, 1, 1)
+			text1:SetText(lootInfo.item)
+			text1:SetJustifyH("LEFT")
+			text1:SetWordWrap(false)
+
+			maxLength = math.max(icon1:GetStringWidth()+text1:GetStringWidth()+text2:GetStringWidth(), maxLength)
+		end
+
+		if app.FilteredRow then
+			if #app.FilteredRow >= 1 then
+				for i, row in ipairs(app.FilteredRow) do
+					if i == 1 then
+						row:SetPoint("TOPLEFT", app.Window.Filtered, "BOTTOMLEFT")
+						row:SetPoint("TOPRIGHT", app.Window.Filtered, "BOTTOMRIGHT")
+					else
+						local offset = -16*(i-1)
+						row:SetPoint("TOPLEFT", app.Window.Filtered, "BOTTOMLEFT", 0, offset)
+						row:SetPoint("TOPRIGHT", app.Window.Filtered, "BOTTOMRIGHT", 0, offset)
+					end
+				end
+			end
+		end
+		
+		-- Enable the clear button
+		app.ClearButton:Enable()
+	end
+
+	-- Hide rows that should be hidden
+	if #app.WeaponRow >=1 and app.ShowWeapons == false then
+		for i, row in pairs(app.WeaponRow) do
+			row:Hide()
+		end
+	end
+	if #app.ArmourRow >=1 and app.ShowArmour == false then
+		for i, row in pairs(app.ArmourRow) do
+			row:Hide()
+		end
+	end
+	if #app.FilteredRow >=1 and app.ShowFiltered == false then
+		for i, row in pairs(app.FilteredRow) do
+			row:Hide()
+		end
+	end
+
+	-- Corner button
 	app.Window.Corner:SetScript("OnDoubleClick", function (self, button)
-		local windowHeight = 28
+		local windowHeight = 66
 		local windowWidth = 0
 		if app.ShowWeapons == true then
 			windowHeight = windowHeight + #app.WeaponLoot * 16
 		end
 		if app.ShowArmour == true then
 			windowHeight = windowHeight + #app.ArmourLoot * 16
+		end
+		if app.ShowFiltered == true then
+			windowHeight = windowHeight + #app.FilteredLoot * 16
 		end
 		windowWidth = maxLength
 		if windowHeight > 600 then windowHeight = 600 end
@@ -776,6 +1013,7 @@ end
 function app.Clear()
 	app.WeaponLoot = {}
 	app.ArmourLoot = {}
+	app.FilteredLoot = {}
 	app.UpdateWindow()
 end
 
@@ -903,6 +1141,10 @@ function event:CHAT_MSG_LOOT(text, playerName, languageName, channelName, player
 	local unitName = playerNameShort, realmName
 	local selfName = UnitName("player")
 
+	-- Class colour
+	local className, classFilename, classId = UnitClass(unitName)
+	local _, _, _, classColor = GetClassColor(classFilename)
+
 	-- Continue only if it's not an item we looted ourselves
 	if unitName ~= selfName then
 		-- Extract item string
@@ -973,10 +1215,6 @@ function event:CHAT_MSG_LOOT(text, playerName, languageName, channelName, player
 
 				-- Filter for usable mog, if the setting is applied
 				if ((TransmogLootHelper_Settings["usableMog"] == true and equippable == true) or TransmogLootHelper_Settings["usableMog"] == false) and itemCategory ~= nil then
-					-- Class colour
-					local className, classFilename, classId = UnitClass(unitName)
-					local _, _, _, classColor = GetClassColor(classFilename)
-
 					-- Write it into our loot variable
 					if itemCategory == "weapon" then
 						app.WeaponLoot[#app.WeaponLoot+1] = { item = itemString, icon = itemTexture, player = playerName, playerShort = playerNameShort, color = classColor, recentlyWhispered = false}
@@ -989,6 +1227,12 @@ function event:CHAT_MSG_LOOT(text, playerName, languageName, channelName, player
 					app.UpdateWindow()
 				end
 			end
+		else
+			app.FilteredLoot[#app.FilteredLoot+1] = { item = itemString, icon = itemTexture, player = playerName, playerShort = playerNameShort, color = classColor, recentlyWhispered = false}
+
+			-- And update the window
+			app.Show()
+			app.UpdateWindow()
 		end
 	end
 end
