@@ -878,8 +878,6 @@ function app.UpdateWindow()
 					table.remove(app.FilteredLoot, lootInfo.index)
 					-- And update the window
 					RunNextFrame(app.UpdateWindow)
-					app.Dump(app.FilteredLoot)
-					print(#app.FilteredLoot)
 					do return end
 				end
 			end)
