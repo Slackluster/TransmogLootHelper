@@ -348,7 +348,9 @@ function app.UpdateWindow()
 	local rowNo1 = 0
 	local rowNo2 = 0
 	local rowNo3 = 0
-	local maxLength = 0
+	local maxLength1 = 0
+	local maxLength2 = 0
+	local maxLength3 = 0
 	app.WeaponRow = {}
 
 	-- Create header
@@ -520,7 +522,7 @@ function app.UpdateWindow()
 			text1:SetJustifyH("LEFT")
 			text1:SetWordWrap(false)
 
-			maxLength = math.max(icon1:GetStringWidth()+text1:GetStringWidth()+text2:GetStringWidth(), maxLength)
+			maxLength1 = math.max(icon1:GetStringWidth()+text1:GetStringWidth()+text2:GetStringWidth(), maxLength1)
 		end
 
 		if app.WeaponRow then
@@ -714,7 +716,7 @@ function app.UpdateWindow()
 			text1:SetJustifyH("LEFT")
 			text1:SetWordWrap(false)
 
-			maxLength = math.max(icon1:GetStringWidth()+text1:GetStringWidth()+text2:GetStringWidth(), maxLength)
+			maxLength2 = math.max(icon1:GetStringWidth()+text1:GetStringWidth()+text2:GetStringWidth(), maxLength2)
 		end
 
 		if app.ArmourRow then
@@ -904,7 +906,7 @@ function app.UpdateWindow()
 			text1:SetJustifyH("LEFT")
 			text1:SetWordWrap(false)
 
-			maxLength = math.max(icon1:GetStringWidth()+text1:GetStringWidth()+text2:GetStringWidth(), maxLength)
+			maxLength3 = math.max(icon1:GetStringWidth()+text1:GetStringWidth()+text2:GetStringWidth(), maxLength3)
 		end
 
 		if app.FilteredRow then
@@ -949,14 +951,16 @@ function app.UpdateWindow()
 		local windowWidth = 0
 		if app.ShowWeapons == true then
 			windowHeight = windowHeight + #app.WeaponLoot * 16
+			windowWidth = math.max(windowWidth, maxLength1)
 		end
 		if app.ShowArmour == true then
 			windowHeight = windowHeight + #app.ArmourLoot * 16
+			windowWidth = math.max(windowWidth, maxLength2)
 		end
 		if app.ShowFiltered == true then
 			windowHeight = windowHeight + #app.FilteredLoot * 16
+			windowWidth = math.max(windowWidth, maxLength3)
 		end
-		windowWidth = maxLength
 		if windowHeight > 600 then windowHeight = 600 end
 		if windowWidth > 600 then windowWidth = 600 end
 		app.Window:SetHeight(math.max(140,windowHeight))
@@ -1227,11 +1231,6 @@ function event:CHAT_MSG_LOOT(text, playerName, languageName, channelName, player
 			end
 		elseif C_Item.IsEquippableItem(itemString) == true then
 			app.FilteredLoot[#app.FilteredLoot+1] = { item = itemString, icon = itemTexture, player = playerName, playerShort = playerNameShort, color = classColor, recentlyWhispered = false}
-		end
-
-			-- And update the window
-			app.Show()
-			app.UpdateWindow()
 		end
 	end
 end
