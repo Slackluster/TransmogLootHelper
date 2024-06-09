@@ -1148,11 +1148,11 @@ function event:CHAT_MSG_LOOT(text, playerName, languageName, channelName, player
 	local className, classFilename, classId = UnitClass(unitName)
 	local _, _, _, classColor = GetClassColor(classFilename)
 
-	-- Continue only if it's not an item we looted ourselves
-	-- if unitName ~= selfName then
-		-- Extract item string
-		local itemString = string.match(text, "(|cff.-|h%[.-%]|h)")
+	-- Extract item string
+	local itemString = string.match(text, "(|cff.-|h%[.-%]|h)")
 
+	-- Continue only if it's not an item we looted ourselves
+	if unitName ~= selfName then
 		-- Get item texture and type
 		local _, _, itemQuality, _, _, _, _, _, _, itemTexture, _, classID, subclassID = C_Item.GetItemInfo(itemString)
 		local itemType = classID.."."..subclassID
@@ -1231,10 +1231,38 @@ function event:CHAT_MSG_LOOT(text, playerName, languageName, channelName, player
 				end
 			end
 		elseif C_Item.IsEquippableItem(itemString) == true then
+			-- Add to filtered loot and update the window
 			app.FilteredLoot[#app.FilteredLoot+1] = { item = itemString, icon = itemTexture, player = playerName, playerShort = playerNameShort, color = classColor, recentlyWhispered = false}
 			app.UpdateWindow()
 		end
-	-- end
+	else
+		-- Remove items if looted by self
+		local function removeIfLooted()
+			for k, v in ipairs(app.WeaponLoot) do
+				if v.item == itemString then
+					-- Remove entry from table
+					table.remove(app.WeaponLoot, k)
+					-- Then start this function over, because indexes have shifted
+					RunNextFrame(removeIfLooted)
+					do return end
+				end
+			end
+
+			for k, v in ipairs(app.ArmourLoot) do
+				if v.item == itemString then
+					-- Remove entry from table
+					table.remove(app.ArmourLoot, k)
+					-- Then start this function over, because indexes have shifted
+					RunNextFrame(removeIfLooted)
+					do return end
+				end
+			end
+
+			-- And update the window
+			app.UpdateWindow()
+		end
+		removeIfLooted()
+	end
 end
 
 -- Debug function
