@@ -1000,6 +1000,7 @@ function app.Show()
 
 	-- Show the windows
 	app.Window:Show()
+	app.UpdateWindow()
 end
 
 -- Toggle window
@@ -1148,7 +1149,7 @@ function event:CHAT_MSG_LOOT(text, playerName, languageName, channelName, player
 	local _, _, _, classColor = GetClassColor(classFilename)
 
 	-- Continue only if it's not an item we looted ourselves
-	if unitName ~= selfName then
+	-- if unitName ~= selfName then
 		-- Extract item string
 		local itemString = string.match(text, "(|cff.-|h%[.-%]|h)")
 
@@ -1231,8 +1232,9 @@ function event:CHAT_MSG_LOOT(text, playerName, languageName, channelName, player
 			end
 		elseif C_Item.IsEquippableItem(itemString) == true then
 			app.FilteredLoot[#app.FilteredLoot+1] = { item = itemString, icon = itemTexture, player = playerName, playerShort = playerNameShort, color = classColor, recentlyWhispered = false}
+			app.UpdateWindow()
 		end
-	end
+	-- end
 end
 
 -- Debug function
