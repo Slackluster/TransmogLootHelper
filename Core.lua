@@ -1228,7 +1228,15 @@ function event:CHAT_MSG_LOOT(text, playerName, languageName, channelName, player
 					-- And update the window
 					app.Show()
 					app.UpdateWindow()
+				elseif C_Item.IsEquippableItem(itemLink) == true then
+					-- Add to filtered loot and update the window
+					app.FilteredLoot[#app.FilteredLoot+1] = { item = itemLink, icon = itemTexture, player = playerName, playerShort = playerNameShort, color = classColor, recentlyWhispered = false}
+					app.UpdateWindow()
 				end
+			elseif C_Item.IsEquippableItem(itemLink) == true then
+				-- Add to filtered loot and update the window
+				app.FilteredLoot[#app.FilteredLoot+1] = { item = itemLink, icon = itemTexture, player = playerName, playerShort = playerNameShort, color = classColor, recentlyWhispered = false}
+				app.UpdateWindow()
 			end
 		elseif C_Item.IsEquippableItem(itemLink) == true then
 			-- Add to filtered loot and update the window
