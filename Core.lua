@@ -1151,20 +1151,20 @@ function event:CHAT_MSG_LOOT(text, playerName, languageName, channelName, player
 	-- Extract item string
 	local itemString = string.match(text, "(|cff.-|h%[.-%]|h)")
 
+	-- Get item texture and type
+	local _, itemLink, itemQuality, _, _, _, _, _, _, itemTexture, _, classID, subclassID = C_Item.GetItemInfo(itemString)
+	local itemType = classID.."."..subclassID
+
 	-- Continue only if it's not an item we looted ourselves
 	if unitName ~= selfName then
-		-- Get item texture and type
-		local _, _, itemQuality, _, _, _, _, _, _, itemTexture, _, classID, subclassID = C_Item.GetItemInfo(itemString)
-		local itemType = classID.."."..subclassID
-
 		-- Scan the tooltip for the appearance text, localised
-		local function ScanTooltipForAppearanceInfo(itemLink, searchString)
+		local function ScanTooltipForAppearanceInfo(itemLinkie, searchString)
 			-- Create a tooltip frame
 			local tooltip = CreateFrame("GameTooltip", "MyScanningTooltip", UIParent, "GameTooltipTemplate")
 		
 			-- Set the tooltip to show the item
 			tooltip:SetOwner(UIParent, "ANCHOR_NONE")
-			tooltip:SetHyperlink(itemLink)
+			tooltip:SetHyperlink(itemLinkie)
 		
 			-- Scan each line of the tooltip for the search string
 			for i = 1, tooltip:NumLines() do
@@ -1180,7 +1180,7 @@ function event:CHAT_MSG_LOOT(text, playerName, languageName, channelName, player
 		end
 		
 		-- Do stuff depending on if the appearance or source is new
-		if ScanTooltipForAppearanceInfo(itemString, TRANSMOGRIFY_TOOLTIP_APPEARANCE_UNKNOWN) or (ScanTooltipForAppearanceInfo(itemString, TRANSMOGRIFY_TOOLTIP_ITEM_UNKNOWN_APPEARANCE_KNOWN) and TransmogLootHelper_Settings["collectMode"] == 2) then
+		if ScanTooltipForAppearanceInfo(itemLink, TRANSMOGRIFY_TOOLTIP_APPEARANCE_UNKNOWN) or (ScanTooltipForAppearanceInfo(itemLink, TRANSMOGRIFY_TOOLTIP_ITEM_UNKNOWN_APPEARANCE_KNOWN) and TransmogLootHelper_Settings["collectMode"] == 2) then
 			-- Rarity filter
 			if itemQuality >= TransmogLootHelper_Settings["rarity"] then
 
@@ -1220,9 +1220,9 @@ function event:CHAT_MSG_LOOT(text, playerName, languageName, channelName, player
 				if ((TransmogLootHelper_Settings["usableMog"] == true and equippable == true) or TransmogLootHelper_Settings["usableMog"] == false) and itemCategory ~= nil then
 					-- Write it into our loot variable
 					if itemCategory == "weapon" then
-						app.WeaponLoot[#app.WeaponLoot+1] = { item = itemString, icon = itemTexture, player = playerName, playerShort = playerNameShort, color = classColor, recentlyWhispered = false}
+						app.WeaponLoot[#app.WeaponLoot+1] = { item = itemLink, icon = itemTexture, player = playerName, playerShort = playerNameShort, color = classColor, recentlyWhispered = false}
 					elseif itemCategory == "armor" then
-						app.ArmourLoot[#app.ArmourLoot+1] = { item = itemString, icon = itemTexture, player = playerName, playerShort = playerNameShort, color = classColor, recentlyWhispered = false}
+						app.ArmourLoot[#app.ArmourLoot+1] = { item = itemLink, icon = itemTexture, player = playerName, playerShort = playerNameShort, color = classColor, recentlyWhispered = false}
 					end
 
 					-- And update the window
@@ -1230,16 +1230,16 @@ function event:CHAT_MSG_LOOT(text, playerName, languageName, channelName, player
 					app.UpdateWindow()
 				end
 			end
-		elseif C_Item.IsEquippableItem(itemString) == true then
+		elseif C_Item.IsEquippableItem(itemLink) == true then
 			-- Add to filtered loot and update the window
-			app.FilteredLoot[#app.FilteredLoot+1] = { item = itemString, icon = itemTexture, player = playerName, playerShort = playerNameShort, color = classColor, recentlyWhispered = false}
+			app.FilteredLoot[#app.FilteredLoot+1] = { item = itemLink, icon = itemTexture, player = playerName, playerShort = playerNameShort, color = classColor, recentlyWhispered = false}
 			app.UpdateWindow()
 		end
 	else
 		-- Remove items if looted by self
 		local function removeIfLooted()
 			for k, v in ipairs(app.WeaponLoot) do
-				if v.item == itemString then
+				if v.item == itemLink then
 					-- Remove entry from table
 					table.remove(app.WeaponLoot, k)
 					-- Then start this function over, because indexes have shifted
@@ -1249,7 +1249,7 @@ function event:CHAT_MSG_LOOT(text, playerName, languageName, channelName, player
 			end
 
 			for k, v in ipairs(app.ArmourLoot) do
-				if v.item == itemString then
+				if v.item == itemLink then
 					-- Remove entry from table
 					table.remove(app.ArmourLoot, k)
 					-- Then start this function over, because indexes have shifted
