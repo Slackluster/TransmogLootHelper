@@ -103,16 +103,6 @@ function app.Border(parent, a, b, c, d)
 	border:SetBackdropBorderColor(0.776, 0.608, 0.427)
 end
 
--- Button
-function app.Button(parent, text)
-	local frame = CreateFrame("Button", nil, parent, "UIPanelButtonTemplate")
-	frame:SetText(text)
-	frame:SetWidth(frame:GetTextWidth()+20)
-
-	app.Border(frame, 0, 0, 0, -1)
-	return frame
-end
-
 -- Window tooltip body
 function app.WindowTooltip(text)
 	-- Tooltip
@@ -1352,3 +1342,7 @@ function api.Debug(itemString)
 	-- Print it all
 	app.Print("DEBUG: "..itemString.."  |  Appearance: "..appearance.."  |  Rarity: "..itemQuality.."  |  CharArmorClass: "..armorClass.."  |  ItemType: "..itemType.."  |  ItemCategory: "..itemCategory.."  |  Equippable: "..equippable)
 end
+
+-- Integrate debug into filtered list
+-- Test filtered list
+-- Test remove if loot
