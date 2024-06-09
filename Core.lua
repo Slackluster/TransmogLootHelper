@@ -266,21 +266,23 @@ function app.CreateWindow()
 	app.ClearButton:SetPushedTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\button-clear.blp")
 	app.ClearButton:GetPushedTexture():SetTexCoord(39/256, 75/256, 81/128, 118/128)
 	app.ClearButton:SetScript("OnClick", function()
-		StaticPopupDialogs["CLEAR_LOOT"] = {
-			text = app.NameLong.."\nDo you want to clear all loot?",
-			button1 = YES,
-			button2 = NO,
-			OnAccept = function()
-				app.WeaponLoot = {}
-				app.ArmourLoot = {}
-				app.UpdateWindow()
-			end,
-			timeout = 0,
-			whileDead = true,
-			hideOnEscape = true,
-			showAlert = true,
-		}
-		StaticPopup_Show("CLEAR_LOOT")
+		if IsShiftKeyDown() == true then
+			app.Clear()
+		else
+			StaticPopupDialogs["CLEAR_LOOT"] = {
+				text = app.NameLong.."\nDo you want to clear all loot?",
+				button1 = YES,
+				button2 = NO,
+				OnAccept = function()
+					app.Clear()
+				end,
+				timeout = 0,
+				whileDead = true,
+				hideOnEscape = true,
+				showAlert = true,
+			}
+			StaticPopup_Show("CLEAR_LOOT")
+		end
 	end)
 	app.ClearButton:SetScript("OnEnter", function()
 		app.WindowTooltipShow(app.ClearButtonTooltip)
@@ -744,7 +746,7 @@ function app.CreateGeneralAssets()
 	app.CloseButtonTooltip = app.WindowTooltip("Close the window.")
 
 	-- Create Clear button tooltip
-	app.ClearButtonTooltip = app.WindowTooltip("Clear all items.")
+	app.ClearButtonTooltip = app.WindowTooltip("Clear all items. Shift+click to skip the confirmation.")
 
 	-- Create corner button tooltip
 	app.CornerButtonTooltip = app.WindowTooltip("Double-click|cffFFFFFF: Autosize to fit the window.")
@@ -769,6 +771,12 @@ function app.Toggle()
 	else
 		app.Show()
 	end
+end
+
+function app.Clear()
+	app.WeaponLoot = {}
+	app.ArmourLoot = {}
+	app.UpdateWindow()
 end
 
 -- Open settings
