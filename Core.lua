@@ -833,10 +833,11 @@ function app.Settings()
 	local variable, name, tooltip = "", "Slash commands", "Type these in chat to use them!"
 	local function GetOptions()
 		local container = Settings.CreateControlTextContainer()
-		container:Add(1, "/tlh", "Open these settings.")
-		container:Add(1, "/tlh default", "Set the whisper message to its default.")
-		container:Add(2, "/tlh msg |cff1B9C85message|R", "Customise the whisper message.")
-		container:Add(3, '/run TransmogLootHelper.Debug("|cff1B9C85[item link]|R")', "Debug an item, if it doesn't show when you feel it should.")
+		container:Add(1, "/tlh", "Toggle the window.")
+		container:Add(2, "/tlh settings", "Open these settings.")
+		container:Add(3, "/tlh default", "Set the whisper message to its default.")
+		container:Add(4, "/tlh msg |cff1B9C85message|R", "Customise the whisper message.")
+		container:Add(5, '/run TransmogLootHelper.Debug("|cff1B9C85[item link]|R")', "Debug an item, if it doesn't show when you feel it should.")
 		return container:GetData()
 	end
 	local setting = Settings.RegisterAddOnSetting(category, name, variable, Settings.VarType.Number, "")
@@ -884,8 +885,11 @@ function event:ADDON_LOADED(addOnName, containsBindings)
 					app.Print('Message set to: "'..TransmogLootHelper_Settings["message"]..'"')
 				end
 			-- Open settings
-			elseif command == "" then
+			elseif command == "settings" then
 				app.OpenSettings()
+			-- Toggle window
+			elseif command == "" then
+				app.Toggle()
 			end
 		end
 	end
