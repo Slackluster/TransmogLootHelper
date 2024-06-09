@@ -947,7 +947,7 @@ function app.UpdateWindow()
 
 	-- Corner button
 	app.Window.Corner:SetScript("OnDoubleClick", function (self, button)
-		local windowHeight = 66
+		local windowHeight = 64
 		local windowWidth = 0
 		if app.ShowWeapons == true then
 			windowHeight = windowHeight + #app.WeaponLoot * 16
