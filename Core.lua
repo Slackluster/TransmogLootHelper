@@ -1225,8 +1225,9 @@ function event:CHAT_MSG_LOOT(text, playerName, languageName, channelName, player
 					app.UpdateWindow()
 				end
 			end
-		else
+		elseif C_Item.IsEquippableItem(itemString) == true then
 			app.FilteredLoot[#app.FilteredLoot+1] = { item = itemString, icon = itemTexture, player = playerName, playerShort = playerNameShort, color = classColor, recentlyWhispered = false}
+		end
 
 			-- And update the window
 			app.Show()
