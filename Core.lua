@@ -1066,8 +1066,9 @@ function app.Settings()
 		local container = Settings.CreateControlTextContainer()
 		container:Add(1, "/tlh", "Toggle the window.")
 		container:Add(2, "/tlh settings", "Open these settings.")
-		container:Add(3, "/tlh default", "Set the whisper message to its default.")
-		container:Add(4, "/tlh msg |cff1B9C85message|R", "Customise the whisper message.")
+		container:Add(3, "/tlh resetpos", "Reset the window position.")
+		container:Add(4, "/tlh default", "Set the whisper message to its default.")
+		container:Add(5, "/tlh msg |cff1B9C85message|R", "Customise the whisper message.")
 		return container:GetData()
 	end
 	local setting = Settings.RegisterAddOnSetting(category, name, variable, Settings.VarType.Number, "")
@@ -1117,6 +1118,14 @@ function event:ADDON_LOADED(addOnName, containsBindings)
 			-- Open settings
 			elseif command == "settings" then
 				app.OpenSettings()
+			-- Reset window positions
+			elseif command == "resetpos" then
+				-- Set the window size and position back to default
+				TransmogLootHelper_Settings["windowPosition"] = { ["left"] = GetScreenWidth()/2-100, ["bottom"] = GetScreenHeight()/2-100, ["width"] = 200, ["height"] = 200, }
+				TransmogLootHelper_Settings["pcWindowPosition"] = TransmogLootHelper_Settings["windowPosition"]
+
+				-- Show the window, which will also run setting its size and position
+				app.Show()
 			-- Toggle window
 			elseif command == "" then
 				app.Toggle()
