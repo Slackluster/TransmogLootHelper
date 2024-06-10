@@ -471,7 +471,7 @@ function app.UpdateWindow()
 						ChatEdit_InsertLink(lootInfo.item)
 					else
 						if app.WeaponLoot[lootInfo.index].recentlyWhispered == false then
-							local msg = string.gsub(TransmogLootHelper_Settings["message"], "%%item", lootInfo.item.."|r")
+							local msg = string.gsub(TransmogLootHelper_Settings["message"], "%%item", lootInfo.item)
 							SendChatMessage(msg, "WHISPER", "", lootInfo.player)
 
 							-- Add a timeout to prevent spamming
@@ -665,7 +665,7 @@ function app.UpdateWindow()
 						ChatEdit_InsertLink(lootInfo.item)
 					else
 						if app.ArmourLoot[lootInfo.index].recentlyWhispered == false then
-							local msg = string.gsub(TransmogLootHelper_Settings["message"], "%%item", lootInfo.item.."|r")
+							local msg = string.gsub(TransmogLootHelper_Settings["message"], "%%item", lootInfo.item)
 							SendChatMessage(msg, "WHISPER", "", lootInfo.player)
 
 							-- Add a timeout to prevent spamming
@@ -1272,6 +1272,3 @@ function event:CHAT_MSG_LOOT(text, playerName, languageName, channelName, player
 		removeIfLooted()
 	end
 end
-
--- Test filtered list
--- Test remove if loot
