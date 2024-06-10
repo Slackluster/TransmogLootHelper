@@ -1140,8 +1140,9 @@ function event:CHAT_MSG_LOOT(text, playerName, languageName, channelName, player
 	-- Extract item string
 	local itemString = string.match(text, "(|cff.-|h%[.-%]|h)")
 
-	-- Get item texture and type
+	-- Get item info
 	local _, itemLink, itemQuality, _, _, _, _, _, _, itemTexture, _, classID, subclassID = C_Item.GetItemInfo(itemString)
+	local itemID = C_Item.GetItemInfoInstant(itemString)
 	local itemType = classID.."."..subclassID
 
 	-- Continue only if it's not an item we looted ourselves
@@ -1209,9 +1210,9 @@ function event:CHAT_MSG_LOOT(text, playerName, languageName, channelName, player
 				if ((TransmogLootHelper_Settings["usableMog"] == true and equippable == true) or TransmogLootHelper_Settings["usableMog"] == false) and itemCategory ~= nil then
 					-- Write it into our loot variable
 					if itemCategory == "weapon" then
-						app.WeaponLoot[#app.WeaponLoot+1] = { item = itemLink, icon = itemTexture, player = playerName, playerShort = playerNameShort, color = classColor, recentlyWhispered = false }
+						app.WeaponLoot[#app.WeaponLoot+1] = { item = itemLink, itemID = itemID, icon = itemTexture, player = playerName, playerShort = playerNameShort, color = classColor, recentlyWhispered = false }
 					elseif itemCategory == "armor" then
-						app.ArmourLoot[#app.ArmourLoot+1] = { item = itemLink, icon = itemTexture, player = playerName, playerShort = playerNameShort, color = classColor, recentlyWhispered = false }
+						app.ArmourLoot[#app.ArmourLoot+1] = { item = itemLink, itemID = itemID, icon = itemTexture, player = playerName, playerShort = playerNameShort, color = classColor, recentlyWhispered = false }
 					end
 
 					-- And update the window
@@ -1219,24 +1220,24 @@ function event:CHAT_MSG_LOOT(text, playerName, languageName, channelName, player
 					app.UpdateWindow()
 				elseif C_Item.IsEquippableItem(itemLink) == true then
 					-- Add to filtered loot and update the window
-					app.FilteredLoot[#app.FilteredLoot+1] = { item = itemLink, icon = itemTexture, player = playerName, playerShort = "Unusable appearance", color = "ffFFFFFF", itemType = itemType }
+					app.FilteredLoot[#app.FilteredLoot+1] = { item = itemLink, itemID = itemID, icon = itemTexture, player = playerName, playerShort = "Unusable appearance", color = "ffFFFFFF", itemType = itemType }
 					app.UpdateWindow()
 				end
 			elseif C_Item.IsEquippableItem(itemLink) == true then
 				-- Add to filtered loot and update the window
-				app.FilteredLoot[#app.FilteredLoot+1] = { item = itemLink, icon = itemTexture, player = playerName, playerShort = "Rarity too low", color = "ffFFFFFF", itemType = itemType }
+				app.FilteredLoot[#app.FilteredLoot+1] = { item = itemLink, itemID = itemID, icon = itemTexture, player = playerName, playerShort = "Rarity too low", color = "ffFFFFFF", itemType = itemType }
 				app.UpdateWindow()
 			end
 		elseif C_Item.IsEquippableItem(itemLink) == true then
 			-- Add to filtered loot and update the window
-			app.FilteredLoot[#app.FilteredLoot+1] = { item = itemLink, icon = itemTexture, player = playerName, playerShort = "Known appearance", color = "ffFFFFFF", itemType = itemType }
+			app.FilteredLoot[#app.FilteredLoot+1] = { item = itemLink, itemID = itemID, icon = itemTexture, player = playerName, playerShort = "Known appearance", color = "ffFFFFFF", itemType = itemType }
 			app.UpdateWindow()
 		end
 	else
 		-- Remove items if looted by self
 		local function removeIfLooted()
 			for k, v in ipairs(app.WeaponLoot) do
-				if v.item == itemLink then
+				if v.itemID == itemID then
 					-- Remove entry from table
 					table.remove(app.WeaponLoot, k)
 					-- Then start this function over, because indexes have shifted
@@ -1246,7 +1247,7 @@ function event:CHAT_MSG_LOOT(text, playerName, languageName, channelName, player
 			end
 
 			for k, v in ipairs(app.ArmourLoot) do
-				if v.item == itemLink then
+				if v.itemID == itemID then
 					-- Remove entry from table
 					table.remove(app.ArmourLoot, k)
 					-- Then start this function over, because indexes have shifted
