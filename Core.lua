@@ -343,7 +343,7 @@ function app.UpdateWindow()
 	local maxLength3 = 0
 	app.WeaponRow = {}
 
-	-- Create header
+	-- Create Weapons header
 	if not app.Window.Weapons then
 		app.Window.Weapons = CreateFrame("Button", nil, app.Window.Child)
 		app.Window.Weapons:SetSize(0,16)
@@ -477,7 +477,7 @@ function app.UpdateWindow()
 							app.WeaponLoot[lootInfo.index].recentlyWhispered = true
 							C_Timer.After(30, function() app.WeaponLoot[lootInfo.index].recentlyWhispered = false end)
 						elseif app.WeaponLoot[lootInfo.index].recentlyWhispered == true then
-							app.Print("You've recently whispered this player. After 30 seconds, you may do so again.")
+							app.Print("You may only whisper a player once every 30 seconds per item.")
 						end
 					end
 				-- RMB
@@ -534,7 +534,7 @@ function app.UpdateWindow()
 		app.ClearButton:Enable()
 	end
 
-	-- Create header
+	-- Create Armour header
 	if not app.Window.Armour then
 		app.Window.Armour = CreateFrame("Button", nil, app.Window.Child)
 		app.Window.Armour:SetSize(0,16)
@@ -671,7 +671,7 @@ function app.UpdateWindow()
 							app.ArmourLoot[lootInfo.index].recentlyWhispered = true
 							C_Timer.After(30, function() app.ArmourLoot[lootInfo.index].recentlyWhispered = false end)
 						elseif app.ArmourLoot[lootInfo.index].recentlyWhispered == true then
-							app.Print("You've recently whispered this player. After 30 seconds, you may do so again.")
+							app.Print("You may only whisper a player once every 30 seconds per item.")
 						end
 					end
 				-- RMB
@@ -728,7 +728,7 @@ function app.UpdateWindow()
 		app.ClearButton:Enable()
 	end
 
-	-- Create header
+	-- Create Filtered header
 	if not app.Window.Filtered then
 		app.Window.Filtered = CreateFrame("Button", nil, app.Window.Child)
 		app.Window.Filtered:SetSize(0,16)
@@ -743,10 +743,10 @@ function app.UpdateWindow()
 		end)
 		app.Window.Filtered:SetScript("OnDragStop", function() app.SaveWindow() end)
 		app.Window.Filtered:SetScript("OnEnter", function()
-			app.WindowTooltipShow(app.LootHeaderTooltip)
+			app.WindowTooltipShow(app.FilteredHeaderTooltip)
 		end)
 		app.Window.Filtered:SetScript("OnLeave", function()
-			app.LootHeaderTooltip:Hide()
+			app.FilteredHeaderTooltip:Hide()
 		end)
 		app.Window.Filtered:SetScript("OnClick", function(self)
 			local children = {self:GetChildren()}
@@ -766,7 +766,7 @@ function app.UpdateWindow()
 		app.FilteredHeader = filtered1
 	end
 
-	-- Adjust header position
+	-- Update header
 	local offset = -2
 	if #app.ArmourLoot >= 1 then offset = -16*#app.ArmourLoot end
 	app.Window.Filtered:SetPoint("TOPLEFT", app.Window.Armour, "BOTTOMLEFT", 0, offset)
@@ -807,7 +807,7 @@ function app.UpdateWindow()
 		-- Sort loot
 		local filteredSorted = {}
 		for k, v in pairs(app.FilteredLoot) do
-			filteredSorted[#filteredSorted+1] = { item = v.item, icon = v.icon, player = v.player, playerShort = v.playerShort, color = v.color, index = k}
+			filteredSorted[#filteredSorted+1] = { item = v.item, icon = v.icon, player = v.player, playerShort = v.playerShort, color = v.color, itemType = v.itemType, index = k}
 		end
 		table.sort(filteredSorted, customSort)
 
@@ -853,16 +853,7 @@ function app.UpdateWindow()
 						-- Try write link to chat
 						ChatEdit_InsertLink(lootInfo.item)
 					else
-						if app.FilteredLoot[lootInfo.index].recentlyWhispered == false then
-							local msg = string.gsub(TransmogLootHelper_Settings["message"], "%%item", lootInfo.item.."|r")
-							SendChatMessage(msg, "WHISPER", "", lootInfo.player)
-
-							-- Add a timeout to prevent spamming
-							app.FilteredLoot[lootInfo.index].recentlyWhispered = true
-							C_Timer.After(30, function() app.FilteredLoot[lootInfo.index].recentlyWhispered = false end)
-						elseif app.FilteredLoot[lootInfo.index].recentlyWhispered == true then
-							app.Print("You've recently whispered this player. After 30 seconds, you may do so again.")
-						end
+						app.Print("Debugging "..lootInfo.item.."  |  Filter reason: "..lootInfo.playerShort.."  |  itemType: "..lootInfo.itemType.."  |  Looted by: "..lootInfo.player)
 					end
 				-- RMB
 				elseif button == "RightButton" then
@@ -968,14 +959,17 @@ end
 
 -- Create assets
 function app.CreateGeneralAssets()
-	-- Create Loot header tooltip
+	-- Create Weapons/Armour header tooltip
 	app.LootHeaderTooltip = app.WindowTooltip("|RLMB|cffFFFFFF: Whisper and request the item.\n|RShift+LMB|cffFFFFFF: Link the item.\n|RRMB|cffFFFFFF: Remove the item.")
+
+	-- Create Filtered header tooltip
+	app.FilteredHeaderTooltip = app.WindowTooltip("|RLMB|cffFFFFFF: Debug this item.\n|RShift+LMB|cffFFFFFF: Link the item.\n|RRMB|cffFFFFFF: Remove the item.")
 
 	-- Create Close button tooltip
 	app.CloseButtonTooltip = app.WindowTooltip("Close the window.")
 
 	-- Create Clear button tooltip
-	app.ClearButtonTooltip = app.WindowTooltip("Clear all items. Shift+click to skip the confirmation.")
+	app.ClearButtonTooltip = app.WindowTooltip("Clear all items.\nHold Shift to skip the confirmation.")
 
 	-- Create corner button tooltip
 	app.CornerButtonTooltip = app.WindowTooltip("Double-click|cffFFFFFF: Autosize to fit the window.")
@@ -1068,7 +1062,6 @@ function app.Settings()
 		container:Add(2, "/tlh settings", "Open these settings.")
 		container:Add(3, "/tlh default", "Set the whisper message to its default.")
 		container:Add(4, "/tlh msg |cff1B9C85message|R", "Customise the whisper message.")
-		container:Add(5, '/run TransmogLootHelper.Debug("|cff1B9C85[item link]|R")', "Debug an item, if it doesn't show when you feel it should.")
 		return container:GetData()
 	end
 	local setting = Settings.RegisterAddOnSetting(category, name, variable, Settings.VarType.Number, "")
@@ -1210,9 +1203,9 @@ function event:CHAT_MSG_LOOT(text, playerName, languageName, channelName, player
 				if ((TransmogLootHelper_Settings["usableMog"] == true and equippable == true) or TransmogLootHelper_Settings["usableMog"] == false) and itemCategory ~= nil then
 					-- Write it into our loot variable
 					if itemCategory == "weapon" then
-						app.WeaponLoot[#app.WeaponLoot+1] = { item = itemLink, icon = itemTexture, player = playerName, playerShort = playerNameShort, color = classColor, recentlyWhispered = false}
+						app.WeaponLoot[#app.WeaponLoot+1] = { item = itemLink, icon = itemTexture, player = playerName, playerShort = playerNameShort, color = classColor, recentlyWhispered = false }
 					elseif itemCategory == "armor" then
-						app.ArmourLoot[#app.ArmourLoot+1] = { item = itemLink, icon = itemTexture, player = playerName, playerShort = playerNameShort, color = classColor, recentlyWhispered = false}
+						app.ArmourLoot[#app.ArmourLoot+1] = { item = itemLink, icon = itemTexture, player = playerName, playerShort = playerNameShort, color = classColor, recentlyWhispered = false }
 					end
 
 					-- And update the window
@@ -1220,17 +1213,17 @@ function event:CHAT_MSG_LOOT(text, playerName, languageName, channelName, player
 					app.UpdateWindow()
 				elseif C_Item.IsEquippableItem(itemLink) == true then
 					-- Add to filtered loot and update the window
-					app.FilteredLoot[#app.FilteredLoot+1] = { item = itemLink, icon = itemTexture, player = playerName, playerShort = playerNameShort, color = classColor, recentlyWhispered = false}
+					app.FilteredLoot[#app.FilteredLoot+1] = { item = itemLink, icon = itemTexture, player = playerName, playerShort = "Unusable appearance", color = "ffFFFFFF", itemType = itemType }
 					app.UpdateWindow()
 				end
 			elseif C_Item.IsEquippableItem(itemLink) == true then
 				-- Add to filtered loot and update the window
-				app.FilteredLoot[#app.FilteredLoot+1] = { item = itemLink, icon = itemTexture, player = playerName, playerShort = playerNameShort, color = classColor, recentlyWhispered = false}
+				app.FilteredLoot[#app.FilteredLoot+1] = { item = itemLink, icon = itemTexture, player = playerName, playerShort = "Rarity too low", color = "ffFFFFFF", itemType = itemType }
 				app.UpdateWindow()
 			end
 		elseif C_Item.IsEquippableItem(itemLink) == true then
 			-- Add to filtered loot and update the window
-			app.FilteredLoot[#app.FilteredLoot+1] = { item = itemLink, icon = itemTexture, player = playerName, playerShort = playerNameShort, color = classColor, recentlyWhispered = false}
+			app.FilteredLoot[#app.FilteredLoot+1] = { item = itemLink, icon = itemTexture, player = playerName, playerShort = "Known appearance", color = "ffFFFFFF", itemType = itemType }
 			app.UpdateWindow()
 		end
 	else
@@ -1263,86 +1256,5 @@ function event:CHAT_MSG_LOOT(text, playerName, languageName, channelName, player
 	end
 end
 
--- Debug function
-function api.Debug(itemString)
-	-- Get item texture and type
-	local _, _, itemQuality, _, _, _, _, _, _, itemTexture, _, classID, subclassID = C_Item.GetItemInfo(itemString)
-	local itemType = classID.."."..subclassID
-
-	-- APPEARANCE/SOURCE KNOWN
-	local appearance
-
-	local function ScanTooltipForAppearanceInfo(itemLink, searchString)
-		-- Create a tooltip frame
-		local tooltip = CreateFrame("GameTooltip", "MyScanningTooltip", UIParent, "GameTooltipTemplate")
-	
-		-- Set the tooltip to show the item
-		tooltip:SetOwner(UIParent, "ANCHOR_NONE")
-		tooltip:SetHyperlink(itemLink)
-	
-		-- Scan each line of the tooltip for the search string
-		for i = 1, tooltip:NumLines() do
-			local text = _G["MyScanningTooltipTextLeft" .. i]:GetText()
-			if text and text:find(searchString) then
-				tooltip:Hide()  -- Hide the tooltip after finding the string
-				return true
-			end
-		end
-	
-		tooltip:Hide()  -- Hide the tooltip if the string was not found
-		return false
-	end
-	
-	if ScanTooltipForAppearanceInfo(itemString, TRANSMOGRIFY_TOOLTIP_APPEARANCE_UNKNOWN) then
-		appearance = "New appearance"
-	elseif ScanTooltipForAppearanceInfo(itemString, TRANSMOGRIFY_TOOLTIP_ITEM_UNKNOWN_APPEARANCE_KNOWN) then
-		appearance = "New Source"
-	else
-		appearance = "Known appearance"
-	end
-
-	-- ARMOR CLASS
-	local armorClass
-	for k, v in pairs(app.Armor) do
-		for _, v2 in pairs(v) do
-			if v2 == app.ClassID then
-				armorClass = k
-			end
-		end
-	end
-
-	local itemCategory = ""
-	local equippable = false
-	-- Check if the item can and should be equipped (armor -> class)
-	if itemType == "4.0" or itemType == "4.1" or itemType == "4.2" or itemType == "4.3" or itemType == "4.4" then
-		itemCategory = "armor"
-		if itemType == app.Type[armorClass] or itemType == app.Type["General"] then
-			equippable = true
-		end
-	end
-	-- Check if a weapon can be equipped
-	for k, v in pairs(app.Type) do
-		if v == itemType and not (itemType == "4.0" or itemType == "4.1" or itemType == "4.2" or itemType == "4.3" or itemType == "4.4") then
-			itemCategory = "weapon"
-			for _, v2 in pairs(app.Weapon[k]) do
-				-- Check if the item can and should be equipped (weapon -> spec)
-				if v2 == app.ClassID then
-					equippable = true
-				end
-			end
-		end
-	end
-
-	if equippable == true then
-		equippable = "true"
-	else
-		equippable = "false"
-	end
-
-	-- Print it all
-	app.Print("DEBUG: "..itemString.."  |  Appearance: "..appearance.."  |  Rarity: "..itemQuality.."  |  CharArmorClass: "..armorClass.."  |  ItemType: "..itemType.."  |  ItemCategory: "..itemCategory.."  |  Equippable: "..equippable)
-end
-
--- Integrate debug into filtered list
 -- Test filtered list
 -- Test remove if loot
