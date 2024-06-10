@@ -156,7 +156,7 @@ function app.InitialiseCore()
 	if TransmogLootHelper_Settings["message"] == nil then TransmogLootHelper_Settings["message"] = "Do you need %item? I'd like to have it for transmog. :)" end
 	if TransmogLootHelper_Settings["collectMode"] == nil then TransmogLootHelper_Settings["collectMode"] = 1 end
 	if TransmogLootHelper_Settings["usableMog"] == nil then TransmogLootHelper_Settings["usableMog"] = true end
-	if TransmogLootHelper_Settings["rarity"] == nil then TransmogLootHelper_Settings["rarity"] = 0 end
+	if TransmogLootHelper_Settings["rarity"] == nil then TransmogLootHelper_Settings["rarity"] = 3 end
 
 	-- Declare session variables
 	app.Hidden = CreateFrame("Frame")
