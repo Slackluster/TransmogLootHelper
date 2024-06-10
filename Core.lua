@@ -778,7 +778,7 @@ function app.UpdateWindow()
 
 	-- If there is loot to process
 	if #app.FilteredLoot >= 1 then
-		-- Custom comparison function based on the beginning of the string (thanks ChatGPT)
+		-- Custom comparison function based on the beginning of the string & a key (thanks ChatGPT)
 		local customSortList = {
 			"|cffe6cc80",	-- Artifact
 			"|cffff8000",	-- Legendary
@@ -789,6 +789,12 @@ function app.UpdateWindow()
 			"|cff9d9d9d",	-- Poor (quantity 0)
 		}
 		local function customSort(a, b)
+			-- Primary sort by playerShort
+			if a.playerShort ~= b.playerShort then
+				return a.playerShort < b.playerShort
+			end
+			
+			-- Secondary sort by item quality
 			for _, v in ipairs(customSortList) do
 				local indexA = string.find(a.item, v, 1, true)
 				local indexB = string.find(b.item, v, 1, true)
@@ -800,7 +806,7 @@ function app.UpdateWindow()
 				end
 			end
 		
-			-- If custom sort index is the same, compare alphabetically
+			-- If custom sort index is the same, compare alphabetically by the remaining part of the item string
 			return string.gsub(a.item, ".-(:%|h)", "") < string.gsub(b.item, ".-(:%|h)", "")
 		end
 
@@ -969,7 +975,7 @@ function app.CreateGeneralAssets()
 	app.CloseButtonTooltip = app.WindowTooltip("Close the window.")
 
 	-- Create Clear button tooltip
-	app.ClearButtonTooltip = app.WindowTooltip("Clear all items.\nHold Shift to skip the confirmation.")
+	app.ClearButtonTooltip = app.WindowTooltip("Clear all items.\nHold Shift to skip confirmation.")
 
 	-- Create corner button tooltip
 	app.CornerButtonTooltip = app.WindowTooltip("Double-click|cffFFFFFF: Autosize to fit the window.")
