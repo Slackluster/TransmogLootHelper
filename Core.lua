@@ -1159,7 +1159,7 @@ function event:CHAT_MSG_LOOT(text, playerName, languageName, channelName, player
 	local itemType = classID.."."..subclassID
 
 	-- Continue only if it's not an item we looted ourselves
-	if unitName == selfName then
+	if unitName ~= selfName then
 		-- Scan the tooltip for the appearance text, localised
 		local function ScanTooltipForAppearanceInfo(itemLinkie, searchString)
 			-- Create a tooltip frame
@@ -1183,7 +1183,7 @@ function event:CHAT_MSG_LOOT(text, playerName, languageName, channelName, player
 		end
 		
 		-- Do stuff depending on if the appearance or source is new
-		-- if ScanTooltipForAppearanceInfo(itemLink, TRANSMOGRIFY_TOOLTIP_APPEARANCE_UNKNOWN) or (ScanTooltipForAppearanceInfo(itemLink, TRANSMOGRIFY_TOOLTIP_ITEM_UNKNOWN_APPEARANCE_KNOWN) and TransmogLootHelper_Settings["collectMode"] == 2) then
+		if ScanTooltipForAppearanceInfo(itemLink, TRANSMOGRIFY_TOOLTIP_APPEARANCE_UNKNOWN) or (ScanTooltipForAppearanceInfo(itemLink, TRANSMOGRIFY_TOOLTIP_ITEM_UNKNOWN_APPEARANCE_KNOWN) and TransmogLootHelper_Settings["collectMode"] == 2) then
 			-- Rarity filter
 			if itemQuality >= TransmogLootHelper_Settings["rarity"] then
 
@@ -1246,13 +1246,13 @@ function event:CHAT_MSG_LOOT(text, playerName, languageName, channelName, player
 				-- Add to filtered loot and update the window
 				app.AddFilteredLoot(itemLink, itemID, itemTexture, playerName, itemType, "Rarity too low")
 			end
-		-- elseif C_Item.IsEquippableItem(itemLink) == true then
-		-- 	-- Ignore necks, rings, trinkets (as they never have a learnable appearance)
-		-- 	if itemType ~= app.Type["General"] or (itemType == app.Type["General"] and itemEquipLoc ~= "INVTYPE_FINGER"	and itemEquipLoc ~= "INVTYPE_TRINKET" and itemEquipLoc ~= "INVTYPE_NECK") then
-		-- 		-- Add to filtered loot and update the window
-		-- 		app.AddFilteredLoot(itemLink, itemID, itemTexture, playerName, itemType, "Known appearance")
-		-- 	end
-		-- end
+		elseif C_Item.IsEquippableItem(itemLink) == true then
+			-- Ignore necks, rings, trinkets (as they never have a learnable appearance)
+			if itemType ~= app.Type["General"] or (itemType == app.Type["General"] and itemEquipLoc ~= "INVTYPE_FINGER"	and itemEquipLoc ~= "INVTYPE_TRINKET" and itemEquipLoc ~= "INVTYPE_NECK") then
+				-- Add to filtered loot and update the window
+				app.AddFilteredLoot(itemLink, itemID, itemTexture, playerName, itemType, "Known appearance")
+			end
+		end
 	else
 		-- Remove if looted by self and update the window
 		app.RemoveLootedItem(itemID)
