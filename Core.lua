@@ -1077,9 +1077,9 @@ end
 -------------------
 
 -- Add to filtered loot and update the window
-function app.AddFilteredLoot(itemLink, itemID, itemTexture, playerName, itemType)
+function app.AddFilteredLoot(itemLink, itemID, itemTexture, playerName, itemType, filterReason)
 	-- Add to filtered loot and update the window
-	app.FilteredLoot[#app.FilteredLoot+1] = { item = itemLink, itemID = itemID, icon = itemTexture, player = playerName, playerShort = "Unusable appearance", color = "ffFFFFFF", itemType = itemType }
+	app.FilteredLoot[#app.FilteredLoot+1] = { item = itemLink, itemID = itemID, icon = itemTexture, player = playerName, playerShort = filterReason, color = "ffFFFFFF", itemType = itemType }
 
 	-- Check if the table exceeds 100 entries
 	if #app.FilteredLoot > 100 then
@@ -1227,17 +1227,17 @@ function event:CHAT_MSG_LOOT(text, playerName, languageName, channelName, player
 					end)
 				elseif C_Item.IsEquippableItem(itemLink) == true then
 					-- Add to filtered loot and update the window
-					app.AddFilteredLoot(itemLink, itemID, itemTexture, playerName, itemType)
+					app.AddFilteredLoot(itemLink, itemID, itemTexture, playerName, itemType, "Unusable transmog")
 				end
 			elseif C_Item.IsEquippableItem(itemLink) == true then
 				-- Add to filtered loot and update the window
-				app.AddFilteredLoot(itemLink, itemID, itemTexture, playerName, itemType)
+				app.AddFilteredLoot(itemLink, itemID, itemTexture, playerName, itemType, "Rarity too low")
 			end
 		elseif C_Item.IsEquippableItem(itemLink) == true then
 			-- Ignore necks, rings, trinkets (as they never have a learnable appearance)
 			if itemType ~= app.Type["General"] or (itemType == app.Type["General"] and itemEquipLoc ~= "INVTYPE_FINGER"	and itemEquipLoc ~= "INVTYPE_TRINKET" and itemEquipLoc ~= "INVTYPE_NECK") then
 				-- Add to filtered loot and update the window
-				app.AddFilteredLoot(itemLink, itemID, itemTexture, playerName, itemType)
+				app.AddFilteredLoot(itemLink, itemID, itemTexture, playerName, itemType, "Known appearance")
 			end
 		end
 	else
