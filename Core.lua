@@ -195,7 +195,7 @@ function event:ADDON_LOADED(addOnName, containsBindings)
 
 			-- Default message
 			if command == "default" then
-				TransmogLootHelper_Settings["message"] = "Do you need %item? I'd like to have it for transmog. :)"
+				TransmogLootHelper_Settings["message"] = "Do you need the %item you looted? If not, I'd like to have it for transmog. :)"
 				app.Print('Message set to: "'..TransmogLootHelper_Settings["message"]..'"')
 			-- Customise message
 			elseif command == "msg" then
