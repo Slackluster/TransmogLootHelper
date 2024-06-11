@@ -829,7 +829,9 @@ function app.Update()
 	local offset = -2
 	if #app.ArmourLoot >= 1 then offset = -16*#app.ArmourLoot end
 	app.Window.Filtered:SetPoint("TOPLEFT", app.Window.Armour, "BOTTOMLEFT", 0, offset)
-	if #app.FilteredLoot >= 1 then
+	if #app.FilteredLoot >= 100 then
+		app.FilteredHeader:SetText("Filtered (100+)")
+	elseif #app.FilteredLoot >= 1 then
 		app.FilteredHeader:SetText("Filtered ("..#app.FilteredLoot..")")
 	else
 		app.FilteredHeader:SetText("Filtered")
