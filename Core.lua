@@ -1187,7 +1187,7 @@ function event:CHAT_MSG_LOOT(text, playerName, languageName, channelName, player
 				local itemCategory = ""
 				local equippable = false
 				-- Check if the item can and should be equipped (armor -> class)
-				if itemType == "4.0" or itemType == "4.1" or itemType == "4.2" or itemType == "4.3" or itemType == "4.4" then
+				if (itemType == "4.0" and equipSlot ~= "INVTYPE_HOLDABLE") or itemType == "4.1" or itemType == "4.2" or itemType == "4.3" or itemType == "4.4" then
 					itemCategory = "armor"
 					if itemType == app.Type[armorClass] or itemType == app.Type["General"] then
 						equippable = true
@@ -1195,7 +1195,7 @@ function event:CHAT_MSG_LOOT(text, playerName, languageName, channelName, player
 				end
 				-- Check if a weapon can be equipped
 				for k, v in pairs(app.Type) do
-					if v == itemType and not (itemType == "4.0" or itemType == "4.1" or itemType == "4.2" or itemType == "4.3" or itemType == "4.4") then
+					if v == itemType and not ((itemType == "4.0" and equipSlot ~= "INVTYPE_HOLDABLE") or itemType == "4.1" or itemType == "4.2" or itemType == "4.3" or itemType == "4.4") then
 						itemCategory = "weapon"
 						for _, v2 in pairs(app.Weapon[k]) do
 							-- Check if the item can and should be equipped (weapon -> spec)
