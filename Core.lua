@@ -171,9 +171,67 @@ function app.InitialiseCore()
 	app.ShowFiltered = false
 	app.RecentlyWhispered = {}
 	app.ClassID = PlayerUtil.GetClassID()
+	app.Flags = {}
+	app.Flags["lastUpdate"] = 0
 
 	-- Enable this CVar, because we need it
 	SetCVar("missingTransmogSourceInItemTooltips", 1)
+end
+
+-- When the AddOn is fully loaded, actually run the components
+function event:ADDON_LOADED(addOnName, containsBindings)
+	if addOnName == appName then
+		app.InitialiseCore()
+		app.CreateWindow()
+		app.Update()
+		app.CreateGeneralAssets()
+		app.Settings()
+
+		-- Slash commands
+		SLASH_PSL1 = "/tlh";
+		function SlashCmdList.PSL(msg, editBox)
+			-- Split message into command and rest
+			local command, rest = msg:match("^(%S*)%s*(.-)$")
+
+			-- Default message
+			if command == "default" then
+				TransmogLootHelper_Settings["message"] = "Do you need %item? I'd like to have it for transmog. :)"
+				app.Print('Message set to: "'..TransmogLootHelper_Settings["message"]..'"')
+			-- Customise message
+			elseif command == "msg" then
+				-- Check if the message is gucci
+				local quotes = false
+				local item = false
+				if string.match(rest, '^".*"$') ~= nil then quotes = true end
+				if string.find(rest, "%%item") ~= nil then item = true end
+				
+				-- Send error messages if not
+				if quotes == false then
+					app.Print('Error: Wrap your message in quotes: "'..TransmogLootHelper_Settings["message"]..'"')
+				elseif item == false then
+					app.Print('Error: Include %item in your message: "'..TransmogLootHelper_Settings["message"]..'"')
+				-- Edit the message if all is gucci
+				else
+					TransmogLootHelper_Settings["message"] = rest:gsub('^"(.*)"$', '%1')
+					app.Print('Message set to: "'..TransmogLootHelper_Settings["message"]..'"')
+				end
+			-- Open settings
+			elseif command == "settings" then
+				app.OpenSettings()
+			-- Reset window positions
+			elseif command == "resetpos" then
+				-- Set the window size and position back to default
+				TransmogLootHelper_Settings["windowPosition"] = { ["left"] = GetScreenWidth()/2-100, ["bottom"] = GetScreenHeight()/2-100, ["width"] = 200, ["height"] = 200, }
+				TransmogLootHelper_Settings["pcWindowPosition"] = TransmogLootHelper_Settings["windowPosition"]
+
+				-- Show the window, which will also run setting its size and position
+				app.Show()
+			-- Toggle window
+			elseif command == "" then
+				app.Toggle()
+			end
+		end
+	end
 end
 
 ------------
@@ -311,7 +369,7 @@ function app.CreateWindow()
 end
 
 -- Update window contents
-function app.UpdateWindow()
+function app.Update()
 	-- Hide existing rows
 	if app.WeaponRow then
 		for i, row in pairs(app.WeaponRow) do
@@ -486,7 +544,7 @@ function app.UpdateWindow()
 					-- Remove the item
 					table.remove(app.WeaponLoot, lootInfo.index)
 					-- And update the window
-					RunNextFrame(app.UpdateWindow)
+					RunNextFrame(app.Update)
 					do return end
 				end
 			end)
@@ -680,7 +738,7 @@ function app.UpdateWindow()
 					-- Remove the item
 					table.remove(app.ArmourLoot, lootInfo.index)
 					-- And update the window
-					RunNextFrame(app.UpdateWindow)
+					RunNextFrame(app.Update)
 					do return end
 				end
 			end)
@@ -867,7 +925,7 @@ function app.UpdateWindow()
 					-- Remove the item
 					table.remove(app.FilteredLoot, lootInfo.index)
 					-- And update the window
-					RunNextFrame(app.UpdateWindow)
+					RunNextFrame(app.Update)
 					do return end
 				end
 			end)
@@ -991,7 +1049,7 @@ function app.Show()
 
 	-- Show the windows
 	app.Window:Show()
-	app.UpdateWindow()
+	app.Update()
 end
 
 -- Toggle window
@@ -1004,135 +1062,65 @@ function app.Toggle()
 	end
 end
 
+-- Clear all entries
 function app.Clear()
 	app.WeaponLoot = {}
 	app.ArmourLoot = {}
 	app.FilteredLoot = {}
-	app.UpdateWindow()
+	app.Update()
 end
 
--- Open settings
-function app.OpenSettings()
-	Settings.OpenToCategory(app.Category:GetID())
+-------------------
+-- ITEM TRACKING --
+-------------------
+
+-- Add to filtered loot and update the window
+function app.AddFilteredLoot(itemLink, itemID, itemTexture, playerName, itemType)
+	-- Add to filtered loot and update the window
+	app.FilteredLoot[#app.FilteredLoot+1] = { item = itemLink, itemID = itemID, icon = itemTexture, player = playerName, playerShort = "Unusable appearance", color = "ffFFFFFF", itemType = itemType }
+
+	-- Check if the table exceeds 100 entries
+	if #app.FilteredLoot > 100 then
+		-- Remove the oldest entry
+		table.remove(app.FilteredLoot, 1)
+	end
+	
+	-- Set when our last update was
+	app.Flags["lastUpdate"] = GetServerTime()
+
+	-- Stagger updating the window
+	C_Timer.After(3, function()
+		-- If it's been at least 2 seconds
+		if GetServerTime() - app.Flags["lastUpdate"] >= 2 then
+			app.Update()
+		end
+	end)
 end
 
--- Settings and minimap icon
-function app.Settings()
-	-- Settings page
-	function app.SettingChanged(_, setting, value)
-		local variable = setting:GetVariable()
-		TransmogLootHelper_Settings[variable] = value
-	end
-
-	local category, layout = Settings.RegisterVerticalLayoutCategory(app.NameLong)
-	Settings.RegisterAddOnCategory(category)
-	app.Category = category
-
-	layout:AddInitializer(CreateSettingsListSectionHeaderInitializer(C_AddOns.GetAddOnMetadata("TransmogLootHelper", "Version")))
-
-	local variable, name, tooltip = "collectMode", "Collection Mode", "Set when "..app.NameShort.." should show new transmog looted by others."
-	local function GetOptions()
-		local container = Settings.CreateControlTextContainer()
-		container:Add(1, "Appearances", "Only show items if they are a new appearance.")
-		container:Add(2, "Sources", "Show items if they are a new source, including for known appearances.")
-		return container:GetData()
-	end
-	local setting = Settings.RegisterAddOnSetting(category, name, variable, Settings.VarType.Number, TransmogLootHelper_Settings[variable])
-	Settings.CreateDropDown(category, setting, GetOptions, tooltip)
-	Settings.SetOnValueChangedCallback(variable, app.SettingChanged)
-
-	local variable, name, tooltip = "usableMog", "Only Usable Transmog", "Only show usable transmog (weapons you can equip, and your armor class)."
-	local setting = Settings.RegisterAddOnSetting(category, name, variable, Settings.VarType.Boolean, TransmogLootHelper_Settings[variable])
-	local parentSetting = Settings.CreateCheckBox(category, setting, tooltip)
-	Settings.SetOnValueChangedCallback(variable, app.SettingChanged)
-
-	local variable, name, tooltip = "rarity", "Rarity", "Set from what quality and up "..app.NameShort.." should show loot."
-	local function GetOptions()
-		local container = Settings.CreateControlTextContainer()
-		container:Add(0, "|cff9d9d9d"..ITEM_QUALITY0_DESC.."|r")
-		container:Add(1, "|cffffffff"..ITEM_QUALITY1_DESC.."|r")
-		container:Add(2, "|cff1eff00"..ITEM_QUALITY2_DESC.."|r")
-		container:Add(3, "|cff0070dd"..ITEM_QUALITY3_DESC.."|r")
-		container:Add(4, "|cffa335ee"..ITEM_QUALITY4_DESC.."|r")
-		return container:GetData()
-	end
-	local setting = Settings.RegisterAddOnSetting(category, name, variable, Settings.VarType.Number, TransmogLootHelper_Settings[variable])
-	Settings.CreateDropDown(category, setting, GetOptions, tooltip)
-	Settings.SetOnValueChangedCallback(variable, app.SettingChanged)
-
-	layout:AddInitializer(CreateSettingsListSectionHeaderInitializer("Information"))
-
-	local variable, name, tooltip = "", "Slash commands", "Type these in chat to use them!"
-	local function GetOptions()
-		local container = Settings.CreateControlTextContainer()
-		container:Add(1, "/tlh", "Toggle the window.")
-		container:Add(2, "/tlh settings", "Open these settings.")
-		container:Add(3, "/tlh resetpos", "Reset the window position.")
-		container:Add(4, "/tlh default", "Set the whisper message to its default.")
-		container:Add(5, "/tlh msg |cff1B9C85message|R", "Customise the whisper message.")
-		return container:GetData()
-	end
-	local setting = Settings.RegisterAddOnSetting(category, name, variable, Settings.VarType.Number, "")
-	Settings.CreateDropDown(category, setting, GetOptions, tooltip)
-
-	--initializer:AddSearchTags
-	--defaults?
-end
-
--- When the AddOn is fully loaded, actually run the components
-function event:ADDON_LOADED(addOnName, containsBindings)
-	if addOnName == appName then
-		app.InitialiseCore()
-		app.CreateWindow()
-		app.UpdateWindow()
-		app.CreateGeneralAssets()
-		app.Settings()
-
-		-- Slash commands
-		SLASH_PSL1 = "/tlh";
-		function SlashCmdList.PSL(msg, editBox)
-			-- Split message into command and rest
-			local command, rest = msg:match("^(%S*)%s*(.-)$")
-
-			-- Default message
-			if command == "default" then
-				TransmogLootHelper_Settings["message"] = "Do you need %item? I'd like to have it for transmog. :)"
-				app.Print('Message set to: "'..TransmogLootHelper_Settings["message"]..'"')
-			-- Customise message
-			elseif command == "msg" then
-				-- Check if the message is gucci
-				local quotes = false
-				local item = false
-				if string.match(rest, '^".*"$') ~= nil then quotes = true end
-				if string.find(rest, "%%item") ~= nil then item = true end
-				
-				-- Send error messages if not
-				if quotes == false then
-					app.Print('Error: Wrap your message in quotes: "'..TransmogLootHelper_Settings["message"]..'"')
-				elseif item == false then
-					app.Print('Error: Include %item in your message: "'..TransmogLootHelper_Settings["message"]..'"')
-				-- Edit the message if all is gucci
-				else
-					TransmogLootHelper_Settings["message"] = rest:gsub('^"(.*)"$', '%1')
-					app.Print('Message set to: "'..TransmogLootHelper_Settings["message"]..'"')
-				end
-			-- Open settings
-			elseif command == "settings" then
-				app.OpenSettings()
-			-- Reset window positions
-			elseif command == "resetpos" then
-				-- Set the window size and position back to default
-				TransmogLootHelper_Settings["windowPosition"] = { ["left"] = GetScreenWidth()/2-100, ["bottom"] = GetScreenHeight()/2-100, ["width"] = 200, ["height"] = 200, }
-				TransmogLootHelper_Settings["pcWindowPosition"] = TransmogLootHelper_Settings["windowPosition"]
-
-				-- Show the window, which will also run setting its size and position
-				app.Show()
-			-- Toggle window
-			elseif command == "" then
-				app.Toggle()
-			end
+-- Remove if looted by self and update the window
+function app.RemoveLootedItem(itemID)
+	for k, v in ipairs(app.WeaponLoot) do
+		if v.itemID == itemID then
+			-- Remove entry from table
+			table.remove(app.WeaponLoot, k)
+			-- Then start this function over, because indexes have shifted
+			RunNextFrame(app.RemoveLootedItem)
+			do return end
 		end
 	end
+
+	for k, v in ipairs(app.ArmourLoot) do
+		if v.itemID == itemID then
+			-- Remove entry from table
+			table.remove(app.ArmourLoot, k)
+			-- Then start this function over, because indexes have shifted
+			RunNextFrame(app.RemoveLootedItem)
+			do return end
+		end
+	end
+
+	-- And update the window
+	app.Update()
 end
 
 -- When an item is looted
@@ -1225,53 +1213,105 @@ function event:CHAT_MSG_LOOT(text, playerName, languageName, channelName, player
 						app.ArmourLoot[#app.ArmourLoot+1] = { item = itemLink, itemID = itemID, icon = itemTexture, player = playerName, playerShort = playerNameShort, color = classColor, recentlyWhispered = false }
 					end
 
-					-- And update the window
-					app.Show()
-					app.UpdateWindow()
+					-- Set when our last update was
+					app.Flags["lastUpdate"] = GetServerTime()
+
+					-- Stagger updating the window
+					C_Timer.After(3, function()
+						-- If it's been at least 2 seconds
+						if GetServerTime() - app.Flags["lastUpdate"] >= 2 then
+							app.Show()
+						end
+					end)
 				elseif C_Item.IsEquippableItem(itemLink) == true then
 					-- Add to filtered loot and update the window
-					app.FilteredLoot[#app.FilteredLoot+1] = { item = itemLink, itemID = itemID, icon = itemTexture, player = playerName, playerShort = "Unusable appearance", color = "ffFFFFFF", itemType = itemType }
-					app.UpdateWindow()
+					app.AddFilteredLoot(itemLink, itemID, itemTexture, playerName, itemType)
 				end
 			elseif C_Item.IsEquippableItem(itemLink) == true then
 				-- Add to filtered loot and update the window
-				app.FilteredLoot[#app.FilteredLoot+1] = { item = itemLink, itemID = itemID, icon = itemTexture, player = playerName, playerShort = "Rarity too low", color = "ffFFFFFF", itemType = itemType }
-				app.UpdateWindow()
+				app.AddFilteredLoot(itemLink, itemID, itemTexture, playerName, itemType)
 			end
 		elseif C_Item.IsEquippableItem(itemLink) == true then
 			-- Ignore necks, rings, trinkets (as they never have a learnable appearance)
 			if itemType ~= app.Type["General"] or (itemType == app.Type["General"] and itemEquipLoc ~= "INVTYPE_FINGER"	and itemEquipLoc ~= "INVTYPE_TRINKET" and itemEquipLoc ~= "INVTYPE_NECK") then
 				-- Add to filtered loot and update the window
-				app.FilteredLoot[#app.FilteredLoot+1] = { item = itemLink, itemID = itemID, icon = itemTexture, player = playerName, playerShort = "Known appearance", color = "ffFFFFFF", itemType = itemType }
-				app.UpdateWindow()
+				app.AddFilteredLoot(itemLink, itemID, itemTexture, playerName, itemType)
 			end
 		end
 	else
-		-- Remove items if looted by self
-		local function removeIfLooted()
-			for k, v in ipairs(app.WeaponLoot) do
-				if v.itemID == itemID then
-					-- Remove entry from table
-					table.remove(app.WeaponLoot, k)
-					-- Then start this function over, because indexes have shifted
-					RunNextFrame(removeIfLooted)
-					do return end
-				end
-			end
-
-			for k, v in ipairs(app.ArmourLoot) do
-				if v.itemID == itemID then
-					-- Remove entry from table
-					table.remove(app.ArmourLoot, k)
-					-- Then start this function over, because indexes have shifted
-					RunNextFrame(removeIfLooted)
-					do return end
-				end
-			end
-
-			-- And update the window
-			app.UpdateWindow()
-		end
-		removeIfLooted()
+		-- Remove if looted by self and update the window
+		app.RemoveLootedItem(itemID)
 	end
+end
+
+--------------
+-- SETTINGS --
+--------------
+
+-- Open settings
+function app.OpenSettings()
+	Settings.OpenToCategory(app.Category:GetID())
+end
+
+-- Settings and minimap icon
+function app.Settings()
+	-- Settings page
+	function app.SettingChanged(_, setting, value)
+		local variable = setting:GetVariable()
+		TransmogLootHelper_Settings[variable] = value
+	end
+
+	local category, layout = Settings.RegisterVerticalLayoutCategory(app.NameLong)
+	Settings.RegisterAddOnCategory(category)
+	app.Category = category
+
+	layout:AddInitializer(CreateSettingsListSectionHeaderInitializer(C_AddOns.GetAddOnMetadata("TransmogLootHelper", "Version")))
+
+	local variable, name, tooltip = "collectMode", "Collection Mode", "Set when "..app.NameShort.." should show new transmog looted by others."
+	local function GetOptions()
+		local container = Settings.CreateControlTextContainer()
+		container:Add(1, "Appearances", "Only show items if they are a new appearance.")
+		container:Add(2, "Sources", "Show items if they are a new source, including for known appearances.")
+		return container:GetData()
+	end
+	local setting = Settings.RegisterAddOnSetting(category, name, variable, Settings.VarType.Number, TransmogLootHelper_Settings[variable])
+	Settings.CreateDropDown(category, setting, GetOptions, tooltip)
+	Settings.SetOnValueChangedCallback(variable, app.SettingChanged)
+
+	local variable, name, tooltip = "usableMog", "Only Usable Transmog", "Only show usable transmog (weapons you can equip, and your armor class)."
+	local setting = Settings.RegisterAddOnSetting(category, name, variable, Settings.VarType.Boolean, TransmogLootHelper_Settings[variable])
+	local parentSetting = Settings.CreateCheckBox(category, setting, tooltip)
+	Settings.SetOnValueChangedCallback(variable, app.SettingChanged)
+
+	local variable, name, tooltip = "rarity", "Rarity", "Set from what quality and up "..app.NameShort.." should show loot."
+	local function GetOptions()
+		local container = Settings.CreateControlTextContainer()
+		container:Add(0, "|cff9d9d9d"..ITEM_QUALITY0_DESC.."|r")
+		container:Add(1, "|cffffffff"..ITEM_QUALITY1_DESC.."|r")
+		container:Add(2, "|cff1eff00"..ITEM_QUALITY2_DESC.."|r")
+		container:Add(3, "|cff0070dd"..ITEM_QUALITY3_DESC.."|r")
+		container:Add(4, "|cffa335ee"..ITEM_QUALITY4_DESC.."|r")
+		return container:GetData()
+	end
+	local setting = Settings.RegisterAddOnSetting(category, name, variable, Settings.VarType.Number, TransmogLootHelper_Settings[variable])
+	Settings.CreateDropDown(category, setting, GetOptions, tooltip)
+	Settings.SetOnValueChangedCallback(variable, app.SettingChanged)
+
+	layout:AddInitializer(CreateSettingsListSectionHeaderInitializer("Information"))
+
+	local variable, name, tooltip = "", "Slash commands", "Type these in chat to use them!"
+	local function GetOptions()
+		local container = Settings.CreateControlTextContainer()
+		container:Add(1, "/tlh", "Toggle the window.")
+		container:Add(2, "/tlh settings", "Open these settings.")
+		container:Add(3, "/tlh resetpos", "Reset the window position.")
+		container:Add(4, "/tlh default", "Set the whisper message to its default.")
+		container:Add(5, "/tlh msg |cff1B9C85message|R", "Customise the whisper message.")
+		return container:GetData()
+	end
+	local setting = Settings.RegisterAddOnSetting(category, name, variable, Settings.VarType.Number, "")
+	Settings.CreateDropDown(category, setting, GetOptions, tooltip)
+
+	--initializer:AddSearchTags
+	--defaults?
 end
