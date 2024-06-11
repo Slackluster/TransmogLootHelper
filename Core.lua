@@ -169,7 +169,6 @@ function app.InitialiseCore()
 	app.ShowWeapons = true
 	app.ShowArmour = true
 	app.ShowFiltered = false
-	app.RecentlyWhispered = {}
 	app.ClassID = PlayerUtil.GetClassID()
 	app.Flags = {}
 	app.Flags["lastUpdate"] = 0
@@ -528,14 +527,21 @@ function app.Update()
 						-- Try write link to chat
 						ChatEdit_InsertLink(lootInfo.item)
 					else
-						if app.WeaponLoot[lootInfo.index].recentlyWhispered == false then
+						if app.WeaponLoot[lootInfo.index].recentlyWhispered == 0 then
 							local msg = string.gsub(TransmogLootHelper_Settings["message"], "%%item", lootInfo.item)
 							SendChatMessage(msg, "WHISPER", "", lootInfo.player)
 
 							-- Add a timeout to prevent spamming
-							app.WeaponLoot[lootInfo.index].recentlyWhispered = true
-							C_Timer.After(30, function() app.WeaponLoot[lootInfo.index].recentlyWhispered = false end)
-						elseif app.WeaponLoot[lootInfo.index].recentlyWhispered == true then
+							local whisperTime = GetServerTime()
+							app.WeaponLoot[lootInfo.index].recentlyWhispered = whisperTime
+							C_Timer.After(30, function()
+								for k, v in ipairs(app.WeaponLoot) do
+									if v.recentlyWhispered == whisperTime then
+										v.recentlyWhispered = 0
+									end
+								end
+							end)
+						elseif app.WeaponLoot[lootInfo.index].recentlyWhispered ~= 0 then
 							app.Print("You may only whisper a player once every 30 seconds per item.")
 						end
 					end
@@ -722,14 +728,21 @@ function app.Update()
 						-- Try write link to chat
 						ChatEdit_InsertLink(lootInfo.item)
 					else
-						if app.ArmourLoot[lootInfo.index].recentlyWhispered == false then
+						if app.ArmourLoot[lootInfo.index].recentlyWhispered == 0 then
 							local msg = string.gsub(TransmogLootHelper_Settings["message"], "%%item", lootInfo.item)
 							SendChatMessage(msg, "WHISPER", "", lootInfo.player)
 
 							-- Add a timeout to prevent spamming
-							app.ArmourLoot[lootInfo.index].recentlyWhispered = true
-							C_Timer.After(30, function() app.ArmourLoot[lootInfo.index].recentlyWhispered = false end)
-						elseif app.ArmourLoot[lootInfo.index].recentlyWhispered == true then
+							local whisperTime = GetServerTime()
+							app.ArmourLoot[lootInfo.index].recentlyWhispered = whisperTime
+							C_Timer.After(30, function()
+								for k, v in ipairs(app.ArmourLoot) do
+									if v.recentlyWhispered == whisperTime then
+										v.recentlyWhispered = 0
+									end
+								end
+							end)
+						elseif app.ArmourLoot[lootInfo.index].recentlyWhispered ~= 0 then
 							app.Print("You may only whisper a player once every 30 seconds per item.")
 						end
 					end
@@ -1146,7 +1159,7 @@ function event:CHAT_MSG_LOOT(text, playerName, languageName, channelName, player
 	local itemType = classID.."."..subclassID
 
 	-- Continue only if it's not an item we looted ourselves
-	if unitName ~= selfName then
+	if unitName == selfName then
 		-- Scan the tooltip for the appearance text, localised
 		local function ScanTooltipForAppearanceInfo(itemLinkie, searchString)
 			-- Create a tooltip frame
@@ -1170,7 +1183,7 @@ function event:CHAT_MSG_LOOT(text, playerName, languageName, channelName, player
 		end
 		
 		-- Do stuff depending on if the appearance or source is new
-		if ScanTooltipForAppearanceInfo(itemLink, TRANSMOGRIFY_TOOLTIP_APPEARANCE_UNKNOWN) or (ScanTooltipForAppearanceInfo(itemLink, TRANSMOGRIFY_TOOLTIP_ITEM_UNKNOWN_APPEARANCE_KNOWN) and TransmogLootHelper_Settings["collectMode"] == 2) then
+		-- if ScanTooltipForAppearanceInfo(itemLink, TRANSMOGRIFY_TOOLTIP_APPEARANCE_UNKNOWN) or (ScanTooltipForAppearanceInfo(itemLink, TRANSMOGRIFY_TOOLTIP_ITEM_UNKNOWN_APPEARANCE_KNOWN) and TransmogLootHelper_Settings["collectMode"] == 2) then
 			-- Rarity filter
 			if itemQuality >= TransmogLootHelper_Settings["rarity"] then
 
@@ -1210,9 +1223,9 @@ function event:CHAT_MSG_LOOT(text, playerName, languageName, channelName, player
 				if ((TransmogLootHelper_Settings["usableMog"] == true and equippable == true) or TransmogLootHelper_Settings["usableMog"] == false) and itemCategory ~= nil then
 					-- Write it into our loot variable
 					if itemCategory == "weapon" then
-						app.WeaponLoot[#app.WeaponLoot+1] = { item = itemLink, itemID = itemID, icon = itemTexture, player = playerName, playerShort = playerNameShort, color = classColor, recentlyWhispered = false }
+						app.WeaponLoot[#app.WeaponLoot+1] = { item = itemLink, itemID = itemID, icon = itemTexture, player = playerName, playerShort = playerNameShort, color = classColor, recentlyWhispered = 0 }
 					elseif itemCategory == "armor" then
-						app.ArmourLoot[#app.ArmourLoot+1] = { item = itemLink, itemID = itemID, icon = itemTexture, player = playerName, playerShort = playerNameShort, color = classColor, recentlyWhispered = false }
+						app.ArmourLoot[#app.ArmourLoot+1] = { item = itemLink, itemID = itemID, icon = itemTexture, player = playerName, playerShort = playerNameShort, color = classColor, recentlyWhispered = 0 }
 					end
 
 					-- Set when our last update was
@@ -1233,13 +1246,13 @@ function event:CHAT_MSG_LOOT(text, playerName, languageName, channelName, player
 				-- Add to filtered loot and update the window
 				app.AddFilteredLoot(itemLink, itemID, itemTexture, playerName, itemType, "Rarity too low")
 			end
-		elseif C_Item.IsEquippableItem(itemLink) == true then
-			-- Ignore necks, rings, trinkets (as they never have a learnable appearance)
-			if itemType ~= app.Type["General"] or (itemType == app.Type["General"] and itemEquipLoc ~= "INVTYPE_FINGER"	and itemEquipLoc ~= "INVTYPE_TRINKET" and itemEquipLoc ~= "INVTYPE_NECK") then
-				-- Add to filtered loot and update the window
-				app.AddFilteredLoot(itemLink, itemID, itemTexture, playerName, itemType, "Known appearance")
-			end
-		end
+		-- elseif C_Item.IsEquippableItem(itemLink) == true then
+		-- 	-- Ignore necks, rings, trinkets (as they never have a learnable appearance)
+		-- 	if itemType ~= app.Type["General"] or (itemType == app.Type["General"] and itemEquipLoc ~= "INVTYPE_FINGER"	and itemEquipLoc ~= "INVTYPE_TRINKET" and itemEquipLoc ~= "INVTYPE_NECK") then
+		-- 		-- Add to filtered loot and update the window
+		-- 		app.AddFilteredLoot(itemLink, itemID, itemTexture, playerName, itemType, "Known appearance")
+		-- 	end
+		-- end
 	else
 		-- Remove if looted by self and update the window
 		app.RemoveLootedItem(itemID)
