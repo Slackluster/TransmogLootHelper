@@ -1151,7 +1151,7 @@ function event:CHAT_MSG_LOOT(text, playerName, languageName, channelName, player
 	local itemString = string.match(text, "(|cff.-|h%[.-%]|h)")
 
 	-- Get item info
-	local _, itemLink, itemQuality, _, _, _, _, _, _, itemTexture, _, classID, subclassID = C_Item.GetItemInfo(itemString)
+	local _, itemLink, itemQuality, _, _, _, _, _, itemEquipLoc, itemTexture, _, classID, subclassID = C_Item.GetItemInfo(itemString)
 	local itemID = C_Item.GetItemInfoInstant(itemString)
 	local itemType = classID.."."..subclassID
 
@@ -1239,9 +1239,12 @@ function event:CHAT_MSG_LOOT(text, playerName, languageName, channelName, player
 				app.UpdateWindow()
 			end
 		elseif C_Item.IsEquippableItem(itemLink) == true then
-			-- Add to filtered loot and update the window
-			app.FilteredLoot[#app.FilteredLoot+1] = { item = itemLink, itemID = itemID, icon = itemTexture, player = playerName, playerShort = "Known appearance", color = "ffFFFFFF", itemType = itemType }
-			app.UpdateWindow()
+			-- Ignore necks, rings, trinkets (as they never have a learnable appearance)
+			if itemType ~= app.Type["General"] or (itemType == app.Type["General"] and itemEquipLoc ~= "INVTYPE_FINGER"	and itemEquipLoc ~= "INVTYPE_TRINKET" and itemEquipLoc ~= "INVTYPE_NECK") then
+				-- Add to filtered loot and update the window
+				app.FilteredLoot[#app.FilteredLoot+1] = { item = itemLink, itemID = itemID, icon = itemTexture, player = playerName, playerShort = "Known appearance", color = "ffFFFFFF", itemType = itemType }
+				app.UpdateWindow()
+			end
 		end
 	else
 		-- Remove items if looted by self
