@@ -1114,23 +1114,17 @@ end
 
 -- Remove if looted by self and update the window
 function app.RemoveLootedItem(itemID)
-	for k, v in ipairs(app.WeaponLoot) do
-		if v.itemID == itemID then
+	for k = #app.WeaponLoot, 1, -1 do
+		if app.WeaponLoot[k].itemID == itemID then
 			-- Remove entry from table
 			table.remove(app.WeaponLoot, k)
-			-- Then start this function over, because indexes have shifted
-			RunNextFrame(app.RemoveLootedItem)
-			do return end
 		end
 	end
 
-	for k, v in ipairs(app.ArmourLoot) do
-		if v.itemID == itemID then
+	for k = #app.ArmourLoot, 1, -1 do
+		if app.ArmourLoot[k].itemID == itemID then
 			-- Remove entry from table
 			table.remove(app.ArmourLoot, k)
-			-- Then start this function over, because indexes have shifted
-			RunNextFrame(app.RemoveLootedItem)
-			do return end
 		end
 	end
 
