@@ -1089,6 +1089,25 @@ end
 -- ITEM TRACKING --
 -------------------
 
+-- Scan the tooltip for the appearance text, localised
+function app.GetAppearanceInfo(itemLinkie, searchString)
+	-- Get our tooltip information
+	local tooltip = C_TooltipInfo.GetHyperlink(itemLinkie)
+
+	-- Read all the lines as plain text
+	if tooltip["lines"] then
+		for k, v in ipairs(tooltip["lines"]) do
+			-- And if the transmog text line was found
+			if v["leftText"] and v["leftText"]:find(searchString) then
+				return true
+			end
+		end
+	end
+
+	-- Otherwise
+	return false
+end
+
 -- Add to filtered loot and update the window
 function app.AddFilteredLoot(itemLink, itemID, itemTexture, playerName, itemType, filterReason)
 	-- Add to filtered loot and update the window
@@ -1153,31 +1172,9 @@ function event:CHAT_MSG_LOOT(text, playerName, languageName, channelName, player
 	local itemType = classID.."."..subclassID
 
 	-- Continue only if it's not an item we looted ourselves
-	if unitName ~= selfName then
-		-- Scan the tooltip for the appearance text, localised
-		local function ScanTooltipForAppearanceInfo(itemLinkie, searchString)
-			-- Create a tooltip frame
-			local tooltip = CreateFrame("GameTooltip", "MyScanningTooltip", UIParent, "GameTooltipTemplate")
-		
-			-- Set the tooltip to show the item
-			tooltip:SetOwner(UIParent, "ANCHOR_NONE")
-			tooltip:SetHyperlink(itemLinkie)
-		
-			-- Scan each line of the tooltip for the search string
-			for i = 1, tooltip:NumLines() do
-				local text = _G["MyScanningTooltipTextLeft" .. i]:GetText()
-				if text and text:find(searchString) then
-					tooltip:Hide()  -- Hide the tooltip after finding the string
-					return true
-				end
-			end
-		
-			tooltip:Hide()  -- Hide the tooltip if the string was not found
-			return false
-		end
-		
+	if unitName == selfName then		
 		-- Do stuff depending on if the appearance or source is new
-		if ScanTooltipForAppearanceInfo(itemLink, TRANSMOGRIFY_TOOLTIP_APPEARANCE_UNKNOWN) or (ScanTooltipForAppearanceInfo(itemLink, TRANSMOGRIFY_TOOLTIP_ITEM_UNKNOWN_APPEARANCE_KNOWN) and TransmogLootHelper_Settings["collectMode"] == 2) then
+		if app.GetAppearanceInfo(itemLink, TRANSMOGRIFY_TOOLTIP_APPEARANCE_UNKNOWN) or (app.GetAppearanceInfo(itemLink, TRANSMOGRIFY_TOOLTIP_ITEM_UNKNOWN_APPEARANCE_KNOWN) and TransmogLootHelper_Settings["collectMode"] == 2) then
 			-- Rarity filter
 			if itemQuality >= TransmogLootHelper_Settings["rarity"] then
 
