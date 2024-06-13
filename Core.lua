@@ -1172,7 +1172,7 @@ function event:CHAT_MSG_LOOT(text, playerName, languageName, channelName, player
 	local itemType = classID.."."..subclassID
 
 	-- Continue only if it's not an item we looted ourselves
-	if unitName == selfName then		
+	if unitName ~= selfName then		
 		-- Do stuff depending on if the appearance or source is new
 		if app.GetAppearanceInfo(itemLink, TRANSMOGRIFY_TOOLTIP_APPEARANCE_UNKNOWN) or (app.GetAppearanceInfo(itemLink, TRANSMOGRIFY_TOOLTIP_ITEM_UNKNOWN_APPEARANCE_KNOWN) and TransmogLootHelper_Settings["collectMode"] == 2) then
 			-- Rarity filter
