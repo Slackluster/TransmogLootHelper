@@ -1222,13 +1222,18 @@ function event:CHAT_MSG_LOOT(text, playerName, languageName, channelName, player
 					-- Set when our last update was
 					app.Flags["lastUpdate"] = GetServerTime()
 
-					-- Stagger updating the window
-					C_Timer.After(3, function()
-						-- If it's been at least 2 seconds
-						if GetServerTime() - app.Flags["lastUpdate"] >= 2 then
-							app.Show()
-						end
-					end)
+					-- Stagger opening the window
+					local function staggerOpen()
+						C_Timer.After(2, function()
+							-- If it's been at least 2 seconds
+							if GetServerTime() - app.Flags["lastUpdate"] >= 2 then
+								app.Show()
+							else
+								-- Just in case we run into an issue where it would never open/update
+								RunNextFrame(staggerOpen)
+							end
+						end)
+					end
 				elseif C_Item.IsEquippableItem(itemLink) == true then
 					-- Add to filtered loot and update the window
 					app.AddFilteredLoot(itemLink, itemID, itemTexture, playerName, itemType, "Unusable transmog")
@@ -1321,3 +1326,10 @@ function app.Settings()
 	--initializer:AddSearchTags
 	--defaults?
 end
+
+-- elseif event == "TRANSMOG_COLLECTION_SOURCE_ADDED" then
+--     local sourceInfo = C_TransmogCollection.GetSourceInfo(arg1)
+--     if sourceInfo then
+--       --print(sourceInfo.itemID)
+--       checkID(sourceInfo.itemID)
+--     end
