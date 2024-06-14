@@ -520,6 +520,12 @@ function app.Update()
 					GameTooltip:SetPoint("RIGHT", app.Window, "LEFT")
 				end
 				GameTooltip:SetHyperlink(lootInfo.item)
+
+				-- If the player who looted the item learned an appearance from it
+				if app.WeaponLoot[lootInfo.index].icon == app.iconMog then
+					GameTooltip:AddLine("|T"..app.iconMog..":0|t "..lootInfo.playerShort.." collected an appearance from this item")
+				end
+				
 				GameTooltip:Show()
 			end)
 			row:SetScript("OnLeave", function()
@@ -721,6 +727,12 @@ function app.Update()
 					GameTooltip:SetPoint("RIGHT", app.Window, "LEFT")
 				end
 				GameTooltip:SetHyperlink(lootInfo.item)
+
+				-- If the player who looted the item learned an appearance from it
+				if app.ArmourLoot[lootInfo.index].icon == app.iconMog then
+					GameTooltip:AddLine("|T"..app.iconMog..":0|t "..lootInfo.playerShort.." learned an appearance from this item.")
+				end
+
 				GameTooltip:Show()
 			end)
 			row:SetScript("OnLeave", function()
@@ -1047,7 +1059,7 @@ end
 -- Create assets
 function app.CreateGeneralAssets()
 	-- Create Weapons/Armour header tooltip
-	app.LootHeaderTooltip = app.WindowTooltip("|RLMB|cffFFFFFF: Whisper and request the item.\n|RShift+LMB|cffFFFFFF: Link the item.\n|RRMB|cffFFFFFF: Remove the item.\n|T"..app.iconMog..":0|t: Player learned an appearance from this item.")
+	app.LootHeaderTooltip = app.WindowTooltip("|RLMB|cffFFFFFF: Whisper and request the item.\n|RShift+LMB|cffFFFFFF: Link the item.\n|RRMB|cffFFFFFF: Remove the item.")
 
 	-- Create Filtered header tooltip
 	app.FilteredHeaderTooltip = app.WindowTooltip("|RLMB|cffFFFFFF: Debug this item.\n|RShift+LMB|cffFFFFFF: Link the item.\n|RRMB|cffFFFFFF: Remove the item.")
