@@ -22,6 +22,7 @@ event:SetScript("OnEvent", function(self, event, ...)
 end)
 event:RegisterEvent("ADDON_LOADED")
 event:RegisterEvent("CHAT_MSG_LOOT")
+event:RegisterEvent("TRANSMOG_COLLECTION_SOURCE_ADDED")
 
 -- Table dump
 function app.Dump(table)
@@ -1222,7 +1223,7 @@ function event:CHAT_MSG_LOOT(text, playerName, languageName, channelName, player
 					-- Set when our last update was
 					app.Flags["lastUpdate"] = GetServerTime()
 
-					-- Stagger opening the window
+					-- Stagger opening/updating the window
 					local function staggerOpen()
 						C_Timer.After(2, function()
 							-- If it's been at least 2 seconds
@@ -1249,10 +1250,16 @@ function event:CHAT_MSG_LOOT(text, playerName, languageName, channelName, player
 				app.AddFilteredLoot(itemLink, itemID, itemTexture, playerName, itemType, "Known appearance")
 			end
 		end
-	else
-		-- Remove if looted by self and update the window
-		app.RemoveLootedItem(itemID)
 	end
+end
+
+-- When a new appearance is learned
+function event:TRANSMOG_COLLECTION_SOURCE_ADDED(itemModifiedAppearanceID)
+	-- Grab the itemID
+	local itemID = C_TransmogCollection.GetSourceInfo(itemModifiedAppearanceID).itemID
+
+	-- And remove it from our own list
+	app.RemoveLootedItem(itemID)
 end
 
 --------------
@@ -1326,10 +1333,3 @@ function app.Settings()
 	--initializer:AddSearchTags
 	--defaults?
 end
-
--- elseif event == "TRANSMOG_COLLECTION_SOURCE_ADDED" then
---     local sourceInfo = C_TransmogCollection.GetSourceInfo(arg1)
---     if sourceInfo then
---       --print(sourceInfo.itemID)
---       checkID(sourceInfo.itemID)
---     end
