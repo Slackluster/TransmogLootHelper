@@ -1280,32 +1280,38 @@ function event:TRANSMOG_COLLECTION_SOURCE_ADDED(itemModifiedAppearanceID)
 	-- Remove it from our own list
 	app.RemoveLootedItem(itemID)
 
+	-- Compile the info we're going to share with other TLH users
+	local message = "itemID:"..itemID
+
 	-- Share it with other TLH users
 	if IsInRaid(2) or IsInGroup(2) then
 		-- Share with instance group first
-		ChatThrottleLib:SendAddonMessage("NORMAL", "TransmogLootHelp", tostring(itemID), "INSTANCE_CHAT")
+		ChatThrottleLib:SendAddonMessage("NORMAL", "TransmogLootHelp", message, "INSTANCE_CHAT")
 	elseif IsInRaid() then
 		-- If not in an instance group, share it with the raid
-		ChatThrottleLib:SendAddonMessage("NORMAL", "TransmogLootHelp", tostring(itemID), "RAID")
+		ChatThrottleLib:SendAddonMessage("NORMAL", "TransmogLootHelp", message, "RAID")
 	elseif IsInGroup() then
 		-- If not in a raid group, share it with the party
-		ChatThrottleLib:SendAddonMessage("NORMAL", "TransmogLootHelp", tostring(itemID), "PARTY")
+		ChatThrottleLib:SendAddonMessage("NORMAL", "TransmogLootHelp", message, "PARTY")
 	end
 end
 
 function event:CHAT_MSG_ADDON(prefix, text, channel, sender, target, zoneChannelID, localID, name, instanceID)
 	-- If it's our message
 	if prefix == "TransmogLootHelp" then
+		-- Extract the info from the message
+		local itemID = tonumber(text:match("itemID:(%d+)"))
+
 		-- Check if it exists in our tables
 		for k, v in ipairs(app.WeaponLoot) do
-			if v.player == sender and v.itemID == tonumber(text) then
+			if v.player == sender and v.itemID == itemID then
 				-- And if it does, mark it as new transmog for the looter
 				app.WeaponLoot[k].icon = app.iconMog
 			end
 		end
 
 		for k, v in ipairs(app.ArmourLoot) do
-			if v.player == sender and v.itemID == tonumber(text) then
+			if v.player == sender and v.itemID == itemID then
 				-- And if it does, mark it as new transmog for the looter
 				app.ArmourLoot[k].icon = app.iconMog
 			end
