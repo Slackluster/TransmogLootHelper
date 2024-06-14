@@ -180,8 +180,6 @@ function app.InitialiseCore()
 
 	-- Register our AddOn communications channel
 	C_ChatInfo.RegisterAddonMessagePrefix("TransmogLootHelp")
-
-	table.insert(app.ArmourLoot, { item = "|cff0070dd|Hitem:184733::::::::70:::::|h[Wristclamps of Remorse]|h|r", itemID = 184733, icon = 3447983, player = "Taggie-Bloodscalp", playerShort = "Taggie", color = "ffF48CBA", recentlyWhispered = 0 })
 end
 
 -- When the AddOn is fully loaded, actually run the components
@@ -730,7 +728,7 @@ function app.Update()
 
 				-- If the player who looted the item learned an appearance from it
 				if app.ArmourLoot[lootInfo.index].icon == app.iconMog then
-					GameTooltip:AddLine("|T"..app.iconMog..":0|t "..lootInfo.playerShort.." learned an appearance from this item.")
+					GameTooltip:AddLine("|T"..app.iconMog..":0|t "..lootInfo.playerShort.." collected an appearance from this item")
 				end
 
 				GameTooltip:Show()
