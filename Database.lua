@@ -11,6 +11,9 @@ app.Name = "Transmog Loot Helper"
 app.NameLong = app.Colour("Transmog Loot Helper")
 app.NameShort = app.Colour("TLH")
 
+-- Used textures
+app.iconMog = "Interface\\AddOns\\TransmogLootHelper\\assets\\newMog.blp"
+
 -- Type.Subtype to item type
 app.Type = {}
 app.Type["General"] = "4.0"	-- Neck, Ring, Trinket, Off-Hand (and shirts and tabards, yay)

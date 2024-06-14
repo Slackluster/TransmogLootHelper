@@ -21,6 +21,7 @@ event:SetScript("OnEvent", function(self, event, ...)
 	end
 end)
 event:RegisterEvent("ADDON_LOADED")
+event:RegisterEvent("CHAT_MSG_ADDON")
 event:RegisterEvent("CHAT_MSG_LOOT")
 event:RegisterEvent("TRANSMOG_COLLECTION_SOURCE_ADDED")
 
@@ -171,11 +172,16 @@ function app.InitialiseCore()
 	app.ShowArmour = true
 	app.ShowFiltered = false
 	app.ClassID = PlayerUtil.GetClassID()
-	app.Flags = {}
-	app.Flags["lastUpdate"] = 0
+	app.Flag = {}
+	app.Flag["lastUpdate"] = 0
 
 	-- Enable this CVar, because we need it
 	SetCVar("missingTransmogSourceInItemTooltips", 1)
+
+	-- Register our AddOn communications channel
+	C_ChatInfo.RegisterAddonMessagePrefix("TransmogLootHelp")
+
+	table.insert(app.ArmourLoot, { item = "|cff0070dd|Hitem:184733::::::::70:::::|h[Wristclamps of Remorse]|h|r", itemID = 184733, icon = 3447983, player = "Taggie-Bloodscalp", playerShort = "Taggie", color = "ffF48CBA", recentlyWhispered = 0 })
 end
 
 -- When the AddOn is fully loaded, actually run the components
@@ -1041,7 +1047,7 @@ end
 -- Create assets
 function app.CreateGeneralAssets()
 	-- Create Weapons/Armour header tooltip
-	app.LootHeaderTooltip = app.WindowTooltip("|RLMB|cffFFFFFF: Whisper and request the item.\n|RShift+LMB|cffFFFFFF: Link the item.\n|RRMB|cffFFFFFF: Remove the item.")
+	app.LootHeaderTooltip = app.WindowTooltip("|RLMB|cffFFFFFF: Whisper and request the item.\n|RShift+LMB|cffFFFFFF: Link the item.\n|RRMB|cffFFFFFF: Remove the item.\n|T"..app.iconMog..":0|t: Player learned an appearance from this item.")
 
 	-- Create Filtered header tooltip
 	app.FilteredHeaderTooltip = app.WindowTooltip("|RLMB|cffFFFFFF: Debug this item.\n|RShift+LMB|cffFFFFFF: Link the item.\n|RRMB|cffFFFFFF: Remove the item.")
@@ -1121,18 +1127,18 @@ function app.AddFilteredLoot(itemLink, itemID, itemTexture, playerName, itemType
 	end
 	
 	-- Set when our last update was
-	app.Flags["lastUpdate"] = GetServerTime()
+	app.Flag["lastUpdate"] = GetServerTime()
 
 	-- Stagger updating the window
 	C_Timer.After(3, function()
 		-- If it's been at least 2 seconds
-		if GetServerTime() - app.Flags["lastUpdate"] >= 2 then
+		if GetServerTime() - app.Flag["lastUpdate"] >= 2 then
 			app.Update()
 		end
 	end)
 end
 
--- Remove if looted by self and update the window
+-- Remove item and update the window
 function app.RemoveLootedItem(itemID)
 	for k = #app.WeaponLoot, 1, -1 do
 		if app.WeaponLoot[k].itemID == itemID then
@@ -1150,6 +1156,22 @@ function app.RemoveLootedItem(itemID)
 
 	-- And update the window
 	app.Update()
+end
+
+-- Delay open/update window
+function app.Stagger(t)
+	-- Set when our last update was
+	app.Flag["lastUpdate"] = GetServerTime()
+
+	C_Timer.After(t, function()
+		-- If it's been at least t seconds
+		if GetServerTime() - app.Flag["lastUpdate"] >= t then
+			app.Show()
+		else
+			-- Just in case we run into an issue where it would never open/update
+			RunNextFrame(app.Stagger(t))
+		end
+	end)
 end
 
 -- When an item is looted
@@ -1220,21 +1242,8 @@ function event:CHAT_MSG_LOOT(text, playerName, languageName, channelName, player
 						app.ArmourLoot[#app.ArmourLoot+1] = { item = itemLink, itemID = itemID, icon = itemTexture, player = playerName, playerShort = playerNameShort, color = classColor, recentlyWhispered = 0 }
 					end
 
-					-- Set when our last update was
-					app.Flags["lastUpdate"] = GetServerTime()
-
-					-- Stagger opening/updating the window
-					local function staggerOpen()
-						C_Timer.After(2, function()
-							-- If it's been at least 2 seconds
-							if GetServerTime() - app.Flags["lastUpdate"] >= 2 then
-								app.Show()
-							else
-								-- Just in case we run into an issue where it would never open/update
-								RunNextFrame(staggerOpen)
-							end
-						end)
-					end
+					-- Stagger show/update the window
+					app.Stagger(2)
 				elseif C_Item.IsEquippableItem(itemLink) == true then
 					-- Add to filtered loot and update the window
 					app.AddFilteredLoot(itemLink, itemID, itemTexture, playerName, itemType, "Unusable transmog")
@@ -1258,8 +1267,43 @@ function event:TRANSMOG_COLLECTION_SOURCE_ADDED(itemModifiedAppearanceID)
 	-- Grab the itemID
 	local itemID = C_TransmogCollection.GetSourceInfo(itemModifiedAppearanceID).itemID
 
-	-- And remove it from our own list
+	-- Remove it from our own list
 	app.RemoveLootedItem(itemID)
+
+	-- Share it with other TLH users
+	if IsInRaid(2) or IsInGroup(2) then
+		-- Share with instance group first
+		ChatThrottleLib:SendAddonMessage("NORMAL", "TransmogLootHelp", tostring(itemID), "INSTANCE_CHAT")
+	elseif IsInRaid() then
+		-- If not in an instance group, share it with the raid
+		ChatThrottleLib:SendAddonMessage("NORMAL", "TransmogLootHelp", tostring(itemID), "RAID")
+	elseif IsInGroup() then
+		-- If not in a raid group, share it with the party
+		ChatThrottleLib:SendAddonMessage("NORMAL", "TransmogLootHelp", tostring(itemID), "PARTY")
+	end
+end
+
+function event:CHAT_MSG_ADDON(prefix, text, channel, sender, target, zoneChannelID, localID, name, instanceID)
+	-- If it's our message
+	if prefix == "TransmogLootHelp" then
+		-- Check if it exists in our tables
+		for k, v in ipairs(app.WeaponLoot) do
+			if v.player == sender and v.itemID == tonumber(text) then
+				-- And if it does, mark it as new transmog for the looter
+				app.WeaponLoot[k].icon = app.iconMog
+			end
+		end
+
+		for k, v in ipairs(app.ArmourLoot) do
+			if v.player == sender and v.itemID == tonumber(text) then
+				-- And if it does, mark it as new transmog for the looter
+				app.ArmourLoot[k].icon = app.iconMog
+			end
+		end
+
+		-- Stagger show/update the window
+		app.Stagger(2)
+	end
 end
 
 --------------
