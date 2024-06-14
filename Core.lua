@@ -654,7 +654,7 @@ function app.Update()
 
 	-- Update header
 	local offset = -2
-	if #app.WeaponLoot >= 1 then offset = -16*#app.WeaponLoot end
+	if #app.WeaponLoot >= 1 and app.ShowWeapons == true then offset = -16*#app.WeaponLoot end
 	app.Window.Armour:SetPoint("TOPLEFT", app.Window.Weapons, "BOTTOMLEFT", 0, offset)
 	if #app.ArmourLoot >= 1 then
 		app.ArmourHeader:SetText("Armor ("..#app.ArmourLoot..")")
@@ -857,7 +857,7 @@ function app.Update()
 
 	-- Update header
 	local offset = -2
-	if #app.ArmourLoot >= 1 then offset = -16*#app.ArmourLoot end
+	if #app.ArmourLoot >= 1 and app.ShowArmour == true then offset = -16*#app.ArmourLoot end
 	app.Window.Filtered:SetPoint("TOPLEFT", app.Window.Armour, "BOTTOMLEFT", 0, offset)
 	if #app.FilteredLoot >= 100 then
 		app.FilteredHeader:SetText("Filtered (100+)")
