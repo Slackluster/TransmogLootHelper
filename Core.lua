@@ -155,11 +155,16 @@ end
 function app.InitialiseCore()
 	-- Declare SavedVariables
 	if not TransmogLootHelper_Settings then TransmogLootHelper_Settings = {} end
-	if TransmogLootHelper_Settings["windowPosition"] == nil then TransmogLootHelper_Settings["windowPosition"] = { ["left"] = 1295, ["bottom"] = 836, ["width"] = 200, ["height"] = 200, } end
-	if TransmogLootHelper_Settings["message"] == nil then TransmogLootHelper_Settings["message"] = "Do you need the %item you looted? If not, I'd like to have it for transmog. :)" end
+	
+	-- Enable default user settings
+	if TransmogLootHelper_Settings["hide"] == nil then TransmogLootHelper_Settings["hide"] = false end
+	if TransmogLootHelper_Settings["minimapIcon"] == nil then TransmogLootHelper_Settings["minimapIcon"] = true end
 	if TransmogLootHelper_Settings["collectMode"] == nil then TransmogLootHelper_Settings["collectMode"] = 1 end
 	if TransmogLootHelper_Settings["usableMog"] == nil then TransmogLootHelper_Settings["usableMog"] = true end
 	if TransmogLootHelper_Settings["rarity"] == nil then TransmogLootHelper_Settings["rarity"] = 3 end
+	-- Hidden
+	if TransmogLootHelper_Settings["message"] == nil then TransmogLootHelper_Settings["message"] = "Do you need the %item you looted? If not, I'd like to have it for transmog. :)" end
+	if TransmogLootHelper_Settings["windowPosition"] == nil then TransmogLootHelper_Settings["windowPosition"] = { ["left"] = 1295, ["bottom"] = 836, ["width"] = 200, ["height"] = 200, } end
 
 	-- Declare session variables
 	app.Hidden = CreateFrame("Frame")
@@ -1447,8 +1452,61 @@ function app.OpenSettings()
 	Settings.OpenToCategory(app.Category:GetID())
 end
 
+-- AddOn Compartment Click
+function TransmogLootHelper_Click(self, button)
+	if button == "LeftButton" then
+		app.Toggle()
+	elseif button == "RightButton" then
+		app.OpenSettings()
+	end
+end
+
+-- AddOn Compartment Enter
+function TransmogLootHelper_Enter(self, button)
+	GameTooltip:ClearLines()
+	GameTooltip:SetOwner(type(self) ~= "string" and self or button, "ANCHOR_LEFT")
+	GameTooltip:AddLine(app.NameLong.."\nLMB|cffFFFFFF: Toggle the window\n|RRMB|cffFFFFFF: Show the settings|R")
+	GameTooltip:Show()
+end
+
+-- AddOn Compartment Leave
+function TransmogLootHelper_Leave()
+	GameTooltip:Hide()
+end
+
 -- Settings and minimap icon
 function app.Settings()
+	-- Minimap button
+	local miniButton = LibStub("LibDataBroker-1.1"):NewDataObject("TransmogLootHelper", {
+		type = "data source",
+		text = app.NameLong,
+		icon = "Interface\\AddOns\\TransmogLootHelper\\assets\\tlh_icon",
+		
+		OnClick = function(self, button)
+			if button == "LeftButton" then
+				app.Toggle()
+			elseif button == "RightButton" then
+				app.OpenSettings()
+			end
+		end,
+		
+		OnTooltipShow = function(tooltip)
+			if not tooltip or not tooltip.AddLine then return end
+			tooltip:AddLine(app.NameLong.."\nLMB|cffFFFFFF: Toggle the window\n|RRMB|cffFFFFFF: Show the settings|R")
+		end,
+	})
+					
+	local icon = LibStub("LibDBIcon-1.0", true)
+	icon:Register("TransmogLootHelper", miniButton, TransmogLootHelper_Settings)
+
+	if TransmogLootHelper_Settings["minimapIcon"] == true then
+		TransmogLootHelper_Settings["hide"] = false
+		icon:Show("TransmogLootHelper")
+	else
+		TransmogLootHelper_Settings["hide"] = true
+		icon:Hide("TransmogLootHelper")
+	end
+
 	-- Settings page
 	function app.SettingChanged(_, setting, value)
 		local variable = setting:GetVariable()
@@ -1460,6 +1518,20 @@ function app.Settings()
 	app.Category = category
 
 	layout:AddInitializer(CreateSettingsListSectionHeaderInitializer(C_AddOns.GetAddOnMetadata("TransmogLootHelper", "Version")))
+
+	local variable, name, tooltip = "minimapIcon", "Show minimap icon", "Show the minimap icon. If you disable this, "..app.NameShort.." is still available from the AddOn Compartment."
+	local setting = Settings.RegisterAddOnSetting(category, name, variable, Settings.VarType.Boolean, TransmogLootHelper_Settings[variable])
+	Settings.CreateCheckBox(category, setting, tooltip)
+	Settings.SetOnValueChangedCallback(variable, app.SettingChanged)
+	Settings.SetOnValueChangedCallback(variable, function()
+		if TransmogLootHelper_Settings["minimapIcon"] == true then
+			TransmogLootHelper_Settings["hide"] = false
+			icon:Show("TransmogLootHelper")
+		else
+			TransmogLootHelper_Settings["hide"] = true
+			icon:Hide("TransmogLootHelper")
+		end
+	end)
 
 	local variable, name, tooltip = "collectMode", "Collection Mode", "Set when "..app.NameShort.." should show new transmog looted by others."
 	local function GetOptions()
