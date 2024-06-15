@@ -1106,6 +1106,24 @@ end
 -- ITEM TRACKING --
 -------------------
 
+-- Delay open/update window
+function app.Stagger(t)
+	C_Timer.After(t, function()
+		-- If it's been at least t seconds
+		if GetServerTime() - app.Flag["lastUpdate"] >= t then
+			app.Show()
+		-- Otherwise, check one more time with double delay
+		else
+			C_Timer.After(t, function()
+				-- If it's been at least t seconds
+				if GetServerTime() - app.Flag["lastUpdate"] >= t then
+					app.Show()
+				end
+			end)
+		end
+	end)
+end
+
 -- Scan the tooltip for the appearance text, localised
 function app.GetAppearanceInfo(itemLinkie, searchString)
 	-- Get our tooltip information
@@ -1136,16 +1154,9 @@ function app.AddFilteredLoot(itemLink, itemID, itemTexture, playerName, itemType
 		table.remove(app.FilteredLoot, 1)
 	end
 	
-	-- Set when our last update was
+	-- Stagger show/update the window
 	app.Flag["lastUpdate"] = GetServerTime()
-
-	-- Stagger updating the window
-	C_Timer.After(3, function()
-		-- If it's been at least 2 seconds
-		if GetServerTime() - app.Flag["lastUpdate"] >= 2 then
-			app.Update()
-		end
-	end)
+	app.Stagger(2)
 end
 
 -- Remove item and update the window
@@ -1166,22 +1177,6 @@ function app.RemoveLootedItem(itemID)
 
 	-- And update the window
 	app.Update()
-end
-
--- Delay open/update window
-function app.Stagger(t)
-	-- Set when our last update was
-	app.Flag["lastUpdate"] = GetServerTime()
-
-	C_Timer.After(t, function()
-		-- If it's been at least t seconds
-		if GetServerTime() - app.Flag["lastUpdate"] >= t then
-			app.Show()
-		else
-			-- Just in case we run into an issue where it would never open/update
-			RunNextFrame(app.Stagger(t))
-		end
-	end)
 end
 
 -- When an item is looted
@@ -1253,6 +1248,7 @@ function event:CHAT_MSG_LOOT(text, playerName, languageName, channelName, player
 					end
 
 					-- Stagger show/update the window
+					app.Flag["lastUpdate"] = GetServerTime()
 					app.Stagger(2)
 				elseif C_Item.IsEquippableItem(itemLink) == true then
 					-- Add to filtered loot and update the window
@@ -1296,6 +1292,7 @@ function event:TRANSMOG_COLLECTION_SOURCE_ADDED(itemModifiedAppearanceID)
 	end
 end
 
+-- When we receive information over the addon comms
 function event:CHAT_MSG_ADDON(prefix, text, channel, sender, target, zoneChannelID, localID, name, instanceID)
 	-- If it's our message
 	if prefix == "TransmogLootHelp" then
@@ -1318,6 +1315,7 @@ function event:CHAT_MSG_ADDON(prefix, text, channel, sender, target, zoneChannel
 		end
 
 		-- Stagger show/update the window
+		app.Flag["lastUpdate"] = GetServerTime()
 		app.Stagger(2)
 	end
 end
