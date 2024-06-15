@@ -173,6 +173,7 @@ function app.InitialiseCore()
 	app.ShowArmour = true
 	app.ShowFiltered = false
 	app.ClassID = PlayerUtil.GetClassID()
+	app.Whispered = {}
 	app.Flag = {}
 	app.Flag["lastUpdate"] = 0
 
@@ -520,9 +521,28 @@ function app.Update()
 				end
 				GameTooltip:SetHyperlink(lootInfo.item)
 
+				-- Check if empty line has been added
+				local emptyLine = false
+
 				-- If the player who looted the item learned an appearance from it
 				if app.WeaponLoot[lootInfo.index].icon == app.iconMog then
-					GameTooltip:AddLine("|T"..app.iconMog..":0|t "..lootInfo.playerShort.." collected an appearance from this item")
+					GameTooltip:AddLine(" ")
+					emptyLine = true
+					GameTooltip:AddLine("|T"..app.iconMog..":0|t |c"..lootInfo.color..lootInfo.playerShort.."|R collected an appearance from this item")
+				end
+
+				-- Show how many times the player has been whispered by TLH users
+				local count = 0
+				if app.Whispered[lootInfo.player] then
+					count = app.Whispered[lootInfo.player]
+				end
+				if count >= 1 and emptyLine == false then
+					GameTooltip:AddLine(" ")
+				end
+				if count == 1 then
+					GameTooltip:AddLine("|c"..lootInfo.color..lootInfo.playerShort.."|R has been whispered by "..app.NameShort.." users "..count.." time")
+				elseif count > 1 then
+					GameTooltip:AddLine("|c"..lootInfo.color..lootInfo.playerShort.."|R has been whispered by "..app.NameShort.." users "..count.." times")
 				end
 				
 				GameTooltip:Show()
@@ -540,8 +560,12 @@ function app.Update()
 						ChatEdit_InsertLink(lootInfo.item)
 					else
 						if app.WeaponLoot[lootInfo.index].recentlyWhispered == 0 then
+							-- Send whisper message
 							local msg = string.gsub(TransmogLootHelper_Settings["message"], "%%item", lootInfo.item)
 							SendChatMessage(msg, "WHISPER", "", lootInfo.player)
+							-- Share with TLH users that we whispered this player
+							local message = "player:"..lootInfo.player
+							app.SendAddonMessage(message)
 
 							-- Add a timeout to prevent spamming
 							local whisperTime = GetServerTime()
@@ -727,9 +751,28 @@ function app.Update()
 				end
 				GameTooltip:SetHyperlink(lootInfo.item)
 
+				-- Check if empty line has been added
+				local emptyLine = false
+
 				-- If the player who looted the item learned an appearance from it
 				if app.ArmourLoot[lootInfo.index].icon == app.iconMog then
-					GameTooltip:AddLine("|T"..app.iconMog..":0|t "..lootInfo.playerShort.." collected an appearance from this item")
+					GameTooltip:AddLine(" ")
+					emptyLine = true
+					GameTooltip:AddLine("|T"..app.iconMog..":0|t |c"..lootInfo.color..lootInfo.playerShort.."|R collected an appearance from this item")
+				end
+
+				-- Show how many times the player has been whispered by TLH users
+				local count = 0
+				if app.Whispered[lootInfo.player] then
+					count = app.Whispered[lootInfo.player]
+				end
+				if count >= 1 and emptyLine == false then
+					GameTooltip:AddLine(" ")
+				end
+				if count == 1 then
+					GameTooltip:AddLine("|c"..lootInfo.color..lootInfo.playerShort.."|R has been whispered by "..app.NameShort.." users "..count.." time")
+				elseif count > 1 then
+					GameTooltip:AddLine("|c"..lootInfo.color..lootInfo.playerShort.."|R has been whispered by "..app.NameShort.." users "..count.." times")
 				end
 
 				GameTooltip:Show()
@@ -747,8 +790,12 @@ function app.Update()
 						ChatEdit_InsertLink(lootInfo.item)
 					else
 						if app.ArmourLoot[lootInfo.index].recentlyWhispered == 0 then
+							-- Send whisper message
 							local msg = string.gsub(TransmogLootHelper_Settings["message"], "%%item", lootInfo.item)
 							SendChatMessage(msg, "WHISPER", "", lootInfo.player)
+							-- Share with TLH users that we whispered this player
+							local message = "player:"..lootInfo.player
+							app.SendAddonMessage(message)
 
 							-- Add a timeout to prevent spamming
 							local whisperTime = GetServerTime()
@@ -1321,7 +1368,7 @@ function event:CHAT_MSG_ADDON(prefix, text, channel, sender, target, zoneChannel
 	-- If it's our message
 	if prefix == "TransmogLootHelp" then
 		-- ItemID
-		local itemID = tonumber(text:match("itemID:(%d+)"))
+		local itemID = tonumber(text:match("itemID:(.+)"))
 		if itemID then
 			-- Check if it exists in our tables
 			for k, v in ipairs(app.WeaponLoot) do
@@ -1371,6 +1418,22 @@ function event:CHAT_MSG_ADDON(prefix, text, channel, sender, target, zoneChannel
 					end
 				end
 			end
+		end
+
+		-- Player
+		local player = text:match("player:(.+)")
+		if player then
+			-- Add the user to our table, if it doesn't exist there yet
+			if app.Whispered[player] == nil then
+				app.Whispered[player] = 0
+			end
+
+			-- Add +1 to the amount of times this player has been whispered by TLH users
+			for k, v in pairs(app.Whispered) do
+				if k == player then
+					app.Whispered[k] = app.Whispered[k] + 1
+				end
+			end		
 		end
 	end
 end
