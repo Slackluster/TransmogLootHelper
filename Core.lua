@@ -307,7 +307,7 @@ function app.CreateWindow()
 	app.Window.Corner = corner
 
 	-- Close button
-	local close = CreateFrame("Button", "pslOptionCloseButton", app.Window, "UIPanelCloseButton")
+	local close = CreateFrame("Button", "", app.Window, "UIPanelCloseButton")
 	close:SetPoint("TOPRIGHT", app.Window, "TOPRIGHT", 2, 2)
 	close:SetScript("OnClick", function()
 		app.Window:Hide()
@@ -319,9 +319,28 @@ function app.CreateWindow()
 		app.CloseButtonTooltip:Hide()
 	end)
 
+	-- Settings button
+	app.SettingsButton = CreateFrame("Button", "", app.Window, "UIPanelCloseButton")
+	app.SettingsButton:SetPoint("TOPRIGHT", close, "TOPLEFT", -2, 0)
+	app.SettingsButton:SetNormalTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\button-settings.blp")
+	app.SettingsButton:GetNormalTexture():SetTexCoord(39/256, 75/256, 1/128, 38/128)
+	app.SettingsButton:SetDisabledTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\button-settings.blp")
+	app.SettingsButton:GetDisabledTexture():SetTexCoord(39/256, 75/256, 41/128, 78/128)
+	app.SettingsButton:SetPushedTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\button-settings.blp")
+	app.SettingsButton:GetPushedTexture():SetTexCoord(39/256, 75/256, 81/128, 118/128)
+	app.SettingsButton:SetScript("OnClick", function()
+		app.OpenSettings()
+	end)
+	app.SettingsButton:SetScript("OnEnter", function()
+		app.WindowTooltipShow(app.SettingsButtonTooltip)
+	end)
+	app.SettingsButton:SetScript("OnLeave", function()
+		app.SettingsButtonTooltip:Hide()
+	end)
+
 	-- Clear button
-	app.ClearButton = CreateFrame("Button", "pslOptionClearButton", app.Window, "UIPanelCloseButton")
-	app.ClearButton:SetPoint("TOPRIGHT", close, "TOPLEFT", -2, 0)
+	app.ClearButton = CreateFrame("Button", "", app.Window, "UIPanelCloseButton")
+	app.ClearButton:SetPoint("TOPRIGHT", app.SettingsButton, "TOPLEFT", -2, 0)
 	app.ClearButton:SetNormalTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\button-clear.blp")
 	app.ClearButton:GetNormalTexture():SetTexCoord(39/256, 75/256, 1/128, 38/128)
 	app.ClearButton:SetDisabledTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\button-clear.blp")
@@ -1110,19 +1129,22 @@ end
 -- Create assets
 function app.CreateGeneralAssets()
 	-- Create Weapons/Armour header tooltip
-	app.LootHeaderTooltip = app.WindowTooltip("|RLMB|cffFFFFFF: Whisper and request the item.\n|RShift+LMB|cffFFFFFF: Link the item.\n|RShift+RMB|cffFFFFFF: Remove the item.")
+	app.LootHeaderTooltip = app.WindowTooltip("|RLMB|cffFFFFFF: Whisper and request the item\n|RShift+LMB|cffFFFFFF: Link the item\n|RShift+RMB|cffFFFFFF: Remove the item")
 
 	-- Create Filtered header tooltip
-	app.FilteredHeaderTooltip = app.WindowTooltip("|RLMB|cffFFFFFF: Debug this item.\n|RShift+LMB|cffFFFFFF: Link the item.\n|RShift+RMB|cffFFFFFF: Remove the item.")
+	app.FilteredHeaderTooltip = app.WindowTooltip("|RLMB|cffFFFFFF: Debug this item\n|RShift+LMB|cffFFFFFF: Link the item\n|RShift+RMB|cffFFFFFF: Remove the item")
 
 	-- Create Close button tooltip
-	app.CloseButtonTooltip = app.WindowTooltip("Close the window.")
+	app.CloseButtonTooltip = app.WindowTooltip("Close the window")
+
+	-- Create Settings button tooltip
+	app.SettingsButtonTooltip = app.WindowTooltip("Open the settings")
 
 	-- Create Clear button tooltip
-	app.ClearButtonTooltip = app.WindowTooltip("Clear all items.\nHold Shift to skip confirmation.")
+	app.ClearButtonTooltip = app.WindowTooltip("Clear all items\nHold Shift to skip confirmation")
 
 	-- Create corner button tooltip
-	app.CornerButtonTooltip = app.WindowTooltip("Double-click|cffFFFFFF: Autosize to fit the window.")
+	app.CornerButtonTooltip = app.WindowTooltip("Double-click|cffFFFFFF: Autosize to fit the window")
 end
 
 -- Show window
