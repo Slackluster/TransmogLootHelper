@@ -250,6 +250,19 @@ end
 -- WINDOW --
 ------------
 
+-- Move the window
+function app.MoveWindow()
+	if TransmogLootHelper_Settings["windowLocked"] then
+		-- Highlight the Unlock button
+		app.UnlockButton:LockHighlight()
+	else
+		-- Start moving the window, and hide any visible tooltips
+		app.Window:StartMoving()
+		GameTooltip:ClearLines()
+		GameTooltip:Hide()
+	end
+end
+
 -- Save the window position and size
 function app.SaveWindow()
 	-- Stop highlighting the unlock button
@@ -286,17 +299,7 @@ function app.CreateWindow()
 	app.Window:SetResizable(true)
 	app.Window:SetResizeBounds(140, 140, 600, 600)
 	app.Window:RegisterForDrag("LeftButton")
-	app.Window:SetScript("OnDragStart", function()
-		if TransmogLootHelper_Settings["windowLocked"] then
-			-- Highlight the Unlock button
-			app.UnlockButton:LockHighlight()
-		else
-			-- Start moving the window, and hide any visible tooltips
-			app.Window:StartMoving()
-			GameTooltip:ClearLines()
-			GameTooltip:Hide()
-		end
-	end)
+	app.Window:SetScript("OnDragStart", function() app.MoveWindow() end)
 	app.Window:SetScript("OnDragStop", function() app.SaveWindow() end)
 	app.Window:Hide()
 
@@ -504,11 +507,7 @@ function app.Update()
 		app.Window.Weapons:SetPoint("RIGHT", app.Window.Child)
 		app.Window.Weapons:RegisterForDrag("LeftButton")
 		app.Window.Weapons:SetHighlightTexture("Interface\\QuestFrame\\UI-QuestTitleHighlight", "ADD")
-		app.Window.Weapons:SetScript("OnDragStart", function()
-			app.Window:StartMoving()
-			GameTooltip:ClearLines()
-			GameTooltip:Hide()
-		end)
+		app.Window.Weapons:SetScript("OnDragStart", function() app.MoveWindow() end)
 		app.Window.Weapons:SetScript("OnDragStop", function() app.SaveWindow() end)
 		app.Window.Weapons:SetScript("OnEnter", function()
 			app.WindowTooltipShow(app.LootHeaderTooltip)
@@ -589,11 +588,7 @@ function app.Update()
 			row:SetHighlightTexture("Interface\\QuestFrame\\UI-QuestTitleHighlight", "ADD")
 			row:RegisterForDrag("LeftButton")
 			row:RegisterForClicks("AnyDown")
-			row:SetScript("OnDragStart", function()
-				app.Window:StartMoving()
-				GameTooltip:ClearLines()
-				GameTooltip:Hide()
-			end)
+			row:SetScript("OnDragStart", function() app.MoveWindow() end)
 			row:SetScript("OnDragStop", function() app.SaveWindow() end)
 			row:SetScript("OnEnter", function()
 				-- Show item tooltip if hovering over the actual row
@@ -731,11 +726,7 @@ function app.Update()
 		app.Window.Armour:SetPoint("RIGHT", app.Window.Child)
 		app.Window.Armour:RegisterForDrag("LeftButton")
 		app.Window.Armour:SetHighlightTexture("Interface\\QuestFrame\\UI-QuestTitleHighlight", "ADD")
-		app.Window.Armour:SetScript("OnDragStart", function()
-			app.Window:StartMoving()
-			GameTooltip:ClearLines()
-			GameTooltip:Hide()
-		end)
+		app.Window.Armour:SetScript("OnDragStart", function() app.MoveWindow() end)
 		app.Window.Armour:SetScript("OnDragStop", function() app.SaveWindow() end)
 		app.Window.Armour:SetScript("OnEnter", function()
 			app.WindowTooltipShow(app.LootHeaderTooltip)
@@ -819,11 +810,7 @@ function app.Update()
 			row:SetHighlightTexture("Interface\\QuestFrame\\UI-QuestTitleHighlight", "ADD")
 			row:RegisterForDrag("LeftButton")
 			row:RegisterForClicks("AnyDown")
-			row:SetScript("OnDragStart", function()
-				app.Window:StartMoving()
-				GameTooltip:ClearLines()
-				GameTooltip:Hide()
-			end)
+			row:SetScript("OnDragStart", function() app.MoveWindow() end)
 			row:SetScript("OnDragStop", function() app.SaveWindow() end)
 			row:SetScript("OnEnter", function()
 				-- Show item tooltip if hovering over the actual row
@@ -961,11 +948,7 @@ function app.Update()
 		app.Window.Filtered:SetPoint("RIGHT", app.Window.Child)
 		app.Window.Filtered:RegisterForDrag("LeftButton")
 		app.Window.Filtered:SetHighlightTexture("Interface\\QuestFrame\\UI-QuestTitleHighlight", "ADD")
-		app.Window.Filtered:SetScript("OnDragStart", function()
-			app.Window:StartMoving()
-			GameTooltip:ClearLines()
-			GameTooltip:Hide()
-		end)
+		app.Window.Filtered:SetScript("OnDragStart", function() app.MoveWindow() end)
 		app.Window.Filtered:SetScript("OnDragStop", function() app.SaveWindow() end)
 		app.Window.Filtered:SetScript("OnEnter", function()
 			app.WindowTooltipShow(app.FilteredHeaderTooltip)
@@ -1053,11 +1036,7 @@ function app.Update()
 			row:SetHighlightTexture("Interface\\QuestFrame\\UI-QuestTitleHighlight", "ADD")
 			row:RegisterForDrag("LeftButton")
 			row:RegisterForClicks("AnyDown")
-			row:SetScript("OnDragStart", function()
-				app.Window:StartMoving()
-				GameTooltip:ClearLines()
-				GameTooltip:Hide()
-			end)
+			row:SetScript("OnDragStart", function() app.MoveWindow() end)
 			row:SetScript("OnDragStop", function() app.SaveWindow() end)
 			row:SetScript("OnEnter", function()
 				-- Show item tooltip if hovering over the actual row
