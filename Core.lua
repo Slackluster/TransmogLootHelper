@@ -1339,7 +1339,7 @@ function app.AddFilteredLoot(itemLink, itemID, itemTexture, playerName, itemType
 	
 	-- Stagger show/update the window
 	app.Flag["lastUpdate"] = GetServerTime()
-	app.Stagger(2, false)
+	app.Stagger(1, false)
 end
 
 -- Remove item and update the window
@@ -1432,7 +1432,7 @@ function event:CHAT_MSG_LOOT(text, playerName, languageName, channelName, player
 
 					-- Stagger show/update the window
 					app.Flag["lastUpdate"] = GetServerTime()
-					app.Stagger(2, true)
+					app.Stagger(1, true)
 				elseif C_Item.IsEquippableItem(itemLink) == true then
 					-- Add to filtered loot and update the window
 					app.AddFilteredLoot(itemLink, itemID, itemTexture, playerName, itemType, "Unusable transmog")
@@ -1514,7 +1514,7 @@ function event:CHAT_MSG_ADDON(prefix, text, channel, sender, target, zoneChannel
 
 			-- Stagger show/update the window
 			app.Flag["lastUpdate"] = GetServerTime()
-			app.Stagger(2, false)
+			app.Stagger(1, false)
 		end
 
 		-- Version
