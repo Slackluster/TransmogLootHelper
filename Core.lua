@@ -23,6 +23,7 @@ end)
 event:RegisterEvent("ADDON_LOADED")
 event:RegisterEvent("CHAT_MSG_ADDON")
 event:RegisterEvent("CHAT_MSG_LOOT")
+event:RegisterEvent("GROUP_JOINED")
 event:RegisterEvent("TRANSMOG_COLLECTION_SOURCE_ADDED")
 
 -- Table dump
@@ -1187,6 +1188,21 @@ function app.RemoveLootedItem(itemID)
 	app.Update()
 end
 
+-- Send information to other TLH users
+function app.SendAddonMessage(message)
+	-- Check which channel to use
+	if IsInRaid(2) or IsInGroup(2) then
+		-- Share with instance group first
+		ChatThrottleLib:SendAddonMessage("NORMAL", "TransmogLootHelp", message, "INSTANCE_CHAT")
+	elseif IsInRaid() then
+		-- If not in an instance group, share it with the raid
+		ChatThrottleLib:SendAddonMessage("NORMAL", "TransmogLootHelp", message, "RAID")
+	elseif IsInGroup() then
+		-- If not in a raid group, share it with the party
+		ChatThrottleLib:SendAddonMessage("NORMAL", "TransmogLootHelp", message, "PARTY")
+	end
+end
+
 -- When an item is looted
 function event:CHAT_MSG_LOOT(text, playerName, languageName, channelName, playerName2, specialFlags, zoneChannelID, channelIndex, channelBaseName, languageID, lineID, guid, bnSenderID, isMobile, isSubtitle, hideSenderInLetterbox, supressRaidIcons)
 	-- Player name
@@ -1284,47 +1300,78 @@ function event:TRANSMOG_COLLECTION_SOURCE_ADDED(itemModifiedAppearanceID)
 	-- Remove it from our own list
 	app.RemoveLootedItem(itemID)
 
-	-- Compile the info we're going to share with other TLH users
+	-- Share the itemID with other TLH users
 	local message = "itemID:"..itemID
+	app.SendAddonMessage(message)
+end
 
-	-- Share it with other TLH users
-	if IsInRaid(2) or IsInGroup(2) then
-		-- Share with instance group first
-		ChatThrottleLib:SendAddonMessage("NORMAL", "TransmogLootHelp", message, "INSTANCE_CHAT")
-	elseif IsInRaid() then
-		-- If not in an instance group, share it with the raid
-		ChatThrottleLib:SendAddonMessage("NORMAL", "TransmogLootHelp", message, "RAID")
-	elseif IsInGroup() then
-		-- If not in a raid group, share it with the party
-		ChatThrottleLib:SendAddonMessage("NORMAL", "TransmogLootHelp", message, "PARTY")
-	end
+-----------------
+-- ADDON COMMS --
+-----------------
+
+-- When joining a group
+function event:GROUP_JOINED(category, partyGUID)
+	-- Share our AddOn version with other users
+	local message = "version:"..C_AddOns.GetAddOnMetadata("TransmogLootHelper", "Version")
+	app.SendAddonMessage(message)
 end
 
 -- When we receive information over the addon comms
 function event:CHAT_MSG_ADDON(prefix, text, channel, sender, target, zoneChannelID, localID, name, instanceID)
 	-- If it's our message
 	if prefix == "TransmogLootHelp" then
-		-- Extract the info from the message
+		-- ItemID
 		local itemID = tonumber(text:match("itemID:(%d+)"))
-
-		-- Check if it exists in our tables
-		for k, v in ipairs(app.WeaponLoot) do
-			if v.player == sender and v.itemID == itemID then
-				-- And if it does, mark it as new transmog for the looter
-				app.WeaponLoot[k].icon = app.iconMog
+		if itemID then
+			-- Check if it exists in our tables
+			for k, v in ipairs(app.WeaponLoot) do
+				if v.player == sender and v.itemID == itemID then
+					-- And if it does, mark it as new transmog for the looter
+					app.WeaponLoot[k].icon = app.iconMog
+				end
 			end
+
+			for k, v in ipairs(app.ArmourLoot) do
+				if v.player == sender and v.itemID == itemID then
+					-- And if it does, mark it as new transmog for the looter
+					app.ArmourLoot[k].icon = app.iconMog
+				end
+			end
+
+			-- Stagger show/update the window
+			app.Flag["lastUpdate"] = GetServerTime()
+			app.Stagger(2, false)
 		end
 
-		for k, v in ipairs(app.ArmourLoot) do
-			if v.player == sender and v.itemID == itemID then
-				-- And if it does, mark it as new transmog for the looter
-				app.ArmourLoot[k].icon = app.iconMog
+		-- Version
+		local version = text:match("version:(.+)")
+		if version then
+			if version ~= "@project-version@" then
+				-- Extract the interface and version from this
+				local expansion, major, minor, iteration = version:match("v(%d+)%.(%d+)%.(%d+)%-(%d%d%d)")
+				expansion = string.format("%02d", expansion)
+				major = string.format("%02d", major)
+				minor = string.format("%02d", minor)
+				local otherGameVersion = tonumber(expansion..major..minor)
+				local otherAddonVersion = tonumber(iteration)
+
+				-- Do the same for our local version
+				local localVersion = C_AddOns.GetAddOnMetadata("TransmogLootHelper", "Version")
+				if localVersion ~= "@project-version@" then
+					expansion, major, minor, iteration = localVersion:match("v(%d+)%.(%d+)%.(%d+)%-(%d%d%d)")
+					expansion = string.format("%02d", expansion)
+					major = string.format("%02d", major)
+					minor = string.format("%02d", minor)
+					local localGameVersion = tonumber(expansion..major..minor)
+					local localAddonVersion = tonumber(iteration)
+
+					-- Now compare our versions
+					if otherGameVersion > localGameVersion or (otherGameVersion == localGameVersion and otherAddonVersion > localAddonVersion) then
+						app.Print("There is a newer version of "..app.NameLong.." available: "..version)
+					end
+				end
 			end
 		end
-
-		-- Stagger show/update the window
-		app.Flag["lastUpdate"] = GetServerTime()
-		app.Stagger(2, false)
 	end
 end
 
