@@ -1107,17 +1107,25 @@ end
 -------------------
 
 -- Delay open/update window
-function app.Stagger(t)
+function app.Stagger(t, show)
 	C_Timer.After(t, function()
 		-- If it's been at least t seconds
 		if GetServerTime() - app.Flag["lastUpdate"] >= t then
-			app.Show()
+			if show then
+				app.Show()
+			else
+				app.Update()
+			end
 		-- Otherwise, check one more time with double delay
 		else
 			C_Timer.After(t, function()
 				-- If it's been at least t seconds
 				if GetServerTime() - app.Flag["lastUpdate"] >= t then
-					app.Show()
+					if show then
+						app.Show()
+					else
+						app.Update()
+					end
 				end
 			end)
 		end
@@ -1156,7 +1164,7 @@ function app.AddFilteredLoot(itemLink, itemID, itemTexture, playerName, itemType
 	
 	-- Stagger show/update the window
 	app.Flag["lastUpdate"] = GetServerTime()
-	app.Stagger(2)
+	app.Stagger(2, false)
 end
 
 -- Remove item and update the window
@@ -1249,7 +1257,7 @@ function event:CHAT_MSG_LOOT(text, playerName, languageName, channelName, player
 
 					-- Stagger show/update the window
 					app.Flag["lastUpdate"] = GetServerTime()
-					app.Stagger(2)
+					app.Stagger(2, true)
 				elseif C_Item.IsEquippableItem(itemLink) == true then
 					-- Add to filtered loot and update the window
 					app.AddFilteredLoot(itemLink, itemID, itemTexture, playerName, itemType, "Unusable transmog")
@@ -1316,7 +1324,7 @@ function event:CHAT_MSG_ADDON(prefix, text, channel, sender, target, zoneChannel
 
 		-- Stagger show/update the window
 		app.Flag["lastUpdate"] = GetServerTime()
-		app.Stagger(2)
+		app.Stagger(2, false)
 	end
 end
 
