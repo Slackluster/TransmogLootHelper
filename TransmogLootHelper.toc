@@ -1,5 +1,5 @@
 ## Interface: 100207
-## Title: |cffC69B6DTransmog Loot Helper|R
+## Title: |cffC69B6DTransmog Loot Helper|r
 ## Author: Sluimerstand
 ## IconTexture: Interface\AddOns\TransmogLootHelper\assets\tlh_icon.blp
 ## AddonCompartmentFunc: TransmogLootHelper_Click
