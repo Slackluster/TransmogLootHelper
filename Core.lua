@@ -557,8 +557,8 @@ function app.Update()
 							app.Print("You may only whisper a player once every 30 seconds per item.")
 						end
 					end
-				-- RMB
-				elseif button == "RightButton" then
+				-- Shift+RMB
+				elseif button == "RightButton" and IsShiftKeyDown() then
 					-- Remove the item
 					table.remove(app.WeaponLoot, lootInfo.index)
 					-- And update the window
@@ -764,8 +764,8 @@ function app.Update()
 							app.Print("You may only whisper a player once every 30 seconds per item.")
 						end
 					end
-				-- RMB
-				elseif button == "RightButton" then
+				-- Shift+RMB
+				elseif button == "RightButton" and IsShiftKeyDown() then
 					-- Remove the item
 					table.remove(app.ArmourLoot, lootInfo.index)
 					-- And update the window
@@ -953,8 +953,8 @@ function app.Update()
 					else
 						app.Print("Debugging "..lootInfo.item.."  |  Filter reason: "..lootInfo.playerShort.."  |  itemType: "..lootInfo.itemType.."  |  Looted by: "..lootInfo.player)
 					end
-				-- RMB
-				elseif button == "RightButton" then
+				-- Shift+RMB
+				elseif button == "RightButton" and IsShiftKeyDown() then
 					-- Remove the item
 					table.remove(app.FilteredLoot, lootInfo.index)
 					-- And update the window
@@ -1058,10 +1058,10 @@ end
 -- Create assets
 function app.CreateGeneralAssets()
 	-- Create Weapons/Armour header tooltip
-	app.LootHeaderTooltip = app.WindowTooltip("|RLMB|cffFFFFFF: Whisper and request the item.\n|RShift+LMB|cffFFFFFF: Link the item.\n|RRMB|cffFFFFFF: Remove the item.")
+	app.LootHeaderTooltip = app.WindowTooltip("|RLMB|cffFFFFFF: Whisper and request the item.\n|RShift+LMB|cffFFFFFF: Link the item.\n|RShift+RMB|cffFFFFFF: Remove the item.")
 
 	-- Create Filtered header tooltip
-	app.FilteredHeaderTooltip = app.WindowTooltip("|RLMB|cffFFFFFF: Debug this item.\n|RShift+LMB|cffFFFFFF: Link the item.\n|RRMB|cffFFFFFF: Remove the item.")
+	app.FilteredHeaderTooltip = app.WindowTooltip("|RLMB|cffFFFFFF: Debug this item.\n|RShift+LMB|cffFFFFFF: Link the item.\n|RShift+RMB|cffFFFFFF: Remove the item.")
 
 	-- Create Close button tooltip
 	app.CloseButtonTooltip = app.WindowTooltip("Close the window.")
@@ -1188,21 +1188,6 @@ function app.RemoveLootedItem(itemID)
 	app.Update()
 end
 
--- Send information to other TLH users
-function app.SendAddonMessage(message)
-	-- Check which channel to use
-	if IsInRaid(2) or IsInGroup(2) then
-		-- Share with instance group first
-		ChatThrottleLib:SendAddonMessage("NORMAL", "TransmogLootHelp", message, "INSTANCE_CHAT")
-	elseif IsInRaid() then
-		-- If not in an instance group, share it with the raid
-		ChatThrottleLib:SendAddonMessage("NORMAL", "TransmogLootHelp", message, "RAID")
-	elseif IsInGroup() then
-		-- If not in a raid group, share it with the party
-		ChatThrottleLib:SendAddonMessage("NORMAL", "TransmogLootHelp", message, "PARTY")
-	end
-end
-
 -- When an item is looted
 function event:CHAT_MSG_LOOT(text, playerName, languageName, channelName, playerName2, specialFlags, zoneChannelID, channelIndex, channelBaseName, languageID, lineID, guid, bnSenderID, isMobile, isSubtitle, hideSenderInLetterbox, supressRaidIcons)
 	-- Player name
@@ -1308,6 +1293,21 @@ end
 -----------------
 -- ADDON COMMS --
 -----------------
+
+-- Send information to other TLH users
+function app.SendAddonMessage(message)
+	-- Check which channel to use
+	if IsInRaid(2) or IsInGroup(2) then
+		-- Share with instance group first
+		ChatThrottleLib:SendAddonMessage("NORMAL", "TransmogLootHelp", message, "INSTANCE_CHAT")
+	elseif IsInRaid() then
+		-- If not in an instance group, share it with the raid
+		ChatThrottleLib:SendAddonMessage("NORMAL", "TransmogLootHelp", message, "RAID")
+	elseif IsInGroup() then
+		-- If not in a raid group, share it with the party
+		ChatThrottleLib:SendAddonMessage("NORMAL", "TransmogLootHelp", message, "PARTY")
+	end
+end
 
 -- When joining a group
 function event:GROUP_JOINED(category, partyGUID)
