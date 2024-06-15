@@ -165,6 +165,7 @@ function app.InitialiseCore()
 	-- Hidden
 	if TransmogLootHelper_Settings["message"] == nil then TransmogLootHelper_Settings["message"] = "Do you need the %item you looted? If not, I'd like to have it for transmog. :)" end
 	if TransmogLootHelper_Settings["windowPosition"] == nil then TransmogLootHelper_Settings["windowPosition"] = { ["left"] = 1295, ["bottom"] = 836, ["width"] = 200, ["height"] = 200, } end
+	if TransmogLootHelper_Settings["windowLocked"] == nil then TransmogLootHelper_Settings["windowLocked"] = false end
 
 	-- Declare session variables
 	app.Hidden = CreateFrame("Frame")
@@ -251,6 +252,9 @@ end
 
 -- Save the window position and size
 function app.SaveWindow()
+	-- Stop highlighting the unlock button
+	app.UnlockButton:UnlockHighlight()
+
 	-- Stop moving or resizing the window
 	app.Window:StopMovingOrSizing()
 
@@ -283,9 +287,15 @@ function app.CreateWindow()
 	app.Window:SetResizeBounds(140, 140, 600, 600)
 	app.Window:RegisterForDrag("LeftButton")
 	app.Window:SetScript("OnDragStart", function()
-		app.Window:StartMoving()
-		GameTooltip:ClearLines()
-		GameTooltip:Hide()
+		if TransmogLootHelper_Settings["windowLocked"] then
+			-- Highlight the Unlock button
+			app.UnlockButton:LockHighlight()
+		else
+			-- Start moving the window, and hide any visible tooltips
+			app.Window:StartMoving()
+			GameTooltip:ClearLines()
+			GameTooltip:Hide()
+		end
 	end)
 	app.Window:SetScript("OnDragStop", function() app.SaveWindow() end)
 	app.Window:Hide()
@@ -319,9 +329,63 @@ function app.CreateWindow()
 		app.CloseButtonTooltip:Hide()
 	end)
 
+	-- Lock button
+	app.LockButton = CreateFrame("Button", "", app.Window, "UIPanelCloseButton")
+	app.LockButton:SetPoint("TOPRIGHT", close, "TOPLEFT", -2, 0)
+	app.LockButton:SetNormalTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\button-lock.blp")
+	app.LockButton:GetNormalTexture():SetTexCoord(39/256, 75/256, 1/128, 38/128)
+	app.LockButton:SetDisabledTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\button-lock.blp")
+	app.LockButton:GetDisabledTexture():SetTexCoord(39/256, 75/256, 41/128, 78/128)
+	app.LockButton:SetPushedTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\button-lock.blp")
+	app.LockButton:GetPushedTexture():SetTexCoord(39/256, 75/256, 81/128, 118/128)
+	app.LockButton:SetScript("OnClick", function()
+		TransmogLootHelper_Settings["windowLocked"] = true
+		app.Window.Corner:Hide()
+		app.LockButton:Hide()
+		app.UnlockButton:Show()
+	end)
+	app.LockButton:SetScript("OnEnter", function()
+		app.WindowTooltipShow(app.LockButtonTooltip)
+	end)
+	app.LockButton:SetScript("OnLeave", function()
+		app.LockButtonTooltip:Hide()
+	end)
+
+	-- Unlock button
+	app.UnlockButton = CreateFrame("Button", "", app.Window, "UIPanelCloseButton")
+	app.UnlockButton:SetPoint("TOPRIGHT", close, "TOPLEFT", -2, 0)
+	app.UnlockButton:SetNormalTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\button-unlock.blp")
+	app.UnlockButton:GetNormalTexture():SetTexCoord(39/256, 75/256, 1/128, 38/128)
+	app.UnlockButton:SetDisabledTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\button-unlock.blp")
+	app.UnlockButton:GetDisabledTexture():SetTexCoord(39/256, 75/256, 41/128, 78/128)
+	app.UnlockButton:SetPushedTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\button-unlock.blp")
+	app.UnlockButton:GetPushedTexture():SetTexCoord(39/256, 75/256, 81/128, 118/128)
+	app.UnlockButton:SetScript("OnClick", function()
+		TransmogLootHelper_Settings["windowLocked"] = false
+		app.Window.Corner:Show()
+		app.LockButton:Show()
+		app.UnlockButton:Hide()
+	end)
+	app.UnlockButton:SetScript("OnEnter", function()
+		app.WindowTooltipShow(app.UnlockButtonTooltip)
+	end)
+	app.UnlockButton:SetScript("OnLeave", function()
+		app.UnlockButtonTooltip:Hide()
+	end)
+
+	if TransmogLootHelper_Settings["windowLocked"] then
+		app.Window.Corner:Hide()
+		app.LockButton:Hide()
+		app.UnlockButton:Show()
+	else
+		app.Window.Corner:Show()
+		app.LockButton:Show()
+		app.UnlockButton:Hide()
+	end
+
 	-- Settings button
 	app.SettingsButton = CreateFrame("Button", "", app.Window, "UIPanelCloseButton")
-	app.SettingsButton:SetPoint("TOPRIGHT", close, "TOPLEFT", -2, 0)
+	app.SettingsButton:SetPoint("TOPRIGHT", app.LockButton, "TOPLEFT", -2, 0)
 	app.SettingsButton:SetNormalTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\button-settings.blp")
 	app.SettingsButton:GetNormalTexture():SetTexCoord(39/256, 75/256, 1/128, 38/128)
 	app.SettingsButton:SetDisabledTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\button-settings.blp")
@@ -1136,6 +1200,10 @@ function app.CreateGeneralAssets()
 
 	-- Create Close button tooltip
 	app.CloseButtonTooltip = app.WindowTooltip("Close the window")
+
+	-- Create Lock/Unlock button tooltip
+	app.LockButtonTooltip = app.WindowTooltip("Lock the window")
+	app.UnlockButtonTooltip = app.WindowTooltip("Unlock the window")
 
 	-- Create Settings button tooltip
 	app.SettingsButtonTooltip = app.WindowTooltip("Open the settings")
