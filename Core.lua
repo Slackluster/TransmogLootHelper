@@ -166,6 +166,7 @@ function app.InitialiseCore()
 	if TransmogLootHelper_Settings["message"] == nil then TransmogLootHelper_Settings["message"] = "Do you need the %item you looted? If not, I'd like to have it for transmog. :)" end
 	if TransmogLootHelper_Settings["windowPosition"] == nil then TransmogLootHelper_Settings["windowPosition"] = { ["left"] = 1295, ["bottom"] = 836, ["width"] = 200, ["height"] = 200, } end
 	if TransmogLootHelper_Settings["windowLocked"] == nil then TransmogLootHelper_Settings["windowLocked"] = false end
+	if TransmogLootHelper_Settings["windowSort"] == nil then TransmogLootHelper_Settings["windowSort"] = 1 end
 
 	-- Declare session variables
 	app.Hidden = CreateFrame("Frame")
@@ -440,6 +441,39 @@ function app.CreateWindow()
 		app.ClearButtonTooltip:Hide()
 	end)
 
+	-- Sort button
+	app.SortButton = CreateFrame("Button", "", app.Window, "UIPanelCloseButton")
+	app.SortButton:SetPoint("TOPRIGHT", app.ClearButton, "TOPLEFT", -2, 0)
+	app.SortButton:SetNormalTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\button-sort.blp")
+	app.SortButton:GetNormalTexture():SetTexCoord(39/256, 75/256, 1/128, 38/128)
+	app.SortButton:SetDisabledTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\button-sort.blp")
+	app.SortButton:GetDisabledTexture():SetTexCoord(39/256, 75/256, 41/128, 78/128)
+	app.SortButton:SetPushedTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\button-sort.blp")
+	app.SortButton:GetPushedTexture():SetTexCoord(39/256, 75/256, 81/128, 118/128)
+	app.SortButton:SetScript("OnClick", function()
+		if TransmogLootHelper_Settings["windowSort"] == 1 then
+			TransmogLootHelper_Settings["windowSort"] = 2
+			app.SortButtonTooltip1:Hide()
+			app.WindowTooltipShow(app.SortButtonTooltip2)
+		elseif TransmogLootHelper_Settings["windowSort"] == 2 then
+			TransmogLootHelper_Settings["windowSort"] = 1
+			app.SortButtonTooltip2:Hide()
+			app.WindowTooltipShow(app.SortButtonTooltip1)
+		end
+		app.Update()
+	end)
+	app.SortButton:SetScript("OnEnter", function()
+		if TransmogLootHelper_Settings["windowSort"] == 1 then
+			app.WindowTooltipShow(app.SortButtonTooltip1)
+		elseif TransmogLootHelper_Settings["windowSort"] == 2 then
+			app.WindowTooltipShow(app.SortButtonTooltip2)
+		end
+	end)
+	app.SortButton:SetScript("OnLeave", function()
+		app.SortButtonTooltip1:Hide()
+		app.SortButtonTooltip2:Hide()
+	end)
+
 	-- ScrollFrame inside the popup frame
 	local scrollFrame = CreateFrame("ScrollFrame", nil, app.Window, "ScrollFrameTemplate")
 	scrollFrame:SetPoint("TOPLEFT", app.Window, 7, -6)
@@ -577,7 +611,12 @@ function app.Update()
 		for k, v in pairs(app.WeaponLoot) do
 			weaponsSorted[#weaponsSorted+1] = { item = v.item, icon = v.icon, player = v.player, playerShort = v.playerShort, color = v.color, index = k}
 		end
-		table.sort(weaponsSorted, customSort)
+
+		if TransmogLootHelper_Settings["windowSort"] == 1 then
+			table.sort(weaponsSorted, customSort)
+		elseif TransmogLootHelper_Settings["windowSort"] == 2 then
+			table.sort(weaponsSorted, function(a, b) return a.index > b.index end)
+		end
 
 		-- Create rows
 		for _, lootInfo in ipairs(weaponsSorted) do
@@ -799,7 +838,12 @@ function app.Update()
 		for k, v in pairs(app.ArmourLoot) do
 			armourSorted[#armourSorted+1] = { item = v.item, icon = v.icon, player = v.player, playerShort = v.playerShort, color = v.color, index = k}
 		end
-		table.sort(armourSorted, customSort)
+
+		if TransmogLootHelper_Settings["windowSort"] == 1 then
+			table.sort(armourSorted, customSort)
+		elseif TransmogLootHelper_Settings["windowSort"] == 2 then
+			table.sort(armourSorted, function(a, b) return a.index > b.index end)
+		end
 
 		-- Create rows
 		for _, lootInfo in ipairs(armourSorted) do
@@ -1025,7 +1069,12 @@ function app.Update()
 		for k, v in pairs(app.FilteredLoot) do
 			filteredSorted[#filteredSorted+1] = { item = v.item, icon = v.icon, player = v.player, playerShort = v.playerShort, color = v.color, itemType = v.itemType, index = k}
 		end
-		table.sort(filteredSorted, customSort)
+
+		if TransmogLootHelper_Settings["windowSort"] == 1 then
+			table.sort(filteredSorted, customSort)
+		elseif TransmogLootHelper_Settings["windowSort"] == 2 then
+			table.sort(filteredSorted, function(a, b) return a.index > b.index end)
+		end
 
 		-- Create rows
 		for _, lootInfo in ipairs(filteredSorted) do
@@ -1189,6 +1238,10 @@ function app.CreateGeneralAssets()
 
 	-- Create Clear button tooltip
 	app.ClearButtonTooltip = app.WindowTooltip("Clear all items\nHold Shift to skip confirmation")
+
+	-- Create Sort button tooltip
+	app.SortButtonTooltip1 = app.WindowTooltip("Sort the items by newest first\nCurrent sorting:|cffFFFFFF alphabetical|R")
+	app.SortButtonTooltip2 = app.WindowTooltip("Sort the items alphabetically\nCurrent sorting:|cffFFFFFF newest first|R")
 
 	-- Create corner button tooltip
 	app.CornerButtonTooltip = app.WindowTooltip("Double-click|cffFFFFFF: Autosize to fit the window")
