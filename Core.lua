@@ -161,6 +161,7 @@ function app.InitialiseCore()
 	if TransmogLootHelper_Settings["minimapIcon"] == nil then TransmogLootHelper_Settings["minimapIcon"] = true end
 	if TransmogLootHelper_Settings["collectMode"] == nil then TransmogLootHelper_Settings["collectMode"] = 1 end
 	if TransmogLootHelper_Settings["usableMog"] == nil then TransmogLootHelper_Settings["usableMog"] = true end
+	if TransmogLootHelper_Settings["remixFilter"] == nil then TransmogLootHelper_Settings["remixFilter"] = false end
 	if TransmogLootHelper_Settings["rarity"] == nil then TransmogLootHelper_Settings["rarity"] = 3 end
 	-- Hidden
 	if TransmogLootHelper_Settings["message"] == nil then TransmogLootHelper_Settings["message"] = "Do you need the %item you looted? If not, I'd like to have it for transmog. :)" end
@@ -1383,11 +1384,15 @@ function event:CHAT_MSG_LOOT(text, playerName, languageName, channelName, player
 	local itemType = classID.."."..subclassID
 
 	-- Continue only if it's not an item we looted ourselves
-	if unitName ~= selfName then		
+	if unitName ~= selfName then
 		-- Do stuff depending on if the appearance or source is new
 		if app.GetAppearanceInfo(itemLink, TRANSMOGRIFY_TOOLTIP_APPEARANCE_UNKNOWN) or (app.GetAppearanceInfo(itemLink, TRANSMOGRIFY_TOOLTIP_ITEM_UNKNOWN_APPEARANCE_KNOWN) and TransmogLootHelper_Settings["collectMode"] == 2) then
+			-- Remix filter
+			if TransmogLootHelper_Settings["remixFilter"] == true and PlayerGetTimerunningSeasonID() ~= nil and itemQuality < 3 then
+				-- Add to filtered loot and update the window
+				app.AddFilteredLoot(itemLink, itemID, itemTexture, playerName, itemType, "Untradeable")
 			-- Rarity filter
-			if itemQuality >= TransmogLootHelper_Settings["rarity"] then
+			elseif itemQuality >= TransmogLootHelper_Settings["rarity"] then
 
 				-- Get the player's armor class
 				local armorClass
@@ -1667,6 +1672,11 @@ function app.Settings()
 	Settings.SetOnValueChangedCallback(variable, app.SettingChanged)
 
 	local variable, name, tooltip = "usableMog", "Only Usable Transmog", "Only show usable transmog (weapons you can equip, and your armor class)."
+	local setting = Settings.RegisterAddOnSetting(category, name, variable, Settings.VarType.Boolean, TransmogLootHelper_Settings[variable])
+	local parentSetting = Settings.CreateCheckBox(category, setting, tooltip)
+	Settings.SetOnValueChangedCallback(variable, app.SettingChanged)
+
+	local variable, name, tooltip = "remixFilter", "Remix filter", "Filter items below |cff0070dd"..ITEM_QUALITY3_DESC.."|r quality (untradeable) for Remix characters."
 	local setting = Settings.RegisterAddOnSetting(category, name, variable, Settings.VarType.Boolean, TransmogLootHelper_Settings[variable])
 	local parentSetting = Settings.CreateCheckBox(category, setting, tooltip)
 	Settings.SetOnValueChangedCallback(variable, app.SettingChanged)
