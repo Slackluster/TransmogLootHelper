@@ -1660,7 +1660,7 @@ function app.Settings()
 		end
 	end)
 
-	local variable, name, tooltip = "collectMode", "Collection Mode", "Set when "..app.NameShort.." should show new transmog looted by others."
+	local variable, name, tooltip = "collectMode", "Collection mode", "Set when "..app.NameShort.." should show new transmog looted by others."
 	local function GetOptions()
 		local container = Settings.CreateControlTextContainer()
 		container:Add(1, "Appearances", "Only show items if they are a new appearance.")
@@ -1671,7 +1671,7 @@ function app.Settings()
 	Settings.CreateDropDown(category, setting, GetOptions, tooltip)
 	Settings.SetOnValueChangedCallback(variable, app.SettingChanged)
 
-	local variable, name, tooltip = "usableMog", "Only Usable Transmog", "Only show usable transmog (weapons you can equip, and your armor class)."
+	local variable, name, tooltip = "usableMog", "Only usable transmog", "Only show usable transmog (weapons you can equip, and your armor class)."
 	local setting = Settings.RegisterAddOnSetting(category, name, variable, Settings.VarType.Boolean, TransmogLootHelper_Settings[variable])
 	local parentSetting = Settings.CreateCheckBox(category, setting, tooltip)
 	Settings.SetOnValueChangedCallback(variable, app.SettingChanged)
