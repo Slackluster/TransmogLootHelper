@@ -1440,15 +1440,15 @@ function event:CHAT_MSG_LOOT(text, playerName, languageName, channelName, player
 						-- Stagger show/update the window
 						app.Flag["lastUpdate"] = GetServerTime()
 						app.Stagger(1, true)
-					elseif C_Item.IsEquippableItem(itemLink) == true then
+					else
 						-- Add to filtered loot and update the window
 						app.AddFilteredLoot(itemLink, itemID, itemTexture, playerName, itemType, "Unusable transmog")
 					end
-				elseif C_Item.IsEquippableItem(itemLink) == true then
+				else
 					-- Add to filtered loot and update the window
 					app.AddFilteredLoot(itemLink, itemID, itemTexture, playerName, itemType, "Rarity too low")
 				end
-			elseif C_Item.IsEquippableItem(itemLink) == true then
+			else
 				-- Ignore necks, rings, trinkets (as they never have a learnable appearance)
 				if itemType ~= app.Type["General"] or (itemType == app.Type["General"] and itemEquipLoc ~= "INVTYPE_FINGER"	and itemEquipLoc ~= "INVTYPE_TRINKET" and itemEquipLoc ~= "INVTYPE_NECK") then
 					-- Add to filtered loot and update the window
