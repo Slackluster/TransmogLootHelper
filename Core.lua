@@ -1365,92 +1365,95 @@ end
 
 -- When an item is looted
 function event:CHAT_MSG_LOOT(text, playerName, languageName, channelName, playerName2, specialFlags, zoneChannelID, channelIndex, channelBaseName, languageID, lineID, guid, bnSenderID, isMobile, isSubtitle, hideSenderInLetterbox, supressRaidIcons)
-	-- Player name
-	local playerNameShort = string.match(playerName, "^(.-)-")
-	local realmName = string.match(playerName, ".*-(.*)")
-	local unitName = playerNameShort, realmName
-	local selfName = UnitName("player")
-
-	-- Class colour
-	local className, classFilename, classId = UnitClass(unitName)
-	local _, _, _, classColor = GetClassColor(classFilename)
-
 	-- Extract item string
 	local itemString = string.match(text, "(|cff.-|h%[.-%]|h)")
 
-	-- Get item info
-	local _, itemLink, itemQuality, _, _, _, _, _, itemEquipLoc, itemTexture, _, classID, subclassID = C_Item.GetItemInfo(itemString)
-	local itemID = C_Item.GetItemInfoInstant(itemString)
-	local itemType = classID.."."..subclassID
+	-- Only proceed if the item is equippable and a player is specified (aka it is not a need/greed roll)
+	if C_Item.IsEquippableItem(itemString) and guid ~= nil then
+		-- Player name
+		local playerNameShort = string.match(playerName, "^(.-)-")
+		local realmName = string.match(playerName, ".*-(.*)")
+		local unitName = playerNameShort, realmName
+		local selfName = UnitName("player")
 
-	-- Continue only if it's not an item we looted ourselves
-	if unitName ~= selfName then
-		-- Do stuff depending on if the appearance or source is new
-		if app.GetAppearanceInfo(itemLink, TRANSMOGRIFY_TOOLTIP_APPEARANCE_UNKNOWN) or (app.GetAppearanceInfo(itemLink, TRANSMOGRIFY_TOOLTIP_ITEM_UNKNOWN_APPEARANCE_KNOWN) and TransmogLootHelper_Settings["collectMode"] == 2) then
-			-- Remix filter
-			if TransmogLootHelper_Settings["remixFilter"] == true and PlayerGetTimerunningSeasonID() ~= nil and itemQuality < 3 then
-				-- Add to filtered loot and update the window
-				app.AddFilteredLoot(itemLink, itemID, itemTexture, playerName, itemType, "Untradeable")
-			-- Rarity filter
-			elseif itemQuality >= TransmogLootHelper_Settings["rarity"] then
+		-- Class colour
+		local className, classFilename, classId = UnitClass(unitName)
+		local _, _, _, classColor = GetClassColor(classFilename)
 
-				-- Get the player's armor class
-				local armorClass
-				for k, v in pairs(app.Armor) do
-					for _, v2 in pairs(v) do
-						if v2 == app.ClassID then
-							armorClass = k
-						end
-					end
-				end
+		-- Get item info
+		local _, itemLink, itemQuality, _, _, _, _, _, itemEquipLoc, itemTexture, _, classID, subclassID = C_Item.GetItemInfo(itemString)
+		local itemID = C_Item.GetItemInfoInstant(itemString)
+		local itemType = classID.."."..subclassID
 
-				local itemCategory = ""
-				local equippable = false
-				-- Check if the item can and should be equipped (armor -> class)
-				if (itemType == "4.0" and itemEquipLoc ~= "INVTYPE_HOLDABLE") or itemType == "4.1" or itemType == "4.2" or itemType == "4.3" or itemType == "4.4" then
-					itemCategory = "armor"
-					if itemType == app.Type[armorClass] or itemType == app.Type["General"] then
-						equippable = true
-					end
-				end
-				-- Check if a weapon can be equipped
-				for k, v in pairs(app.Type) do
-					if v == itemType and not ((itemType == "4.0" and itemEquipLoc ~= "INVTYPE_HOLDABLE") or itemType == "4.1" or itemType == "4.2" or itemType == "4.3" or itemType == "4.4") then
-						itemCategory = "weapon"
-						for _, v2 in pairs(app.Weapon[k]) do
-							-- Check if the item can and should be equipped (weapon -> spec)
+		-- Continue only if it's not an item we looted ourselves
+		if unitName ~= selfName then
+			-- Do stuff depending on if the appearance or source is new
+			if app.GetAppearanceInfo(itemLink, TRANSMOGRIFY_TOOLTIP_APPEARANCE_UNKNOWN) or (app.GetAppearanceInfo(itemLink, TRANSMOGRIFY_TOOLTIP_ITEM_UNKNOWN_APPEARANCE_KNOWN) and TransmogLootHelper_Settings["collectMode"] == 2) then
+				-- Remix filter
+				if TransmogLootHelper_Settings["remixFilter"] == true and PlayerGetTimerunningSeasonID() ~= nil and itemQuality < 3 then
+					-- Add to filtered loot and update the window
+					app.AddFilteredLoot(itemLink, itemID, itemTexture, playerName, itemType, "Untradeable")
+				-- Rarity filter
+				elseif itemQuality >= TransmogLootHelper_Settings["rarity"] then
+
+					-- Get the player's armor class
+					local armorClass
+					for k, v in pairs(app.Armor) do
+						for _, v2 in pairs(v) do
 							if v2 == app.ClassID then
-								equippable = true
+								armorClass = k
 							end
 						end
 					end
-				end
 
-				-- Filter for usable mog, if the setting is applied
-				if ((TransmogLootHelper_Settings["usableMog"] == true and equippable == true) or TransmogLootHelper_Settings["usableMog"] == false) and itemCategory ~= nil then
-					-- Write it into our loot variable
-					if itemCategory == "weapon" then
-						app.WeaponLoot[#app.WeaponLoot+1] = { item = itemLink, itemID = itemID, icon = itemTexture, player = playerName, playerShort = playerNameShort, color = classColor, recentlyWhispered = 0 }
-					elseif itemCategory == "armor" then
-						app.ArmourLoot[#app.ArmourLoot+1] = { item = itemLink, itemID = itemID, icon = itemTexture, player = playerName, playerShort = playerNameShort, color = classColor, recentlyWhispered = 0 }
+					local itemCategory = ""
+					local equippable = false
+					-- Check if the item can and should be equipped (armor -> class)
+					if (itemType == "4.0" and itemEquipLoc ~= "INVTYPE_HOLDABLE") or itemType == "4.1" or itemType == "4.2" or itemType == "4.3" or itemType == "4.4" then
+						itemCategory = "armor"
+						if itemType == app.Type[armorClass] or itemType == app.Type["General"] then
+							equippable = true
+						end
+					end
+					-- Check if a weapon can be equipped
+					for k, v in pairs(app.Type) do
+						if v == itemType and not ((itemType == "4.0" and itemEquipLoc ~= "INVTYPE_HOLDABLE") or itemType == "4.1" or itemType == "4.2" or itemType == "4.3" or itemType == "4.4") then
+							itemCategory = "weapon"
+							for _, v2 in pairs(app.Weapon[k]) do
+								-- Check if the item can and should be equipped (weapon -> spec)
+								if v2 == app.ClassID then
+									equippable = true
+								end
+							end
+						end
 					end
 
-					-- Stagger show/update the window
-					app.Flag["lastUpdate"] = GetServerTime()
-					app.Stagger(1, true)
+					-- Filter for usable mog, if the setting is applied
+					if ((TransmogLootHelper_Settings["usableMog"] == true and equippable == true) or TransmogLootHelper_Settings["usableMog"] == false) and itemCategory ~= nil then
+						-- Write it into our loot variable
+						if itemCategory == "weapon" then
+							app.WeaponLoot[#app.WeaponLoot+1] = { item = itemLink, itemID = itemID, icon = itemTexture, player = playerName, playerShort = playerNameShort, color = classColor, recentlyWhispered = 0 }
+						elseif itemCategory == "armor" then
+							app.ArmourLoot[#app.ArmourLoot+1] = { item = itemLink, itemID = itemID, icon = itemTexture, player = playerName, playerShort = playerNameShort, color = classColor, recentlyWhispered = 0 }
+						end
+
+						-- Stagger show/update the window
+						app.Flag["lastUpdate"] = GetServerTime()
+						app.Stagger(1, true)
+					elseif C_Item.IsEquippableItem(itemLink) == true then
+						-- Add to filtered loot and update the window
+						app.AddFilteredLoot(itemLink, itemID, itemTexture, playerName, itemType, "Unusable transmog")
+					end
 				elseif C_Item.IsEquippableItem(itemLink) == true then
 					-- Add to filtered loot and update the window
-					app.AddFilteredLoot(itemLink, itemID, itemTexture, playerName, itemType, "Unusable transmog")
+					app.AddFilteredLoot(itemLink, itemID, itemTexture, playerName, itemType, "Rarity too low")
 				end
 			elseif C_Item.IsEquippableItem(itemLink) == true then
-				-- Add to filtered loot and update the window
-				app.AddFilteredLoot(itemLink, itemID, itemTexture, playerName, itemType, "Rarity too low")
-			end
-		elseif C_Item.IsEquippableItem(itemLink) == true then
-			-- Ignore necks, rings, trinkets (as they never have a learnable appearance)
-			if itemType ~= app.Type["General"] or (itemType == app.Type["General"] and itemEquipLoc ~= "INVTYPE_FINGER"	and itemEquipLoc ~= "INVTYPE_TRINKET" and itemEquipLoc ~= "INVTYPE_NECK") then
-				-- Add to filtered loot and update the window
-				app.AddFilteredLoot(itemLink, itemID, itemTexture, playerName, itemType, "Known appearance")
+				-- Ignore necks, rings, trinkets (as they never have a learnable appearance)
+				if itemType ~= app.Type["General"] or (itemType == app.Type["General"] and itemEquipLoc ~= "INVTYPE_FINGER"	and itemEquipLoc ~= "INVTYPE_TRINKET" and itemEquipLoc ~= "INVTYPE_NECK") then
+					-- Add to filtered loot and update the window
+					app.AddFilteredLoot(itemLink, itemID, itemTexture, playerName, itemType, "Known appearance")
+				end
 			end
 		end
 	end
