@@ -184,6 +184,7 @@ function app.InitialiseCore()
 	app.Whispered = {}
 	app.Flag = {}
 	app.Flag["lastUpdate"] = 0
+	app.Flag["versionCheck"] = 0
 
 	-- Enable this CVar, because we need it
 	SetCVar("missingTransmogSourceInItemTooltips", 1)
@@ -1549,7 +1550,11 @@ function event:CHAT_MSG_ADDON(prefix, text, channel, sender, target, zoneChannel
 
 					-- Now compare our versions
 					if otherGameVersion > localGameVersion or (otherGameVersion == localGameVersion and otherAddonVersion > localAddonVersion) then
-						app.Print("There is a newer version of "..app.NameLong.." available: "..version)
+						-- But only send the message once every 10 minutes
+						if GetServerTime() - app.Flag["versionCheck"] > 600 then
+							app.Print("There is a newer version of "..app.NameLong.." available: "..version)
+							app.Flag["versionCheck"] = GetServerTime()
+						end
 					end
 				end
 			end
