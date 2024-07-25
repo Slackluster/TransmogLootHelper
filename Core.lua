@@ -23,7 +23,7 @@ end)
 event:RegisterEvent("ADDON_LOADED")
 event:RegisterEvent("CHAT_MSG_ADDON")
 event:RegisterEvent("CHAT_MSG_LOOT")
-event:RegisterEvent("GROUP_JOINED")
+event:RegisterEvent("GROUP_ROSTER_UPDATE")
 event:RegisterEvent("TRANSMOG_COLLECTION_SOURCE_ADDED")
 
 -- Table dump
@@ -1492,7 +1492,7 @@ function app.SendAddonMessage(message)
 end
 
 -- When joining a group
-function event:GROUP_JOINED(category, partyGUID)
+function event:GROUP_ROSTER_UPDATE(category, partyGUID)
 	-- Share our AddOn version with other users
 	local message = "version:"..C_AddOns.GetAddOnMetadata("TransmogLootHelper", "Version")
 	app.SendAddonMessage(message)
