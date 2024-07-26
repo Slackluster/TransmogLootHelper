@@ -1370,7 +1370,7 @@ function event:CHAT_MSG_LOOT(text, playerName, languageName, channelName, player
 	local itemString = string.match(text, "(|cff.-|h%[.-%]|h)")
 
 	-- Only proceed if the item is equippable and a player is specified (aka it is not a need/greed roll)
-	if C_Item.IsEquippableItem(itemString) and guid ~= nil then
+	if itemString and C_Item.IsEquippableItem(itemString) and guid ~= nil then
 		-- Player name
 		local playerNameShort = string.match(playerName, "^(.-)-")
 		local realmName = string.match(playerName, ".*-(.*)")
