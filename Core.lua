@@ -160,7 +160,7 @@ function app.InitialiseCore()
 	if TransmogLootHelper_Settings["hide"] == nil then TransmogLootHelper_Settings["hide"] = false end
 	if TransmogLootHelper_Settings["minimapIcon"] == nil then TransmogLootHelper_Settings["minimapIcon"] = true end
 	if TransmogLootHelper_Settings["collectMode"] == nil then TransmogLootHelper_Settings["collectMode"] = 1 end
-	if TransmogLootHelper_Settings["usableMog"] == nil then TransmogLootHelper_Settings["usableMog"] = true end
+	if TransmogLootHelper_Settings["usableMog"] == nil then TransmogLootHelper_Settings["usableMog"] = false end
 	if TransmogLootHelper_Settings["remixFilter"] == nil then TransmogLootHelper_Settings["remixFilter"] = false end
 	if TransmogLootHelper_Settings["rarity"] == nil then TransmogLootHelper_Settings["rarity"] = 3 end
 	-- Hidden
