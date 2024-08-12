@@ -203,8 +203,8 @@ function event:ADDON_LOADED(addOnName, containsBindings)
 		app.Settings()
 
 		-- Slash commands
-		SLASH_PSL1 = "/tlh";
-		function SlashCmdList.PSL(msg, editBox)
+		SLASH_TransmogLootHelper1 = "/tlh";
+		function SlashCmdList.TransmogLootHelper(msg, editBox)
 			-- Split message into command and rest
 			local command, rest = msg:match("^(%S*)%s*(.-)$")
 
