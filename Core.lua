@@ -158,12 +158,6 @@ function app.InitialiseCore()
 	
 	-- Enable default user settings
 	if TransmogLootHelper_Settings["hide"] == nil then TransmogLootHelper_Settings["hide"] = false end
-	if TransmogLootHelper_Settings["minimapIcon"] == nil then TransmogLootHelper_Settings["minimapIcon"] = true end
-	if TransmogLootHelper_Settings["collectMode"] == nil then TransmogLootHelper_Settings["collectMode"] = 1 end
-	if TransmogLootHelper_Settings["usableMog"] == nil then TransmogLootHelper_Settings["usableMog"] = false end
-	if TransmogLootHelper_Settings["remixFilter"] == nil then TransmogLootHelper_Settings["remixFilter"] = false end
-	if TransmogLootHelper_Settings["rarity"] == nil then TransmogLootHelper_Settings["rarity"] = 3 end
-	-- Hidden
 	if TransmogLootHelper_Settings["message"] == nil then TransmogLootHelper_Settings["message"] = "Do you need the %item you looted? If not, I'd like to have it for transmog. :)" end
 	if TransmogLootHelper_Settings["windowPosition"] == nil then TransmogLootHelper_Settings["windowPosition"] = { ["left"] = 1295, ["bottom"] = 836, ["width"] = 200, ["height"] = 200, } end
 	if TransmogLootHelper_Settings["windowLocked"] == nil then TransmogLootHelper_Settings["windowLocked"] = false end
@@ -1643,22 +1637,16 @@ function app.Settings()
 	end
 
 	-- Settings page
-	function app.SettingChanged(_, setting, value)
-		local variable = setting:GetVariable()
-		TransmogLootHelper_Settings[variable] = value
-	end
-
 	local category, layout = Settings.RegisterVerticalLayoutCategory(app.NameLong)
 	Settings.RegisterAddOnCategory(category)
 	app.Category = category
 
-	layout:AddInitializer(CreateSettingsListSectionHeaderInitializer(C_AddOns.GetAddOnMetadata("TransmogLootHelper", "Version")))
+	layout:AddInitializer(CreateSettingsListSectionHeaderInitializer(C_AddOns.GetAddOnMetadata(appName, "Version")))
 
 	local variable, name, tooltip = "minimapIcon", "Show minimap icon", "Show the minimap icon. If you disable this, "..app.NameShort.." is still available from the AddOn Compartment."
-	local setting = Settings.RegisterAddOnSetting(category, appName.."_"..variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name)
+	local setting = Settings.RegisterAddOnSetting(category, appName.."_"..variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, true)
 	Settings.CreateCheckbox(category, setting, tooltip)
-	Settings.SetOnValueChangedCallback(variable, app.SettingChanged)
-	Settings.SetOnValueChangedCallback(variable, function()
+	setting:SetValueChangedCallback(function()
 		if TransmogLootHelper_Settings["minimapIcon"] == true then
 			TransmogLootHelper_Settings["hide"] = false
 			icon:Show("TransmogLootHelper")
@@ -1675,19 +1663,16 @@ function app.Settings()
 		container:Add(2, "Sources", "Show items if they are a new source, including for known appearances.")
 		return container:GetData()
 	end
-	local setting = Settings.RegisterAddOnSetting(category, appName.."_"..variable, variable, TransmogLootHelper_Settings, Settings.VarType.Number, name)
+	local setting = Settings.RegisterAddOnSetting(category, appName.."_"..variable, variable, TransmogLootHelper_Settings, Settings.VarType.Number, name, 1)
 	Settings.CreateDropdown(category, setting, GetOptions, tooltip)
-	Settings.SetOnValueChangedCallback(variable, app.SettingChanged)
 
 	local variable, name, tooltip = "usableMog", "Only usable transmog", "Only show usable transmog (weapons you can equip, and your armor class)."
-	local setting = Settings.RegisterAddOnSetting(category, appName.."_"..variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name)
+	local setting = Settings.RegisterAddOnSetting(category, appName.."_"..variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, false)
 	local parentSetting = Settings.CreateCheckbox(category, setting, tooltip)
-	Settings.SetOnValueChangedCallback(variable, app.SettingChanged)
 
 	local variable, name, tooltip = "remixFilter", "Remix filter", "Filter items below |cff0070dd"..ITEM_QUALITY3_DESC.."|r quality (untradeable) for Remix characters."
-	local setting = Settings.RegisterAddOnSetting(category, appName.."_"..variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name)
+	local setting = Settings.RegisterAddOnSetting(category, appName.."_"..variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, false)
 	local parentSetting = Settings.CreateCheckbox(category, setting, tooltip)
-	Settings.SetOnValueChangedCallback(variable, app.SettingChanged)
 
 	local variable, name, tooltip = "rarity", "Rarity", "Set from what quality and up "..app.NameShort.." should show loot."
 	local function GetOptions()
@@ -1699,9 +1684,8 @@ function app.Settings()
 		container:Add(4, "|cffa335ee"..ITEM_QUALITY4_DESC.."|r")
 		return container:GetData()
 	end
-	local setting = Settings.RegisterAddOnSetting(category, appName.."_"..variable, variable, TransmogLootHelper_Settings, Settings.VarType.Number, name)
+	local setting = Settings.RegisterAddOnSetting(category, appName.."_"..variable, variable, TransmogLootHelper_Settings, Settings.VarType.Number, name, 3)
 	Settings.CreateDropdown(category, setting, GetOptions, tooltip)
-	Settings.SetOnValueChangedCallback(variable, app.SettingChanged)
 
 	layout:AddInitializer(CreateSettingsListSectionHeaderInitializer("Information"))
 
@@ -1717,7 +1701,4 @@ function app.Settings()
 	end
 	local setting = Settings.RegisterAddOnSetting(category, appName.."_"..variable, variable, TransmogLootHelper_Settings, Settings.VarType.Number, name, 1)
 	Settings.CreateDropdown(category, setting, GetOptions, tooltip)
-
-	--initializer:AddSearchTags
-	--defaults?
 end
