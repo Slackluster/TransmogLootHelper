@@ -180,9 +180,6 @@ function app.InitialiseCore()
 	app.Flag["lastUpdate"] = 0
 	app.Flag["versionCheck"] = 0
 
-	-- Enable this CVar, because we need it
-	SetCVar("missingTransmogSourceInItemTooltips", 1)
-
 	-- Register our AddOn communications channel
 	C_ChatInfo.RegisterAddonMessagePrefix("TransmogLootHelp")
 end
@@ -1305,8 +1302,17 @@ end
 
 -- Scan the tooltip for the appearance text, localised
 function app.GetAppearanceInfo(itemLinkie, searchString)
+	-- Grab the original value for this setting
+	local cvar = C_CVar.GetCVarInfo("missingTransmogSourceInItemTooltips")
+	
+	-- Enable this CVar, because we need it
+	C_CVar.SetCVar("missingTransmogSourceInItemTooltips", 1)
+
 	-- Get our tooltip information
 	local tooltip = C_TooltipInfo.GetHyperlink(itemLinkie)
+
+	-- Return the CVar to its original setting
+	C_CVar.SetCVar("missingTransmogSourceInItemTooltips", cvar)
 
 	-- Read all the lines as plain text
 	if tooltip["lines"] then
