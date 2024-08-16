@@ -1665,7 +1665,7 @@ function app.Settings()
 	local variable, name, tooltip = "collectMode", "Collection mode", "Set when "..app.NameShort.." should show new transmog looted by others."
 	local function GetOptions()
 		local container = Settings.CreateControlTextContainer()
-		container:Add(1, "Appearances", "Only show items if they are a new appearance.")
+		container:Add(1, "Appearances", "Show items only if they have a new appearance.")
 		container:Add(2, "Sources", "Show items if they are a new source, including for known appearances.")
 		return container:GetData()
 	end
