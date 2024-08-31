@@ -1279,7 +1279,7 @@ function app.Stagger(t, show)
 	C_Timer.After(t, function()
 		-- If it's been at least t seconds
 		if GetServerTime() - app.Flag["lastUpdate"] >= t then
-			if show then
+			if show and TransmogLootHelper_Settings["autoOpen"] then
 				app.Show()
 			else
 				app.Update()
@@ -1289,7 +1289,7 @@ function app.Stagger(t, show)
 			C_Timer.After(t, function()
 				-- If it's been at least t seconds
 				if GetServerTime() - app.Flag["lastUpdate"] >= t then
-					if show then
+					if show and TransmogLootHelper_Settings["autoOpen"] then
 						app.Show()
 					else
 						app.Update()
@@ -1661,6 +1661,10 @@ function app.Settings()
 			icon:Hide("TransmogLootHelper")
 		end
 	end)
+
+	local variable, name, tooltip = "autoOpen", "Auto open window", "Automatically show the "..app.NameShort.." window when an eligible item is looted."
+	local setting = Settings.RegisterAddOnSetting(category, appName.."_"..variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, true)
+	Settings.CreateCheckbox(category, setting, tooltip)
 
 	local variable, name, tooltip = "collectMode", "Collection mode", "Set when "..app.NameShort.." should show new transmog looted by others."
 	local function GetOptions()
