@@ -1301,7 +1301,7 @@ function app.Stagger(t, show)
 end
 
 -- Scan the tooltip for the appearance text, localised
-function app.GetAppearanceInfo(itemLinkie, searchString)
+function app.GetTooltipText(itemLinkie, searchString)
 	-- Grab the original value for this setting
 	local cvar = C_CVar.GetCVarInfo("missingTransmogSourceInItemTooltips")
 	
@@ -1389,9 +1389,11 @@ function event:CHAT_MSG_LOOT(text, playerName, languageName, channelName, player
 		-- Continue only if it's not an item we looted ourselves
 		if unitName ~= selfName then
 			-- Do stuff depending on if the appearance or source is new
-			if app.GetAppearanceInfo(itemLink, TRANSMOGRIFY_TOOLTIP_APPEARANCE_UNKNOWN) or (app.GetAppearanceInfo(itemLink, TRANSMOGRIFY_TOOLTIP_ITEM_UNKNOWN_APPEARANCE_KNOWN) and TransmogLootHelper_Settings["collectMode"] == 2) then
+			if app.GetTooltipText(itemLink, TRANSMOGRIFY_TOOLTIP_APPEARANCE_UNKNOWN) or (app.GetTooltipText(itemLink, TRANSMOGRIFY_TOOLTIP_ITEM_UNKNOWN_APPEARANCE_KNOWN) and TransmogLootHelper_Settings["collectMode"] == 2) then
 				-- Remix filter
-				if TransmogLootHelper_Settings["remixFilter"] == true and PlayerGetTimerunningSeasonID() ~= nil and itemQuality < 3 then
+				if (TransmogLootHelper_Settings["remixFilter"] == true and PlayerGetTimerunningSeasonID() ~= nil and itemQuality < 3)
+				-- Or if the item is Account/Warbound
+				or app.GetTooltipText(itemLink, ITEM_BIND_TO_ACCOUNT) or app.GetTooltipText(itemLink, ITEM_BIND_TO_ACCOUNT_UNTIL_EQUIP) or app.GetTooltipText(itemLink, ITEM_BIND_TO_BNETACCOUNT) or app.GetTooltipText(itemLink, ITEM_BNETACCOUNTBOUND) then
 					-- Add to filtered loot and update the window
 					app.AddFilteredLoot(itemLink, itemID, itemTexture, playerName, itemType, "Untradeable")
 				-- Rarity filter
