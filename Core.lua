@@ -26,23 +26,6 @@ event:RegisterEvent("CHAT_MSG_LOOT")
 event:RegisterEvent("GROUP_ROSTER_UPDATE")
 event:RegisterEvent("TRANSMOG_COLLECTION_SOURCE_ADDED")
 
--- Table dump
-function app.Dump(table)
-	local function dumpTable(o)
-		if type(o) == 'table' then
-			local s = '{ '
-			for k,v in pairs(o) do
-				if type(k) ~= 'number' then k = '"'..k..'"' end
-				s = s .. '['..k..'] = ' .. dumpTable(v) .. ','
-			end
-		return s .. '} '
-		else
-			return tostring(o)
-		end
-	end
-	print(dumpTable(table))
-end
-
 -- App colour
 function app.Colour(string)
 	return "|cffC69B6D"..string.."|R"
