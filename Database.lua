@@ -13,6 +13,8 @@ app.NameShort = app.Colour("TLH")
 
 -- Used textures
 app.iconMog = "Interface\\AddOns\\TransmogLootHelper\\assets\\newMog.blp"
+app.IconReady = "|TInterface\\RaidFrame\\ReadyCheck-Ready:0|t"
+app.IconNotReady = "|TInterface\\RaidFrame\\ReadyCheck-NotReady:0|t"
 
 -- Type.Subtype to item type
 app.Type = {}

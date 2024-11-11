@@ -174,6 +174,7 @@ function event:ADDON_LOADED(addOnName, containsBindings)
 		app.CreateWindow()
 		app.Update()
 		app.CreateGeneralAssets()
+		app.MessagePopup()
 		app.Settings()
 
 		-- Slash commands
@@ -188,22 +189,7 @@ function event:ADDON_LOADED(addOnName, containsBindings)
 				app.Print('Message set to: "'..TransmogLootHelper_Settings["message"]..'"')
 			-- Customise message
 			elseif command == "msg" then
-				-- Check if the message is gucci
-				local quotes = false
-				local item = false
-				if string.match(rest, '^".*"$') ~= nil then quotes = true end
-				if string.find(rest, "%%item") ~= nil then item = true end
-				
-				-- Send error messages if not
-				if quotes == false then
-					app.Print('Error: Wrap your message in quotes: "'..TransmogLootHelper_Settings["message"]..'"')
-				elseif item == false then
-					app.Print('Error: Include %item in your message: "'..TransmogLootHelper_Settings["message"]..'"')
-				-- Edit the message if all is gucci
-				else
-					TransmogLootHelper_Settings["message"] = rest:gsub('^"(.*)"$', '%1')
-					app.Print('Message set to: "'..TransmogLootHelper_Settings["message"]..'"')
-				end
+				app.RenamePopup:Show()
 			-- Open settings
 			elseif command == "settings" then
 				app.OpenSettings()
@@ -1458,6 +1444,124 @@ function event:TRANSMOG_COLLECTION_SOURCE_ADDED(itemModifiedAppearanceID)
 	app.SendAddonMessage(message)
 end
 
+------------------------
+-- MESSAGE CUSTOMIZER --
+------------------------
+
+-- Pop-up window
+function app.MessagePopup()
+	-- Create popup frame
+	local frame = CreateFrame("Frame", nil, UIParent, "BackdropTemplate")
+	frame:SetPoint("CENTER")
+	frame:SetFrameStrata("TOOLTIP")
+	frame:SetBackdrop({
+		bgFile = "Interface/Tooltips/UI-Tooltip-Background",
+		edgeFile = "Interface/Tooltips/UI-Tooltip-Border",
+		edgeSize = 16,
+		insets = { left = 4, right = 4, top = 4, bottom = 4 },
+	})
+	frame:SetBackdropColor(0, 0, 0, 1)
+	frame:EnableMouse(true)
+	frame:SetHeight(85)
+	frame:SetWidth(500)
+	frame:Hide()
+
+	-- Close button
+	local close = CreateFrame("Button", "", frame, "UIPanelCloseButton")
+	close:SetPoint("TOPRIGHT", frame, "TOPRIGHT", 2, 2)
+	close:SetScript("OnClick", function()
+		frame:Hide()
+	end)
+
+	-- Text
+	local string1 = frame:CreateFontString("ARTWORK", nil, "GameFontNormal")
+	string1:SetPoint("CENTER", frame, "CENTER", 0, 0)
+	string1:SetPoint("TOP", frame, "TOP", 0, -10)
+	string1:SetJustifyH("CENTER")
+	string1:SetText("Customize your whisper message:")
+
+	-- Editbox
+	local editBox = CreateFrame("EditBox", nil, frame, "InputBoxTemplate")
+	editBox:SetSize(460, 20)
+	editBox:SetPoint("CENTER", frame, "CENTER", 0, 0)
+	editBox:SetPoint("TOP", frame, "TOP", 0, -30)
+	editBox:SetAutoFocus(false)
+	editBox:SetText(TransmogLootHelper_Settings["message"])
+	editBox:SetCursorPosition(0)
+
+	local border = CreateFrame("Frame", nil, editBox, "BackdropTemplate")
+	border:SetPoint("TOPLEFT", editBox, -6, 1)
+	border:SetPoint("BOTTOMRIGHT", editBox, 2, -2)
+	border:SetBackdrop({
+		bgFile = "Interface/Tooltips/UI-Tooltip-Background",
+		edgeFile = "Interface/Tooltips/UI-Tooltip-Border",
+		edgeSize = 14,
+		insets = { left = 4, right = 4, top = 4, bottom = 4 },
+	})
+	border:SetBackdropColor(0, 0, 0, 0)
+	border:SetBackdropBorderColor(0.776, 0.608, 0.427)
+
+	-- Text 2
+	local string2 = frame:CreateFontString("ARTWORK", nil, "GameFontNormal")
+	string2:SetPoint("CENTER", frame, "CENTER", 0, 0)
+	string2:SetPoint("TOP", frame, "TOP", 0, -60)
+	string2:SetJustifyH("CENTER")
+	string2:SetText("")
+
+	-- Edit functions
+	editBox:SetScript("OnEditFocusGained", function(self)
+		-- Reset our visual feedback
+		border:SetBackdropBorderColor(0.776, 0.608, 0.427)
+		string2:SetText("")
+	end)
+	editBox:SetScript("OnEditFocusLost", function(self)
+		-- Check if the message is gucci
+		local newValue = self:GetText()
+
+		if newValue == TransmogLootHelper_Settings["message"] then
+			-- Do nothing
+		else
+			local item = false
+			if string.find(newValue, "%%item") ~= nil then
+				item = true
+			end
+			
+			if item == false then
+				-- Change the editbox border colour for some extra visual feedback
+				border:SetBackdropBorderColor(1, 0, 0)
+				C_Timer.After(3, function()
+					border:SetBackdropBorderColor(0.776, 0.608, 0.427)
+				end)
+
+				-- Set our feedback text message
+				string2:SetText(app.IconNotReady .. " Message does not include |cffC69B6D%item|r. Message is not updated.")
+			-- Edit the message if all is gucci
+			else
+				-- Change the editbox border colour for some extra visual feedback
+				border:SetBackdropBorderColor(0, 1, 0)
+				C_Timer.After(3, function()
+					border:SetBackdropBorderColor(0.776, 0.608, 0.427)
+				end)
+
+				-- Set our feedback text message
+				string2:SetText(app.IconReady .. " Message is updated.")
+
+				-- Save the new message
+				TransmogLootHelper_Settings["message"] = newValue
+			end
+		end
+	end)
+	editBox:SetScript("OnEnterPressed", function(self)
+		-- This triggers the above script
+		self:ClearFocus()
+	end)
+	editBox:SetScript("OnEscapePressed", function(self)
+		self:SetText(TransmogLootHelper_Settings["message"])
+	end)
+
+	app.RenamePopup = frame
+end
+
 -----------------
 -- ADDON COMMS --
 -----------------
@@ -1681,6 +1785,12 @@ function app.Settings()
 	end
 	local setting = Settings.RegisterAddOnSetting(category, appName.."_"..variable, variable, TransmogLootHelper_Settings, Settings.VarType.Number, name, 3)
 	Settings.CreateDropdown(category, setting, GetOptions, tooltip)
+
+	local function onButtonClick()
+		app.RenamePopup:Show()
+	end
+	local initializer = CreateSettingsButtonInitializer("Whisper message", "Customize", onButtonClick, "Customize your whisper message.", true)
+	layout:AddInitializer(initializer)
 
 	layout:AddInitializer(CreateSettingsListSectionHeaderInitializer("Information"))
 
