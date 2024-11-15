@@ -9,22 +9,35 @@ app.api = {}	-- Create a table to use for our "API"
 TransmogLootHelper = app.api	-- Create a namespace for our "API"
 local api = app.api	-- Our "API" prefix
 
+---------------------------
+-- WOW API EVENT HANDLER --
+---------------------------
+
+app.Event = CreateFrame("Frame")
+app.Event.handlers = {}
+
+-- Register the event and add it to the handlers table
+function app.Event:Register(eventName, func)
+    if not self.handlers[eventName] then
+        self.handlers[eventName] = {}
+        self:RegisterEvent(eventName)
+    end
+    table.insert(self.handlers[eventName], func)
+end
+
+-- Run all handlers for a given event, when it fires
+app.Event:SetScript("OnEvent", function(self, event, ...)
+    if self.handlers[event] then
+        for _, handler in ipairs(self.handlers[event]) do
+            handler(...)
+        end
+    end
+end)
+
+
 ----------------------
 -- HELPER FUNCTIONS --
 ----------------------
-
--- WoW API Events
-local event = CreateFrame("Frame")
-event:SetScript("OnEvent", function(self, event, ...)
-	if self[event] then
-		self[event](self, ...)
-	end
-end)
-event:RegisterEvent("ADDON_LOADED")
-event:RegisterEvent("CHAT_MSG_ADDON")
-event:RegisterEvent("CHAT_MSG_LOOT")
-event:RegisterEvent("GROUP_ROSTER_UPDATE")
-event:RegisterEvent("TRANSMOG_COLLECTION_SOURCE_ADDED")
 
 -- App colour
 function app.Colour(string)
@@ -168,7 +181,7 @@ function app.InitialiseCore()
 end
 
 -- When the AddOn is fully loaded, actually run the components
-function event:ADDON_LOADED(addOnName, containsBindings)
+app.Event:Register("ADDON_LOADED", function(addOnName, containsBindings)
 	if addOnName == appName then
 		app.InitialiseCore()
 		app.CreateWindow()
@@ -207,7 +220,7 @@ function event:ADDON_LOADED(addOnName, containsBindings)
 			end
 		end
 	end
-end
+end)
 
 ------------
 -- WINDOW --
@@ -1334,7 +1347,7 @@ function app.RemoveLootedItem(itemID)
 end
 
 -- When an item is looted
-function event:CHAT_MSG_LOOT(text, playerName, languageName, channelName, playerName2, specialFlags, zoneChannelID, channelIndex, channelBaseName, languageID, lineID, guid, bnSenderID, isMobile, isSubtitle, hideSenderInLetterbox, supressRaidIcons)
+app.Event:Register("CHAT_MSG_LOOT", function(text, playerName, languageName, channelName, playerName2, specialFlags, zoneChannelID, channelIndex, channelBaseName, languageID, lineID, guid, bnSenderID, isMobile, isSubtitle, hideSenderInLetterbox, supressRaidIcons)
 	-- Extract item string
 	local itemString = string.match(text, "(|cff.-|h%[.-%]|h)")
 
@@ -1429,10 +1442,10 @@ function event:CHAT_MSG_LOOT(text, playerName, languageName, channelName, player
 			end
 		end
 	end
-end
+end)
 
 -- When a new appearance is learned
-function event:TRANSMOG_COLLECTION_SOURCE_ADDED(itemModifiedAppearanceID)
+app.Event:Register("TRANSMOG_COLLECTION_SOURCE_ADDED", function(itemModifiedAppearanceID)
 	-- Grab the itemID
 	local itemID = C_TransmogCollection.GetSourceInfo(itemModifiedAppearanceID).itemID
 
@@ -1442,7 +1455,7 @@ function event:TRANSMOG_COLLECTION_SOURCE_ADDED(itemModifiedAppearanceID)
 	-- Share the itemID with other TLH users
 	local message = "itemID:"..itemID
 	app.SendAddonMessage(message)
-end
+end)
 
 ------------------------
 -- MESSAGE CUSTOMIZER --
@@ -1582,14 +1595,14 @@ function app.SendAddonMessage(message)
 end
 
 -- When joining a group
-function event:GROUP_ROSTER_UPDATE(category, partyGUID)
+app.Event:Register("GROUP_ROSTER_UPDATE", function(category, partyGUID)
 	-- Share our AddOn version with other users
 	local message = "version:"..C_AddOns.GetAddOnMetadata("TransmogLootHelper", "Version")
 	app.SendAddonMessage(message)
-end
+end)
 
 -- When we receive information over the addon comms
-function event:CHAT_MSG_ADDON(prefix, text, channel, sender, target, zoneChannelID, localID, name, instanceID)
+app.Event:Register("CHAT_MSG_ADDON", function(prefix, text, channel, sender, target, zoneChannelID, localID, name, instanceID)
 	-- If it's our message
 	if prefix == "TransmogLootHelp" then
 		-- ItemID
@@ -1665,7 +1678,7 @@ function event:CHAT_MSG_ADDON(prefix, text, channel, sender, target, zoneChannel
 			end		
 		end
 	end
-end
+end)
 
 --------------
 -- SETTINGS --
