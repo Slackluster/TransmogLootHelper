@@ -188,6 +188,7 @@ app.Event:Register("ADDON_LOADED", function(addOnName, containsBindings)
 		app.Update()
 		app.CreateGeneralAssets()
 		app.MessagePopup()
+		app.ItemOverlayHooks()
 		app.Settings()
 
 		-- Slash commands
@@ -1751,7 +1752,7 @@ function app.Settings()
 
 	layout:AddInitializer(CreateSettingsListSectionHeaderInitializer(C_AddOns.GetAddOnMetadata(appName, "Version")))
 
-	local variable, name, tooltip = "minimapIcon", "Show minimap icon", "Show the minimap icon. If you disable this, "..app.NameShort.." is still available from the AddOn Compartment."
+	local variable, name, tooltip = "minimapIcon", "Minimap Icon", "Show the minimap icon. If you disable this, "..app.NameShort.." is still available from the AddOn Compartment."
 	local setting = Settings.RegisterAddOnSetting(category, appName.."_"..variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, true)
 	Settings.CreateCheckbox(category, setting, tooltip)
 	setting:SetValueChangedCallback(function()
@@ -1764,11 +1765,11 @@ function app.Settings()
 		end
 	end)
 
-	local variable, name, tooltip = "autoOpen", "Auto open window", "Automatically show the "..app.NameShort.." window when an eligible item is looted."
+	local variable, name, tooltip = "autoOpen", "Auto Open Window", "Automatically show the "..app.NameShort.." window when an eligible item is looted."
 	local setting = Settings.RegisterAddOnSetting(category, appName.."_"..variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, true)
 	Settings.CreateCheckbox(category, setting, tooltip)
 
-	local variable, name, tooltip = "collectMode", "Collection mode", "Set when "..app.NameShort.." should show new transmog looted by others."
+	local variable, name, tooltip = "collectMode", "Collection Mode", "Set when "..app.NameShort.." should show new transmog looted by others."
 	local function GetOptions()
 		local container = Settings.CreateControlTextContainer()
 		container:Add(1, "Appearances", "Show items only if they have a new appearance.")
@@ -1778,11 +1779,11 @@ function app.Settings()
 	local setting = Settings.RegisterAddOnSetting(category, appName.."_"..variable, variable, TransmogLootHelper_Settings, Settings.VarType.Number, name, 1)
 	Settings.CreateDropdown(category, setting, GetOptions, tooltip)
 
-	local variable, name, tooltip = "usableMog", "Only usable transmog", "Only show usable transmog (weapons you can equip, and your armor class)."
+	local variable, name, tooltip = "usableMog", "Only Usable Appearances", "Only show usable appearances (weapons you can equip, and your armor class)."
 	local setting = Settings.RegisterAddOnSetting(category, appName.."_"..variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, false)
 	local parentSetting = Settings.CreateCheckbox(category, setting, tooltip)
 
-	local variable, name, tooltip = "remixFilter", "Remix filter", "Filter items below |cff0070dd"..ITEM_QUALITY3_DESC.."|r quality (untradeable) for Remix characters."
+	local variable, name, tooltip = "remixFilter", "Remix Filter", "Filter items below |cff0070dd"..ITEM_QUALITY3_DESC.."|r quality (untradeable) for Remix characters."
 	local setting = Settings.RegisterAddOnSetting(category, appName.."_"..variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, false)
 	local parentSetting = Settings.CreateCheckbox(category, setting, tooltip)
 
@@ -1802,19 +1803,19 @@ function app.Settings()
 	local function onButtonClick()
 		app.RenamePopup:Show()
 	end
-	local initializer = CreateSettingsButtonInitializer("Whisper message", "Customize", onButtonClick, "Customize your whisper message.", true)
+	local initializer = CreateSettingsButtonInitializer("Whisper Message", "Customize", onButtonClick, "Customize your whisper message.", true)
 	layout:AddInitializer(initializer)
 
 	layout:AddInitializer(CreateSettingsListSectionHeaderInitializer("Information"))
 
-	local variable, name, tooltip = "", "Slash commands", "Type these in chat to use them!"
+	local variable, name, tooltip = "", "Slash Commands", "Type these in chat to use them!"
 	local function GetOptions()
 		local container = Settings.CreateControlTextContainer()
 		container:Add(1, "/tlh", "Toggle the window.")
 		container:Add(2, "/tlh settings", "Open these settings.")
 		container:Add(3, "/tlh resetpos", "Reset the window position.")
 		container:Add(4, "/tlh default", "Set the whisper message to its default.")
-		container:Add(5, "/tlh msg |cff1B9C85message|R", "Customise the whisper message.")
+		container:Add(5, "/tlh msg", "Customize the whisper message.")
 		return container:GetData()
 	end
 	local setting = Settings.RegisterAddOnSetting(category, appName.."_"..variable, variable, TransmogLootHelper_Settings, Settings.VarType.Number, name, 1)
