@@ -14,6 +14,9 @@ function app.InitialiseCoreItemOverlay()
 	-- Declare SavedVariables
 	if not TransmogLootHelper_Cache then TransmogLootHelper_Cache = {} end
 	if not TransmogLootHelper_Cache.Recipes then TransmogLootHelper_Cache.Recipes = {} end
+
+	-- Declare session variables
+	app.OverlayCache = {}
 end
 
 -- When the AddOn is fully loaded, actually run the components
@@ -33,7 +36,6 @@ end)
 -- AH rows
 -- Prof rows
 -- Icon for openable containers (goodie bags, lockboxes, etc.)
--- Learn how to cache stuff so we don't have to wait an extra 0.1 second for the backpack to open
 -- AH pricing (Auctionator, Auctioneer, TSM, Oribos Exchange)
 -- Baganator
 -- ArkInventory
@@ -139,64 +141,76 @@ function app.ItemOverlay(overlay, itemLink)
 	
 	-- And when the item is cached
 	item:ContinueOnItemLoad(function()
-		-- Grab our item info, which is enough for appearances
-		local _, _, _, _, _, _, _, _, itemEquipLoc, _, _, classID, subclassID, bindType, _, _, _ = C_Item.GetItemInfo(itemID)
+		local itemEquipLoc
+		local icon
+		-- Check if we've cached this info
+		if app.OverlayCache[itemLink] then
+			itemEquipLoc = app.OverlayCache[itemLink].itemEquipLoc
+			icon = app.Icon[itemEquipLoc]
+		-- If not, let's do that
+		else
+			-- Grab our item info, which is enough for appearances
+			_, _, _, _, _, _, _, _, itemEquipLoc, _, _, classID, subclassID, bindType, _, _, _ = C_Item.GetItemInfo(itemID)
 
-		-- Mounts
-		if classID == 15 and subclassID == 5 then
-			itemEquipLoc = "Mount"
-		-- Toys
-		elseif app.GetTooltipText(itemLink, ITEM_TOY_ONUSE) then
-			itemEquipLoc = "Toy"
-		-- Pets
-		elseif classID == 17 or (classID == 15 and subclassID == 2) then
-			itemEquipLoc = "Pet"
-		-- Recipes
-		elseif classID == 9 and subclassID ~= 0 then
-			itemEquipLoc = "Recipe"
-		-- Illusions & Ensembles
-		elseif classID == 0 and subclassID == 8 then
-			local itemName = C_Item.GetItemInfo(itemLink)
+			-- Mounts
+			if classID == 15 and subclassID == 5 then
+				itemEquipLoc = "Mount"
+			-- Toys
+			elseif app.GetTooltipText(itemLink, ITEM_TOY_ONUSE) then
+				itemEquipLoc = "Toy"
+			-- Pets
+			elseif classID == 17 or (classID == 15 and subclassID == 2) then
+				itemEquipLoc = "Pet"
+			-- Recipes
+			elseif classID == 9 and subclassID ~= 0 then
+				itemEquipLoc = "Recipe"
+			-- Illusions & Ensembles
+			elseif classID == 0 and subclassID == 8 then
+				local itemName = C_Item.GetItemInfo(itemLink)
 
-			-- Check if it's an illusion
-			local localeIllusion = {
-				"Illusion:",
-				"Illusion :",
-				"Ilusión:",
-				"Illusione:",
-				"Ilusão:",
-				"Иллюзия",
-				"환영:",
-				"幻象：",
-			}
-			for k, v in pairs(localeIllusion) do
-				if itemName:find("^" .. v) then
-					itemEquipLoc = "Illusion"
-					break
+				-- Check if it's an illusion
+				local localeIllusion = {
+					"Illusion:",
+					"Illusion :",
+					"Ilusión:",
+					"Illusione:",
+					"Ilusão:",
+					"Иллюзия",
+					"환영:",
+					"幻象：",
+				}
+				for k, v in pairs(localeIllusion) do
+					if itemName:find("^" .. v) then
+						itemEquipLoc = "Illusion"
+						break
+					end
+				end
+
+				-- Check if it's an ensemble
+				local localeEnsemble = {
+					"Ensemble:",
+					"Ensemble :",
+					"Indumentaria:",
+					"Set:",
+					"Indumentária:",
+					"Комплект:",
+					"복장:",
+					"套装：",
+				}
+				for k, v in pairs(localeEnsemble) do
+					if itemName:find("^" .. v) then
+						itemEquipLoc = "Ensemble"
+						break
+					end
 				end
 			end
 
-			-- Check if it's an ensemble
-			local localeEnsemble = {
-				"Ensemble:",
-				"Ensemble :",
-				"Indumentaria:",
-				"Set:",
-				"Indumentária:",
-				"Комплект:",
-				"복장:",
-				"套装：",
-			}
-			for k, v in pairs(localeEnsemble) do
-				if itemName:find("^" .. v) then
-					itemEquipLoc = "Ensemble"
-					break
-				end
-			end
+			-- Set which icon we're going to be using
+			icon = app.Icon[itemEquipLoc] or "Interface\\Icons\\INV_Misc_QuestionMark"
+
+			-- Cache this info, so we don't need to check it again
+			app.OverlayCache[itemLink] = { itemEquipLoc = itemEquipLoc }
 		end
-
-		-- Set which icon we're going to be using
-		local icon = app.Icon[itemEquipLoc] or "Interface\\Icons\\INV_Misc_QuestionMark"
 
 		-- Create the overlay
 		createOverlay(icon, itemLink)
@@ -231,96 +245,97 @@ function app.ItemOverlay(overlay, itemLink)
 			overlay.animation:Stop()
 		end
 
-		-- Appearances
-		if TransmogLootHelper_Settings["iconNewMog"] and app.Icon[itemEquipLoc] and itemEquipLoc:find("INVTYPE") then
-			-- New appearance
-			if app.GetTooltipText(itemLink, TRANSMOGRIFY_TOOLTIP_APPEARANCE_UNKNOWN) then
-				showOverlay("purple")
-			-- New source
-			elseif TransmogLootHelper_Settings["iconNewSource"] and app.GetTooltipText(itemLink, TRANSMOGRIFY_TOOLTIP_ITEM_UNKNOWN_APPEARANCE_KNOWN) then
-				showOverlay("yellow")
-			elseif TransmogLootHelper_Settings["iconLearned"] and not (classID == 15 and subclassID == 0) then
-				showOverlay("green")
-			else
-				overlay.icon:Hide()
-				overlay.animation:Stop()
-			end
-		-- Ensembles
-		elseif TransmogLootHelper_Settings["iconNewMog"] and itemEquipLoc == "Ensemble" then
-			if app.GetTooltipText(itemLink, ITEM_SPELL_KNOWN) then
-				if TransmogLootHelper_Settings["iconLearned"] then
+		if app.Icon[itemEquipLoc] then
+			-- Appearances
+			if TransmogLootHelper_Settings["iconNewMog"] and itemEquipLoc:find("INVTYPE") then
+				-- New appearance
+				if app.GetTooltipText(itemLink, TRANSMOGRIFY_TOOLTIP_APPEARANCE_UNKNOWN) then
+					showOverlay("purple")
+				-- New source
+				elseif TransmogLootHelper_Settings["iconNewSource"] and app.GetTooltipText(itemLink, TRANSMOGRIFY_TOOLTIP_ITEM_UNKNOWN_APPEARANCE_KNOWN) then
+					showOverlay("yellow")
+				elseif TransmogLootHelper_Settings["iconLearned"] and not (classID == 15 and subclassID == 0) then
 					showOverlay("green")
 				else
-					hideOverlay()
+					overlay.icon:Hide()
+					overlay.animation:Stop()
 				end
-			else
-				showOverlay("purple")
-			end
-		-- Illusions
-		elseif TransmogLootHelper_Settings["iconNewIllusion"] and itemEquipLoc == "Illusion" then
-			if app.GetTooltipText(itemLink, ITEM_SPELL_KNOWN) then
-				if TransmogLootHelper_Settings["iconLearned"] then
-					showOverlay("green")
-				else
-					hideOverlay()
-				end
-			else
-				showOverlay("purple")
-			end
-		-- Mounts
-		elseif TransmogLootHelper_Settings["iconNewMount"] and itemEquipLoc == "Mount" then
-			if app.GetTooltipText(itemLink, ITEM_SPELL_KNOWN) then
-				if TransmogLootHelper_Settings["iconLearned"] then
-					showOverlay("green")
-				else
-					hideOverlay()
-				end
-			else
-				showOverlay("purple")
-			end
-		-- Pets
-		elseif TransmogLootHelper_Settings["iconNewPet"] and itemEquipLoc == "Pet" then
-			local _, _, _, _, _, _, _, _, _, _, _, _, speciesID = C_PetJournal.GetPetInfoByItemID(itemID)
-			if C_PetJournal.GetOwnedBattlePetString(speciesID) then
-				if TransmogLootHelper_Settings["iconLearned"] then
-					showOverlay("green")
-				else
-					hideOverlay()
-				end
-			else
-				showOverlay("purple")
-			end				
-		-- Toys
-		elseif TransmogLootHelper_Settings["iconNewToy"] and itemEquipLoc == "Toy" then
-			if app.GetTooltipText(itemLink, ITEM_SPELL_KNOWN) then
-				if TransmogLootHelper_Settings["iconLearned"] then
-					showOverlay("green")
-				else
-					hideOverlay()
-				end
-			else
-				showOverlay("purple")
-			end
-		-- Recipes
-		elseif TransmogLootHelper_Settings["iconNewRecipe"] and itemEquipLoc == "Recipe" then
-			if app.RecipeItem[itemID] then
-				local recipeID = app.RecipeItem[itemID]
-				
-				if TransmogLootHelper_Cache.Recipes[recipeID] then
+			-- Ensembles
+			elseif TransmogLootHelper_Settings["iconNewMog"] and itemEquipLoc == "Ensemble" then
+				if app.GetTooltipText(itemLink, ITEM_SPELL_KNOWN) then
 					if TransmogLootHelper_Settings["iconLearned"] then
 						showOverlay("green")
 					else
 						hideOverlay()
 					end
-				elseif C_TradeSkillUI.IsRecipeProfessionLearned(recipeID) then
-					showOverlay("purple")
 				else
-					showOverlay("red")
+					showOverlay("purple")
 				end
-			else
-				hideOverlay()
+			-- Illusions
+			elseif TransmogLootHelper_Settings["iconNewIllusion"] and itemEquipLoc == "Illusion" then
+				if app.GetTooltipText(itemLink, ITEM_SPELL_KNOWN) then
+					if TransmogLootHelper_Settings["iconLearned"] then
+						showOverlay("green")
+					else
+						hideOverlay()
+					end
+				else
+					showOverlay("purple")
+				end
+			-- Mounts
+			elseif TransmogLootHelper_Settings["iconNewMount"] and itemEquipLoc == "Mount" then
+				if app.GetTooltipText(itemLink, ITEM_SPELL_KNOWN) then
+					if TransmogLootHelper_Settings["iconLearned"] then
+						showOverlay("green")
+					else
+						hideOverlay()
+					end
+				else
+					showOverlay("purple")
+				end
+			-- Pets
+			elseif TransmogLootHelper_Settings["iconNewPet"] and itemEquipLoc == "Pet" then
+				local _, _, _, _, _, _, _, _, _, _, _, _, speciesID = C_PetJournal.GetPetInfoByItemID(itemID)
+				if C_PetJournal.GetOwnedBattlePetString(speciesID) then
+					if TransmogLootHelper_Settings["iconLearned"] then
+						showOverlay("green")
+					else
+						hideOverlay()
+					end
+				else
+					showOverlay("purple")
+				end				
+			-- Toys
+			elseif TransmogLootHelper_Settings["iconNewToy"] and itemEquipLoc == "Toy" then
+				if app.GetTooltipText(itemLink, ITEM_SPELL_KNOWN) then
+					if TransmogLootHelper_Settings["iconLearned"] then
+						showOverlay("green")
+					else
+						hideOverlay()
+					end
+				else
+					showOverlay("purple")
+				end
+			-- Recipes
+			elseif TransmogLootHelper_Settings["iconNewRecipe"] and itemEquipLoc == "Recipe" then
+				if app.RecipeItem[itemID] then
+					local recipeID = app.RecipeItem[itemID]
+					
+					if TransmogLootHelper_Cache.Recipes[recipeID] then
+						if TransmogLootHelper_Settings["iconLearned"] then
+							showOverlay("green")
+						else
+							hideOverlay()
+						end
+					elseif C_TradeSkillUI.IsRecipeProfessionLearned(recipeID) then
+						showOverlay("purple")
+					else
+						showOverlay("red")
+					end
+				else
+					hideOverlay()
+				end
 			end
-		-- Otherwise
 		else
 			hideOverlay()
 		end
