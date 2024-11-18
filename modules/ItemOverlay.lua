@@ -664,6 +664,7 @@ function app.ItemOverlayHooks()
 		hooksecurefunc("QuestMapFrame_ShowQuestDetails", questOverlay)
 
 		local function worldQuests()
+			C_Timer.After(0.1, function()
 				for pin in WorldMapFrame:EnumeratePinsByTemplate("WorldMap_WorldQuestPinTemplate") do
 					if not pin.TLHOverlay then
 						pin.TLHOverlay = CreateFrame("Frame", nil, pin)
@@ -676,6 +677,7 @@ function app.ItemOverlayHooks()
 						local itemLink = GetQuestLogItemLink(bestType, bestIndex, pin.questID)
 						if itemLink then
 							app.ItemOverlay(pin.TLHOverlay, itemLink)
+							pin.TLHOverlay.text:SetText("")	-- No bind text for these
 						else
 							pin.TLHOverlay:Hide()
 						end
@@ -683,9 +685,11 @@ function app.ItemOverlayHooks()
 						pin.TLHOverlay:Hide()
 					end
 				end
+			end)
 		end
 
-		WorldMapFrame:HookScript("OnUpdate", worldQuests)
+		WorldMapFrame:HookScript("OnShow", worldQuests)
+		EventRegistry:RegisterCallback("MapCanvas.MapSet", worldQuests)
 	end
 end
 
