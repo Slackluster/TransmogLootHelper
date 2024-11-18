@@ -141,7 +141,7 @@ function app.ItemOverlay(overlay, itemLink)
 		-- Cache our info, if we haven't yet.
 		if not app.OverlayCache[itemLink] then
 			-- Grab our item info, which is enough for appearances
-			local _, _, _, _, _, _, _, _, itemEquipLoc, _, _, classID, subclassID, bindType, _, _, _ = C_Item.GetItemInfo(itemLink)
+			local _, _, itemQuality, _, _, _, _, _, itemEquipLoc, _, _, classID, subclassID, bindType, _, _, _ = C_Item.GetItemInfo(itemLink)
 
 			-- Mounts
 			if classID == 15 and subclassID == 5 then
@@ -200,7 +200,7 @@ function app.ItemOverlay(overlay, itemLink)
 			local icon = app.Icon[itemEquipLoc] or "Interface\\Icons\\INV_Misc_QuestionMark"
 
 			-- Cache this info, so we don't need to check it again
-			app.OverlayCache[itemLink] = { itemEquipLoc = itemEquipLoc, bindType = bindType }
+			app.OverlayCache[itemLink] = { itemEquipLoc = itemEquipLoc, bindType = bindType, itemQuality = itemQuality }
 		end
 
 		local itemEquipLoc = app.OverlayCache[itemLink].itemEquipLoc
@@ -241,8 +241,15 @@ function app.ItemOverlay(overlay, itemLink)
 		if app.Icon[itemEquipLoc] then
 			-- Appearances
 			if TransmogLootHelper_Settings["iconNewMog"] and itemEquipLoc:find("INVTYPE") then
+				-- Legendaries and Artifacts can be a little weird
+				if (app.OverlayCache[itemLink].itemQuality == 5 or app.OverlayCache[itemLink].itemQuality == 6) and bindType == 1 then
+					if TransmogLootHelper_Settings["iconLearned"] then
+						showOverlay("green")
+					else
+						hideOverlay()
+					end
 				-- New appearance
-				if not api.IsAppearanceCollected(itemLink) then
+				elseif not api.IsAppearanceCollected(itemLink) then
 					showOverlay("purple")
 				-- New source
 				elseif TransmogLootHelper_Settings["iconNewSource"] and not api.IsSourceCollected(itemLink) then
@@ -250,8 +257,7 @@ function app.ItemOverlay(overlay, itemLink)
 				elseif TransmogLootHelper_Settings["iconLearned"] and not (classID == 15 and subclassID == 0) then
 					showOverlay("green")
 				else
-					overlay.icon:Hide()
-					overlay.animation:Stop()
+					hideOverlay()
 				end
 			-- Ensembles
 			elseif TransmogLootHelper_Settings["iconNewMog"] and itemEquipLoc == "Ensemble" then
