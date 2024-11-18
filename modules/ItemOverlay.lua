@@ -141,16 +141,10 @@ function app.ItemOverlay(overlay, itemLink)
 	
 	-- And when the item is cached
 	item:ContinueOnItemLoad(function()
-		local itemEquipLoc
-		local icon
-		-- Check if we've cached this info
-		if app.OverlayCache[itemLink] then
-			itemEquipLoc = app.OverlayCache[itemLink].itemEquipLoc
-			icon = app.Icon[itemEquipLoc]
-		-- If not, let's do that
-		else
+		-- Cache our info, if we haven't yet.
+		if not app.OverlayCache[itemLink] then
 			-- Grab our item info, which is enough for appearances
-			_, _, _, _, _, _, _, _, itemEquipLoc, _, _, classID, subclassID, bindType, _, _, _ = C_Item.GetItemInfo(itemID)
+			local _, _, _, _, _, _, _, _, itemEquipLoc, _, _, classID, subclassID, bindType, _, _, _ = C_Item.GetItemInfo(itemLink)
 
 			-- Mounts
 			if classID == 15 and subclassID == 5 then
@@ -206,11 +200,15 @@ function app.ItemOverlay(overlay, itemLink)
 			end
 
 			-- Set which icon we're going to be using
-			icon = app.Icon[itemEquipLoc] or "Interface\\Icons\\INV_Misc_QuestionMark"
+			local icon = app.Icon[itemEquipLoc] or "Interface\\Icons\\INV_Misc_QuestionMark"
 
 			-- Cache this info, so we don't need to check it again
-			app.OverlayCache[itemLink] = { itemEquipLoc = itemEquipLoc }
+			app.OverlayCache[itemLink] = { itemEquipLoc = itemEquipLoc, bindType = bindType }
 		end
+
+		local itemEquipLoc = app.OverlayCache[itemLink].itemEquipLoc
+		local icon = app.Icon[itemEquipLoc]
+		local bindType = app.OverlayCache[itemLink].bindType
 
 		-- Create the overlay
 		createOverlay(icon, itemLink)
@@ -351,6 +349,8 @@ function app.ItemOverlay(overlay, itemLink)
 			else
 				overlay.text:SetText("")
 			end
+		else
+			overlay.text:SetText("")
 		end
 	end)
 end
