@@ -344,12 +344,12 @@ function app.ItemOverlay(overlay, itemLink)
 
 		-- Set the bind text
 		if TransmogLootHelper_Settings["textBind"] then
-			if bindType == 2 or bindType == 3 then
-				overlay.text:SetText("BoE")
+			if bindType == 9 or app.GetTooltipText(itemLink, ITEM_ACCOUNTBOUND_UNTIL_EQUIP) or app.GetTooltipText(itemLink, ITEM_BIND_TO_ACCOUNT_UNTIL_EQUIP) then
+				overlay.text:SetText("|cff00CCFFWuE|r")
 			elseif bindType == 7 or bindType == 8 or app.GetTooltipText(itemLink, ITEM_ACCOUNTBOUND) or app.GetTooltipText(itemLink, ITEM_BNETACCOUNTBOUND) or app.GetTooltipText(itemLink, ITEM_BIND_TO_ACCOUNT) or app.GetTooltipText(itemLink, ITEM_BIND_TO_BNETACCOUNT) then
 				overlay.text:SetText("|cff00CCFFBoA|r")
-			elseif bindType == 9 or app.GetTooltipText(itemLink, ITEM_ACCOUNTBOUND_UNTIL_EQUIP) or app.GetTooltipText(itemLink, ITEM_BIND_TO_ACCOUNT_UNTIL_EQUIP) then
-				overlay.text:SetText("|cff00CCFFWuE|r")
+			elseif bindType == 2 or bindType == 3 then
+				overlay.text:SetText("BoE")
 			else
 				overlay.text:SetText("")
 			end
