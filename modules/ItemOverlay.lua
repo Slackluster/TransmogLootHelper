@@ -43,7 +43,7 @@ end)
 
 function app.ItemOverlay(overlay, itemLink)
 	-- Create our overlay
-	local function createOverlay(icon, itemLink)
+	local function createOverlay(icon)
 		-- Text
 		if not overlay.text then
 			overlay.text = overlay:CreateFontString("OVERLAY", nil, "GameFontNormalOutline")
@@ -134,13 +134,8 @@ function app.ItemOverlay(overlay, itemLink)
 		end
 	end
 
-	-- Cache the item by asking the server to give us the info
-	local itemID = C_Item.GetItemInfoInstant(itemLink)
-	C_Item.RequestLoadItemDataByID(itemID)
-	local item = Item:CreateFromItemID(itemID)
-	
-	-- And when the item is cached
-	item:ContinueOnItemLoad(function()
+	-- Process our overlay
+	local function processOverlay(itemID)
 		-- Cache our info, if we haven't yet.
 		if not app.OverlayCache[itemLink] then
 			-- Grab our item info, which is enough for appearances
@@ -211,7 +206,7 @@ function app.ItemOverlay(overlay, itemLink)
 		local bindType = app.OverlayCache[itemLink].bindType
 
 		-- Create the overlay
-		createOverlay(icon, itemLink)
+		createOverlay(icon)
 		-- Set the icon's texture
 		overlay.texture:SetTexture(icon)
 		-- Show the overlay
@@ -293,16 +288,25 @@ function app.ItemOverlay(overlay, itemLink)
 				end
 			-- Pets
 			elseif TransmogLootHelper_Settings["iconNewPet"] and itemEquipLoc == "Pet" then
-				local _, _, _, _, _, _, _, _, _, _, _, _, speciesID = C_PetJournal.GetPetInfoByItemID(itemID)
-				if C_PetJournal.GetOwnedBattlePetString(speciesID) then
+				-- If we haven't grabbed this info from a pet cage, grab it now
+				if not app.OverlayCache[itemLink].creatureID then
+					local _, _, _, creatureID = C_PetJournal.GetPetInfoByItemID(itemID)
+					app.OverlayCache[itemLink].creatureID = creatureID
+				end
+
+				maxAllowed, numPets = C_PetJournal.GetNumPetsInJournal(app.OverlayCache[itemLink].creatureID)
+
+				if (maxAllowed == numPets and numPets ~= 0) or (not TransmogLootHelper_Settings["iconNewPetMax"] and numPets >= 1) then
 					if TransmogLootHelper_Settings["iconLearned"] then
 						showOverlay("green")
 					else
 						hideOverlay()
 					end
+				elseif TransmogLootHelper_Settings["iconNewPetMax"] and maxAllowed > numPets then
+					showOverlay("yellow")
 				else
 					showOverlay("purple")
-				end				
+				end
 			-- Toys
 			elseif TransmogLootHelper_Settings["iconNewToy"] and itemEquipLoc == "Toy" then
 				if app.GetTooltipText(itemLink, ITEM_SPELL_KNOWN) then
@@ -340,19 +344,41 @@ function app.ItemOverlay(overlay, itemLink)
 
 		-- Set the bind text
 		if TransmogLootHelper_Settings["textBind"] then
-			if bindType == 9 or app.GetTooltipText(itemLink, ITEM_ACCOUNTBOUND_UNTIL_EQUIP) or app.GetTooltipText(itemLink, ITEM_BIND_TO_ACCOUNT_UNTIL_EQUIP) then
-				overlay.text:SetText("|cff00CCFFWuE|r")
+			if bindType == 2 or bindType == 3 then
+				overlay.text:SetText("BoE")
 			elseif bindType == 7 or bindType == 8 or app.GetTooltipText(itemLink, ITEM_ACCOUNTBOUND) or app.GetTooltipText(itemLink, ITEM_BNETACCOUNTBOUND) or app.GetTooltipText(itemLink, ITEM_BIND_TO_ACCOUNT) or app.GetTooltipText(itemLink, ITEM_BIND_TO_BNETACCOUNT) then
 				overlay.text:SetText("|cff00CCFFBoA|r")
-			elseif bindType == 2 or bindType == 3 then
-				overlay.text:SetText("BoE")
+			elseif bindType == 9 or app.GetTooltipText(itemLink, ITEM_ACCOUNTBOUND_UNTIL_EQUIP) or app.GetTooltipText(itemLink, ITEM_BIND_TO_ACCOUNT_UNTIL_EQUIP) then
+				overlay.text:SetText("|cff00CCFFWuE|r")
 			else
 				overlay.text:SetText("")
 			end
 		else
 			overlay.text:SetText("")
 		end
-	end)
+	end
+
+	-- Cache the item by asking the server to give us the info
+	local itemID = C_Item.GetItemInfoInstant(itemLink)
+	-- Caged pets don't return this info
+	if not itemID then
+		local creatureID = string.match(itemLink, "battlepet:(%d+):")
+		if creatureID then
+			app.OverlayCache[itemLink] = { itemEquipLoc = "Pet", bindType = 2, creatureID = creatureID }
+			processOverlay()
+		else
+			return
+		end
+	-- But everything else does (that I know of so far)
+	else
+		C_Item.RequestLoadItemDataByID(itemID)
+		local item = Item:CreateFromItemID(itemID)
+
+		-- And when the item is cached
+		item:ContinueOnItemLoad(function()
+			processOverlay(itemID)
+		end)
+	end
 end
 
 -- Hook our overlay onto items in various places
@@ -724,21 +750,26 @@ function app.SettingsItemOverlay()
 	local parentSetting = Settings.CreateCheckbox(category, setting, tooltip)
 
 	local variable, name, tooltip = "iconNewSource", "Sources", "Show an icon to indicate an item's appearance source is unlearned."
-	local setting = Settings.RegisterAddOnSetting(category, appName .. "_" .. variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, true)
+	local setting = Settings.RegisterAddOnSetting(category, appName .. "_" .. variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, false)
 	local subSetting = Settings.CreateCheckbox(category, setting, tooltip)
 	subSetting:SetParentInitializer(parentSetting, function() return TransmogLootHelper_Settings["iconNewMog"] end)
 
-	local variable, name, tooltip = "iconNewIllusion", "Illusions", "Show an icon to indicate an item's source is unlearned."
+	local variable, name, tooltip = "iconNewIllusion", "Illusions", "Show an icon to indicate an illusion is unlearned."
 	local setting = Settings.RegisterAddOnSetting(category, appName.."_"..variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, true)
 	Settings.CreateCheckbox(category, setting, tooltip)
 
-	local variable, name, tooltip = "iconNewMount", "Mounts", "Show an icon to indicate an item's source is unlearned."
+	local variable, name, tooltip = "iconNewMount", "Mounts", "Show an icon to indicate a mount is unlearned."
 	local setting = Settings.RegisterAddOnSetting(category, appName.."_"..variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, true)
 	Settings.CreateCheckbox(category, setting, tooltip)
 
-	local variable, name, tooltip = "iconNewPet", "Pets", "Show an icon to indicate an item's source is unlearned."
-	local setting = Settings.RegisterAddOnSetting(category, appName.."_"..variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, true)
-	Settings.CreateCheckbox(category, setting, tooltip)
+	local variable, name, tooltip = "iconNewPet", "Pets", "Show an icon to indicate a pet is unlearned."
+	local setting = Settings.RegisterAddOnSetting(category, appName .. "_" .. variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, true)
+	local parentSetting = Settings.CreateCheckbox(category, setting, tooltip)
+
+	local variable, name, tooltip = "iconNewPetMax", "Collect 3/3", "Also take the maximum number of pets you can own into account (usually 3)."
+	local setting = Settings.RegisterAddOnSetting(category, appName .. "_" .. variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, false)
+	local subSetting = Settings.CreateCheckbox(category, setting, tooltip)
+	subSetting:SetParentInitializer(parentSetting, function() return TransmogLootHelper_Settings["iconNewPet"] end)
 
 	local variable, name, tooltip = "iconNewToy", "Toys", "Show an icon to indicate an item's source is unlearned."
 	local setting = Settings.RegisterAddOnSetting(category, appName.."_"..variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, true)
