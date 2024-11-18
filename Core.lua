@@ -1283,6 +1283,53 @@ function app.Stagger(t, show)
 	end)
 end
 
+-- Get an item's SourceID (thank you Plusmouse!)
+function app.GetSourceID(itemLink)
+	local _, sourceID = C_TransmogCollection.GetItemInfo(itemLink)
+	if sourceID then
+		return sourceID
+	end
+
+	local _, sourceID = C_TransmogCollection.GetItemInfo((C_Item.GetItemInfoInstant(itemLink)))
+	return sourceID
+end
+
+-- Check if an item's appearance is collected (thank you Plusmouse!)
+function api.IsAppearanceCollected(itemLink)
+	local sourceID = app.GetSourceID(itemLink)
+	if not sourceID then
+		return
+	else
+		local subClass = select(7, C_Item.GetItemInfoInstant(itemLink))
+		local sourceInfo = C_TransmogCollection.GetSourceInfo(sourceID)
+		local allSources = C_TransmogCollection.GetAllAppearanceSources(sourceInfo.visualID)
+		if #allSources == 0 then
+			allSources = {sourceID}
+	  	end
+
+		local anyCollected = false
+		for _, alternateSourceID in ipairs(allSources) do
+			local altInfo = C_TransmogCollection.GetSourceInfo(alternateSourceID)
+			local altSubClass = select(7, C_Item.GetItemInfoInstant(altInfo.itemID))
+			if altInfo.isCollected and altSubClass == subClass then
+				anyCollected = true
+				break
+			end
+		end
+		return anyCollected
+	end
+end
+
+-- Check if an item's source is collected (thank you Plusmouse!)
+function api.IsSourceCollected(itemLink)
+	local sourceID = app.GetSourceID(itemLink)
+	if not sourceID then
+		return nil
+	else
+		return C_TransmogCollection.PlayerHasTransmogItemModifiedAppearance(sourceID)
+	end
+end
+
 -- Scan the tooltip for the appearance text, localised
 function app.GetTooltipText(itemLinkie, searchString)
 	-- Grab the original value for this setting
@@ -1372,7 +1419,7 @@ app.Event:Register("CHAT_MSG_LOOT", function(text, playerName, languageName, cha
 		-- Continue only if it's not an item we looted ourselves
 		if unitName ~= selfName then
 			-- Do stuff depending on if the appearance or source is new
-			if app.GetTooltipText(itemLink, TRANSMOGRIFY_TOOLTIP_APPEARANCE_UNKNOWN) or (app.GetTooltipText(itemLink, TRANSMOGRIFY_TOOLTIP_ITEM_UNKNOWN_APPEARANCE_KNOWN) and TransmogLootHelper_Settings["collectMode"] == 2) then
+			if not api.IsAppearanceCollected(itemLink) or (not api.IsSourceCollected(itemLink) and TransmogLootHelper_Settings["collectMode"] == 2) then
 				-- Remix filter
 				if (TransmogLootHelper_Settings["remixFilter"] == true and PlayerGetTimerunningSeasonID() ~= nil and itemQuality < 3)
 				-- Or if the item is Account/Warbound
@@ -1381,7 +1428,6 @@ app.Event:Register("CHAT_MSG_LOOT", function(text, playerName, languageName, cha
 					app.AddFilteredLoot(itemLink, itemID, itemTexture, playerName, itemType, "Untradeable")
 				-- Rarity filter
 				elseif itemQuality >= TransmogLootHelper_Settings["rarity"] then
-
 					-- Get the player's armor class
 					local armorClass
 					for k, v in pairs(app.Armor) do

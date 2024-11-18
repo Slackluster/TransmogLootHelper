@@ -5,6 +5,7 @@
 
 -- Initialisation
 local appName, app =  ...	-- Returns the AddOn name and a unique table
+local api = app.api	-- Our "API" prefix
 
 ------------------
 -- INITIAL LOAD --
@@ -242,10 +243,10 @@ function app.ItemOverlay(overlay, itemLink)
 			-- Appearances
 			if TransmogLootHelper_Settings["iconNewMog"] and itemEquipLoc:find("INVTYPE") then
 				-- New appearance
-				if app.GetTooltipText(itemLink, TRANSMOGRIFY_TOOLTIP_APPEARANCE_UNKNOWN) then
+				if not api.IsAppearanceCollected(itemLink) then
 					showOverlay("purple")
 				-- New source
-				elseif TransmogLootHelper_Settings["iconNewSource"] and app.GetTooltipText(itemLink, TRANSMOGRIFY_TOOLTIP_ITEM_UNKNOWN_APPEARANCE_KNOWN) then
+				elseif TransmogLootHelper_Settings["iconNewSource"] and not api.IsSourceCollected(itemLink) then
 					showOverlay("yellow")
 				elseif TransmogLootHelper_Settings["iconLearned"] and not (classID == 15 and subclassID == 0) then
 					showOverlay("green")
