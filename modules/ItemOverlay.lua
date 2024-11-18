@@ -635,6 +635,30 @@ function app.ItemOverlayHooks()
 
 		app.Event:Register("QUEST_DETAIL", questOverlay)
 		hooksecurefunc("QuestMapFrame_ShowQuestDetails", questOverlay)
+
+		local function worldQuests()
+				for pin in WorldMapFrame:EnumeratePinsByTemplate("WorldMap_WorldQuestPinTemplate") do
+					if not pin.TLHOverlay then
+						pin.TLHOverlay = CreateFrame("Frame", nil, pin)
+						pin.TLHOverlay:SetAllPoints(pin)
+					end
+					pin.TLHOverlay:Hide()	-- Hide our overlay initially, updating doesn't work like for regular itemButtons
+
+					local bestIndex, bestType = QuestUtils_GetBestQualityItemRewardIndex(pin.questID)
+					if bestIndex and bestType then
+						local itemLink = GetQuestLogItemLink(bestType, bestIndex, pin.questID)
+						if itemLink then
+							app.ItemOverlay(pin.TLHOverlay, itemLink)
+						else
+							pin.TLHOverlay:Hide()
+						end
+					else
+						pin.TLHOverlay:Hide()
+					end
+				end
+		end
+
+		WorldMapFrame:HookScript("OnUpdate", worldQuests)
 	end
 end
 
