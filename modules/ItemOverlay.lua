@@ -30,11 +30,14 @@ end)
 ----------------
 
 -- TODO:
--- Quest rewards
 -- AH rows
 -- Prof rows
 -- Icon for openable containers (goodie bags, lockboxes, etc.)
 -- Learn how to cache stuff so we don't have to wait an extra 0.1 second for the backpack to open
+-- AH pricing (Auctionator, Auctioneer, TSM, Oribos Exchange)
+-- Baganator
+-- ArkInventory
+-- World Quest Tab
 
 function app.ItemOverlay(overlay, itemLink)
 	-- Create our overlay
@@ -85,7 +88,7 @@ function app.ItemOverlay(overlay, itemLink)
 			local texture = frame:CreateTexture(nil, "ARTWORK")
 			texture:SetAllPoints(frame)
 			texture:SetTexture("interface\\artifacts\\relicforge")
-			texture:SetTexCoord(0.8740234375, 0.9423828125, 0.56640625, 0.634765625)
+			texture:SetAtlas("ArtifactsFX-SpinningGlowys-Purple", true)
 
 			-- Create an AnimationGroup for the texture
 			overlay.animation = texture:CreateAnimationGroup()
@@ -202,28 +205,42 @@ function app.ItemOverlay(overlay, itemLink)
 		-- Show the overlay
 		overlay:Show()
 
+		local function showOverlay(color)
+			if color == "purple" then
+				overlay.border:SetTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\border_purple.blp")
+				overlay.color:SetColorTexture(0.761, 0, 1, 0.2)
+				overlay.animation:Play()
+			elseif color == "yellow" then
+				overlay.border:SetTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\border_yellow.blp")
+				overlay.color:SetColorTexture(1, 0.984, 0, 0.2)
+				overlay.animation:Play()
+			elseif color == "green" then
+				overlay.border:SetTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\border_green.blp")
+				overlay.color:SetColorTexture(0.12, 1, 0, 0.2)
+				overlay.animation:Stop()
+			elseif color == "red" then
+				overlay.border:SetTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\border_red.blp")
+				overlay.color:SetColorTexture(1, 0, 0, 0.2)
+				overlay.animation:Stop()
+			end
+			overlay.icon:Show()
+		end
+
+		local function hideOverlay()
+			overlay.icon:Hide()
+			overlay.animation:Stop()
+		end
+
 		-- Appearances
 		if TransmogLootHelper_Settings["iconNewMog"] and app.Icon[itemEquipLoc] and itemEquipLoc:find("INVTYPE") then
 			-- New appearance
 			if app.GetTooltipText(itemLink, TRANSMOGRIFY_TOOLTIP_APPEARANCE_UNKNOWN) then
-				-- Purple
-				overlay.border:SetTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\border_purple.blp")
-				overlay.color:SetColorTexture(0.761, 0, 1, 0.2)
-				overlay.icon:Show()
-				overlay.animation:Play()
+				showOverlay("purple")
 			-- New source
 			elseif TransmogLootHelper_Settings["iconNewSource"] and app.GetTooltipText(itemLink, TRANSMOGRIFY_TOOLTIP_ITEM_UNKNOWN_APPEARANCE_KNOWN) then
-				-- Yellow
-				overlay.border:SetTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\border_yellow.blp")
-				overlay.color:SetColorTexture(1, 0.984, 0, 0.2)
-				overlay.icon:Show()
-				overlay.animation:Play()
+				showOverlay("yellow")
 			elseif TransmogLootHelper_Settings["iconLearned"] and not (classID == 15 and subclassID == 0) then
-				-- Green
-				overlay.border:SetTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\border_green.blp")
-				overlay.color:SetColorTexture(0.12, 1, 0, 0.2)
-				overlay.icon:Show()
-				overlay.animation:Stop()
+				showOverlay("green")
 			else
 				overlay.icon:Hide()
 				overlay.animation:Stop()
@@ -232,102 +249,57 @@ function app.ItemOverlay(overlay, itemLink)
 		elseif TransmogLootHelper_Settings["iconNewMog"] and itemEquipLoc == "Ensemble" then
 			if app.GetTooltipText(itemLink, ITEM_SPELL_KNOWN) then
 				if TransmogLootHelper_Settings["iconLearned"] then
-					-- Green
-					overlay.border:SetTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\border_green.blp")
-					overlay.color:SetColorTexture(0.12, 1, 0, 0.2)
-					overlay.icon:Show()
-					overlay.animation:Stop()
+					showOverlay("green")
 				else
-					overlay.icon:Hide()
-					overlay.animation:Stop()
+					hideOverlay()
 				end
 			else
-				-- Purple
-				overlay.border:SetTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\border_purple.blp")
-				overlay.color:SetColorTexture(0.761, 0, 1, 0.2)
-				overlay.icon:Show()
-				overlay.animation:Play()
+				showOverlay("purple")
 			end
 		-- Illusions
 		elseif TransmogLootHelper_Settings["iconNewIllusion"] and itemEquipLoc == "Illusion" then
 			if app.GetTooltipText(itemLink, ITEM_SPELL_KNOWN) then
 				if TransmogLootHelper_Settings["iconLearned"] then
-					-- Green
-					overlay.border:SetTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\border_green.blp")
-					overlay.color:SetColorTexture(0.12, 1, 0, 0.2)
-					overlay.icon:Show()
-					overlay.animation:Stop()
+					showOverlay("green")
 				else
-					overlay.icon:Hide()
-					overlay.animation:Stop()
+					hideOverlay()
 				end
 			else
-				-- Purple
-				overlay.border:SetTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\border_purple.blp")
-				overlay.color:SetColorTexture(0.761, 0, 1, 0.2)
-				overlay.icon:Show()
-				overlay.animation:Play()
+				showOverlay("purple")
 			end
 		-- Mounts
 		elseif TransmogLootHelper_Settings["iconNewMount"] and itemEquipLoc == "Mount" then
 			if app.GetTooltipText(itemLink, ITEM_SPELL_KNOWN) then
 				if TransmogLootHelper_Settings["iconLearned"] then
-					-- Green
-					overlay.border:SetTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\border_green.blp")
-					overlay.color:SetColorTexture(0.12, 1, 0, 0.2)
-					overlay.icon:Show()
-					overlay.animation:Stop()
+					showOverlay("green")
 				else
-					overlay.icon:Hide()
-					overlay.animation:Stop()
+					hideOverlay()
 				end
 			else
-				-- Purple
-				overlay.border:SetTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\border_purple.blp")
-				overlay.color:SetColorTexture(0.761, 0, 1, 0.2)
-				overlay.icon:Show()
-				overlay.animation:Play()
+				showOverlay("purple")
 			end
 		-- Pets
 		elseif TransmogLootHelper_Settings["iconNewPet"] and itemEquipLoc == "Pet" then
 			local _, _, _, _, _, _, _, _, _, _, _, _, speciesID = C_PetJournal.GetPetInfoByItemID(itemID)
 			if C_PetJournal.GetOwnedBattlePetString(speciesID) then
 				if TransmogLootHelper_Settings["iconLearned"] then
-					-- Green
-					overlay.border:SetTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\border_green.blp")
-					overlay.color:SetColorTexture(0.12, 1, 0, 0.2)
-					overlay.icon:Show()
-					overlay.animation:Stop()
+					showOverlay("green")
 				else
-					overlay.icon:Hide()
-					overlay.animation:Stop()
+					hideOverlay()
 				end
 			else
-				-- Purple
-				overlay.border:SetTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\border_purple.blp")
-				overlay.color:SetColorTexture(0.761, 0, 1, 0.2)
-				overlay.icon:Show()
-				overlay.animation:Play()
+				showOverlay("purple")
 			end				
 		-- Toys
 		elseif TransmogLootHelper_Settings["iconNewToy"] and itemEquipLoc == "Toy" then
 			if app.GetTooltipText(itemLink, ITEM_SPELL_KNOWN) then
 				if TransmogLootHelper_Settings["iconLearned"] then
-					-- Green
-					overlay.border:SetTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\border_green.blp")
-					overlay.color:SetColorTexture(0.12, 1, 0, 0.2)
-					overlay.icon:Show()
-					overlay.animation:Stop()
+					showOverlay("green")
 				else
-					overlay.icon:Hide()
-					overlay.animation:Stop()
+					hideOverlay()
 				end
 			else
-				-- Purple
-				overlay.border:SetTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\border_purple.blp")
-				overlay.color:SetColorTexture(0.761, 0, 1, 0.2)
-				overlay.icon:Show()
-				overlay.animation:Play()
+				showOverlay("purple")
 			end
 		-- Recipes
 		elseif TransmogLootHelper_Settings["iconNewRecipe"] and itemEquipLoc == "Recipe" then
@@ -336,36 +308,21 @@ function app.ItemOverlay(overlay, itemLink)
 				
 				if TransmogLootHelper_Cache.Recipes[recipeID] then
 					if TransmogLootHelper_Settings["iconLearned"] then
-						-- Green
-						overlay.border:SetTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\border_green.blp")
-						overlay.color:SetColorTexture(0.12, 1, 0, 0.2)
-						overlay.icon:Show()
-						overlay.animation:Stop()
+						showOverlay("green")
 					else
-						overlay.icon:Hide()
-						overlay.animation:Stop()
+						hideOverlay()
 					end
 				elseif C_TradeSkillUI.IsRecipeProfessionLearned(recipeID) then
-					-- Purple
-					overlay.border:SetTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\border_purple.blp")
-					overlay.color:SetColorTexture(0.761, 0, 1, 0.2)
-					overlay.icon:Show()
-					overlay.animation:Play()
+					showOverlay("purple")
 				else
-					-- Red
-					overlay.border:SetTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\border_red.blp")
-					overlay.color:SetColorTexture(1, 0, 0, 0.2)
-					overlay.icon:Show()
-					overlay.animation:Stop()
+					showOverlay("red")
 				end
 			else
-				overlay.icon:Hide()
-				overlay.animation:Stop()
+				hideOverlay()
 			end
 		-- Otherwise
 		else
-			overlay.icon:Hide()
-			overlay.animation:Stop()
+			hideOverlay()
 		end
 
 		-- Set the bind text
@@ -383,6 +340,7 @@ function app.ItemOverlay(overlay, itemLink)
 	end)
 end
 
+-- Hook our overlay onto items in various places
 function app.ItemOverlayHooks()
 	if TransmogLootHelper_Settings["overlay"] then
 		-- Hook our overlay onto all bag slots (thank you Plusmouse!)
@@ -419,7 +377,6 @@ function app.ItemOverlayHooks()
 						itemButton.TLHOverlay:SetAllPoints(itemButton)
 					end
 			
-					local t = itemButton.TLHOverlay
 					local itemLink = C_Container.GetContainerItemLink(-1, i)
 					if itemLink then
 						app.ItemOverlay(itemButton.TLHOverlay, itemLink)
@@ -444,7 +401,6 @@ function app.ItemOverlayHooks()
 						itemButton.TLHOverlay:SetAllPoints(itemButton)
 					end
 			
-					local t = itemButton.TLHOverlay
 					local itemLink = C_Container.GetContainerItemLink(-3, i)
 					if itemLink then
 						app.ItemOverlay(itemButton.TLHOverlay, itemLink)
@@ -470,7 +426,6 @@ function app.ItemOverlayHooks()
 							itemButton.TLHOverlay:SetAllPoints(itemButton)
 						end
 		
-						local t = itemButton.TLHOverlay
 						local location = ItemLocation:CreateFromBagAndSlot(AccountBankPanel.selectedTabID, i)
 						local exists = C_Item.DoesItemExist(location)
 						if exists then
@@ -508,7 +463,6 @@ function app.ItemOverlayHooks()
 							itemButton.TLHOverlay:SetAllPoints(itemButton)
 						end
 				
-						local t = itemButton.TLHOverlay
 						local tab = GetCurrentGuildBankTab()
 						local slot = itemButton:GetID()
 						local itemLink = GetGuildBankItemLink(tab, slot)
@@ -541,7 +495,6 @@ function app.ItemOverlayHooks()
 						itemButton.TLHOverlay:SetAllPoints(itemButton)
 					end
 			
-					local t = itemButton.TLHOverlay
 					local slot = itemButton.slot + (80 * (_G["VoidStorageFrame"].page - 1))
 					local itemLink = GetVoidItemHyperlinkString(slot)
 					if itemLink then
@@ -591,6 +544,82 @@ function app.ItemOverlayHooks()
 		end
 
 		app.Event:Register("MERCHANT_SHOW", function() C_Timer.After(0.1, merchantOverlay) end)
+
+		-- Hook our overlay onto all quest rewards
+		local function questOverlay()
+			local function rewardOverlay(rewardsFrame)
+				local sellPrice = {}
+
+				for k, v in pairs(rewardsFrame.RewardButtons) do
+					local itemButton = QuestInfo_GetRewardButton(rewardsFrame, k)
+					if not itemButton.TLHOverlay then
+						itemButton.TLHOverlay = CreateFrame("Frame", nil, itemButton)
+						itemButton.TLHOverlay:SetAllPoints(itemButton)
+					end
+					itemButton.TLHOverlay:Hide()	-- Hide our overlay initially, updating doesn't work like for regular itemButtons
+					if itemButton.TLHOverlay.gold then itemButton.TLHOverlay.gold:Hide() end
+
+					local itemLink = GetQuestLogItemLink("choice", k) or GetQuestLogItemLink("reward", k) or GetQuestItemLink("choice", k) or GetQuestItemLink("reward", k)
+					if itemLink then
+						table.insert(sellPrice, { price = select(11, GetItemInfo(itemLink)), itemButton = itemButton})
+						app.ItemOverlay(itemButton.TLHOverlay, itemLink)
+						itemButton.TLHOverlay:SetAllPoints(itemButton.IconBorder)
+					else
+						itemButton.TLHOverlay:Hide()
+					end
+				end
+
+				if TransmogLootHelper_Settings["iconQuestGold"] and #sellPrice > 1 then
+					local highestPrice = 0
+					local highestItem = nil
+				
+					for k, v in ipairs(sellPrice) do
+						if v.price > highestPrice then
+							highestPrice = v.price
+							highestItem = v.itemButton
+						end
+					end
+
+					if highestPrice then
+						local overlay = highestItem.TLHOverlay
+
+						if not overlay.gold then
+							overlay.gold = CreateFrame("Frame", nil, overlay)
+							overlay.gold:SetSize(16, 16)
+
+							local goldIcon = overlay.gold:CreateTexture(nil, "ARTWORK")
+							goldIcon:SetAllPoints(overlay.gold)
+							goldIcon:SetTexture("interface\\buttons\\ui-grouploot-coin-up")
+						end
+
+						overlay.gold:Show()
+						-- Set the icon's position
+						if TransmogLootHelper_Settings["iconPosition"] == 0 then
+							overlay.gold:SetPoint("CENTER", overlay, "TOPRIGHT", -4, -4)
+						elseif TransmogLootHelper_Settings["iconPosition"] == 1 then
+							overlay.gold:SetPoint("CENTER", overlay, "TOPLEFT", 4, -4)
+						elseif TransmogLootHelper_Settings["iconPosition"] == 2 then
+							overlay.gold:SetPoint("CENTER", overlay, "BOTTOMLEFT", 4, 4)
+						elseif TransmogLootHelper_Settings["iconPosition"] == 3 then
+							overlay.gold:SetPoint("CENTER", overlay, "BOTTOMRIGHT", -4, 4)
+						end
+					end
+				end
+			end
+
+			if QuestInfoRewardsFrame then
+				rewardOverlay(QuestInfoRewardsFrame)
+			end
+
+			if MapQuestInfoRewardsFrame then
+				rewardOverlay(MapQuestInfoRewardsFrame)
+			end
+
+			
+		end
+
+		app.Event:Register("QUEST_DETAIL", questOverlay)
+		hooksecurefunc("QuestMapFrame_ShowQuestDetails", questOverlay)
 	end
 end
 
@@ -654,9 +683,6 @@ function app.SettingsItemOverlay()
 	local variable, name, tooltip = "iconNewMog", "Appearances", "Show an icon to indicate an item's appearance is unlearned."
 	local setting = Settings.RegisterAddOnSetting(category, appName .. "_" .. variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, true)
 	local parentSetting = Settings.CreateCheckbox(category, setting, tooltip)
-	setting:SetValueChangedCallback(function()
-		--
-	end)
 
 	local variable, name, tooltip = "iconNewSource", "Sources", "Show an icon to indicate an item's appearance source is unlearned."
 	local setting = Settings.RegisterAddOnSetting(category, appName .. "_" .. variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, true)
@@ -666,51 +692,34 @@ function app.SettingsItemOverlay()
 	local variable, name, tooltip = "iconNewIllusion", "Illusions", "Show an icon to indicate an item's source is unlearned."
 	local setting = Settings.RegisterAddOnSetting(category, appName.."_"..variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, true)
 	Settings.CreateCheckbox(category, setting, tooltip)
-	setting:SetValueChangedCallback(function()
-		--
-	end)
 
 	local variable, name, tooltip = "iconNewMount", "Mounts", "Show an icon to indicate an item's source is unlearned."
 	local setting = Settings.RegisterAddOnSetting(category, appName.."_"..variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, true)
 	Settings.CreateCheckbox(category, setting, tooltip)
-	setting:SetValueChangedCallback(function()
-		--
-	end)
 
 	local variable, name, tooltip = "iconNewPet", "Pets", "Show an icon to indicate an item's source is unlearned."
 	local setting = Settings.RegisterAddOnSetting(category, appName.."_"..variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, true)
 	Settings.CreateCheckbox(category, setting, tooltip)
-	setting:SetValueChangedCallback(function()
-		--
-	end)
 
 	local variable, name, tooltip = "iconNewToy", "Toys", "Show an icon to indicate an item's source is unlearned."
 	local setting = Settings.RegisterAddOnSetting(category, appName.."_"..variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, true)
 	Settings.CreateCheckbox(category, setting, tooltip)
-	setting:SetValueChangedCallback(function()
-		--
-	end)
 
 	local variable, name, tooltip = "iconNewRecipe", "Recipes", "Show an icon to indicate an item's source is unlearned."
 	local setting = Settings.RegisterAddOnSetting(category, appName.."_"..variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, true)
 	Settings.CreateCheckbox(category, setting, tooltip)
-	setting:SetValueChangedCallback(function()
-		--
-	end)
 
 	local variable, name, tooltip = "iconLearned", "Learned", "Show an icon to indicate the above tracked collectibles are learned.\n\n|cffFF0000This may show items that cannot be learned at all, as being learned.|r"
+	local setting = Settings.RegisterAddOnSetting(category, appName.."_"..variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, false)
+	Settings.CreateCheckbox(category, setting, tooltip)
+
+	local variable, name, tooltip = "iconQuestGold", "Quest reward sell value", "Show an icon to indicate which quest reward has the highest vendor sell value, if there are multiple."
 	local setting = Settings.RegisterAddOnSetting(category, appName.."_"..variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, true)
 	Settings.CreateCheckbox(category, setting, tooltip)
-	setting:SetValueChangedCallback(function()
-		--
-	end)
 
 	layout:AddInitializer(CreateSettingsListSectionHeaderInitializer("Text"))
 
 	local variable, name, tooltip = "textBind", "Binding Status", "Show a text indicator for Bind-on-Equip items (BoE), Warbound items (BoA), and Warbound-until-Equipped (WuE) items."
 	local setting = Settings.RegisterAddOnSetting(category, appName.."_"..variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, true)
 	Settings.CreateCheckbox(category, setting, tooltip)
-	setting:SetValueChangedCallback(function()
-		--
-	end)
 end
