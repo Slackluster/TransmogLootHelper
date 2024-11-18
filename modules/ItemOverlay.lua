@@ -134,6 +134,7 @@ function app.ItemOverlay(overlay, itemLink)
 			overlay.icon:SetPoint("CENTER", overlay, "BOTTOMLEFT", 4, 4)
 		end
 	end
+	createOverlay(icon)
 
 	-- Process our overlay
 	local function processOverlay(itemID)
@@ -206,8 +207,6 @@ function app.ItemOverlay(overlay, itemLink)
 		local icon = app.Icon[itemEquipLoc]
 		local bindType = app.OverlayCache[itemLink].bindType
 
-		-- Create the overlay
-		createOverlay(icon)
 		-- Set the icon's texture
 		overlay.texture:SetTexture(icon)
 		-- Show the overlay
