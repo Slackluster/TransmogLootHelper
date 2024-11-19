@@ -18,89 +18,89 @@ app.IconNotReady = "|TInterface\\RaidFrame\\ReadyCheck-NotReady:0|t"
 
 -- Type.Subtype -> item type
 app.Type = {
-	["General"] = "4.0"	-- Neck, Ring, Trinket, Off-Hand (and shirts and tabards, yay)
-	["Cloth"] = "4.1"
-	["Leather"] = "4.2"
-	["Mail"] = "4.3"
-	["Plate"] = "4.4"
-	["Shield"] = "4.6"
-	["Axe1H"] = "2.0"
-	["Axe2H"] = "2.1"
-	["Bow"] = "2.2"
-	["Gun"] = "2.3"
-	["Mace1H"] = "2.4"
-	["Mace2H"] = "2.5"
-	["Polearm"] = "2.6"
-	["Sword1H"] = "2.7"
-	["Sword2H"] = "2.8"
-	["Warglaive"] = "2.9"
-	["Staff"] = "2.10"
-	["Fist"] = "2.13"
-	["Dagger"] = "2.15"
-	["Crossbow"] = "2.18"
-	["Wand"] = "2.19"
+	["General"] = "4.0",	-- Neck, Ring, Trinket, Off-Hand (and shirts and tabards, yay)
+	["Cloth"] = "4.1",
+	["Leather"] = "4.2",
+	["Mail"] = "4.3",
+	["Plate"] = "4.4",
+	["Shield"] = "4.6",
+	["Axe1H"] = "2.0",
+	["Axe2H"] = "2.1",
+	["Bow"] = "2.2",
+	["Gun"] = "2.3",
+	["Mace1H"] = "2.4",
+	["Mace2H"] = "2.5",
+	["Polearm"] = "2.6",
+	["Sword1H"] = "2.7",
+	["Sword2H"] = "2.8",
+	["Warglaive"] = "2.9",
+	["Staff"] = "2.10",
+	["Fist"] = "2.13",
+	["Dagger"] = "2.15",
+	["Crossbow"] = "2.18",
+	["Wand"] = "2.19",
 }
 
 -- Armor -> Class
 app.Armor = {
-	["Cloth"] = { 5, 8, 9 }	-- Priest, Mage, Warlock
-	["Leather"] = { 4, 10, 11, 12 }	-- Rogue, Monk, Druid, Demon Hunter
-	["Mail"] = { 3, 7, 13 }	-- Hunter, Shaman, Evoker
-	["Plate"] = { 1, 2, 6 }	-- Warrior, Paladin, Death Knight
+	["Cloth"] = { 5, 8, 9 },	-- Priest, Mage, Warlock
+	["Leather"] = { 4, 10, 11, 12 },	-- Rogue, Monk, Druid, Demon Hunter
+	["Mail"] = { 3, 7, 13 },	-- Hunter, Shaman, Evoker
+	["Plate"] = { 1, 2, 6 },	-- Warrior, Paladin, Death Knight
 }
 
 -- Weapon -> Class
 app.Weapon = {
-	["General"] = { 5, 8, 9, 4, 10, 11, 12, 3, 7, 13, 1, 2, 6 }	-- Priest, Mage, Warlock, Rogue, Monk, Druid, Demon Hunter, Hunter, Shaman, Evoker, Warrior, Paladin, Death Knight
-	["Shield"] = { 7, 1, 2, 1, 2 }	-- Shaman, Warrior, Paladin, Warrior, Paladin
-	["Axe1H"] = { 4, 10, 12, 3, 7, 13, 1, 2 , 6}	-- Rogue, Monk, Demon Hunter, Hunter, Shaman, Evoker, Warrior, Paladin, Death Knight
-	["Axe2H"] = { 3, 7, 13, 1, 2, 6 }	-- Hunter, Shaman, Evoker, Warrior, Paladin, Death Knight
-	["Bow"] = { 4, 3, 1 }	-- Rogue, Hunter, Warrior
-	["Gun"] = { 4, 3, 1 }	-- Rogue, Hunter, Warrior
-	["Mace1H"] = { 5, 4, 10, 11, 7, 13, 1, 2, 6 }	-- Priest, Rogue, Monk, Druid, Shaman, Evoker, Warrior, Paladin, Death Knight
-	["Mace2H"] = { 11, 7, 13, 1, 2, 6 }	-- Druid, Shaman, Evoker, Warrior, Paladin, Death Knight
-	["Polearm"] = { 10, 11, 3 , 1, 2, 6 }	-- Monk, Druid, Hunter, Warrior, Paladin, Death Knight
-	["Sword1H"] = { 8, 9, 4, 10, 12, 3, 13, 1, 2, 6 }	-- Mage, Warlock, Rogue, Monk, Hunter, Evoker, Warrior, Paladin, Death Knight
-	["Sword2H"] = { 3, 13, 1, 2, 6 }	-- Hunter, Evoker, Warrior, Paladin, Death Knight
-	["Warglaive"] = { 12 }	-- Demon Hunter
-	["Staff"] = { 5, 8, 9, 10, 11, 3, 7, 13, 1 }	-- Priest, Mage, Warlock, Monk, Druid, Hunter, Shaman, Evoker, Warrior
-	["Fist"] = { 4, 10, 11, 12, 3, 7, 13, 1 }	-- Rogue, Monk, Druid, Demon Hunter, Hunter, Shaman, Evoker, Warrior
-	["Dagger"] = { 5, 8, 9, 4, 11, 3, 7, 13, 1 }	-- Priest, Mage, Warlock, Rogue, Druid, Hunter, Shaman, Evoker, Warrior
-	["Crossbow"] = { 4, 3, 1 }	-- Rogue, Hunter, Warrior
-	["Wand"] = { 5, 8, 9 }	-- Priest, Mage, Warlock
+	["General"] = { 5, 8, 9, 4, 10, 11, 12, 3, 7, 13, 1, 2, 6 },	-- Priest, Mage, Warlock, Rogue, Monk, Druid, Demon Hunter, Hunter, Shaman, Evoker, Warrior, Paladin, Death Knight
+	["Shield"] = { 7, 1, 2, 1, 2 },	-- Shaman, Warrior, Paladin, Warrior, Paladin
+	["Axe1H"] = { 4, 10, 12, 3, 7, 13, 1, 2 , 6},	-- Rogue, Monk, Demon Hunter, Hunter, Shaman, Evoker, Warrior, Paladin, Death Knight
+	["Axe2H"] = { 3, 7, 13, 1, 2, 6 },	-- Hunter, Shaman, Evoker, Warrior, Paladin, Death Knight
+	["Bow"] = { 4, 3, 1 },	-- Rogue, Hunter, Warrior
+	["Gun"] = { 4, 3, 1 },	-- Rogue, Hunter, Warrior
+	["Mace1H"] = { 5, 4, 10, 11, 7, 13, 1, 2, 6 },	-- Priest, Rogue, Monk, Druid, Shaman, Evoker, Warrior, Paladin, Death Knight
+	["Mace2H"] = { 11, 7, 13, 1, 2, 6 },	-- Druid, Shaman, Evoker, Warrior, Paladin, Death Knight
+	["Polearm"] = { 10, 11, 3 , 1, 2, 6 },	-- Monk, Druid, Hunter, Warrior, Paladin, Death Knight
+	["Sword1H"] = { 8, 9, 4, 10, 12, 3, 13, 1, 2, 6 },	-- Mage, Warlock, Rogue, Monk, Hunter, Evoker, Warrior, Paladin, Death Knight
+	["Sword2H"] = { 3, 13, 1, 2, 6 },	-- Hunter, Evoker, Warrior, Paladin, Death Knight
+	["Warglaive"] = { 12 },	-- Demon Hunter
+	["Staff"] = { 5, 8, 9, 10, 11, 3, 7, 13, 1 },	-- Priest, Mage, Warlock, Monk, Druid, Hunter, Shaman, Evoker, Warrior
+	["Fist"] = { 4, 10, 11, 12, 3, 7, 13, 1 },	-- Rogue, Monk, Druid, Demon Hunter, Hunter, Shaman, Evoker, Warrior
+	["Dagger"] = { 5, 8, 9, 4, 11, 3, 7, 13, 1 },	-- Priest, Mage, Warlock, Rogue, Druid, Hunter, Shaman, Evoker, Warrior
+	["Crossbow"] = { 4, 3, 1 },	-- Rogue, Hunter, Warrior
+	["Wand"] = { 5, 8, 9 },	-- Priest, Mage, Warlock
 }
 
 -- Item type -> Icon
 app.Icon = {
-	["INVTYPE_HEAD"] = "Interface\\Icons\\inv_helmet_03"
-	["INVTYPE_SHOULDER"] = "Interface\\Icons\\inv_shoulder_09"
-	["INVTYPE_CLOAK"] = "Interface\\Icons\\inv_misc_cape_11"
-	["INVTYPE_CHEST"] = "Interface\\Icons\\inv_chest_chain"
-	["INVTYPE_ROBE"] = "Interface\\Icons\\inv_chest_chain"
-	["INVTYPE_BODY"] = "Interface\\Icons\\inv_shirt_white_01"
-	["INVTYPE_TABARD"] = "Interface\\Icons\\inv_misc_tournaments_tabard_gnome"
-	["INVTYPE_WRIST"] = "Interface\\Icons\\inv_bracer_07"
-	["INVTYPE_HAND"] = "Interface\\Icons\\inv_gauntlets_24"
-	["INVTYPE_WAIST"] = "Interface\\Icons\\inv_belt_26"
-	["INVTYPE_LEGS"] = "Interface\\Icons\\inv_pants_09"
-	["INVTYPE_FEET"] = "Interface\\Icons\\inv_boots_05"
-	["INVTYPE_RANGED"] = "Interface\\Icons\\inv_sword_04"
-	["INVTYPE_RANGEDRIGHT"] = "Interface\\Icons\\inv_sword_04"
-	["INVTYPE_2HWEAPON"] = "Interface\\Icons\\inv_sword_04"
-	["INVTYPE_WEAPONMAINHAND"] = "Interface\\Icons\\inv_sword_04"
-	["INVTYPE_WEAPONOFFHAND"] = "Interface\\Icons\\inv_sword_04"
-	["INVTYPE_WEAPON"] = "Interface\\Icons\\inv_sword_04"
-	["INVTYPE_SHIELD"] = "Interface\\Icons\\inv_shield_06"
-	["INVTYPE_HOLDABLE"] = "Interface\\Icons\\inv_shield_06"
+	["INVTYPE_HEAD"] = "Interface\\Icons\\inv_helmet_03",
+	["INVTYPE_SHOULDER"] = "Interface\\Icons\\inv_shoulder_09",
+	["INVTYPE_CLOAK"] = "Interface\\Icons\\inv_misc_cape_11",
+	["INVTYPE_CHEST"] = "Interface\\Icons\\inv_chest_chain",
+	["INVTYPE_ROBE"] = "Interface\\Icons\\inv_chest_chain",
+	["INVTYPE_BODY"] = "Interface\\Icons\\inv_shirt_white_01",
+	["INVTYPE_TABARD"] = "Interface\\Icons\\inv_misc_tournaments_tabard_gnome",
+	["INVTYPE_WRIST"] = "Interface\\Icons\\inv_bracer_07",
+	["INVTYPE_HAND"] = "Interface\\Icons\\inv_gauntlets_24",
+	["INVTYPE_WAIST"] = "Interface\\Icons\\inv_belt_26",
+	["INVTYPE_LEGS"] = "Interface\\Icons\\inv_pants_09",
+	["INVTYPE_FEET"] = "Interface\\Icons\\inv_boots_05",
+	["INVTYPE_RANGED"] = "Interface\\Icons\\inv_sword_04",
+	["INVTYPE_RANGEDRIGHT"] = "Interface\\Icons\\inv_sword_04",
+	["INVTYPE_2HWEAPON"] = "Interface\\Icons\\inv_sword_04",
+	["INVTYPE_WEAPONMAINHAND"] = "Interface\\Icons\\inv_sword_04",
+	["INVTYPE_WEAPONOFFHAND"] = "Interface\\Icons\\inv_sword_04",
+	["INVTYPE_WEAPON"] = "Interface\\Icons\\inv_sword_04",
+	["INVTYPE_SHIELD"] = "Interface\\Icons\\inv_shield_06",
+	["INVTYPE_HOLDABLE"] = "Interface\\Icons\\inv_shield_06",
 
-	["Ensemble"] = "Interface\\Icons\\inv_chest_cloth_17"
-	["Illusion"] = "Interface\\Icons\\inv_misc_scrollrolled03"
-	["Mount"] = "Interface\\Icons\\ability_mount_ridinghorse"
-	["Pet"] = "Interface\\Icons\\petjournalportrait"
-	["Toy"] = "Interface\\Icons\\trade_archaeology_chestoftinyglassanimals"
-	["Recipe"] = "Interface\\Icons\\inv_misc_note_01"
+	["Ensemble"] = "Interface\\Icons\\inv_chest_cloth_17",
+	["Illusion"] = "Interface\\Icons\\inv_misc_scrollrolled03",
+	["Mount"] = "Interface\\Icons\\ability_mount_ridinghorse",
+	["Pet"] = "Interface\\Icons\\petjournalportrait",
+	["Toy"] = "Interface\\Icons\\trade_archaeology_chestoftinyglassanimals",
+	["Recipe"] = "Interface\\Icons\\inv_misc_note_01",
 
-	["Unknown"] = "Interface\\Icons\\INV_Misc_QuestionMark"
+	["Unknown"] = "Interface\\Icons\\INV_Misc_QuestionMark",
 }
 
 -- ItemID -> RecipeID
