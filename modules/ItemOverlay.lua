@@ -892,11 +892,11 @@ function app.SettingsItemOverlay()
 
 	layout:AddInitializer(CreateSettingsListSectionHeaderInitializer("Other Info"))
 
-	local variable, name, tooltip = "iconQuestGold", "Quest reward sell value", "Show an icon to indicate which quest reward has the highest vendor sell value, if there are multiple."
+	local variable, name, tooltip = "iconQuestGold", "Quest Reward Sell Value", "Show an icon to indicate which quest reward has the highest vendor sell value, if there are multiple."
 	local setting = Settings.RegisterAddOnSetting(category, appName.."_"..variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, true)
 	Settings.CreateCheckbox(category, setting, tooltip)
 
-	local variable, name, tooltip = "iconContainer", "Openable containers", "Show an icon to indicate an item can be opened, such as lockboxes and holiday boss bags."
+	local variable, name, tooltip = "iconContainer", "Openable Containers", "Show an icon to indicate an item can be opened, such as lockboxes and holiday boss bags."
 	local setting = Settings.RegisterAddOnSetting(category, appName.."_"..variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, true)
 	Settings.CreateCheckbox(category, setting, tooltip)
 
