@@ -36,15 +36,15 @@ end)
 -- TODO:
 -- AH rows
 -- Prof rows
--- Icon for openable containers (goodie bags, lockboxes, etc.)
--- AH pricing (Auctionator, Auctioneer, TSM, Oribos Exchange)
+--
 -- ArkInventory
 -- World Quest Tab
+--
 -- DB2 Wago itemID to spellID thing
 
-function app.ItemOverlay(overlay, itemLink, itemLocation)
+function app.ItemOverlay(overlay, itemLink, itemLocation, containerInfo)
 	-- Create our overlay
-	local function createOverlay(icon)
+	local function createOverlay()
 		-- Text
 		if not overlay.text then
 			overlay.text = overlay:CreateFontString("OVERLAY", nil, "GameFontNormalOutline")
@@ -134,7 +134,7 @@ function app.ItemOverlay(overlay, itemLink, itemLocation)
 			overlay.icon:SetPoint("CENTER", overlay, "BOTTOMLEFT", 4, 4)
 		end
 	end
-	createOverlay(icon)
+	createOverlay()
 
 	-- Process our overlay
 	local function processOverlay(itemID)
@@ -143,8 +143,11 @@ function app.ItemOverlay(overlay, itemLink, itemLocation)
 			-- Grab our item info, which is enough for appearances
 			local _, _, itemQuality, _, _, _, _, _, itemEquipLoc, _, _, classID, subclassID, bindType, _, _, _ = C_Item.GetItemInfo(itemLink)
 
+			-- Containers
+			if containerInfo and containerInfo.hasLoot then
+				itemEquipLoc = "Container"
 			-- Mounts
-			if classID == 15 and subclassID == 5 then
+			elseif classID == 15 and subclassID == 5 then
 				itemEquipLoc = "Mount"
 			-- Toys
 			elseif app.GetTooltipText(itemLink, ITEM_TOY_ONUSE) then
@@ -312,6 +315,10 @@ function app.ItemOverlay(overlay, itemLink, itemLocation)
 				else
 					showOverlay("purple")
 				end
+			-- Unknown Pet Cages
+			elseif TransmogLootHelper_Settings["iconNewPet"] and itemEquipLoc == "Unknown" then
+				showOverlay("yellow")
+				overlay.animation:Stop()
 			-- Toys
 			elseif TransmogLootHelper_Settings["iconNewToy"] and itemEquipLoc == "Toy" then
 				if app.GetTooltipText(itemLink, ITEM_SPELL_KNOWN) then
@@ -342,10 +349,13 @@ function app.ItemOverlay(overlay, itemLink, itemLocation)
 				else
 					hideOverlay()
 				end
-			-- Unknown (so far only that one magical pet cage that while in the guild bank doesn't return any pet info)
-			elseif TransmogLootHelper_Settings["iconNewPet"] and itemEquipLoc == "Unknown" then
-				showOverlay("yellow")
-				overlay.animation:Stop()
+			-- Containers
+			elseif TransmogLootHelper_Settings["iconContainer"] and itemEquipLoc == "Container" then
+				if not containerInfo then
+					hideOverlay()
+				else
+					showOverlay("yellow")
+				end
 			end
 		else
 			hideOverlay()
@@ -379,7 +389,6 @@ function app.ItemOverlay(overlay, itemLink, itemLocation)
 		end
 	end
 
-	-- Cache the item by asking the server to give us the info
 	local itemID = C_Item.GetItemInfoInstant(itemLink)
 	-- Caged pets don't return this info, except this one magical pet cage
 	if not itemID or itemID == 82800 then
@@ -396,6 +405,7 @@ function app.ItemOverlay(overlay, itemLink, itemLocation)
 		end
 	-- But everything else does (that I know of so far)
 	else
+		-- Cache the item by asking the server to give us the info
 		C_Item.RequestLoadItemDataByID(itemID)
 		local item = Item:CreateFromItemID(itemID)
 
@@ -421,7 +431,10 @@ function app.ItemOverlayHooks()
 				local exists = C_Item.DoesItemExist(itemLocation)
 				if exists then
 					local itemLink = C_Item.GetItemLink(itemLocation)
-					app.ItemOverlay(itemButton.TLHOverlay, itemLink, itemLocation)
+					local containerInfo = C_Container.GetContainerItemInfo(itemButton:GetBagID(), itemButton:GetID())
+					print(itemLink)
+					DevTools_Dump(containerInfo)
+					app.ItemOverlay(itemButton.TLHOverlay, itemLink, itemLocation, containerInfo)
 				else
 					itemButton.TLHOverlay:Hide()
 				end
@@ -447,7 +460,8 @@ function app.ItemOverlayHooks()
 					local exists = C_Item.DoesItemExist(itemLocation)
 					if exists then
 						local itemLink = C_Item.GetItemLink(itemLocation)
-						app.ItemOverlay(itemButton.TLHOverlay, itemLink, itemLocation)
+						local containerInfo = C_Container.GetContainerItemInfo(-1, i)
+						app.ItemOverlay(itemButton.TLHOverlay, itemLink, itemLocation, containerInfo)
 					else
 						itemButton.TLHOverlay:Hide()
 					end
@@ -473,7 +487,8 @@ function app.ItemOverlayHooks()
 					local exists = C_Item.DoesItemExist(itemLocation)
 					if exists then
 						local itemLink = C_Item.GetItemLink(itemLocation)
-						app.ItemOverlay(itemButton.TLHOverlay, itemLink, itemLocation)
+						local containerInfo = C_Container.GetContainerItemInfo(-3, i)
+						app.ItemOverlay(itemButton.TLHOverlay, itemLink, itemLocation, containerInfo)
 					else
 						itemButton.TLHOverlay:Hide()
 					end
@@ -500,7 +515,8 @@ function app.ItemOverlayHooks()
 						local exists = C_Item.DoesItemExist(itemLocation)
 						if exists then
 							local itemLink = C_Item.GetItemLink(itemLocation)
-							app.ItemOverlay(itemButton.TLHOverlay, itemLink, itemLocation)
+							local containerInfo = C_Container.GetContainerItemInfo(AccountBankPanel.selectedTabID, i)
+							app.ItemOverlay(itemButton.TLHOverlay, itemLink, itemLocation, containerInfo)
 						else
 							itemButton.TLHOverlay:Hide()
 						end
@@ -777,7 +793,7 @@ function app.SettingsItemOverlay()
 		ddSetting, GetOptions, ddName, ddTooltip)
 	layout:AddInitializer(initializer)
 
-	layout:AddInitializer(CreateSettingsListSectionHeaderInitializer("Icon"))
+	layout:AddInitializer(CreateSettingsListSectionHeaderInitializer("Collection Info"))
 
 	local variable, name, tooltip = "iconNewMog", "Appearances", "Show an icon to indicate an item's appearance is unlearned."
 	local setting = Settings.RegisterAddOnSetting(category, appName .. "_" .. variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, true)
@@ -817,11 +833,15 @@ function app.SettingsItemOverlay()
 	local setting = Settings.RegisterAddOnSetting(category, appName.."_"..variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, false)
 	Settings.CreateCheckbox(category, setting, tooltip)
 
+	layout:AddInitializer(CreateSettingsListSectionHeaderInitializer("Other Info"))
+
 	local variable, name, tooltip = "iconQuestGold", "Quest reward sell value", "Show an icon to indicate which quest reward has the highest vendor sell value, if there are multiple."
 	local setting = Settings.RegisterAddOnSetting(category, appName.."_"..variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, true)
 	Settings.CreateCheckbox(category, setting, tooltip)
 
-	layout:AddInitializer(CreateSettingsListSectionHeaderInitializer("Text"))
+	local variable, name, tooltip = "iconContainer", "Openable containers", "Show an icon to indicate an item can be opened, such as lockboxes and holiday boss bags."
+	local setting = Settings.RegisterAddOnSetting(category, appName.."_"..variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, true)
+	Settings.CreateCheckbox(category, setting, tooltip)
 
 	local variable, name, tooltip = "textBind", "Binding Status", "Show a text indicator for Bind-on-Equip items (BoE), Warbound items (BoA), and Warbound-until-Equipped (WuE) items."
 	local setting = Settings.RegisterAddOnSetting(category, appName.."_"..variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, true)

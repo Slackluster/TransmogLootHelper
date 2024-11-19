@@ -100,7 +100,8 @@ app.Icon = {
 	["Toy"] = "Interface\\Icons\\trade_archaeology_chestoftinyglassanimals",
 	["Recipe"] = "Interface\\Icons\\inv_misc_note_01",
 
-	["Unknown"] = "Interface\\Icons\\INV_Misc_QuestionMark",
+	["Container"] = "Interface\\Icons\\inv_misc_bag_16",
+	["Unknown"] = "Interface\\Icons\\inv_misc_questionMark",
 }
 
 -- ItemID -> RecipeID
