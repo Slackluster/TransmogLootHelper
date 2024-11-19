@@ -38,11 +38,12 @@ end)
 -- Prof rows
 -- Icon for openable containers (goodie bags, lockboxes, etc.)
 -- AH pricing (Auctionator, Auctioneer, TSM, Oribos Exchange)
--- Baganator
 -- ArkInventory
 -- World Quest Tab
+-- Check that weird pet cage in the gbank 82800
+-- DB2 Wago itemID to spellID thing
 
-function app.ItemOverlay(overlay, itemLink)
+function app.ItemOverlay(overlay, itemLink, itemLocation)
 	-- Create our overlay
 	local function createOverlay(icon)
 		-- Text
@@ -350,10 +351,23 @@ function app.ItemOverlay(overlay, itemLink)
 
 		-- Set the bind text
 		if TransmogLootHelper_Settings["textBind"] then
-			if bindType == 9 or app.GetTooltipText(itemLink, ITEM_ACCOUNTBOUND_UNTIL_EQUIP) or app.GetTooltipText(itemLink, ITEM_BIND_TO_ACCOUNT_UNTIL_EQUIP) then
-				overlay.text:SetText("|cff00CCFFWuE|r")
-			elseif bindType == 7 or bindType == 8 or app.GetTooltipText(itemLink, ITEM_ACCOUNTBOUND) or app.GetTooltipText(itemLink, ITEM_BNETACCOUNTBOUND) or app.GetTooltipText(itemLink, ITEM_BIND_TO_ACCOUNT) or app.GetTooltipText(itemLink, ITEM_BIND_TO_BNETACCOUNT) then
-				overlay.text:SetText("|cff00CCFFBoA|r")
+			-- WuE
+			if itemLocation and C_Item.IsBoundToAccountUntilEquip(itemLocation) then
+			-- if bindType == 9 or app.GetTooltipText(itemLink, ITEM_ACCOUNTBOUND_UNTIL_EQUIP) or app.GetTooltipText(itemLink, ITEM_BIND_TO_ACCOUNT_UNTIL_EQUIP) then	
+				if C_Item.IsBound(itemLocation) then
+					overlay.text:SetText("")
+				else
+					overlay.text:SetText("|cff00CCFFWuE|r")
+				end
+			-- Soulbound + BoA
+			elseif itemLocation and C_Item.IsBound(itemLocation) then
+				-- BoA (ITEM_ACCOUNTBOUND and ITEM_BNETACCOUNTBOUND is the actual text, but it always returns the other two anyway)
+				if app.GetTooltipText(itemLink, ITEM_BIND_TO_ACCOUNT) or app.GetTooltipText(itemLink, ITEM_BIND_TO_BNETACCOUNT) then
+					overlay.text:SetText("|cff00CCFFBoA|r")
+				-- Soulbound
+				else
+					overlay.text:SetText("")
+				end
 			elseif bindType == 2 or bindType == 3 then
 				overlay.text:SetText("BoE")
 			else
@@ -398,11 +412,11 @@ function app.ItemOverlayHooks()
 					itemButton.TLHOverlay:SetAllPoints(itemButton)
 				end
 		
-				local location = ItemLocation:CreateFromBagAndSlot(itemButton:GetBagID(), itemButton:GetID())
-				local exists = C_Item.DoesItemExist(location)
+				local itemLocation = ItemLocation:CreateFromBagAndSlot(itemButton:GetBagID(), itemButton:GetID())
+				local exists = C_Item.DoesItemExist(itemLocation)
 				if exists then
-					local itemLink = C_Item.GetItemLink(location)
-					app.ItemOverlay(itemButton.TLHOverlay, itemLink)
+					local itemLink = C_Item.GetItemLink(itemLocation)
+					app.ItemOverlay(itemButton.TLHOverlay, itemLink, itemLocation)
 				else
 					itemButton.TLHOverlay:Hide()
 				end
@@ -423,10 +437,12 @@ function app.ItemOverlayHooks()
 						itemButton.TLHOverlay = CreateFrame("Frame", nil, itemButton)
 						itemButton.TLHOverlay:SetAllPoints(itemButton)
 					end
-			
-					local itemLink = C_Container.GetContainerItemLink(-1, i)
-					if itemLink then
-						app.ItemOverlay(itemButton.TLHOverlay, itemLink)
+
+					local itemLocation = ItemLocation:CreateFromBagAndSlot(-1, i)
+					local exists = C_Item.DoesItemExist(itemLocation)
+					if exists then
+						local itemLink = C_Item.GetItemLink(itemLocation)
+						app.ItemOverlay(itemButton.TLHOverlay, itemLink, itemLocation)
 					else
 						itemButton.TLHOverlay:Hide()
 					end
@@ -448,9 +464,11 @@ function app.ItemOverlayHooks()
 						itemButton.TLHOverlay:SetAllPoints(itemButton)
 					end
 			
-					local itemLink = C_Container.GetContainerItemLink(-3, i)
-					if itemLink then
-						app.ItemOverlay(itemButton.TLHOverlay, itemLink)
+					local itemLocation = ItemLocation:CreateFromBagAndSlot(-3, i)
+					local exists = C_Item.DoesItemExist(itemLocation)
+					if exists then
+						local itemLink = C_Item.GetItemLink(itemLocation)
+						app.ItemOverlay(itemButton.TLHOverlay, itemLink, itemLocation)
 					else
 						itemButton.TLHOverlay:Hide()
 					end
@@ -473,11 +491,11 @@ function app.ItemOverlayHooks()
 							itemButton.TLHOverlay:SetAllPoints(itemButton)
 						end
 		
-						local location = ItemLocation:CreateFromBagAndSlot(AccountBankPanel.selectedTabID, i)
-						local exists = C_Item.DoesItemExist(location)
+						local itemLocation = ItemLocation:CreateFromBagAndSlot(AccountBankPanel.selectedTabID, i)
+						local exists = C_Item.DoesItemExist(itemLocation)
 						if exists then
-							local itemLink = C_Item.GetItemLink(location)
-							app.ItemOverlay(itemButton.TLHOverlay, itemLink)
+							local itemLink = C_Item.GetItemLink(itemLocation)
+							app.ItemOverlay(itemButton.TLHOverlay, itemLink, itemLocation)
 						else
 							itemButton.TLHOverlay:Hide()
 						end
@@ -546,6 +564,7 @@ function app.ItemOverlayHooks()
 					local itemLink = GetVoidItemHyperlinkString(slot)
 					if itemLink then
 						app.ItemOverlay(itemButton.TLHOverlay, itemLink)
+						itemButton.TLHOverlay.text:SetText("")	-- No bind text for these
 					else
 						itemButton.TLHOverlay:Hide()
 					end
