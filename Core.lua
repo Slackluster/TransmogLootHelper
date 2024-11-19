@@ -1298,7 +1298,11 @@ end
 function api.IsAppearanceCollected(itemLink)
 	local sourceID = app.GetSourceID(itemLink)
 	if not sourceID then
-		return
+		if app.GetTooltipText(itemLink, TRANSMOGRIFY_TOOLTIP_APPEARANCE_UNKNOWN) or app.GetTooltipText(itemLink, TRANSMOGRIFY_TOOLTIP_ITEM_UNKNOWN_APPEARANCE_KNOWN) then
+			return false
+		else
+			return true	-- Should be nil if the item does not have an appearance, but for our purposes this is fine
+		end
 	else
 		local subClass = select(7, C_Item.GetItemInfoInstant(itemLink))
 		local sourceInfo = C_TransmogCollection.GetSourceInfo(sourceID)
@@ -1324,7 +1328,11 @@ end
 function api.IsSourceCollected(itemLink)
 	local sourceID = app.GetSourceID(itemLink)
 	if not sourceID then
-		return nil
+		if app.GetTooltipText(itemLink, TRANSMOGRIFY_TOOLTIP_APPEARANCE_UNKNOWN) or app.GetTooltipText(itemLink, TRANSMOGRIFY_TOOLTIP_ITEM_UNKNOWN_APPEARANCE_KNOWN) then
+			return false
+		else
+			return true	-- Should be nil if the item does not have an appearance, but for our purposes this is fine
+		end
 	else
 		return C_TransmogCollection.PlayerHasTransmogItemModifiedAppearance(sourceID)
 	end
