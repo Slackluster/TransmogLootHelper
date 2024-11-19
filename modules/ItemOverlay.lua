@@ -34,8 +34,6 @@ end)
 ----------------
 
 -- TODO:
--- AH rows
---
 -- ArkInventory
 -- World Quest Tab
 --
@@ -752,7 +750,7 @@ function app.ItemOverlayHooks()
 							v.TLHOverlay.text:SetText("")	-- No bind text for these
 
 							v.TLHOverlay.icon:ClearAllPoints()
-							v.TLHOverlay.icon:SetPoint("RIGHT", v)	-- Set the icon to the left of the row
+							v.TLHOverlay.icon:SetPoint("RIGHT", v)	-- Set the icon to the right of the row
 							v.TLHOverlay.animation:Stop()	-- And don't animate, that's a little obnoxious in these close quarters
 						end
 					end
@@ -762,6 +760,38 @@ function app.ItemOverlayHooks()
 
 		app.Event:Register("TRADE_SKILL_SHOW", recipeRows)
 		EventRegistry:RegisterCallback("Professions.ProfessionSelected", recipeRows)
+
+		app.Count = 0
+		-- Hook our overlay onto all recipe rows
+		local function auctionHouseRows()
+			-- Thank you AGAIN Plusmouse, for this callback
+			AuctionHouseFrame.BrowseResultsFrame.ItemList.ScrollBox:RegisterCallback("OnAcquiredFrame", function(_, v, data)
+				C_Timer.After(0.1, function()
+					if not v.TLHOverlay then
+						v.TLHOverlay = CreateFrame("Frame", nil, v)
+					end
+					v.TLHOverlay:Hide()
+
+					local rowData = v.rowData
+					if rowData then
+						local itemID = rowData.itemKey.itemID
+						if itemID then
+							local _, itemLink = C_Item.GetItemInfo(itemID)
+							if itemLink then
+								app.ItemOverlay(v.TLHOverlay, itemLink)
+								v.TLHOverlay.text:SetText("")	-- No bind text for these
+
+								v.TLHOverlay.icon:ClearAllPoints()
+								v.TLHOverlay.icon:SetPoint("LEFT", v, 134, 0)	-- Set the icon to the left of the row
+								v.TLHOverlay.animation:Stop()	-- And don't animate, that's a little obnoxious in these close quarters
+							end
+						end
+					end
+				end)
+			end)
+		end
+
+		app.Event:Register("AUCTION_HOUSE_THROTTLED_SYSTEM_READY", auctionHouseRows)
 	end
 end
 
