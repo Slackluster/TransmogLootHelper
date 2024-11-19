@@ -298,16 +298,16 @@ function app.ItemOverlay(overlay, itemLink, itemLocation)
 				if not app.OverlayCache[itemLink].speciesID then
 					app.OverlayCache[itemLink].speciesID = select(13, C_PetJournal.GetPetInfoByItemID(itemID))
 				end
-								
+				
 				numPets, maxAllowed = C_PetJournal.GetNumCollectedInfo(app.OverlayCache[itemLink].speciesID)
-
+				
 				if (maxAllowed == numPets and numPets ~= 0) or (not TransmogLootHelper_Settings["iconNewPetMax"] and numPets >= 1) then
 					if TransmogLootHelper_Settings["iconLearned"] then
 						showOverlay("green")
 					else
 						hideOverlay()
 					end
-				elseif TransmogLootHelper_Settings["iconNewPetMax"] and maxAllowed > numPets then
+				elseif TransmogLootHelper_Settings["iconNewPetMax"] and maxAllowed > numPets and numPets >= 1 then
 					showOverlay("yellow")
 				else
 					showOverlay("purple")
