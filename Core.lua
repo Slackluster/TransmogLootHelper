@@ -1298,7 +1298,7 @@ end
 function api.IsAppearanceCollected(itemLink)
 	local sourceID = app.GetSourceID(itemLink)
 	if not sourceID then
-		if app.GetTooltipText(itemLink, TRANSMOGRIFY_TOOLTIP_APPEARANCE_UNKNOWN) or app.GetTooltipText(itemLink, TRANSMOGRIFY_TOOLTIP_ITEM_UNKNOWN_APPEARANCE_KNOWN) then
+		if app.GetTooltipText(itemLink, TRANSMOGRIFY_TOOLTIP_APPEARANCE_UNKNOWN) then
 			return false
 		else
 			return true	-- Should be nil if the item does not have an appearance, but for our purposes this is fine
@@ -1338,7 +1338,7 @@ function api.IsSourceCollected(itemLink)
 	end
 end
 
--- Scan the tooltip for the appearance text, localised
+-- Scan the tooltip for any text
 function app.GetTooltipText(itemLinkie, searchString)
 	-- Grab the original value for this setting
 	local cvar = C_CVar.GetCVarInfo("missingTransmogSourceInItemTooltips")
