@@ -35,7 +35,6 @@ end)
 
 -- TODO:
 -- AH rows
--- Prof rows
 --
 -- ArkInventory
 -- World Quest Tab
@@ -432,8 +431,6 @@ function app.ItemOverlayHooks()
 				if exists then
 					local itemLink = C_Item.GetItemLink(itemLocation)
 					local containerInfo = C_Container.GetContainerItemInfo(itemButton:GetBagID(), itemButton:GetID())
-					print(itemLink)
-					DevTools_Dump(containerInfo)
 					app.ItemOverlay(itemButton.TLHOverlay, itemLink, itemLocation, containerInfo)
 				else
 					itemButton.TLHOverlay:Hide()
@@ -540,10 +537,9 @@ function app.ItemOverlayHooks()
 		-- Hook our overlay onto all guild bank slots
 		local function guildBankOverlay()
 			if GuildBankFrame and GuildBankFrame:IsShown() then
-				local guildBankFrame = _G["GuildBankFrame"]
 				for i = 1, 7 do
 					for j = 1, 14 do
-						local itemButton = guildBankFrame.Columns[i].Buttons[j]
+						local itemButton = GuildBankFrame.Columns[i].Buttons[j]
 						if not itemButton.TLHOverlay then
 							itemButton.TLHOverlay = CreateFrame("Frame", nil, itemButton)
 							itemButton.TLHOverlay:SetAllPoints(itemButton)
@@ -708,6 +704,7 @@ function app.ItemOverlayHooks()
 		app.Event:Register("QUEST_DETAIL", questOverlay)
 		hooksecurefunc("QuestMapFrame_ShowQuestDetails", questOverlay)
 
+		-- Hook our overlay onto all world quest pins
 		local function worldQuests()
 			C_Timer.After(0.1, function()
 				for pin in WorldMapFrame:EnumeratePinsByTemplate("WorldMap_WorldQuestPinTemplate") do
@@ -735,6 +732,40 @@ function app.ItemOverlayHooks()
 
 		WorldMapFrame:HookScript("OnShow", worldQuests)
 		EventRegistry:RegisterCallback("MapCanvas.MapSet", worldQuests)
+
+		-- Hook our overlay onto all recipe rows
+		local function recipeRows()
+			if not app.ProfessionsHook then
+				-- This does impact FPS, but when scrolling only this makes them stay in their place
+				ProfessionsFrame.CraftingPage.RecipeList:HookScript("OnUpdate", recipeRows)
+				app.ProfessionsHook = true
+			end
+
+			local rows = ProfessionsFrame.CraftingPage.RecipeList.ScrollBox:GetFrames()
+			for k, v in pairs(rows) do
+				if not v.TLHOverlay then
+					v.TLHOverlay = CreateFrame("Frame", nil, v)
+				end
+				v.TLHOverlay:Hide()
+
+				local recipeInfo = v:GetElementData().data.recipeInfo
+				if recipeInfo then
+					local recipeID = recipeInfo.recipeID
+					if recipeID then
+						local itemLink = C_TradeSkillUI.GetRecipeItemLink(recipeID)
+						if itemLink then
+							app.ItemOverlay(v.TLHOverlay, itemLink)
+							v.TLHOverlay.text:SetText("")	-- No bind text for these
+							v.TLHOverlay.icon:SetPoint("LEFT", v, -2, 0)	-- Set the icon to the left of the row
+							v.TLHOverlay.animation:Stop()	-- And don't animate, that's a little obnoxious in these close quarters
+						end
+					end
+				end
+			end
+		end
+
+		app.Event:Register("TRADE_SKILL_SHOW", recipeRows)
+		EventRegistry:RegisterCallback("Professions.ProfessionSelected", recipeRows)
 	end
 end
 
