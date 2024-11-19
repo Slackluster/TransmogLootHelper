@@ -735,20 +735,14 @@ function app.ItemOverlayHooks()
 
 		-- Hook our overlay onto all recipe rows
 		local function recipeRows()
-			if not app.ProfessionsHook then
-				-- This does impact FPS, but when scrolling only this makes them stay in their place
-				ProfessionsFrame.CraftingPage.RecipeList:HookScript("OnUpdate", recipeRows)
-				app.ProfessionsHook = true
-			end
-
-			local rows = ProfessionsFrame.CraftingPage.RecipeList.ScrollBox:GetFrames()
-			for k, v in pairs(rows) do
+			-- Thank you AGAIN Plusmouse, for this callback
+			ProfessionsFrame.CraftingPage.RecipeList.ScrollBox:RegisterCallback("OnAcquiredFrame", function(_, v, data)
 				if not v.TLHOverlay then
 					v.TLHOverlay = CreateFrame("Frame", nil, v)
 				end
 				v.TLHOverlay:Hide()
 
-				local recipeInfo = v:GetElementData().data.recipeInfo
+				local recipeInfo = data.data.recipeInfo
 				if recipeInfo then
 					local recipeID = recipeInfo.recipeID
 					if recipeID then
@@ -756,12 +750,14 @@ function app.ItemOverlayHooks()
 						if itemLink then
 							app.ItemOverlay(v.TLHOverlay, itemLink)
 							v.TLHOverlay.text:SetText("")	-- No bind text for these
-							v.TLHOverlay.icon:SetPoint("LEFT", v, -2, 0)	-- Set the icon to the left of the row
+
+							v.TLHOverlay.icon:ClearAllPoints()
+							v.TLHOverlay.icon:SetPoint("RIGHT", v)	-- Set the icon to the left of the row
 							v.TLHOverlay.animation:Stop()	-- And don't animate, that's a little obnoxious in these close quarters
 						end
 					end
 				end
-			end
+			end)
 		end
 
 		app.Event:Register("TRADE_SKILL_SHOW", recipeRows)
