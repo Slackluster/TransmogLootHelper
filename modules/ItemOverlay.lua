@@ -254,7 +254,7 @@ function app.ItemOverlay(overlay, itemLink, itemLocation, containerInfo)
 				elseif (api.IsAppearanceCollected(itemLink) ~= nil and not api.IsAppearanceCollected(itemLink)) or app.GetTooltipText(itemLink, TRANSMOGRIFY_TOOLTIP_APPEARANCE_UNKNOWN) then
 					showOverlay("purple")
 				-- New source
-				elseif TransmogLootHelper_Settings["iconNewSource"] and (api.IsAppearanceCollected(itemLink) ~= nil and not api.IsSourceCollected(itemLink)) or app.GetTooltipText(itemLink, TRANSMOGRIFY_TOOLTIP_ITEM_UNKNOWN_APPEARANCE_KNOWN) then
+				elseif TransmogLootHelper_Settings["iconNewSource"] and ((api.IsAppearanceCollected(itemLink) ~= nil and not api.IsSourceCollected(itemLink)) or app.GetTooltipText(itemLink, TRANSMOGRIFY_TOOLTIP_ITEM_UNKNOWN_APPEARANCE_KNOWN)) then
 					showOverlay("yellow")
 				elseif TransmogLootHelper_Settings["iconLearned"] and not (classID == 15 and subclassID == 0) then
 					showOverlay("green")
