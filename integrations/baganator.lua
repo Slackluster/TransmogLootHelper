@@ -1,5 +1,6 @@
 local appName, app =  ...	-- Returns the AddOn name and a unique table
 
+-- Baganator icon integration
 EventUtil.ContinueOnAddOnLoaded("Baganator", function()
 	Baganator.API.RegisterCornerWidget("Transmog Loot Helper", "transmogloothelper",
 		function(icon, itemDetails)
