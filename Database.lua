@@ -97,6 +97,7 @@ app.Icon["Pet"] = "Interface\\Icons\\petjournalportrait"
 app.Icon["Toy"] = "Interface\\Icons\\trade_archaeology_chestoftinyglassanimals"
 app.Icon["Recipe"] = "Interface\\Icons\\inv_misc_note_01"
 
+app.Icon["Unknown"] = "Interface\\Icons\\INV_Misc_QuestionMark"
 
 -- ItemID -> RecipeID
 app.RecipeItem = {

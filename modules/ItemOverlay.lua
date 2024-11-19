@@ -40,7 +40,6 @@ end)
 -- AH pricing (Auctionator, Auctioneer, TSM, Oribos Exchange)
 -- ArkInventory
 -- World Quest Tab
--- Check that weird pet cage in the gbank 82800
 -- DB2 Wago itemID to spellID thing
 
 function app.ItemOverlay(overlay, itemLink, itemLocation)
@@ -198,7 +197,7 @@ function app.ItemOverlay(overlay, itemLink, itemLocation)
 			end
 
 			-- Set which icon we're going to be using
-			local icon = app.Icon[itemEquipLoc] or "Interface\\Icons\\INV_Misc_QuestionMark"
+			local icon = app.Icon[itemEquipLoc]
 
 			-- Cache this info, so we don't need to check it again
 			app.OverlayCache[itemLink] = { itemEquipLoc = itemEquipLoc, bindType = bindType, itemQuality = itemQuality }
@@ -296,12 +295,11 @@ function app.ItemOverlay(overlay, itemLink, itemLocation)
 			-- Pets
 			elseif TransmogLootHelper_Settings["iconNewPet"] and itemEquipLoc == "Pet" then
 				-- If we haven't grabbed this info from a pet cage, grab it now
-				if not app.OverlayCache[itemLink].creatureID then
-					local _, _, _, creatureID = C_PetJournal.GetPetInfoByItemID(itemID)
-					app.OverlayCache[itemLink].creatureID = creatureID
+				if not app.OverlayCache[itemLink].speciesID then
+					app.OverlayCache[itemLink].speciesID = select(13, C_PetJournal.GetPetInfoByItemID(itemID))
 				end
-
-				maxAllowed, numPets = C_PetJournal.GetNumPetsInJournal(app.OverlayCache[itemLink].creatureID)
+								
+				numPets, maxAllowed = C_PetJournal.GetNumCollectedInfo(app.OverlayCache[itemLink].speciesID)
 
 				if (maxAllowed == numPets and numPets ~= 0) or (not TransmogLootHelper_Settings["iconNewPetMax"] and numPets >= 1) then
 					if TransmogLootHelper_Settings["iconLearned"] then
@@ -344,6 +342,10 @@ function app.ItemOverlay(overlay, itemLink, itemLocation)
 				else
 					hideOverlay()
 				end
+			-- Unknown (so far only that one magical pet cage that while in the guild bank doesn't return any pet info)
+			elseif TransmogLootHelper_Settings["iconNewPet"] and itemEquipLoc == "Unknown" then
+				showOverlay("yellow")
+				overlay.animation:Stop()
 			end
 		else
 			hideOverlay()
@@ -353,7 +355,6 @@ function app.ItemOverlay(overlay, itemLink, itemLocation)
 		if TransmogLootHelper_Settings["textBind"] then
 			-- WuE
 			if itemLocation and C_Item.IsBoundToAccountUntilEquip(itemLocation) then
-			-- if bindType == 9 or app.GetTooltipText(itemLink, ITEM_ACCOUNTBOUND_UNTIL_EQUIP) or app.GetTooltipText(itemLink, ITEM_BIND_TO_ACCOUNT_UNTIL_EQUIP) then	
 				if C_Item.IsBound(itemLocation) then
 					overlay.text:SetText("")
 				else
@@ -380,11 +381,15 @@ function app.ItemOverlay(overlay, itemLink, itemLocation)
 
 	-- Cache the item by asking the server to give us the info
 	local itemID = C_Item.GetItemInfoInstant(itemLink)
-	-- Caged pets don't return this info
-	if not itemID then
-		local creatureID = string.match(itemLink, "battlepet:(%d+):")
-		if creatureID then
-			app.OverlayCache[itemLink] = { itemEquipLoc = "Pet", bindType = 2, creatureID = creatureID }
+	-- Caged pets don't return this info, except this one magical pet cage
+	if not itemID or itemID == 82800 then
+		local speciesID = string.match(itemLink, "battlepet:(%d+):")
+		if speciesID then
+			app.OverlayCache[itemLink] = { itemEquipLoc = "Pet", bindType = 2, speciesID = speciesID }
+			processOverlay()
+		-- If this magical pet cage can't return the above info, in that case mark it as unknown
+		elseif itemID == 82800 then
+			app.OverlayCache[itemLink] = { itemEquipLoc = "Unknown" }
 			processOverlay()
 		else
 			return
