@@ -738,7 +738,10 @@ function app.ItemOverlayHooks()
 
 							v.TLHOverlay.icon:ClearAllPoints()
 							v.TLHOverlay.icon:SetPoint("RIGHT", v)	-- Set the icon to the right of the row
-							v.TLHOverlay.animation:Stop()	-- And don't animate, that's a little obnoxious in these close quarters
+							-- Delay this bit, sometimes it doesn't quite trigger right
+							C_Timer.After(0.2, function()
+								v.TLHOverlay.animation:Stop()	-- And don't animate, that's a little obnoxious in these close quarters
+							end)
 						end
 					end
 				end
