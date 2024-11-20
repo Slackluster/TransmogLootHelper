@@ -14,5 +14,6 @@ jobs:
       GITHUB_OAUTH: ${{ secrets.GITHUB_TOKEN }}
 
     steps:
+    - name: Grab recipe itemIDs to recipeIDs
       working-directory: ${{ github.workspace }}/PROJECT_FOLDER
       run: bash ./scripts/do-all.sh
