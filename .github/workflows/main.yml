@@ -15,4 +15,4 @@ jobs:
 
     steps:
       - name: Grab recipes to recipeIDs
-        run:  bash ./scripts/do-all.sh
+        run:  bash scripts/do-all.sh
