@@ -33,11 +33,6 @@ end)
 -- ITEM ICONS --
 ----------------
 
--- TODO:
--- ArkInventory
---
--- DB2 Wago itemID to spellID thing
-
 function app.ItemOverlay(overlay, itemLink, itemLocation, containerInfo)
 	-- Create our overlay
 	local function createOverlay()
