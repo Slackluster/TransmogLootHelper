@@ -35,7 +35,6 @@ end)
 
 -- TODO:
 -- ArkInventory
--- World Quest Tab
 --
 -- DB2 Wago itemID to spellID thing
 
