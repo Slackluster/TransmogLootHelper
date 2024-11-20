@@ -19,4 +19,6 @@ jobs:
         with:
           fetch-depth: 0
       - name: Grab recipe itemIDs to recipeIDs
-        run: bash ${GITHUB_WORKSPACE}/scripts/do-all.sh
+        run: git update-index --chmod=+x ./scripts/get-files.sh
+             git update-index --chmod=+x ./scripts/convert-recipes-to-spell-ids.py
+             bash ${GITHUB_WORKSPACE}/scripts/do-all.sh
