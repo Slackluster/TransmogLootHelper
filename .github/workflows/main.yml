@@ -14,9 +14,9 @@ jobs:
       GITHUB_OAUTH: ${{ secrets.GITHUB_TOKEN }}
 
     steps:
-    - name: Clone project
+      - name: Clone project
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-    - name: Grab recipe itemIDs to recipeIDs
-      run:  ${GITHUB_WORKSPACE}/scripts/do-all.sh
+      - name: Grab recipe itemIDs to recipeIDs
+        run: bash ${GITHUB_WORKSPACE}/scripts/do-all.sh
