@@ -14,9 +14,6 @@ jobs:
       GITHUB_OAUTH: ${{ secrets.GITHUB_TOKEN }}
 
     steps:
-      - name: Clone project
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-      - name: Package and release
-        uses: BigWigsMods/packager@v2
+    - name: Grab recipe itemIDs to recipeIDs
+      working-directory: ${{ github.workspace }}/scripts
+      run: bash do-all.sh
