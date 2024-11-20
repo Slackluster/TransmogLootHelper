@@ -642,7 +642,7 @@ function app.ItemOverlayHooks()
 						end
 					end
 
-					if highestPrice then
+					if highestPrice and highestItem then
 						local overlay = highestItem.TLHOverlay
 
 						if not overlay.gold then
