@@ -96,7 +96,7 @@ app.Icon = {
 	["Ensemble"] = "Interface\\Icons\\inv_chest_cloth_17",
 	["Illusion"] = "Interface\\Icons\\inv_misc_scrollrolled03",
 	["Mount"] = "Interface\\Icons\\ability_mount_ridinghorse",
-	["Pet"] = "Interface\\Icons\\petjournalportrait",
+	["Pet"] = "Interface\\Icons\\inv_arfuspet_classic",
 	["Toy"] = "Interface\\Icons\\trade_archaeology_chestoftinyglassanimals",
 	["Recipe"] = "Interface\\Icons\\inv_misc_note_01",
 

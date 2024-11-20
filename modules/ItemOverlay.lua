@@ -64,59 +64,50 @@ function app.ItemOverlay(overlay, itemLink, itemLocation, containerInfo)
 			mask:SetAllPoints(overlay.icon)
 			overlay.texture:AddMaskTexture(mask)
 
-			-- Colour overlay
-			local colorOverlay = CreateFrame("Frame", nil, overlay.icon)
-			colorOverlay:SetAllPoints(overlay.icon)
-
-			overlay.color = colorOverlay:CreateTexture(nil, "ARTWORK")
-			overlay.color:SetAllPoints(colorOverlay)
-			
-			-- Round mask
-			overlay.color:AddMaskTexture(mask)
-
 			-- Border
-			overlay.border = colorOverlay:CreateTexture(nil, "OVERLAY")
+			local frame = CreateFrame("Frame", nil, overlay.icon)
+			frame:SetAllPoints(overlay.icon)
+			overlay.border = frame:CreateTexture(nil, "OVERLAY")
 			overlay.border:SetPoint("CENTER", overlay.icon)
 			overlay.border:SetSize(24, 24)
 
-			-- Create a frame to hold the texture
+			-- Animation texture
 			local frame = CreateFrame("Frame", nil, overlay.icon)
 			frame:SetSize(20, 20)
 			frame:SetPoint("CENTER")
-
-			-- Add the texture to the frame
 			local texture = frame:CreateTexture(nil, "ARTWORK")
 			texture:SetAllPoints(frame)
 			texture:SetTexture("interface\\artifacts\\relicforge")
 			texture:SetAtlas("ArtifactsFX-SpinningGlowys-Purple", true)
 
-			-- Create an AnimationGroup for the texture
+			-- Animation group
 			overlay.animation = texture:CreateAnimationGroup()
 
-			-- Add a rotation animation to the group
+			-- Rotation first half
 			local spin = overlay.animation:CreateAnimation("Rotation")
-			spin:SetDuration(2) -- Duration of one full spin (in seconds)
-			spin:SetDegrees(-360) -- Full rotation (360 degrees)
-			spin:SetOrder(1) -- Execution order of the animation
+			spin:SetDuration(2)
+			spin:SetDegrees(-360)
+			spin:SetOrder(1)
 
-			-- Add a scaling animation to the group
+			-- Scale first half
 			local scaleUp = overlay.animation:CreateAnimation("Scale")
-			scaleUp:SetDuration(1) -- First half of the rotation
-			scaleUp:SetScale(1.5, 1.5) -- Grow to 150% size
-			scaleUp:SetOrder(1) -- Same order as the rotation
+			scaleUp:SetDuration(1)
+			scaleUp:SetScale(1.5, 1.5)
+			scaleUp:SetOrder(1)
 
-			-- Add a rotation animation to the group
+			-- Rotation second half
 			local spin2 = overlay.animation:CreateAnimation("Rotation")
-			spin2:SetDuration(2) -- Duration of one full spin (in seconds)
-			spin2:SetDegrees(-360) -- Full rotation (360 degrees)
-			spin2:SetOrder(2) -- Execution order of the animation
+			spin2:SetDuration(2)
+			spin2:SetDegrees(-360)
+			spin2:SetOrder(2)
 
+			-- Scale second half
 			local scaleDown = overlay.animation:CreateAnimation("Scale")
-			scaleDown:SetDuration(1) -- Second half of the rotation
-			scaleDown:SetScale(0.6667, 0.6667) -- Shrink back to 100% size
+			scaleDown:SetDuration(1)
+			scaleDown:SetScale(0.6667, 0.6667)
 			scaleDown:SetOrder(2)
 
-			-- Add a pause at the end of the animation group
+			-- Repeat the animation
 			overlay.animation:SetLooping("REPEAT")
 		end
 
@@ -215,19 +206,15 @@ function app.ItemOverlay(overlay, itemLink, itemLocation, containerInfo)
 		local function showOverlay(color)
 			if color == "purple" then
 				overlay.border:SetTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\border_purple.blp")
-				overlay.color:SetColorTexture(0.761, 0, 1, 0.2)
 				overlay.animation:Play()
 			elseif color == "yellow" then
 				overlay.border:SetTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\border_yellow.blp")
-				overlay.color:SetColorTexture(1, 0.984, 0, 0.2)
 				overlay.animation:Play()
 			elseif color == "green" then
 				overlay.border:SetTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\border_green.blp")
-				overlay.color:SetColorTexture(0.12, 1, 0, 0.2)
 				overlay.animation:Stop()
 			elseif color == "red" then
 				overlay.border:SetTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\border_red.blp")
-				overlay.color:SetColorTexture(1, 0, 0, 0.2)
 				overlay.animation:Stop()
 			end
 			overlay.icon:Show()
