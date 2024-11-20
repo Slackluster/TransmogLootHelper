@@ -15,4 +15,4 @@ jobs:
 
     steps:
     - name: Grab recipe itemIDs to recipeIDs
-      run:  bash ./scripts/do-all.sh
+      run:  bash ${GITHUB_WORKSPACE}/scripts/do-all.sh
