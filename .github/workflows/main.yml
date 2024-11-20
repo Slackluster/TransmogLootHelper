@@ -15,5 +15,4 @@ jobs:
 
     steps:
       - name: Grab recipes to recipeIDs
-        working-directory: ${{ github.workspace }}/scripts
-        run: bash ./do-all.sh
+        run:  bash path/scripts/do-all.sh
