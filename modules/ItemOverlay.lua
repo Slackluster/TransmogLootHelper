@@ -66,6 +66,19 @@ function app.TooltipInfo()
 	end
 end
 
+function app.GetTooltipRedText(itemLink)
+	local tooltip = C_TooltipInfo.GetHyperlink(itemLink)
+	if tooltip["lines"] then
+		for k, v in ipairs(tooltip["lines"]) do
+			if v.leftColor["r"] ~= 1 and v.leftColor["g"] ~= 1 and v.leftColor["b"] ~= 1 then
+				return true
+			end
+		end
+		return false
+	end
+end
+
+-- Create and set our icon and text overlay
 function app.ItemOverlay(overlay, itemLink, itemLocation, containerInfo)
 	-- Create our overlay
 	local function createOverlay()
@@ -311,19 +324,7 @@ function app.ItemOverlay(overlay, itemLink, itemLocation, containerInfo)
 					end
 				-- Unlearned
 				else
-					-- Look for red text, which should only be when on the wrong class for this item
-					local red = false
-					local tooltip = C_TooltipInfo.GetHyperlink(itemLink)
-					if tooltip["lines"] then
-						for k, v in ipairs(tooltip["lines"]) do
-							if v.leftColor["r"] ~= 1 and v.leftColor["g"] ~= 1 and v.leftColor["b"] ~= 1 then
-								red = true
-								break
-							end
-						end
-					end
-
-					if red then
+					if app.GetTooltipRedText(itemLink) then
 						showOverlay("red")
 					else
 						showOverlay("purple")
@@ -413,19 +414,7 @@ function app.ItemOverlay(overlay, itemLink, itemLocation, containerInfo)
 				if not containerInfo then
 					hideOverlay()
 				else
-					-- Look for red text, which should only be when we can't open a container
-					local red = false
-					local tooltip = C_TooltipInfo.GetHyperlink(itemLink)
-					if tooltip["lines"] then
-						for k, v in ipairs(tooltip["lines"]) do
-							if v.leftColor["r"] ~= 1 and v.leftColor["g"] ~= 1 and v.leftColor["b"] ~= 1 then
-								red = true
-								break
-							end
-						end
-					end
-
-					if red then
+					if app.GetTooltipRedText(itemLink) then
 						showOverlay("red")
 					else
 						showOverlay("yellow")
