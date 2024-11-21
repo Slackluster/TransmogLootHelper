@@ -212,6 +212,25 @@ function app.ItemOverlay(overlay, itemLink, itemLocation, containerInfo)
 						break
 					end
 				end
+			-- Check for profession knowledge items
+			else
+				local localeProfessionKnowledge = {
+					"Use: Study to increase your",
+					"Benutzen: Studieren, um Euer",
+					"Uso: Estudia para aumentar",
+					"Utilise: Vous étudiez afin",
+					"Usa: Da studiare per aumentare",
+					"Uso: Estuda para aumentar",
+					"Использование: Изучить, повышая ваше",
+					"사용 효과: 연구합니다. 카즈 알가르",
+					"使用: 研究以使你的卡兹阿加",
+				}
+				for k, v in pairs(localeProfessionKnowledge) do
+					if app.GetTooltipText(itemLink, v) then
+						itemEquipLoc = "ProfessionKnowledge"
+						break
+					end
+				end
 			end
 
 			-- Cache this info, so we don't need to check it again
@@ -368,6 +387,9 @@ function app.ItemOverlay(overlay, itemLink, itemLocation, containerInfo)
 				else
 					hideOverlay()
 				end
+			-- Profession Knowledge
+			elseif TransmogLootHelper_Settings["iconUsable"] and itemEquipLoc == "ProfessionKnowledge" then
+				showOverlay("yellow")
 			-- Containers
 			elseif TransmogLootHelper_Settings["iconContainer"] and itemEquipLoc == "Container" then
 				if not containerInfo then
@@ -922,6 +944,10 @@ function app.SettingsItemOverlay()
 	layout:AddInitializer(CreateSettingsListSectionHeaderInitializer("Other Info"))
 
 	local variable, name, tooltip = "iconQuestGold", "Quest Reward Sell Value", "Show an icon to indicate which quest reward has the highest vendor sell value, if there are multiple."
+	local setting = Settings.RegisterAddOnSetting(category, appName.."_"..variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, true)
+	Settings.CreateCheckbox(category, setting, tooltip)
+
+	local variable, name, tooltip = "iconUsable", "Usable Items", "Show an icon to indicate an item can be used (currently only Profession Knowledge items)."
 	local setting = Settings.RegisterAddOnSetting(category, appName.."_"..variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, true)
 	Settings.CreateCheckbox(category, setting, tooltip)
 

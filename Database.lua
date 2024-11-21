@@ -101,6 +101,7 @@ app.Icon = {
 	["Toy"] = "Interface\\Icons\\trade_archaeology_chestoftinyglassanimals",
 	["Recipe"] = "Interface\\Icons\\inv_misc_note_01",
 
+	["ProfessionKnowledge"] = "Interface\\Icons\\inv_cosmicvoid_orb",
 	["Container"] = "Interface\\Icons\\inv_misc_bag_16",
 	["Unknown"] = "Interface\\Icons\\inv_misc_questionMark",
 }
