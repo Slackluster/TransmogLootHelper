@@ -575,8 +575,10 @@ function app.ItemOverlayHooks()
 		-- Hook our overlay onto all merchant slots
 		local function merchantOverlay()
 			if not app.MerchantHook then
-				MerchantPrevPageButton:HookScript("OnClick", merchantOverlay)
-				MerchantNextPageButton:HookScript("OnClick", merchantOverlay)
+				MerchantPrevPageButton:HookScript("OnClick", merchantOverlay)	-- Previous page button
+				MerchantNextPageButton:HookScript("OnClick", merchantOverlay)	-- Next page button
+				MerchantFrame:HookScript("OnMouseWheel", function() C_Timer.After(0.05, merchantOverlay) end)	-- Scrolling, which also changes the page
+
 				app.MerchantHook = true
 			end
 
