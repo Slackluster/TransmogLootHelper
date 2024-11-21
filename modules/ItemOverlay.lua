@@ -302,14 +302,32 @@ function app.ItemOverlay(overlay, itemLink, itemLocation, containerInfo)
 				end
 			-- Illusions
 			elseif TransmogLootHelper_Settings["iconNewIllusion"] and itemEquipLoc == "Illusion" then
+				-- Learned
 				if app.GetTooltipText(itemLink, ITEM_SPELL_KNOWN) then
 					if TransmogLootHelper_Settings["iconLearned"] then
 						showOverlay("green")
 					else
 						hideOverlay()
 					end
+				-- Unlearned
 				else
-					showOverlay("purple")
+					-- Look for red text, which should only be when on the wrong class for this item
+					local red = false
+					local tooltip = C_TooltipInfo.GetHyperlink(itemLink)
+					if tooltip["lines"] then
+						for k, v in ipairs(tooltip["lines"]) do
+							if v.leftColor["r"] ~= 1 and v.leftColor["g"] ~= 1 and v.leftColor["b"] ~= 1 then
+								red = true
+								break
+							end
+						end
+					end
+
+					if red then
+						showOverlay("red")
+					else
+						showOverlay("purple")
+					end
 				end
 			-- Mounts
 			elseif TransmogLootHelper_Settings["iconNewMount"] and itemEquipLoc == "Mount" then
@@ -846,8 +864,6 @@ function app.ItemOverlayHooks()
 		end
 
 		app.Event:Register("AUCTION_HOUSE_THROTTLED_SYSTEM_READY", auctionHouseRows)
-
-		--app.Baganator()
 	end
 end
 
