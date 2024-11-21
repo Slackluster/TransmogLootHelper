@@ -12,9 +12,10 @@ app.NameLong = app.Colour("Transmog Loot Helper")
 app.NameShort = app.Colour("TLH")
 
 -- Used textures
-app.IconMog = "Interface\\AddOns\\TransmogLootHelper\\assets\\newMog.blp"
+app.IconTLH = "|TInterface\\AddOns\\TransmogLootHelper\\assets\\tlh_icon.blp:0|t"
 app.IconReady = "|TInterface\\RaidFrame\\ReadyCheck-Ready:0|t"
 app.IconNotReady = "|TInterface\\RaidFrame\\ReadyCheck-NotReady:0|t"
+app.IconMog = "Interface\\AddOns\\TransmogLootHelper\\assets\\newMog.blp"
 
 -- Type.Subtype -> item type
 app.Type = {

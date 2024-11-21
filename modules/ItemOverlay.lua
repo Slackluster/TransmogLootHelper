@@ -24,6 +24,7 @@ end
 app.Event:Register("ADDON_LOADED", function(addOnName, containsBindings)
 	if addOnName == appName then
 		app.InitialiseCoreItemOverlay()
+		app.TooltipInfo()
 		app.ItemOverlayHooks()
 		app.SettingsItemOverlay()
 	end
@@ -32,6 +33,38 @@ end)
 ----------------
 -- ITEM ICONS --
 ----------------
+
+-- Tooltip information (to tell the user a recipe is not cached)
+function app.TooltipInfo()
+	-- Only run any of this is the relevant setting is enabled
+	if TransmogLootHelper_Settings["iconNewRecipe"] then
+		local function OnTooltipSetItem(tooltip)
+			-- Get item info from the last processed tooltip and the primary tooltip
+			local _, _, itemID = TooltipUtil.GetDisplayedItem(tooltip)
+			local _, _, primaryItemID = TooltipUtil.GetDisplayedItem(GameTooltip)
+
+			-- Stop if error, it will try again on its own REAL soon
+			if itemID == nil then
+				return
+			end
+
+			-- If the last processed tooltip isn't the same as the primary tooltip (aka, a compare tooltip), don't do anything
+			if itemID ~= primaryItemID then
+				return
+			end
+
+			-- Only run this if the item is known to be a recipe
+			if app.RecipeItem[itemID] then
+				local recipeID = app.RecipeItem[itemID]
+				if TransmogLootHelper_Cache.Recipes[recipeID] == nil then
+					tooltip:AddLine(" ")
+					tooltip:AddLine(app.IconTLH .. " " .. "Please open this profession to update the recipe's collection status.")
+				end
+			end
+		end
+		TooltipDataProcessor.AddTooltipPostCall(Enum.TooltipDataType.Item, OnTooltipSetItem)
+	end
+end
 
 function app.ItemOverlay(overlay, itemLink, itemLocation, containerInfo)
 	-- Create our overlay
@@ -181,9 +214,6 @@ function app.ItemOverlay(overlay, itemLink, itemLocation, containerInfo)
 				end
 			end
 
-			-- Set which icon we're going to be using
-			local icon = app.Icon[itemEquipLoc]
-
 			-- Cache this info, so we don't need to check it again
 			app.OverlayCache[itemLink] = { itemEquipLoc = itemEquipLoc, bindType = bindType, itemQuality = itemQuality }
 		end
@@ -313,16 +343,27 @@ function app.ItemOverlay(overlay, itemLink, itemLocation, containerInfo)
 				if app.RecipeItem[itemID] then
 					local recipeID = app.RecipeItem[itemID]
 					
-					if TransmogLootHelper_Cache.Recipes[recipeID] then
-						if TransmogLootHelper_Settings["iconLearned"] then
-							showOverlay("green")
-						else
-							hideOverlay()
+					if TransmogLootHelper_Cache.Recipes[recipeID] ~= nil then
+						-- Learned
+						if TransmogLootHelper_Cache.Recipes[recipeID] then
+							if TransmogLootHelper_Settings["iconLearned"] then
+								showOverlay("green")
+							else
+								hideOverlay()
+							end
+						-- Unlearned
+						elseif not TransmogLootHelper_Cache.Recipes[recipeID] then
+							if C_TradeSkillUI.IsRecipeProfessionLearned(recipeID) then
+								showOverlay("purple")
+							else
+								showOverlay("red")
+							end
 						end
-					elseif C_TradeSkillUI.IsRecipeProfessionLearned(recipeID) then
-						showOverlay("purple")
+					-- Uncached
 					else
-						showOverlay("red")
+						overlay.texture:SetTexture(app.Icon["Unknown"])
+						showOverlay("yellow")
+						overlay.animation:Stop()
 					end
 				else
 					hideOverlay()
