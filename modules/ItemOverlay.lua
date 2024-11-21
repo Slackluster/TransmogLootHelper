@@ -686,7 +686,14 @@ function app.ItemOverlayHooks()
 					itemButton.TLHOverlay:Hide()	-- Hide our overlay initially, updating doesn't work like for regular itemButtons
 					if itemButton.TLHOverlay.gold then itemButton.TLHOverlay.gold:Hide() end
 
-					local itemLink = GetQuestLogItemLink("choice", k) or GetQuestLogItemLink("reward", k) or GetQuestItemLink("choice", k) or GetQuestItemLink("reward", k)
+					-- Get our quest rewards
+					local itemLink
+					if rewardsFrame == QuestInfoRewardsFrame then
+						itemLink = GetQuestItemLink("choice", k) or GetQuestItemLink("reward", k)
+					elseif rewardsFrame == MapQuestInfoRewardsFrame then
+						itemLink = GetQuestLogItemLink("choice", k) or GetQuestLogItemLink("reward", k)
+					end
+
 					if itemLink then
 						table.insert(sellPrice, { price = select(11, GetItemInfo(itemLink)), itemButton = itemButton})
 						app.ItemOverlay(itemButton.TLHOverlay, itemLink)
@@ -734,18 +741,16 @@ function app.ItemOverlayHooks()
 				end
 			end
 
-			if QuestInfoRewardsFrame then
+			if QuestInfoRewardsFrame and not WorldMapFrame:IsShown() then
 				rewardOverlay(QuestInfoRewardsFrame)
 			end
 
-			if MapQuestInfoRewardsFrame then
+			if MapQuestInfoRewardsFrame and WorldMapFrame:IsShown() then
 				rewardOverlay(MapQuestInfoRewardsFrame)
 			end
-
-			
 		end
 
-		app.Event:Register("QUEST_DETAIL", questOverlay)
+		app.Event:Register("QUEST_DETAIL", function() questOverlay() C_Timer.After(0.1, questOverlay) end)
 		hooksecurefunc("QuestMapFrame_ShowQuestDetails", function() questOverlay() C_Timer.After(0.1, questOverlay) end)
 
 		-- Hook our overlay onto all world quest pins
