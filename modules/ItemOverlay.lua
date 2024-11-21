@@ -616,8 +616,8 @@ function app.ItemOverlayHooks()
 		-- Hook our overlay onto all merchant slots
 		local function merchantOverlay()
 			if not app.MerchantHook then
-				MerchantPrevPageButton:HookScript("OnClick", merchantOverlay)	-- Previous page button
-				MerchantNextPageButton:HookScript("OnClick", merchantOverlay)	-- Next page button
+				MerchantPrevPageButton:HookScript("OnClick", function() merchantOverlay() C_Timer.After(0.1, merchantOverlay) end)	-- Previous page button
+				MerchantNextPageButton:HookScript("OnClick", function() merchantOverlay() C_Timer.After(0.1, merchantOverlay) end)	-- Next page button
 				MerchantFrame:HookScript("OnMouseWheel", function() merchantOverlay() C_Timer.After(0.1, merchantOverlay) end)	-- Scrolling, which also changes the page
 
 				app.MerchantHook = true
@@ -724,7 +724,7 @@ function app.ItemOverlayHooks()
 		end
 
 		app.Event:Register("QUEST_DETAIL", questOverlay)
-		hooksecurefunc("QuestMapFrame_ShowQuestDetails", function() C_Timer.After(0.1, questOverlay) end)
+		hooksecurefunc("QuestMapFrame_ShowQuestDetails", function() questOverlay() C_Timer.After(0.1, questOverlay) end)
 
 		-- Hook our overlay onto all world quest pins
 		local function worldQuests()
