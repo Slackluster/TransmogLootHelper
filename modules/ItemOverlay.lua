@@ -711,7 +711,7 @@ function app.ItemOverlayHooks()
 					elseif rewardsFrame == MapQuestInfoRewardsFrame then
 						itemLink = GetQuestLogItemLink("choice", k) or GetQuestLogItemLink("reward", k)
 					end
-					print(itemLink)
+
 					if itemLink then
 						table.insert(sellPrice, { price = select(11, GetItemInfo(itemLink)), itemButton = itemButton})
 						app.ItemOverlay(itemButton.TLHOverlay, itemLink)
