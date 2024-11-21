@@ -693,7 +693,7 @@ function app.ItemOverlayHooks()
 					elseif rewardsFrame == MapQuestInfoRewardsFrame then
 						itemLink = GetQuestLogItemLink("choice", k) or GetQuestLogItemLink("reward", k)
 					end
-
+					print(itemLink)
 					if itemLink then
 						table.insert(sellPrice, { price = select(11, GetItemInfo(itemLink)), itemButton = itemButton})
 						app.ItemOverlay(itemButton.TLHOverlay, itemLink)
@@ -750,7 +750,7 @@ function app.ItemOverlayHooks()
 			end
 		end
 
-		app.Event:Register("QUEST_DETAIL", function() questOverlay() C_Timer.After(0.1, questOverlay) end)
+		app.Event:Register("QUEST_DETAIL", questOverlay)
 		hooksecurefunc("QuestMapFrame_ShowQuestDetails", function() questOverlay() C_Timer.After(0.1, questOverlay) end)
 
 		-- Hook our overlay onto all world quest pins
