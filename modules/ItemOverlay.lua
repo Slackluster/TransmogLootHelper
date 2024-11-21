@@ -778,6 +778,8 @@ function app.ItemOverlayHooks()
 		end
 
 		app.Event:Register("AUCTION_HOUSE_THROTTLED_SYSTEM_READY", auctionHouseRows)
+
+		--app.Baganator()
 	end
 end
 
