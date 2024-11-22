@@ -2,7 +2,7 @@ local appName, app =  ...	-- Returns the AddOn name and a unique table
 
 app.Event:Register("ADDON_LOADED", function(addOnName, containsBindings)
 	if addOnName == "WorldQuestTab" then
-		local function worldquesttabIntegration()
+		local function wqtRewardsList()
 			-- Put our icon on the rewards list
 			if WQT_QuestScrollFrame then
 				local wqtRewards = { WQT_QuestScrollFrame.Contents:GetChildren() }
@@ -30,10 +30,44 @@ app.Event:Register("ADDON_LOADED", function(addOnName, containsBindings)
 					end
 				end
 			end
-
-			-- TODO: icon on world quest pins
 		end
 
-		WQT_WorldQuestFrame:RegisterCallback("UpdateQuestList", worldquesttabIntegration, appName)
+		WQT_WorldQuestFrame:RegisterCallback("UpdateQuestList", wqtRewardsList, appName)
+
+		-- Hook our overlay onto the world quest pins
+		local function wqtMapPins()
+			C_Timer.After(0.1, function()
+				for k, v in pairs({ WorldMapFrame.ScrollContainer.Child:GetChildren() }) do
+					if v.RingBG then
+						local pin = v
+						if not pin.TLHOverlay then
+							pin.TLHOverlay = CreateFrame("Frame", nil, pin)
+							pin.TLHOverlay:SetAllPoints(pin)
+							pin.TLHOverlay:SetScale(0.8)	-- Make it a little smaller
+						end
+						pin.TLHOverlay:Hide()	-- Hide our overlay initially, updating doesn't work like for regular itemButtons
+
+						if pin.questID then
+							local bestIndex, bestType = QuestUtils_GetBestQualityItemRewardIndex(pin.questID)
+							if bestIndex and bestType then
+								local itemLink = GetQuestLogItemLink(bestType, bestIndex, pin.questID)
+								if itemLink then
+									app.ItemOverlay(pin.TLHOverlay, itemLink)
+									pin.TLHOverlay.text:SetText("")	-- No bind text for these
+								else
+									pin.TLHOverlay:Hide()
+								end
+							else
+								pin.TLHOverlay:Hide()
+							end
+						end
+					end
+				end
+			end)
+		end
+
+		WorldMapFrame:HookScript("OnShow", wqtMapPins)
+		EventRegistry:RegisterCallback("MapCanvas.MapSet", wqtMapPins)
+		WQT_WorldQuestFrame:RegisterCallback("UpdateQuestList", wqtMapPins, appName)
 	end
 end)

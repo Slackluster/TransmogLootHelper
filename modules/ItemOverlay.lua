@@ -783,6 +783,7 @@ function app.ItemOverlayHooks()
 					if not pin.TLHOverlay then
 						pin.TLHOverlay = CreateFrame("Frame", nil, pin)
 						pin.TLHOverlay:SetAllPoints(pin)
+						pin.TLHOverlay:SetScale(0.8)	-- Make it a little smaller
 					end
 					pin.TLHOverlay:Hide()	-- Hide our overlay initially, updating doesn't work like for regular itemButtons
 
