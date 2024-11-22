@@ -475,7 +475,12 @@ function app.ItemOverlay(overlay, itemLink, itemLocation, containerInfo)
 
 		-- And when the item is cached
 		item:ContinueOnItemLoad(function()
-			processOverlay(itemID)
+			-- Also cache the spell associated with this item (or a dummy spell if none)
+			local spellID = select(2, C_Item.GetItemSpell(itemLink)) or 61304
+			local spell = Spell:CreateFromSpellID(spellID)
+			spell:ContinueOnSpellLoad(function()
+				processOverlay(itemID)
+			end)
 		end)
 	end
 end
