@@ -476,6 +476,7 @@ function app.ItemOverlay(overlay, itemLink, itemLocation, containerInfo)
 		-- And when the item is cached
 		item:ContinueOnItemLoad(function()
 			-- Also cache the spell associated with this item (or a dummy spell if none)
+			-- We do this to make sure all tooltip lines (Use: lines especially) are loaded in by the time we scan the tooltip, if necessary
 			local spellID = select(2, C_Item.GetItemSpell(itemLink)) or 61304
 			local spell = Spell:CreateFromSpellID(spellID)
 			spell:ContinueOnSpellLoad(function()
