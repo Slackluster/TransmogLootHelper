@@ -36,9 +36,9 @@ end)
 
 -- Tooltip information (to tell the user a recipe is not cached)
 function app.TooltipInfo()
-	-- Only run any of this is the relevant setting is enabled
-	if TransmogLootHelper_Settings["iconNewRecipe"] then
-		local function OnTooltipSetItem(tooltip)
+	local function OnTooltipSetItem(tooltip)
+		-- Only run any of this is the relevant setting is enabled
+		if TransmogLootHelper_Settings["iconNewRecipe"] then
 			-- Get item info from the last processed tooltip and the primary tooltip
 			local _, _, itemID = TooltipUtil.GetDisplayedItem(tooltip)
 			local _, _, primaryItemID = TooltipUtil.GetDisplayedItem(GameTooltip)
@@ -62,8 +62,8 @@ function app.TooltipInfo()
 				end
 			end
 		end
-		TooltipDataProcessor.AddTooltipPostCall(Enum.TooltipDataType.Item, OnTooltipSetItem)
 	end
+	TooltipDataProcessor.AddTooltipPostCall(Enum.TooltipDataType.Item, OnTooltipSetItem)
 end
 
 function app.GetTooltipRedText(itemLink)
