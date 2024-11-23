@@ -420,6 +420,8 @@ function app.ItemOverlay(overlay, itemLink, itemLocation, containerInfo)
 						showOverlay("yellow")
 					end
 				end
+			else
+				hideOverlay()
 			end
 		else
 			hideOverlay()
