@@ -672,7 +672,7 @@ function app.ItemOverlayHooks()
 				MerchantPrevPageButton:HookScript("OnClick", function() merchantOverlay() C_Timer.After(0.1, merchantOverlay) end)	-- Previous page button
 				MerchantNextPageButton:HookScript("OnClick", function() merchantOverlay() C_Timer.After(0.1, merchantOverlay) end)	-- Next page button
 				MerchantFrame:HookScript("OnMouseWheel", function() merchantOverlay() C_Timer.After(0.1, merchantOverlay) end)	-- Scrolling, which also changes the page
-
+				MerchantFrame.FilterDropdown:RegisterCallback("OnMenuClose", function() merchantOverlay() C_Timer.After(0.1, merchantOverlay) end)	-- For when users change the filtering
 				app.MerchantHook = true
 			end
 
