@@ -809,7 +809,7 @@ function app.ItemOverlayHooks()
 					local highestItem = nil
 				
 					for k, v in ipairs(sellPrice) do
-						if v.price > highestPrice then
+						if v.price > 1 and v.price > highestPrice then
 							highestPrice = v.price
 							highestItem = v.itemButton
 						end
