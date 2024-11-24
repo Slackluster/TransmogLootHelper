@@ -274,6 +274,10 @@ function app.ItemOverlay(overlay, itemLink, itemLocation, containerInfo)
 						break
 					end
 				end
+
+				if app.QuestItem[itemID] then
+					itemEquipLoc = "Customisation"
+				end
 			end
 
 			-- Cache this info, so we don't need to check it again
@@ -457,7 +461,7 @@ function app.ItemOverlay(overlay, itemLink, itemLocation, containerInfo)
 			-- Customisations (includes spellbooks)
 			elseif TransmogLootHelper_Settings["iconUsable"] and itemEquipLoc == "Customisation" then
 				-- Learned
-				if app.GetTooltipText(itemLink, ITEM_SPELL_KNOWN) or TransmogLootHelper_Cache.Recipes[app.RecipeItem[itemID]] then
+				if TransmogLootHelper_Cache.Recipes[app.RecipeItem[itemID]] or (app.QuestItem[itemID] and C_QuestLog.IsQuestFlaggedCompleted(app.QuestItem[itemID])) or app.GetTooltipText(itemLink, ITEM_SPELL_KNOWN) then
 					if TransmogLootHelper_Settings["iconLearned"] then
 						showOverlay("green")
 					else
