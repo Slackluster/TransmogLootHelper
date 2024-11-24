@@ -447,7 +447,13 @@ function app.ItemOverlay(overlay, itemLink, itemLocation, containerInfo)
 				end
 			-- Profession Knowledge
 			elseif TransmogLootHelper_Settings["iconUsable"] and itemEquipLoc == "ProfessionKnowledge" then
-				showOverlay("yellow")
+				-- Unusable
+				if app.GetTooltipRedText(itemLink) then
+					hideOverlay()
+				-- Usable
+				else
+					showOverlay("yellow")
+				end
 			-- Customisations (includes spellbooks)
 			elseif TransmogLootHelper_Settings["iconUsable"] and itemEquipLoc == "Customisation" then
 				-- Learned
@@ -910,11 +916,6 @@ function app.ItemOverlayHooks()
 									-- Delay this bit, sometimes it doesn't quite trigger right
 									C_Timer.After(0.2, function()
 										v.TLHOverlay.animation:Stop()	-- Don't animate, that's a little obnoxious in these close quarters
-
-										-- Hide the icon if it's for profession knowledge or customisations
-										if app.OverlayCache[itemLink] and app.OverlayCache[itemLink].itemEquipLoc == "ProfessionKnowledge" then
-											v.TLHOverlay:Hide()
-										end
 									end)
 								end
 							end
