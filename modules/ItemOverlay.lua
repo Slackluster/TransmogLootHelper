@@ -907,14 +907,14 @@ function app.ItemOverlayHooks()
 									v.TLHOverlay.icon:ClearAllPoints()
 									v.TLHOverlay.icon:SetPoint("RIGHT", v)	-- Set the icon to the right of the row
 
-									-- Hide the icon if it's for knowledge points
-									if app.OverlayCache[itemLink] and app.OverlayCache[itemLink].itemEquipLoc == "ProfessionKnowledge" then
-										v.TLHOverlay:Hide()
-									end
-
 									-- Delay this bit, sometimes it doesn't quite trigger right
 									C_Timer.After(0.2, function()
-										v.TLHOverlay.animation:Stop()	-- And don't animate, that's a little obnoxious in these close quarters
+										v.TLHOverlay.animation:Stop()	-- Don't animate, that's a little obnoxious in these close quarters
+
+										-- Hide the icon if it's for profession knowledge or customisations
+										if app.OverlayCache[itemLink] and app.OverlayCache[itemLink].itemEquipLoc == "ProfessionKnowledge" then
+											v.TLHOverlay:Hide()
+										end
 									end)
 								end
 							end
