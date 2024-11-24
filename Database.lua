@@ -102,6 +102,7 @@ app.Icon = {
 	["Recipe"] = "Interface\\Icons\\inv_misc_note_01",
 
 	["ProfessionKnowledge"] = "Interface\\Icons\\inv_cosmicvoid_orb",
+	["Customisation"] = "Interface\\Icons\\inv_10_jewelcrafting_gem1leveling_uncut_transparent",
 	["Container"] = "Interface\\Icons\\inv_misc_bag_16",
 	["Unknown"] = "Interface\\Icons\\inv_misc_questionMark",
 }

@@ -53,6 +53,12 @@ function app.TooltipInfo()
 				return
 			end
 
+			-- Filter out recipe "books" that aren't associated with any profession
+			local _, _, _, _, _, _, _, _, _, _, _, classID, subclassID = C_Item.GetItemInfo(itemID)
+			if classID == 9 and subclassID == 0 then
+				return
+			end
+
 			-- Only run this if the item is known to be a recipe
 			if app.RecipeItem[itemID] then
 				local recipeID = app.RecipeItem[itemID]
@@ -225,8 +231,12 @@ function app.ItemOverlay(overlay, itemLink, itemLocation, containerInfo)
 						break
 					end
 				end
-			-- Check for profession knowledge items
+			-- Class books
+			elseif classID == 9 and subclassID == 0 then
+				itemEquipLoc = "Customisation"
+			-- Check for other item types
 			else
+				-- Profession Knowledge
 				local localeProfessionKnowledge = {
 					"Use: Study to increase your",
 					"Benutzen: Studieren, um Euer",
@@ -241,6 +251,26 @@ function app.ItemOverlay(overlay, itemLink, itemLocation, containerInfo)
 				for k, v in pairs(localeProfessionKnowledge) do
 					if app.GetTooltipText(itemLink, v) then
 						itemEquipLoc = "ProfessionKnowledge"
+						break
+					end
+				end
+
+				-- Customisations
+				local localeCustomisations = {
+					"Use: Unlock",
+					"Benutzen: Schaltet",
+					"Uso: Desbloquea",
+					"Utilise: Débloque",
+					"Usa: Sblocca",
+					"Uso: Desbloqueia",
+					"Использование: Открывает",
+					"잠금 해제",
+					"지를 잠금 해제합니다.",
+					"解锁",
+				}
+				for k, v in pairs(localeCustomisations) do
+					if app.GetTooltipText(itemLink, v) then
+						itemEquipLoc = "Customisation"
 						break
 					end
 				end
@@ -304,12 +334,17 @@ function app.ItemOverlay(overlay, itemLink, itemLocation, containerInfo)
 				end
 			-- Ensembles
 			elseif TransmogLootHelper_Settings["iconNewMog"] and itemEquipLoc == "Ensemble" then
+				-- Learned
 				if app.GetTooltipText(itemLink, ITEM_SPELL_KNOWN) then
 					if TransmogLootHelper_Settings["iconLearned"] then
 						showOverlay("green")
 					else
 						hideOverlay()
 					end
+				-- Unusable
+				elseif app.GetTooltipRedText(itemLink) then
+					showOverlay("red")
+				-- Unlearned
 				else
 					showOverlay("purple")
 				end
@@ -322,22 +357,26 @@ function app.ItemOverlay(overlay, itemLink, itemLocation, containerInfo)
 					else
 						hideOverlay()
 					end
+				-- Unusable
+				elseif app.GetTooltipRedText(itemLink) then
+					showOverlay("red")
 				-- Unlearned
 				else
-					if app.GetTooltipRedText(itemLink) then
-						showOverlay("red")
-					else
-						showOverlay("purple")
-					end
+					showOverlay("purple")
 				end
 			-- Mounts
 			elseif TransmogLootHelper_Settings["iconNewMount"] and itemEquipLoc == "Mount" then
+				-- Learned
 				if app.GetTooltipText(itemLink, ITEM_SPELL_KNOWN) then
 					if TransmogLootHelper_Settings["iconLearned"] then
 						showOverlay("green")
 					else
 						hideOverlay()
 					end
+				-- Unusable
+				elseif app.GetTooltipRedText(itemLink) then
+					showOverlay("red")
+				-- Unlearned
 				else
 					showOverlay("purple")
 				end
@@ -409,6 +448,22 @@ function app.ItemOverlay(overlay, itemLink, itemLocation, containerInfo)
 			-- Profession Knowledge
 			elseif TransmogLootHelper_Settings["iconUsable"] and itemEquipLoc == "ProfessionKnowledge" then
 				showOverlay("yellow")
+			-- Customisations (includes spellbooks)
+			elseif TransmogLootHelper_Settings["iconUsable"] and itemEquipLoc == "Customisation" then
+				-- Learned
+				if app.GetTooltipText(itemLink, ITEM_SPELL_KNOWN) or TransmogLootHelper_Cache.Recipes[app.RecipeItem[itemID]] then
+					if TransmogLootHelper_Settings["iconLearned"] then
+						showOverlay("green")
+					else
+						hideOverlay()
+					end
+				-- Unusable
+				elseif app.GetTooltipRedText(itemLink) then
+					showOverlay("red")
+				-- Unlearned
+				else
+					showOverlay("purple")
+				end
 			-- Containers
 			elseif TransmogLootHelper_Settings["iconContainer"] and itemEquipLoc == "Container" then
 				if not containerInfo then
@@ -897,9 +952,9 @@ function app.ItemOverlayHooks()
 
 		app.Event:Register("AUCTION_HOUSE_THROTTLED_SYSTEM_READY", auctionHouseOverlay)
 
-		-- Update our overlays if a mog or recipe is learned
+		-- Update our overlay if a mog, recipe, or spell is learned
 		function api.UpdateOverlay()
-			C_Timer.After(0.1, function()
+			C_Timer.After(1, function()
 				-- bagsOverlay()
 				reagentBankOverlay()
 				warbankOverlay()
@@ -918,6 +973,26 @@ function app.ItemOverlayHooks()
 
 		app.Event:Register("NEW_RECIPE_LEARNED", function(recipeID, recipeLevel, baseRecipeID)
 			TransmogLootHelper_Cache.Recipes[recipeID] = true	-- Also cache the recipe as learned, otherwise updating the overlay won't do much good
+			api.UpdateOverlay()
+		end)
+
+		-- Cache player spells, for books that teach these
+		local function cacheSpells()
+			C_Timer.After(0.9, function()
+				for k, v in pairs(app.RecipeItem) do
+					if IsSpellKnown(v) or IsPlayerSpell(v) then
+						TransmogLootHelper_Cache.Recipes[v] = true
+					end
+				end
+			end)
+		end
+
+		app.Event:Register("PLAYER_ENTERING_WORLD", function(isInitialLogin, isReloadingUi)
+			cacheSpells()
+		end)
+
+		app.Event:Register("SPELLS_CHANGED", function()
+			cacheSpells()
 			api.UpdateOverlay()
 		end)
 	end
@@ -1024,7 +1099,7 @@ function app.SettingsItemOverlay()
 	local setting = Settings.RegisterAddOnSetting(category, appName.."_"..variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, true)
 	Settings.CreateCheckbox(category, setting, tooltip)
 
-	local variable, name, tooltip = "iconUsable", "Usable Items", "Show an icon to indicate an item can be used (currently only Profession Knowledge items)."
+	local variable, name, tooltip = "iconUsable", "Usable Items", "Show an icon to indicate an item can be used (profession knowledge, unlockable customisations, and spellbooks)."
 	local setting = Settings.RegisterAddOnSetting(category, appName.."_"..variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, true)
 	Settings.CreateCheckbox(category, setting, tooltip)
 
