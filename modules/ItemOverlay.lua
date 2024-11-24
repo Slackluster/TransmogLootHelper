@@ -541,7 +541,6 @@ function app.ItemOverlayHooks()
 		
 		app.Event:Register("BANKFRAME_OPENED", bankOverlay)
 		app.Event:Register("PLAYERBANKSLOTS_CHANGED", bankOverlay)
-		app.Event:Register("TRANSMOG_COLLECTION_UPDATED", bankOverlay)
 
 		-- Hook our overlay onto all reagent bank slots
 		local function reagentBankOverlay()
@@ -568,7 +567,9 @@ function app.ItemOverlayHooks()
 
 		BankFrameTab2:HookScript("OnClick", reagentBankOverlay)
 		app.Event:Register("PLAYERREAGENTBANKSLOTS_CHANGED", reagentBankOverlay)
-		app.Event:Register("TRANSMOG_COLLECTION_UPDATED", reagentBankOverlay)
+		-- Update if we learn a mog or recipe
+		app.Event:Register("TRANSMOG_COLLECTION_UPDATED", function() C_Timer.After(0.1, reagentBankOverlay) end)
+		app.Event:Register("NEW_RECIPE_LEARNED", function() C_Timer.After(0.1, reagentBankOverlay) end)
 
 		-- Hook our overlay onto all warbank slots
 		local function warbankOverlay()
@@ -605,7 +606,9 @@ function app.ItemOverlayHooks()
 
 		hooksecurefunc(AccountBankPanel, "RefreshBankPanel", warbankOverlay)
 		app.Event:Register("BAG_UPDATE_DELAYED", warbankOverlay)
-		app.Event:Register("TRANSMOG_COLLECTION_UPDATED", warbankOverlay)
+		-- Update if we learn a mog or recipe
+		app.Event:Register("TRANSMOG_COLLECTION_UPDATED", function() C_Timer.After(0.1, warbankOverlay) end)
+		app.Event:Register("NEW_RECIPE_LEARNED", function() C_Timer.After(0.1, warbankOverlay) end)
 
 		-- Hook our overlay onto all guild bank slots
 		local function guildBankOverlay()
@@ -633,6 +636,9 @@ function app.ItemOverlayHooks()
 
 		app.Event:Register("GUILDBANKBAGSLOTS_CHANGED", guildBankOverlay)
 		app.Event:Register("TRANSMOG_COLLECTION_UPDATED", guildBankOverlay)
+		-- Update if we learn a mog or recipe
+		app.Event:Register("TRANSMOG_COLLECTION_UPDATED", function() C_Timer.After(0.1, guildBankOverlay) end)
+		app.Event:Register("NEW_RECIPE_LEARNED", function() C_Timer.After(0.1, guildBankOverlay) end)
 
 		-- Hook our overlay onto all void bank slots
 		local function voidBankOverlay()
@@ -664,7 +670,9 @@ function app.ItemOverlayHooks()
 
 		app.Event:Register("VOID_STORAGE_UPDATE", voidBankOverlay)
 		app.Event:Register("VOID_STORAGE_CONTENTS_UPDATE", voidBankOverlay)
-		app.Event:Register("TRANSMOG_COLLECTION_UPDATED", voidBankOverlay)
+		-- Update if we learn a mog or recipe
+		app.Event:Register("TRANSMOG_COLLECTION_UPDATED", function() C_Timer.After(0.1, voidBankOverlay) end)
+		app.Event:Register("NEW_RECIPE_LEARNED", function() C_Timer.After(0.1, voidBankOverlay) end)
 
 		-- Hook our overlay onto all merchant slots
 		local function merchantOverlay()
@@ -702,6 +710,9 @@ function app.ItemOverlayHooks()
 		end
 
 		app.Event:Register("MERCHANT_SHOW", function() C_Timer.After(0.1, merchantOverlay) end)
+		-- Update if we learn a mog or recipe
+		app.Event:Register("TRANSMOG_COLLECTION_UPDATED", function() C_Timer.After(0.1, merchantOverlay) end)
+		app.Event:Register("NEW_RECIPE_LEARNED", function() C_Timer.After(0.1, merchantOverlay) end)
 
 		-- Hook our overlay onto all quest rewards
 		local function questOverlay()
@@ -785,7 +796,7 @@ function app.ItemOverlayHooks()
 		hooksecurefunc("QuestMapFrame_ShowQuestDetails", function() questOverlay() C_Timer.After(0.1, questOverlay) end)
 
 		-- Hook our overlay onto all world quest pins
-		local function worldQuests()
+		local function worldQuestOverlay()
 			C_Timer.After(0.1, function()
 				for pin in WorldMapFrame:EnumeratePinsByTemplate("WorldMap_WorldQuestPinTemplate") do
 					if not pin.TLHOverlay then
@@ -811,73 +822,100 @@ function app.ItemOverlayHooks()
 			end)
 		end
 
-		WorldMapFrame:HookScript("OnShow", worldQuests)
-		EventRegistry:RegisterCallback("MapCanvas.MapSet", worldQuests)
+		WorldMapFrame:HookScript("OnShow", worldQuestOverlay)
+		EventRegistry:RegisterCallback("MapCanvas.MapSet", worldQuestOverlay)
 
 		-- Hook our overlay onto all recipe rows
-		local function recipeRows()
-			-- Thank you AGAIN Plusmouse, for this callback
-			ProfessionsFrame.CraftingPage.RecipeList.ScrollBox:RegisterCallback("OnAcquiredFrame", function(_, v, data)
-				if not v.TLHOverlay then
-					v.TLHOverlay = CreateFrame("Frame", nil, v)
-				end
-				v.TLHOverlay:Hide()
-
-				local recipeInfo = data.data.recipeInfo
-				if recipeInfo then
-					local recipeID = recipeInfo.recipeID
-					if recipeID then
-						local itemLink = C_TradeSkillUI.GetRecipeItemLink(recipeID)
-						if itemLink then
-							app.ItemOverlay(v.TLHOverlay, itemLink)
-							v.TLHOverlay.text:SetText("")	-- No bind text for these
-
-							v.TLHOverlay.icon:ClearAllPoints()
-							v.TLHOverlay.icon:SetPoint("RIGHT", v)	-- Set the icon to the right of the row
-							-- Delay this bit, sometimes it doesn't quite trigger right
-							C_Timer.After(0.2, function()
-								v.TLHOverlay.animation:Stop()	-- And don't animate, that's a little obnoxious in these close quarters
-							end)
-						end
-					end
-				end
-			end)
-		end
-
-		app.Event:Register("TRADE_SKILL_SHOW", recipeRows)
-		EventRegistry:RegisterCallback("Professions.ProfessionSelected", recipeRows)
-
-		app.Count = 0
-		-- Hook our overlay onto all recipe rows
-		local function auctionHouseRows()
-			-- Thank you AGAIN Plusmouse, for this callback
-			AuctionHouseFrame.BrowseResultsFrame.ItemList.ScrollBox:RegisterCallback("OnAcquiredFrame", function(_, v, data)
-				C_Timer.After(0.1, function()
+		local function tradeskillOverlay()
+			if ProfessionsFrame then
+				-- Thank you AGAIN Plusmouse, for this callback
+				ProfessionsFrame.CraftingPage.RecipeList.ScrollBox:RegisterCallback("OnAcquiredFrame", function(_, v, data)
 					if not v.TLHOverlay then
 						v.TLHOverlay = CreateFrame("Frame", nil, v)
 					end
 					v.TLHOverlay:Hide()
 
-					local rowData = v.rowData
-					if rowData then
-						local itemID = rowData.itemKey.itemID
-						if itemID then
-							local _, itemLink = C_Item.GetItemInfo(itemID)
+					local recipeInfo = data.data.recipeInfo
+					if recipeInfo then
+						local recipeID = recipeInfo.recipeID
+						if recipeID then
+							local itemLink = C_TradeSkillUI.GetRecipeItemLink(recipeID)
 							if itemLink then
 								app.ItemOverlay(v.TLHOverlay, itemLink)
 								v.TLHOverlay.text:SetText("")	-- No bind text for these
 
 								v.TLHOverlay.icon:ClearAllPoints()
-								v.TLHOverlay.icon:SetPoint("LEFT", v, 134, 0)	-- Set the icon to the left of the row
-								v.TLHOverlay.animation:Stop()	-- And don't animate, that's a little obnoxious in these close quarters
+								v.TLHOverlay.icon:SetPoint("RIGHT", v)	-- Set the icon to the right of the row
+								-- Delay this bit, sometimes it doesn't quite trigger right
+								C_Timer.After(0.2, function()
+									v.TLHOverlay.animation:Stop()	-- And don't animate, that's a little obnoxious in these close quarters
+								end)
 							end
 						end
 					end
 				end)
+			end
+		end
+
+		app.Event:Register("TRADE_SKILL_SHOW", tradeskillOverlay)
+		EventRegistry:RegisterCallback("Professions.ProfessionSelected", tradeskillOverlay)
+
+		-- Hook our overlay onto all recipe rows
+		local function auctionHouseOverlay()
+			if AuctionHouseFrame then
+				-- Thank you AGAIN Plusmouse, for this callback
+				AuctionHouseFrame.BrowseResultsFrame.ItemList.ScrollBox:RegisterCallback("OnAcquiredFrame", function(_, v, data)
+					C_Timer.After(0.1, function()
+						if not v.TLHOverlay then
+							v.TLHOverlay = CreateFrame("Frame", nil, v)
+						end
+						v.TLHOverlay:Hide()
+
+						local rowData = v.rowData
+						if rowData then
+							local itemID = rowData.itemKey.itemID
+							if itemID then
+								local _, itemLink = C_Item.GetItemInfo(itemID)
+								if itemLink then
+									app.ItemOverlay(v.TLHOverlay, itemLink)
+									v.TLHOverlay.text:SetText("")	-- No bind text for these
+
+									v.TLHOverlay.icon:ClearAllPoints()
+									v.TLHOverlay.icon:SetPoint("LEFT", v, 134, 0)	-- Set the icon to the left of the row
+									v.TLHOverlay.animation:Stop()	-- And don't animate, that's a little obnoxious in these close quarters
+								end
+							end
+						end
+					end)
+				end)
+			end
+		end
+
+		app.Event:Register("AUCTION_HOUSE_THROTTLED_SYSTEM_READY", auctionHouseOverlay)
+
+		-- Update our overlays if a mog or recipe is learned
+		function api.UpdateOverlay()
+			C_Timer.After(0.1, function()
+				-- bagsOverlay()
+				reagentBankOverlay()
+				warbankOverlay()
+				voidBankOverlay()
+				merchantOverlay()
+				questOverlay()
+				worldQuestOverlay()
+				tradeskillOverlay()
+				auctionHouseOverlay()
 			end)
 		end
 
-		app.Event:Register("AUCTION_HOUSE_THROTTLED_SYSTEM_READY", auctionHouseRows)
+		app.Event:Register("TRANSMOG_COLLECTION_UPDATED", function()
+			api.UpdateOverlay()
+		end)
+
+		app.Event:Register("NEW_RECIPE_LEARNED", function(recipeID, recipeLevel, baseRecipeID)
+			TransmogLootHelper_Cache.Recipes[recipeID] = true	-- Also cache the recipe as learned, otherwise updating the overlay won't do much good
+			api.UpdateOverlay()
+		end)
 	end
 end
 
