@@ -436,6 +436,9 @@ function app.ItemOverlay(overlay, itemLink, itemLocation, containerInfo)
 				else
 					overlay.text:SetText("|cff00CCFFWuE|r")
 				end
+			-- WuE on vendor
+			elseif not itemLocation and app.GetTooltipText(itemLink, ITEM_BIND_TO_ACCOUNT_UNTIL_EQUIP) then
+				overlay.text:SetText("|cff00CCFFWuE|r")
 			-- Soulbound + BoA
 			elseif itemLocation and C_Item.IsBound(itemLocation) then
 				-- BoA (ITEM_ACCOUNTBOUND and ITEM_BNETACCOUNTBOUND is the actual text, but it always returns the other two anyway)
@@ -445,6 +448,7 @@ function app.ItemOverlay(overlay, itemLink, itemLocation, containerInfo)
 				else
 					overlay.text:SetText("")
 				end
+			-- BoE
 			elseif bindType == 2 or bindType == 3 then
 				overlay.text:SetText("BoE")
 			else
