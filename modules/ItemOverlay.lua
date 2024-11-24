@@ -886,73 +886,78 @@ function app.ItemOverlayHooks()
 
 		-- Hook our overlay onto all recipe rows
 		local function tradeskillOverlay()
-			if ProfessionsFrame then
-				-- Thank you AGAIN Plusmouse, for this callback
-				ProfessionsFrame.CraftingPage.RecipeList.ScrollBox:RegisterCallback("OnAcquiredFrame", function(_, v, data)
-					if not v.TLHOverlay then
-						v.TLHOverlay = CreateFrame("Frame", nil, v)
-					end
-					v.TLHOverlay:Hide()
-
-					local recipeInfo = data.data.recipeInfo
-					if recipeInfo then
-						local recipeID = recipeInfo.recipeID
-						if recipeID then
-							local itemLink = C_TradeSkillUI.GetRecipeItemLink(recipeID)
-							if itemLink then
-								app.ItemOverlay(v.TLHOverlay, itemLink)
-								v.TLHOverlay.text:SetText("")	-- No bind text for these
-
-								v.TLHOverlay.icon:ClearAllPoints()
-								v.TLHOverlay.icon:SetPoint("RIGHT", v)	-- Set the icon to the right of the row
-
-								-- Hide the icon if it's for knowledge points
-								if app.OverlayCache[itemLink] and app.OverlayCache[itemLink].itemEquipLoc == "ProfessionKnowledge" then
-									v.TLHOverlay:Hide()
-								end
-
-								-- Delay this bit, sometimes it doesn't quite trigger right
-								C_Timer.After(0.2, function()
-									v.TLHOverlay.animation:Stop()	-- And don't animate, that's a little obnoxious in these close quarters
-								end)
-							end
-						end
-					end
-				end)
-			end
-		end
-
-		app.Event:Register("TRADE_SKILL_SHOW", tradeskillOverlay)
-		EventRegistry:RegisterCallback("Professions.ProfessionSelected", tradeskillOverlay)
-
-		-- Hook our overlay onto all recipe rows
-		local function auctionHouseOverlay()
-			if AuctionHouseFrame then
-				-- Thank you AGAIN Plusmouse, for this callback
-				AuctionHouseFrame.BrowseResultsFrame.ItemList.ScrollBox:RegisterCallback("OnAcquiredFrame", function(_, v, data)
-					C_Timer.After(0.1, function()
+			if ProfessionsFrame and ProfessionsFrame:IsShown() then
+				if not app.TradeskillHook then
+					-- Thank you AGAIN Plusmouse, for this callback
+					ProfessionsFrame.CraftingPage.RecipeList.ScrollBox:RegisterCallback("OnAcquiredFrame", function(_, v, data)
 						if not v.TLHOverlay then
 							v.TLHOverlay = CreateFrame("Frame", nil, v)
 						end
 						v.TLHOverlay:Hide()
 
-						local rowData = v.rowData
-						if rowData then
-							local itemID = rowData.itemKey.itemID
-							if itemID then
-								local _, itemLink = C_Item.GetItemInfo(itemID)
+						local recipeInfo = data.data.recipeInfo
+						if recipeInfo then
+							local recipeID = recipeInfo.recipeID
+							if recipeID then
+								local itemLink = C_TradeSkillUI.GetRecipeItemLink(recipeID)
 								if itemLink then
 									app.ItemOverlay(v.TLHOverlay, itemLink)
 									v.TLHOverlay.text:SetText("")	-- No bind text for these
 
 									v.TLHOverlay.icon:ClearAllPoints()
-									v.TLHOverlay.icon:SetPoint("LEFT", v, 134, 0)	-- Set the icon to the left of the row
-									v.TLHOverlay.animation:Stop()	-- And don't animate, that's a little obnoxious in these close quarters
+									v.TLHOverlay.icon:SetPoint("RIGHT", v)	-- Set the icon to the right of the row
+
+									-- Hide the icon if it's for knowledge points
+									if app.OverlayCache[itemLink] and app.OverlayCache[itemLink].itemEquipLoc == "ProfessionKnowledge" then
+										v.TLHOverlay:Hide()
+									end
+
+									-- Delay this bit, sometimes it doesn't quite trigger right
+									C_Timer.After(0.2, function()
+										v.TLHOverlay.animation:Stop()	-- And don't animate, that's a little obnoxious in these close quarters
+									end)
 								end
 							end
 						end
 					end)
-				end)
+					app.TradeskillHook = true
+				end
+			end
+		end
+
+		app.Event:Register("TRADE_SKILL_SHOW", tradeskillOverlay)
+
+		-- Hook our overlay onto all recipe rows
+		local function auctionHouseOverlay()
+			if AuctionHouseFrame and AuctionHouseFrame:IsShown() then
+				if not app.AuctionHouseHook then
+					-- Thank you AGAIN Plusmouse, for this callback
+					AuctionHouseFrame.BrowseResultsFrame.ItemList.ScrollBox:RegisterCallback("OnAcquiredFrame", function(_, v, data)
+						C_Timer.After(0.1, function()
+							if not v.TLHOverlay then
+								v.TLHOverlay = CreateFrame("Frame", nil, v)
+							end
+							v.TLHOverlay:Hide()
+
+							local rowData = v.rowData
+							if rowData then
+								local itemID = rowData.itemKey.itemID
+								if itemID then
+									local _, itemLink = C_Item.GetItemInfo(itemID)
+									if itemLink then
+										app.ItemOverlay(v.TLHOverlay, itemLink)
+										v.TLHOverlay.text:SetText("")	-- No bind text for these
+
+										v.TLHOverlay.icon:ClearAllPoints()
+										v.TLHOverlay.icon:SetPoint("LEFT", v, 134, 0)	-- Set the icon to the left of the row
+										v.TLHOverlay.animation:Stop()	-- And don't animate, that's a little obnoxious in these close quarters
+									end
+								end
+							end
+						end)
+					end)
+					app.AuctionHouseHook = true
+				end
 			end
 		end
 
