@@ -256,24 +256,24 @@ function app.ItemOverlay(overlay, itemLink, itemLocation, containerInfo)
 				end
 
 				-- Customisations
-				local localeCustomisations = {
-					"Use: Unlock",
-					"Benutzen: Schaltet",
-					"Uso: Desbloquea",
-					"Utilise: Débloque",
-					"Usa: Sblocca",
-					"Uso: Desbloqueia",
-					"Использование: Открывает",
-					"잠금 해제",
-					"지를 잠금 해제합니다.",
-					"解锁",
-				}
-				for k, v in pairs(localeCustomisations) do
-					if app.GetTooltipText(itemLink, v) then
-						itemEquipLoc = "Customisation"
-						break
-					end
-				end
+				-- local localeCustomisations = {
+				-- 	"Use: Unlock",
+				-- 	"Benutzen: Schaltet",
+				-- 	"Uso: Desbloquea",
+				-- 	"Utilise: Débloque",
+				-- 	"Usa: Sblocca",
+				-- 	"Uso: Desbloqueia",
+				-- 	"Использование: Открывает",
+				-- 	"잠금 해제",
+				-- 	"지를 잠금 해제합니다.",
+				-- 	"解锁",
+				-- }
+				-- for k, v in pairs(localeCustomisations) do
+				-- 	if app.GetTooltipText(itemLink, v) then
+				-- 		itemEquipLoc = "Customisation"
+				-- 		break
+				-- 	end
+				-- end
 
 				if app.QuestItem[itemID] then
 					itemEquipLoc = "Customisation"
