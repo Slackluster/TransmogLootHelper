@@ -18,5 +18,6 @@ libs\ChatThrottleLib\ChatThrottleLib.xml
 Core.lua
 Database.lua
 modules\ItemOverlay.lua
+integrations\ArkInventory.lua
 integrations\Baganator.lua
 integrations\WorldQuestTab.lua
