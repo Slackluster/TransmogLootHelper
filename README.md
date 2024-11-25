@@ -2,7 +2,7 @@
 A World of Warcraft AddOn. Download locations: [CurseForge](https://www.curseforge.com/wow/addons/transmog-loot-helper) | [Wago.io](https://addons.wago.io/addons/tlh)
 
 # Description
-**Transmog Loot Helper** shows you transmog looted by your fellow party/raid members that you still need.
+**Transmog Loot Helper** shows you transmog looted by your fellow party/raid members that you still need, and features icons to show items' collection status.
 
 ![](https://media.forgecdn.net/attachments/description/1033752/description_62349c27-183a-4589-9013-d193e7a7a519.png)
 
