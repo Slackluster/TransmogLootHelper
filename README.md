@@ -19,6 +19,7 @@ Includes icons for unlearned transmog, mounts, pets, toys, and recipes. These sh
 ![](https://media.forgecdn.net/attachments/description/1033752/description_17172ffd-6371-4979-a00d-b4da2bca0fa6.png)
 
 Currently supported AddOns:
+- ArkInventory
 - Baganator
 - World Quest Tab
 
