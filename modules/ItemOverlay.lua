@@ -231,9 +231,6 @@ function app.ItemOverlay(overlay, itemLink, itemLocation, containerInfo)
 						break
 					end
 				end
-			-- Class books
-			elseif classID == 9 and subclassID == 0 then
-				itemEquipLoc = "Customisation"
 			-- Check for other item types
 			else
 				-- Profession Knowledge
@@ -255,27 +252,8 @@ function app.ItemOverlay(overlay, itemLink, itemLocation, containerInfo)
 					end
 				end
 
-				-- Customisations
-				-- local localeCustomisations = {
-				-- 	"Use: Unlock",
-				-- 	"Benutzen: Schaltet",
-				-- 	"Uso: Desbloquea",
-				-- 	"Utilise: Débloque",
-				-- 	"Usa: Sblocca",
-				-- 	"Uso: Desbloqueia",
-				-- 	"Использование: Открывает",
-				-- 	"잠금 해제",
-				-- 	"지를 잠금 해제합니다.",
-				-- 	"解锁",
-				-- }
-				-- for k, v in pairs(localeCustomisations) do
-				-- 	if app.GetTooltipText(itemLink, v) then
-				-- 		itemEquipLoc = "Customisation"
-				-- 		break
-				-- 	end
-				-- end
-
-				if app.QuestItem[itemID] then
+				-- Customisations and spellbooks
+				if app.QuestItem[itemID] or app.QuestItem[itemID] then
 					itemEquipLoc = "Customisation"
 				end
 			end
