@@ -274,10 +274,18 @@ function app.ItemOverlay(overlay, itemLink, itemLocation, containerInfo)
 		local function showOverlay(color)
 			if color == "purple" then
 				overlay.border:SetTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\border_purple.blp")
-				overlay.animation:Play()
+				if TransmogLootHelper_Settings["animateIcon"] then
+					overlay.animation:Play()
+				else
+					overlay.animation:Stop()
+				end
 			elseif color == "yellow" then
 				overlay.border:SetTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\border_yellow.blp")
-				overlay.animation:Play()
+				if TransmogLootHelper_Settings["animateIcon"] then
+					overlay.animation:Play()
+				else
+					overlay.animation:Stop()
+				end
 			elseif color == "green" then
 				overlay.border:SetTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\border_green.blp")
 				overlay.animation:Stop()
@@ -1046,6 +1054,10 @@ function app.SettingsItemOverlay()
 		cbSetting, cbName, cbTooltip,
 		ddSetting, GetOptions, ddName, ddTooltip)
 	layout:AddInitializer(initializer)
+
+	local variable, name, tooltip = "animateIcon", "Icon Animation", "Show a pretty animated swirl on icons for learnable and usable icons."
+	local setting = Settings.RegisterAddOnSetting(category, appName .. "_" .. variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, true)
+	local parentSetting = Settings.CreateCheckbox(category, setting, tooltip)
 
 	layout:AddInitializer(CreateSettingsListSectionHeaderInitializer("Collection Info"))
 
