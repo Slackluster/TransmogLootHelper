@@ -848,6 +848,7 @@ function app.ItemOverlayHooks()
 		end
 
 		app.Event:Register("QUEST_DETAIL", questOverlay)
+		app.Event:Register("QUEST_COMPLETE", questOverlay)
 		hooksecurefunc("QuestMapFrame_ShowQuestDetails", function() questOverlay() C_Timer.After(0.1, questOverlay) end)
 
 		-- Hook our overlay onto all world quest pins
