@@ -803,15 +803,21 @@ function app.ItemOverlayHooks()
 				if TransmogLootHelper_Settings["iconQuestGold"] and #sellPrice > 1 then
 					local highestPrice = 0
 					local highestItem = nil
+					local diff = -1
 				
 					for k, v in ipairs(sellPrice) do
 						if v.price > 1 and v.price > highestPrice then
 							highestPrice = v.price
 							highestItem = v.itemButton
 						end
+
+						-- If all items have the same value, we don't show an icon
+						if v.price > 1 and v.price ~= highestPrice then
+							diff = diff + 1
+						end
 					end
 
-					if highestPrice and highestItem then
+					if highestItem and diff > 0 then
 						local overlay = highestItem.TLHOverlay
 
 						if not overlay.gold then
