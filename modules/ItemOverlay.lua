@@ -806,14 +806,14 @@ function app.ItemOverlayHooks()
 					local diff = -1
 				
 					for k, v in ipairs(sellPrice) do
-						if v.price > 1 and v.price > highestPrice then
-							highestPrice = v.price
-							highestItem = v.itemButton
-						end
-
 						-- If all items have the same value, we don't show an icon
 						if v.price > 1 and v.price ~= highestPrice then
 							diff = diff + 1
+						end
+
+						if v.price > 1 and v.price > highestPrice then
+							highestPrice = v.price
+							highestItem = v.itemButton
 						end
 					end
 
