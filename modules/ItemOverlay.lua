@@ -411,6 +411,12 @@ function app.ItemOverlay(overlay, itemLink, itemLocation, containerInfo)
 					local recipeID = app.RecipeItem[itemID]
 					
 					if TransmogLootHelper_Cache.Recipes[recipeID] ~= nil then
+						-- Set profession icon
+						local _, _, tradeskill = C_TradeSkillUI.GetTradeSkillLineForRecipe(recipeID)
+						if app.Icon[tradeskill] then
+							overlay.texture:SetTexture(app.Icon[tradeskill])
+						end
+
 						-- Learned
 						if TransmogLootHelper_Cache.Recipes[recipeID] then
 							if TransmogLootHelper_Settings["iconLearned"] then
