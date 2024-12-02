@@ -60,8 +60,8 @@ function app.TooltipInfo()
 			end
 
 			-- Only run this if the item is known to be a recipe
-			if app.RecipeItem[itemID] then
-				local recipeID = app.RecipeItem[itemID]
+			if app.SpellItem[itemID] then
+				local recipeID = app.SpellItem[itemID]
 				if TransmogLootHelper_Cache.Recipes[recipeID] == nil then
 					tooltip:AddLine(" ")
 					tooltip:AddLine(app.IconTLH .. " " .. "Please open this profession to update the recipe's collection status.")
@@ -253,7 +253,7 @@ function app.ItemOverlay(overlay, itemLink, itemLocation, containerInfo)
 				end
 
 				-- Customisations and spellbooks
-				if app.QuestItem[itemID] or app.QuestItem[itemID] then
+				if app.QuestItem[itemID] or app.SpellItem[itemID] then
 					itemEquipLoc = "Customisation"
 				end
 			end
@@ -407,8 +407,8 @@ function app.ItemOverlay(overlay, itemLink, itemLocation, containerInfo)
 				end
 			-- Recipes
 			elseif TransmogLootHelper_Settings["iconNewRecipe"] and itemEquipLoc == "Recipe" then
-				if app.RecipeItem[itemID] then
-					local recipeID = app.RecipeItem[itemID]
+				if app.SpellItem[itemID] then
+					local recipeID = app.SpellItem[itemID]
 					
 					if TransmogLootHelper_Cache.Recipes[recipeID] ~= nil then
 						-- Set profession icon
@@ -453,7 +453,7 @@ function app.ItemOverlay(overlay, itemLink, itemLocation, containerInfo)
 			-- Customisations (includes spellbooks)
 			elseif TransmogLootHelper_Settings["iconUsable"] and itemEquipLoc == "Customisation" then
 				-- Learned
-				if TransmogLootHelper_Cache.Recipes[app.RecipeItem[itemID]] or (app.QuestItem[itemID] and C_QuestLog.IsQuestFlaggedCompleted(app.QuestItem[itemID])) or app.GetTooltipText(itemLink, ITEM_SPELL_KNOWN) then
+				if TransmogLootHelper_Cache.Recipes[app.SpellItem[itemID]] or (app.QuestItem[itemID] and C_QuestLog.IsQuestFlaggedCompleted(app.QuestItem[itemID])) or app.GetTooltipText(itemLink, ITEM_SPELL_KNOWN) then
 					if TransmogLootHelper_Settings["iconLearned"] then
 						showOverlay("green")
 					else
@@ -994,7 +994,7 @@ function app.ItemOverlayHooks()
 		-- Cache player spells, for books that teach these
 		local function cacheSpells()
 			C_Timer.After(0.9, function()
-				for k, v in pairs(app.RecipeItem) do
+				for k, v in pairs(app.SpellItem) do
 					if IsSpellKnown(v) or IsPlayerSpell(v) then
 						TransmogLootHelper_Cache.Recipes[v] = true
 					end

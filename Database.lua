@@ -101,19 +101,19 @@ app.Icon = {
 	["Toy"] = "Interface\\Icons\\trade_archaeology_chestoftinyglassanimals",
 	["Recipe"] = "Interface\\Icons\\inv_misc_note_01",
 
-	[164] = "|TInterface\\Icons\\ui_profession_blacksmithing:0|t",
-	[165] = "|TInterface\\Icons\\ui_profession_leatherworking:0|t",
-	[171] = "|TInterface\\Icons\\ui_profession_alchemy:0|t",
-	[182] = "|TInterface\\Icons\\ui_profession_herbalism:0|t",
-	[185] = "|TInterface\\Icons\\ui_profession_cooking:0|t",
-	[186] = "|TInterface\\Icons\\ui_profession_mining:0|t",
-	[197] = "|TInterface\\Icons\\ui_profession_tailoring:0|t",
-	[202] = "|TInterface\\Icons\\ui_profession_engineering:0|t",
-	[333] = "|TInterface\\Icons\\ui_profession_enchanting:0|t",
-	[356] = "|TInterface\\Icons\\ui_profession_fishing:0|t",
-	[393] = "|TInterface\\Icons\\ui_profession_skinning:0|t",
-	[755] = "|TInterface\\Icons\\ui_profession_jewelcrafting:0|t",
-	[773] = "|TInterface\\Icons\\ui_profession_inscription:0|t",
+	[164] = "Interface\\Icons\\ui_profession_blacksmithing",
+	[165] = "Interface\\Icons\\ui_profession_leatherworking",
+	[171] = "Interface\\Icons\\ui_profession_alchemy",
+	[182] = "Interface\\Icons\\ui_profession_herbalism",
+	[185] = "Interface\\Icons\\ui_profession_cooking",
+	[186] = "Interface\\Icons\\ui_profession_mining",
+	[197] = "Interface\\Icons\\ui_profession_tailoring",
+	[202] = "Interface\\Icons\\ui_profession_engineering",
+	[333] = "Interface\\Icons\\ui_profession_enchanting",
+	[356] = "Interface\\Icons\\ui_profession_fishing",
+	[393] = "Interface\\Icons\\ui_profession_skinning",
+	[755] = "Interface\\Icons\\ui_profession_jewelcrafting",
+	[773] = "Interface\\Icons\\ui_profession_inscription",
 
 	["ProfessionKnowledge"] = "Interface\\Icons\\inv_cosmicvoid_orb",
 	["Customisation"] = "Interface\\Icons\\inv_10_jewelcrafting_gem1leveling_uncut_transparent",
@@ -121,8 +121,8 @@ app.Icon = {
 	["Unknown"] = "Interface\\Icons\\inv_misc_questionMark",
 }
 
--- ItemID -> RecipeID
-app.RecipeItem = {
+-- ItemID -> SpellID
+app.SpellItem = {
 	[728] = 2543,
 	[2406] = 2158,
 	[2407] = 2163,
