@@ -255,6 +255,15 @@ function app.ItemOverlay(overlay, itemLink, itemLocation, containerInfo)
 				-- Customisations and spellbooks
 				if app.QuestItem[itemID] or app.SpellItem[itemID] then
 					itemEquipLoc = "Customisation"
+
+					-- Check for profession books
+					if app.SpellItem[itemID] then
+						local _, _, tradeskill = C_TradeSkillUI.GetTradeSkillLineForRecipe(app.SpellItem[itemID])
+
+						if app.Icon[tradeskill] then
+							itemEquipLoc = "Recipe"
+						end
+					end
 				end
 			end
 
