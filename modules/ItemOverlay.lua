@@ -785,7 +785,7 @@ function app.ItemOverlayHooks()
 		app.Event:Register("NEW_RECIPE_LEARNED", function() C_Timer.After(0.1, merchantOverlay) end)
 
 		-- Hook our overlay onto all quest rewards
-		local function questOverlay()
+		local function questOverlay(mode)
 			local function rewardOverlay(rewardsFrame)
 				local sellPrice = {}
 
@@ -800,7 +800,15 @@ function app.ItemOverlayHooks()
 
 					-- Get our quest rewards
 					local itemLink
-					if rewardsFrame == QuestInfoRewardsFrame then
+
+					if mode == "turnin" then
+						-- Set our map quest log to the currently displayed quest; stuff is being weird on quest turn-in
+						if GetQuestID() then
+							C_QuestLog.SetSelectedQuest(GetQuestID())
+						end
+						
+						itemLink = GetQuestLogItemLink("choice", k) or GetQuestLogItemLink("reward", k)
+					elseif rewardsFrame == QuestInfoRewardsFrame then
 						itemLink = GetQuestItemLink("choice", k) or GetQuestItemLink("reward", k)
 					elseif rewardsFrame == MapQuestInfoRewardsFrame then
 						itemLink = GetQuestLogItemLink("choice", k) or GetQuestLogItemLink("reward", k)
@@ -869,7 +877,7 @@ function app.ItemOverlayHooks()
 		end
 
 		app.Event:Register("QUEST_DETAIL", questOverlay)
-		app.Event:Register("QUEST_COMPLETE", questOverlay)
+		app.Event:Register("QUEST_COMPLETE", function() questOverlay("turnin") end)
 		hooksecurefunc("QuestMapFrame_ShowQuestDetails", function() questOverlay() C_Timer.After(0.1, questOverlay) end)
 
 		-- Hook our overlay onto all world quest pins
