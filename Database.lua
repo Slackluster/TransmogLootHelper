@@ -4711,9 +4711,6 @@ app.SpellItem = {
 	[174369] = 305800,
 	[174370] = 304559,
 	[174371] = 304562,
-	[175158] = 59029,
-	[175159] = 59032,
-	[175160] = 59035,
 	[180780] = 334413,
 	[180781] = 334499,
 	[180782] = 334537,
@@ -6368,4 +6365,9 @@ app.QuestItem = {
 	[224981] = 82187,	-- Delver's Dirigible Schematic: Brown Paint
 	[224982] = 82179,	-- Delver's Dirigible Schematic: Exhaust
 	[225542] = 83308,	-- Delver's Dirigible Schematic: Void
+
+	-- Vulpera Bag of Tricks
+	[175158] = 59029,	-- Flames of Fury
+	[175159] = 59032,	-- Sinister Shadows
+	[175160] = 59035,	-- Holy Relic
 }
