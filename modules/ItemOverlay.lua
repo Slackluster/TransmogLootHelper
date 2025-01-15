@@ -386,7 +386,13 @@ function app.ItemOverlay(overlay, itemLink, itemLocation, containerInfo)
 					app.OverlayCache[itemLink].speciesID = select(13, C_PetJournal.GetPetInfoByItemID(itemID))
 				end
 				
-				numPets, maxAllowed = C_PetJournal.GetNumCollectedInfo(app.OverlayCache[itemLink].speciesID)
+				-- Account for a Blizz API bug that is apparently present, this is why we can't have nice things
+				if app.OverlayCache[itemLink].speciesID then
+					numPets, maxAllowed = C_PetJournal.GetNumCollectedInfo(app.OverlayCache[itemLink].speciesID)
+				else
+					numPets = 0
+					maxAllowed = 0
+				end
 				
 				if (maxAllowed == numPets and numPets ~= 0) or (not TransmogLootHelper_Settings["iconNewPetMax"] and numPets >= 1) then
 					if TransmogLootHelper_Settings["iconLearned"] then
