@@ -288,6 +288,11 @@ function app.ItemOverlay(overlay, itemLink, itemLocation, containerInfo)
 				else
 					overlay.animation:Stop()
 				end
+
+				-- Simple icon
+				if TransmogLootHelper_Settings["simpleIcon"] then
+					overlay.texture:SetTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\icon_purple.blp")
+				end
 			elseif color == "yellow" then
 				overlay.border:SetTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\border_yellow.blp")
 				if TransmogLootHelper_Settings["animateIcon"] then
@@ -295,12 +300,27 @@ function app.ItemOverlay(overlay, itemLink, itemLocation, containerInfo)
 				else
 					overlay.animation:Stop()
 				end
+
+				-- Simple icon
+				if TransmogLootHelper_Settings["simpleIcon"] then
+					overlay.texture:SetTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\icon_yellow.blp")
+				end
 			elseif color == "green" then
 				overlay.border:SetTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\border_green.blp")
 				overlay.animation:Stop()
+
+				-- Simple icon
+				if TransmogLootHelper_Settings["simpleIcon"] then
+					overlay.texture:SetTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\icon_green.blp")
+				end
 			elseif color == "red" then
 				overlay.border:SetTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\border_red.blp")
 				overlay.animation:Stop()
+
+				-- Simple icon
+				if TransmogLootHelper_Settings["simpleIcon"] then
+					overlay.texture:SetTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\icon_red.blp")
+				end
 			end
 			overlay.icon:Show()
 		end
@@ -1119,6 +1139,10 @@ function app.SettingsItemOverlay()
 		cbSetting, cbName, cbTooltip,
 		ddSetting, GetOptions, ddName, ddTooltip)
 	layout:AddInitializer(initializer)
+
+	local variable, name, tooltip = "simpleIcon", "Simple Icons", "Use simple, high contrast icons designed to aid with color blindness."
+	local setting = Settings.RegisterAddOnSetting(category, appName .. "_" .. variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, false)
+	local parentSetting = Settings.CreateCheckbox(category, setting, tooltip)
 
 	local variable, name, tooltip = "animateIcon", "Icon Animation", "Show a pretty animated swirl on icons for learnable and usable icons."
 	local setting = Settings.RegisterAddOnSetting(category, appName .. "_" .. variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, true)
