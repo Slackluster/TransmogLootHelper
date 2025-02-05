@@ -163,9 +163,9 @@ function app.ItemOverlay(overlay, itemLink, itemLocation, containerInfo)
 		elseif TransmogLootHelper_Settings["iconPosition"] == 1 then
 			overlay.icon:SetPoint("CENTER", overlay, "TOPRIGHT", -4, -4)
 		elseif TransmogLootHelper_Settings["iconPosition"] == 2 then
-			overlay.icon:SetPoint("CENTER", overlay, "BOTTOMRIGHT", -4, 4)
-		elseif TransmogLootHelper_Settings["iconPosition"] == 3 then
 			overlay.icon:SetPoint("CENTER", overlay, "BOTTOMLEFT", 4, 4)
+		elseif TransmogLootHelper_Settings["iconPosition"] == 3 then
+			overlay.icon:SetPoint("CENTER", overlay, "BOTTOMRIGHT", -4, 4)
 		end
 	end
 	createOverlay()
