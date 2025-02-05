@@ -750,6 +750,35 @@ function app.ItemOverlayHooks()
 		app.Event:Register("TRANSMOG_COLLECTION_UPDATED", function() C_Timer.After(0.1, voidBankOverlay) end)
 		app.Event:Register("NEW_RECIPE_LEARNED", function() C_Timer.After(0.1, voidBankOverlay) end)
 
+
+
+		-- Hook our overlay onto all black market items
+		local function blackMarketOverlay()
+			if BlackMarketFrame and BlackMarketFrame:IsShown() then
+				if not app.BlackMarketFrameHook then
+					-- Thank you AGAIN Plusmouse, for this callback
+					BlackMarketFrame.ScrollBox:RegisterCallback("OnAcquiredFrame", function(_, v, data)
+						C_Timer.After(0.1, function()
+							if not v.TLHOverlay then
+								v.TLHOverlay = CreateFrame("Frame", nil, v)
+								v.TLHOverlay:SetAllPoints(v.Item)
+							end
+							v.TLHOverlay:Hide()
+
+							local itemLink = v.itemLink
+							if itemLink then
+								app.ItemOverlay(v.TLHOverlay, itemLink)
+								v.TLHOverlay.text:SetText("")	-- No bind text for these
+							end
+						end)
+					end)
+					app.BlackMarketFrameHook = true
+				end
+			end
+		end
+
+		app.Event:Register("BLACK_MARKET_OPEN", function() C_Timer.After(0.1, blackMarketOverlay) end)
+
 		-- Hook our overlay onto all merchant slots
 		local function merchantOverlay()
 			if not app.MerchantHook then
