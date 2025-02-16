@@ -1451,7 +1451,7 @@ app.Event:Register("CHAT_MSG_LOOT", function(text, playerName, languageName, cha
 					-- Check if the item can and should be equipped (armor -> class)
 					if (itemType == "4.0" and itemEquipLoc ~= "INVTYPE_HOLDABLE") or itemType == "4.1" or itemType == "4.2" or itemType == "4.3" or itemType == "4.4" then
 						itemCategory = "armor"
-						if itemType == app.Type[armorClass] or itemType == app.Type["General"] then
+						if itemType == app.Type["General"] or itemEquipLoc == "INVTYPE_CLOAK" or itemType == app.Type[armorClass] then
 							equippable = true
 						end
 					end
