@@ -770,8 +770,6 @@ function app.ItemOverlayHooks()
 		app.Event:Register("TRANSMOG_COLLECTION_UPDATED", function() C_Timer.After(0.1, voidBankOverlay) end)
 		app.Event:Register("NEW_RECIPE_LEARNED", function() C_Timer.After(0.1, voidBankOverlay) end)
 
-
-
 		-- Hook our overlay onto all black market items
 		local function blackMarketOverlay()
 			if BlackMarketFrame and BlackMarketFrame:IsShown() then
