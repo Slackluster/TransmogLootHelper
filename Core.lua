@@ -558,13 +558,13 @@ function app.Update()
 	if #app.WeaponLoot >= 1 then
 		-- Custom comparison function based on the beginning of the string (thanks ChatGPT)
 		local customSortList = {
-			"|cffe6cc80",	-- Artifact
-			"|cffff8000",	-- Legendary
-			"|cffa335ee",	-- Epic
-			"|cff0070dd",	-- Rare
-			"|cff1eff00",	-- Uncommon
-			"|cffffffff",	-- Common
-			"|cff9d9d9d",	-- Poor (quantity 0)
+			"|cnIQ6",	-- Artifact
+			"|cnIQ5",	-- Legendary
+			"|cnIQ4",	-- Epic
+			"|cnIQ3",	-- Rare
+			"|cnIQ2",	-- Uncommon
+			"|cnIQ1",	-- Common
+			"|cnIQ0",	-- Poor (quantity 0)
 		}
 		local function customSort(a, b)
 			for _, v in ipairs(customSortList) do
@@ -785,13 +785,13 @@ function app.Update()
 	if #app.ArmourLoot >= 1 then
 		-- Custom comparison function based on the beginning of the string (thanks ChatGPT)
 		local customSortList = {
-			"|cffe6cc80",	-- Artifact
-			"|cffff8000",	-- Legendary
-			"|cffa335ee",	-- Epic
-			"|cff0070dd",	-- Rare
-			"|cff1eff00",	-- Uncommon
-			"|cffffffff",	-- Common
-			"|cff9d9d9d",	-- Poor (quantity 0)
+			"|cnIQ6",	-- Artifact
+			"|cnIQ5",	-- Legendary
+			"|cnIQ4",	-- Epic
+			"|cnIQ3",	-- Rare
+			"|cnIQ2",	-- Uncommon
+			"|cnIQ1",	-- Common
+			"|cnIQ0",	-- Poor (quantity 0)
 		}
 		local function customSort(a, b)
 			for _, v in ipairs(customSortList) do
@@ -1010,13 +1010,13 @@ function app.Update()
 	if #app.FilteredLoot >= 1 then
 		-- Custom comparison function based on the beginning of the string & a key (thanks ChatGPT)
 		local customSortList = {
-			"|cffe6cc80",	-- Artifact
-			"|cffff8000",	-- Legendary
-			"|cffa335ee",	-- Epic
-			"|cff0070dd",	-- Rare
-			"|cff1eff00",	-- Uncommon
-			"|cffffffff",	-- Common
-			"|cff9d9d9d",	-- Poor (quantity 0)
+			"|cnIQ6",	-- Artifact
+			"|cnIQ5",	-- Legendary
+			"|cnIQ4",	-- Epic
+			"|cnIQ3",	-- Rare
+			"|cnIQ2",	-- Uncommon
+			"|cnIQ1",	-- Common
+			"|cnIQ0",	-- Poor (quantity 0)
 		}
 		local function customSort(a, b)
 			-- Primary sort by playerShort
