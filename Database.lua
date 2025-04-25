@@ -121,7 +121,7 @@ app.Icon = {
 	["Unknown"] = "Interface\\Icons\\inv_misc_questionMark",
 }
 
--- ItemID -> SpellID
+-- ItemID -> SpellID (sourced from Collectionator's "RecipesToSpellIDs.lua")
 app.SpellItem = {
 	[728] = 2543,
 	[2406] = 2158,
@@ -5889,9 +5889,20 @@ app.SpellItem = {
 	[228424] = 445479,
 	[228708] = 445382,
 	[228954] = 43308,
-  }
+	[232535] = 471132,
+	[233022] = 472951,
+	[234229] = 1213514,
+	[234230] = 1213512,
+	[234231] = 1213515,
+	[234232] = 1213517,
+	[234233] = 1213516,
+	[234274] = 1213620,
+	[235338] = 1216520,
+	[235800] = 1218414,
+	[238922] = 1226650,
+}
 
--- ItemID -> QuestID
+-- ItemID -> QuestID (sourced from ATT's "Mount Mods.lua" among others)
 app.QuestItem = {
 	-- Pocopoc
 	[187833] = 65528,	-- Dapper Pocopoc
@@ -5979,6 +5990,11 @@ app.QuestItem = {
 	[122237] = 38098,
 	[122238] = 38099,
 	[122239] = 38100,
+
+	-- Vulpera Bag of Tricks
+	[175158] = 59029,	-- Flames of Fury
+	[175159] = 59032,	-- Sinister Shadows
+	[175160] = 59035,	-- Holy Relic
 
 	-- Drakewatcher Manuscript
 	[196961] = 69161,	-- Cliffside Wylderdrake: Armor
@@ -6365,9 +6381,44 @@ app.QuestItem = {
 	[224981] = 82187,	-- Delver's Dirigible Schematic: Brown Paint
 	[224982] = 82179,	-- Delver's Dirigible Schematic: Exhaust
 	[225542] = 83308,	-- Delver's Dirigible Schematic: Void
+	[235685] = 82168,	-- Delver's Dirigible Schematic: Drill
+	[235684] = 82182,	-- Delver's Dirigible Schematic: Glider
+	[235687] = 82180,	-- Delver's Dirigible Schematic: Spoiler
+	[235683] = 82173,	-- Delver's Dirigible Schematic: Turbine
+	[235686] = 82190,	-- Delver's Dirigible Schematic: White Paint
+	[230219] = 85181,	-- Delver's Gob-Trotter Schematic: Balloon
+	[230217] = 85177,	-- Delver's Gob-Trotter Schematic: Flamethrower
+	[233196] = 86296,	-- Delver's Gob-Trotter Schematic: Gold
+	[230220] = 85183,	-- Delver's Gob-Trotter Schematic: Green
+	[230216] = 85175,	-- Delver's Gob-Trotter Schematic: Harpoon
+	[230218] = 85179,	-- Delver's Gob-Trotter Schematic: Pipes
+	[238839] = 86199,	-- Delver's Dirigible Schematic: Arathi Decal
+	[238837] = 86198,	-- Delver's Dirigible Schematic: Pale Paint
+	[235697] = 82192,	-- Delver's Dirigible Schematic: Alliance Decal
+	[235694] = 82117,	-- Delver's Dirigible Schematic: Blue Paint
+	[235696] = 82193,	-- Delver's Dirigible Schematic: Explorer Decal
+	[235688] = 82174,	-- Delver's Dirigible Schematic: Fan
+	[235690] = 82169,	-- Delver's Dirigible Schematic: Harpoon
+	[235698] = 82194,	-- Delver's Dirigible Schematic: Horde Decal
+	[235689] = 82186,	-- Delver's Dirigible Schematic: Kite
+	[235695] = 82189,	-- Delver's Dirigible Schematic: Red Paint
+	[235693] = 82175,	-- Delver's Dirigible Schematic: Rocket
+	[235692] = 82177,	-- Delver's Dirigible Schematic: Thrusters
+	[235691] = 82191,	-- Delver's Dirigible Schematic: Yellow Paint
 
-	-- Vulpera Bag of Tricks
-	[175158] = 59029,	-- Flames of Fury
-	[175159] = 59032,	-- Sinister Shadows
-	[175160] = 59035,	-- Holy Relic
+	-- D.R.I.V.E. Customisations
+	[232982] = 85775,	-- Engine: The Pozzik Standard
+	[232985] = 85782,	-- 22H Slicks
+	[232986] = 85781,	-- GE86 Advance
+	[232981] = 85776,	-- GNZ Airmaster 9000
+	[232984] = 85784,	-- Handcrank
+	[236670] = 85787,	-- Maniacal Melodies
+	[235390] = 86771,	-- Paint: Body Roll Blue
+	[235389] = 86772,	-- Paint: Goblin Green
+	[235388] = 86773,	-- Paint: Redlining Red
+	[235391] = 86774,	-- Paint: Yellow Cake Yellow
+	[232983] = 85783,	-- Steamboil
+	[236671] = 85786,	-- The Buzzer
+	[236672] = 85785,	-- The Ol' Low-and-Slow
+	[236669] = 85788,	-- The Whole Brass Band
 }
