@@ -1405,7 +1405,7 @@ end
 -- When an item is looted
 app.Event:Register("CHAT_MSG_LOOT", function(text, playerName, languageName, channelName, playerName2, specialFlags, zoneChannelID, channelIndex, channelBaseName, languageID, lineID, guid, bnSenderID, isMobile, isSubtitle, hideSenderInLetterbox, supressRaidIcons)
 	-- Extract item string
-	local itemString = string.match(text, "(|cff.-|h%[.-%]|h)")
+	local itemString = string.match(text, "(|cnIQ.-|h%[.-%]|h)")
 
 	-- Only proceed if the item is equippable and a player is specified (aka it is not a need/greed roll)
 	if itemString and C_Item.IsEquippableItem(itemString) and guid ~= nil then
