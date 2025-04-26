@@ -74,7 +74,7 @@ end
 
 function app.GetTooltipRedText(itemLink)
 	local tooltip = C_TooltipInfo.GetHyperlink(itemLink)
-	if tooltip["lines"] then
+	if tooltip and tooltip["lines"] then
 		for k, v in ipairs(tooltip["lines"]) do
 			if v.leftColor["r"] == 1 and v.leftColor["g"] > 0.1 and v.leftColor["g"] < 0.2 and v.leftColor["b"] > 0.1 and v.leftColor["b"] < 0.2 then
 				return true
