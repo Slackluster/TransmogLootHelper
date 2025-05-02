@@ -32,4 +32,5 @@ Database.lua
 modules\ItemOverlay.lua
 integrations\ArkInventory.lua
 integrations\Baganator.lua
+integrations\BetterBags.lua
 integrations\WorldQuestTab.lua
