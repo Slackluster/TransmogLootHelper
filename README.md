@@ -21,6 +21,7 @@ Includes icons for unlearned transmog, mounts, pets, toys, and recipes. These sh
 Currently supported AddOns:
 - ArkInventory
 - Baganator
+- BetterBags
 - World Quest Tab
 
 #### If you are experiencing issues
