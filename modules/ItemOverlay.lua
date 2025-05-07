@@ -1123,7 +1123,7 @@ end
 
 -- When a tradeskill window is opened
 app.Event:Register("TRADE_SKILL_SHOW", function()
-	if not UnitAffectingCombat("player") then
+	if not InCombatLockdown() then
 		-- Register all recipes for this profession, on a delay so we give all this info time to load.
 		C_Timer.After(2, function()
 			for _, recipeID in pairs(C_TradeSkillUI.GetAllRecipeIDs()) do
