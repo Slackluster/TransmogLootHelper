@@ -1037,6 +1037,28 @@ function app.ItemOverlayHooks()
 
 		app.Event:Register("AUCTION_HOUSE_THROTTLED_SYSTEM_READY", auctionHouseOverlay)
 
+		--  Hook our overlay onto Great Vault rewards
+		local function greatVaultOverlay()
+			if WeeklyRewardsFrame and WeeklyRewardsFrame:IsShown() then
+				local children = { WeeklyRewardsFrame:GetChildren() }
+				for k, v in pairs(children) do
+					if type(v) == "table" and v.hasRewards and v.ItemFrame then
+						if v.info and v.info.rewards then
+							if not v.TLHOverlay then
+								v.TLHOverlay = CreateFrame("Frame", nil, v.ItemFrame)
+								v.TLHOverlay:SetAllPoints(v.ItemFrame.Icon)
+							end
+
+							local itemLink = C_WeeklyRewards.GetItemHyperlink(v.info.rewards[1].itemDBID)
+							app.ItemOverlay(v.TLHOverlay, itemLink)
+						end
+					end
+				end
+			end
+		end
+
+		app.Event:Register("WEEKLY_REWARDS_UPDATE", greatVaultOverlay)
+
 		-- Update our overlay if a mog, recipe, or spell is learned
 		function api.UpdateOverlay()
 			C_Timer.After(1, function()
