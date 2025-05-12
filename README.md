@@ -23,6 +23,7 @@ Currently supported AddOns:
 - Baganator
 - BetterBags
 - World Quest Tab
+- World Quests List
 
 #### If you are experiencing issues
 - If you run into any issues or if you have other feedback, feel free to join the [Discord](https://discord.gg/FwWZZ39kPX) and ask in the `#transmog-loot-helper` channel, or create a [ticket on GitHub](https://github.com/Sluimerstand/TransmogLootHelper/issues). :)
