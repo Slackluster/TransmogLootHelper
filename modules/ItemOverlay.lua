@@ -183,9 +183,6 @@ function app.ItemOverlay(overlay, itemLink, itemLocation, containerInfo)
 			-- Mounts
 			elseif classID == 15 and subclassID == 5 then
 				itemEquipLoc = "Mount"
-			-- Toys
-			elseif app.GetTooltipText(itemLink, ITEM_TOY_ONUSE) then
-				itemEquipLoc = "Toy"
 			-- Pets
 			elseif classID == 17 or (classID == 15 and subclassID == 2) then
 				itemEquipLoc = "Pet"
@@ -231,6 +228,9 @@ function app.ItemOverlay(overlay, itemLink, itemLocation, containerInfo)
 						break
 					end
 				end
+			-- Toys
+			elseif app.GetTooltipText(itemLink, ITEM_TOY_ONUSE) then
+				itemEquipLoc = "Toy"
 			-- Check for other item types
 			else
 				-- Profession Knowledge
