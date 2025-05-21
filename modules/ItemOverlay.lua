@@ -189,6 +189,9 @@ function app.ItemOverlay(overlay, itemLink, itemLocation, containerInfo)
 			-- Recipes
 			elseif classID == 9 and subclassID ~= 0 then
 				itemEquipLoc = "Recipe"
+			-- Toys
+			elseif app.GetTooltipText(itemLink, ITEM_TOY_ONUSE) then
+				itemEquipLoc = "Toy"
 			-- Illusions & Ensembles
 			elseif classID == 0 and subclassID == 8 then
 				local itemName = C_Item.GetItemInfo(itemLink)
@@ -228,9 +231,6 @@ function app.ItemOverlay(overlay, itemLink, itemLocation, containerInfo)
 						break
 					end
 				end
-			-- Toys
-			elseif app.GetTooltipText(itemLink, ITEM_TOY_ONUSE) then
-				itemEquipLoc = "Toy"
 			-- Check for other item types
 			else
 				-- Profession Knowledge
@@ -1039,22 +1039,27 @@ function app.ItemOverlayHooks()
 
 		--  Hook our overlay onto Great Vault rewards
 		local function greatVaultOverlay()
-			if WeeklyRewardsFrame and WeeklyRewardsFrame:IsShown() then
-				local children = { WeeklyRewardsFrame:GetChildren() }
-				for k, v in pairs(children) do
-					if type(v) == "table" and v.hasRewards and v.ItemFrame then
-						if v.info and v.info.rewards then
-							if not v.TLHOverlay then
-								v.TLHOverlay = CreateFrame("Frame", nil, v.ItemFrame)
-								v.TLHOverlay:SetAllPoints(v.ItemFrame.Icon)
-							end
+			local function doTheThing()
+				if WeeklyRewardsFrame and WeeklyRewardsFrame:IsShown() then
+					local children = { WeeklyRewardsFrame:GetChildren() }
+					for k, v in pairs(children) do
+						if type(v) == "table" and v.hasRewards and v.ItemFrame then
+							if v.info and v.info.rewards then
+								if not v.TLHOverlay then
+									v.TLHOverlay = CreateFrame("Frame", nil, v.ItemFrame)
+									v.TLHOverlay:SetAllPoints(v.ItemFrame.Icon)
+								end
 
-							local itemLink = C_WeeklyRewards.GetItemHyperlink(v.info.rewards[1].itemDBID)
-							app.ItemOverlay(v.TLHOverlay, itemLink)
+								local itemLink = C_WeeklyRewards.GetItemHyperlink(v.info.rewards[1].itemDBID)
+								app.ItemOverlay(v.TLHOverlay, itemLink)
+							end
 						end
 					end
 				end
 			end
+			-- Do the thing, then do it again 1 second later because it doesn't show immediately when generating rewards
+			doTheThing()
+			C_Timer.After(1, doTheThing)
 		end
 
 		app.Event:Register("WEEKLY_REWARDS_UPDATE", greatVaultOverlay)
