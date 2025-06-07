@@ -123,7 +123,6 @@ function app.ItemOverlay(overlay, itemLink, itemLocation, containerInfo)
 			frame:SetPoint("CENTER")
 			local texture = frame:CreateTexture(nil, "ARTWORK")
 			texture:SetAllPoints(frame)
-			texture:SetTexture("interface\\artifacts\\relicforge")
 			texture:SetAtlas("ArtifactsFX-SpinningGlowys-Purple", true)
 
 			-- Animation group
