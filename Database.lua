@@ -5902,7 +5902,7 @@ app.SpellItem = {
 	[238922] = 1226650,
 }
 
--- ItemID -> QuestID (sourced from ATT's "Mount Mods.lua" among others)
+-- ItemID -> QuestID (sourced from ATT's "Mount Mods.lua" and "CharacterItemDB.lua" among others)
 app.QuestItem = {
 	-- Pocopoc
 	[187833] = 65528,	-- Dapper Pocopoc
