@@ -5961,7 +5961,6 @@ app.QuestItem = {
 	[122205] = 38077,
 	[122206] = 38079,
 	[122207] = 38081,
-	[122207] = 38081,
 	[122208] = 38083,
 	[122209] = 38085,
 	[122210] = 38070,
@@ -5969,7 +5968,6 @@ app.QuestItem = {
 	[122212] = 38078,
 	[122213] = 38074,
 	[122214] = 38076,
-	[122215] = 38080,
 	[122215] = 38080,
 	[122216] = 38082,
 	[122217] = 38084,
@@ -6421,4 +6419,435 @@ app.QuestItem = {
 	[236671] = 85786,	-- The Buzzer
 	[236672] = 85785,	-- The Ol' Low-and-Slow
 	[236669] = 85788,	-- The Whole Brass Band
+
+	-----------------
+	-- PATCH 6.0.2 --
+	-----------------
+	[139003] = 43016,	-- Broken Pet Portal
+	[118727] = 34557,	-- Frostfire Treasure Map
+	[118729] = 36465,	-- Gorgrond Treasure Map
+	[118732] = 36468,	-- Nagrand Treasure Map
+	[118730] = 36466,	-- Talador Treasure Map
+	[118728] = 36464,	-- Shadowmoon Valley Treasure Map
+	[118731] = 36467,	-- Spires of Arak Treasure Map
+
+	-----------------
+	-- PATCH 6.2.0 --
+	-----------------
+	[128444] = 39561,	-- Blueprint: Oil Rig [A]
+	[128490] = 39561,	-- Blueprint: Oil Rig [H]
+	[128251] = 39359,	-- Equipment Blueprint: Tuskarr Fishing Net
+	[128250] = 39358,	-- Equipment Blueprint: Unsinkable
+	[128446] = 39564,	-- Saberstalker Teachings: Trailblazer
+	[128294] = 37485,	-- Trade Agreement: Arakkoa Outcasts
+	[128474] = 39463,	-- Treasure Map: Tanaan Jungle [A]
+	[113212] = 39463,	-- Treasure Map: Tanaan Jungle [H]
+
+	-----------------
+	-- PATCH 6.2.2 --
+	-----------------
+	-- Hallow's End --
+	[128664] = 39759,	-- Creepy Crawlers
+	[128660] = 39758,	-- Ghoulish Guises
+	[128661] = 39612,	-- Hallow's Glow
+	[128662] = 39613,	-- Seer's Invitation
+	[128663] = 39611,	-- Witch's Brew
+	-- Feast of Winter Veil --
+	[128665] = 39615,	-- Ball of Tangled Lights
+	[128666] = 39616,	-- Imported Trees
+	[128667] = 39767,	-- Little Helpers
+	[128669] = 39712,	-- Old Box of Decorations
+
+	-----------------
+	-- PATCH 7.0.3 --
+	-----------------
+	-- Classes --
+	[141409] = 44455,	-- Candrael's Charm
+	-- Ancient Mana --
+	[140326] = 43986,	-- Enchanted Burial Urn
+	[140329] = 43989,	-- Infinite Stone
+	[136269] = 42842,	-- Kel'danath's Manaflask
+	[140327] = 43987,	-- Kyrtos's Research Notes
+	[140328] = 43988,	-- Volatile Leyline Crystal
+	-- Reaves Module --
+	[132528] = 40734,	-- Reaves Module: Fireworks Display Mode
+	[132526] = 40733,	-- Reaves Module: Failure Detection Mode
+	[132529] = 40735,	-- Reaves Module: Snack Distribution Mode
+	[132525] = 40732,	-- Reaves Module: Repair Mode
+	[132531] = 40737,	-- Reaves Module: Piloted Combat Mode
+	[132530] = 40736,	-- Reaves Module: Bling Mode
+	[132524] = 40738,	-- Reaves Module: Wormhole Generator Mode
+	-- The Underbelly Portals --
+	[138031] = 42531,	-- Portal Key: Abandoned Shack
+	[138030] = 42530,	-- Portal Key: Alchemists' Lair
+	[138028] = 42528,	-- Portal Key: Black Market
+	[138029] = 42529,	-- Portal Key: Inn Entrance
+	[138032] = 42532,	-- Portal Key: Rear Entrance
+	[138027] = 42527,	-- Portal Key: Sewer Guard Station
+
+	-----------------
+	-- PATCH 7.3.0 --
+	-----------------
+	[152964] = 49006,	-- Krokul Flute
+	[152583] = 48546,	-- Underlight Emerald
+
+	-----------------
+	-- PATCH 8.0.1 --
+	-----------------
+	-- Flight Path Maps --
+	[166445] = 54705,	-- 7th Legion Scouting Map
+	[166444] = 54704,	-- Honorbound Scouting Map
+
+	-----------------
+	-- PATCH 8.1.0 --
+	-----------------
+	[166502] = 54753,	-- Blood-Soaked Tome of Dark Whispers
+	[166749] = 54859,	-- Lyrics: Song of the Sea
+
+	-----------------
+	-- PATCH 9.0.1 --
+	-----------------
+	[183123] = 62254,	-- How to School Your Serpent
+	[89868] = 62677,	-- Mark of the Cheetah
+	[140630] = 62678,	-- Mark of the Doe
+	[162022] = 62674,	-- Mark of the Dolphin
+	[162029] = 62676,	-- Mark of the Humble Flyer
+	[40919] = 62673,	-- Mark of the Orca
+	[129021] = 62675,	-- Mark of the Sentinel
+	[162027] = 62672,	-- Mark of the Tideskipper
+	[165840] = 54264,	-- Shattered Pet Portal
+
+	-----------------
+	-- PATCH 9.0.2 --
+	-----------------
+	[187923] = 65039,	-- Aurelid Lure
+	[184220] = 62821,	-- Encyclopedia of Sinstone Fragment Recovery
+	[180705] = 61160,	-- Gargon Training Manual
+	[184222] = 62822,	-- Lemet's Requisition Orders
+	[183517] = 62372,	-- Page 76 of the Necronom-i-nom
+	[183124] = 62255,	-- Simple Tome of Bone-Binding
+	[184219] = 62821,	-- Treatise on Sinstone Fragment Acquisition
+	-- Ve'nari --
+	[180949] = 61600,	-- Animaflow Stabilizer
+	[184653] = 63217,	-- Animated Levitating Chain
+	[184617] = 63193,	-- Bangle of Seniority
+	[184901] = 63523,	-- Broker Traversal Enhancer
+	[184613] = 63177,	-- Encased Riftwalker Essence
+	[184615] = 63183,	-- Extradimensional Pockets
+	[184619] = 63201,	-- Loupe of Unusual Charm
+	[180952] = 61144,	-- Possibility Matrix
+	[184618] = 63200,	-- Rank Insignia: Acquisitionist
+	[184621] = 63204,	-- Ritual Prism of Fortune
+	[184605] = 63092,	-- Sigil of the Unseen
+	[184588] = 63091,	-- Soul-Stabilizing Talisman
+	[184620] = 63202,	-- Vessel of Unfortunate Spirits
+	-- Ember Court --
+	[181441] = 61457,	-- Altar of Accomplishment
+	[177230] = 59681,	-- Anima-Infused Water
+	[177232] = 59683,	-- Bewitched Wardrobe
+	[177233] = 59684,	-- Bounding Shroom Seeds
+	[181517] = 61493,	-- Building: Dredger Pool
+	[181518] = 61494,	-- Building: Guardhouse
+	[176130] = 59494,	-- Contract: Atoning Rituals
+	[176135] = 59503,	-- Contract: Divine Desserts
+	[176131] = 59491,	-- Contract: Glimpse of the Wilds
+	[176132] = 59488,	-- Contract: Lost Chalice Band
+	[176140] = 59512,	-- Contract: Maldraxxian Army
+	[176128] = 59476,	-- Contract: Mortal Reminders
+	[176136] = 59500,	-- Contract: Mushroom Surprise!
+	[176127] = 59479,	-- Contract: Mystery Mirrors
+	[176139] = 59515,	-- Contract: Stoneborn Reserves
+	[176126] = 59473,	-- Contract: Traditional Theme
+	[176134] = 59506,	-- Contract: Tubbins's Tea Party
+	[176138] = 59518,	-- Contract: Venthyr Volunteers
+	[177231] = 59682,	-- Crown of Honor
+	[177236] = 59687,	-- Dog Bone's Bone
+	[177237] = 59688,	-- Dredger Party Supplies
+	[181521] = 61501,	-- Ember Court Ambassador
+	[177238] = 59689,	-- Generous Gift
+	[181536] = 61504,	-- Guest List Page
+	[181537] = 61505,	-- Guest List Page
+	[181538] = 61506,	-- Guest List Page
+	[183956] = 62656,	-- Invitation: Choofa
+	[183957] = 62657,	-- Invitation: Grandmaster Vole
+	[177243] = 59693,	-- Kyrian Arsenal
+	[177245] = 59695,	-- Maldraxxi Challenge Banner
+	[177241] = 59691,	-- Necrolord Arsenal
+	[177244] = 59694,	-- Night Fae Arsenal
+	[181439] = 61455,	-- Protective Braziers
+	[177239] = 59690,	-- Racing Permit
+	[177234] = 59685,	-- Rally Bell
+	[181440] = 61456,	-- Slippery Muck
+	[181524] = 61502,	-- Staff: Ambassador
+	[182343] = 61888,	-- Staff: Bastion Ambassador
+	[181523] = 59437,	-- Staff: Bouncers
+	[181519] = 59435,	-- Staff: Dredger Decorators
+	[182342] = 61887,	-- Staff: Maldraxxus Ambassador
+	[181520] = 59436,	-- Staff: Stage Crew
+	[181522] = 59433,	-- Staff: Waiters
+	[181533] = 61499,	-- Stock: Anima Samples
+	[181532] = 61498,	-- Stock: Appetizers
+	[181535] = 61500,	-- Stock: Comfy Chairs
+	[181530] = 61497,	-- Stock: Greeting Kits
+	[181443] = 61459,	-- The Party Herald's Party Hat
+	[181438] = 61454,	-- The Wild Drum
+	[181437] = 61453,	-- Training Dummies
+	[177235] = 59686,	-- Tubbins's Lucky Teapot
+	[181436] = 61452,	-- Vanity Mirror
+	[177242] = 59692,	-- Venthyr Arsenal
+	[181442] = 61458,	-- Visions of Sire Denathrius
+
+	-----------------
+	-- PATCH 9.0.5 --
+	-----------------
+	[185632] = 63668,	-- Intact Rune Codex
+	[185351] = 63641,	-- Rune Codex Page: Forging
+	[185352] = 63642,	-- Rune Codex Page: Souls
+	[185353] = 63643,	-- Rune Codex Page: Binding
+	[185473] = 63667,	-- Soulforger's Tools
+
+	-----------------
+	-- PATCH 9.1.0 --
+	-----------------
+	[186970] = 62683,	-- Feeder's Hand and Key
+	[185965] = 63893,	-- Memories of Sunless Skies
+	[187138] = 64303,	-- Research Report: First Alloys
+	[187136] = 64367,	-- Research Report: Relic Examination Techniques
+	[186716] = 64348,	-- Research Report: Ancient Shrines
+	[186714] = 64339,	-- Research Report: All-Seeing Crystal
+	[186717] = 64300,	-- Research Report: Adaptive Alloys
+	[186722] = 64027,	-- Treatise: The Study of Anima and Harnessing Every Drop
+	[186721] = 64366,	-- Treatise: Relics Abound in the Shadowlands
+	[187145] = 64307,	-- Treatise: Recognizing Stygia and its Uses
+	[187706] = 64828,	-- Treatise: Bonds of Stygia in Mortals
+	[186453] = 64061,	-- Vault Anima Tracker
+
+	-----------------
+	-- PATCH 9.1.5 --
+	-----------------
+	[187933] = 65058,	-- Mark of the Duskwing Raven
+	[187887] = 65048,	-- Mark of the Gloomstalker Dredbat
+	[187934] = 65061,	-- Mark of the Midnight Runestag
+	[187931] = 65059,	-- Mark of the Regal Dredbat
+	[187936] = 65062,	-- Mark of the Sable Ardenmoth
+	[187888] = 64987,	-- Mark of the Shimmering Ardenmoth
+	[187884] = 64986,	-- Mark of the Twilight Runestag
+	[190184] = 65623,	-- Incense of Infinity
+	[187560] = 64628,	-- Rockin' Rollin' Racer Pack
+
+	-----------------
+	-- PATCH 9.2.0 --
+	-----------------
+	[190640] = 65694,	-- Font of Ephemeral Power
+	[190956] = 70705,	-- Decanter of Untapped Potential
+	[190234] = 65617,	-- Enlightened Portal Research
+	[188793] = 65282,	-- Improvised Cypher Analysis Tool
+	[183693] = 62409,	-- Plague Doctor's Mask
+	[190644] = 70704,	-- Vessel of Profound Possibilities
+
+	------------------
+	-- PATCH 10.0.2 --
+	------------------
+	-- Grand Hunt --
+	[194095] = 71052,	-- Ohuna Companion Color: Sepia
+	[194088] = 71049,	-- Ohuna Companion Color: Dark
+	[194087] = 71051,	-- Ohuna Companion Color: Red
+	[193205] = 71050,	-- Ohuna Companion Color: Brown
+	[194090] = 71047,	-- Bakar Companion Color: White
+	[194089] = 71046,	-- Bakar Companion Color: Orange
+	[194091] = 71048,	-- Bakar Companion Color: Golden Brown
+	[194093] = 71045,	-- Bakar Companion Color: Brown
+	[194094] = 71044,	-- Bakar Companion Color: Black
+	-- Iskaara Fishing --
+	[199847] = 70799,	-- Braided Seavine Harpoon Rope
+	[199849] = 70801,	-- Dense Draconium Net Weight
+	[199851] = 70803,	-- Double Imbu Knot
+	[199848] = 70800,	-- Draconium Net Weights
+	[199694] = 75642,	-- Flying Fish Bone Charm
+	[199850] = 70802,	-- Imbu Knot
+	[199698] = 70794,	-- Irontree Harpoon Handle
+	[199695] = 70793,	-- Iskaaran Fishing Net
+	[194510] = 70792,	-- Iskaaran Harpoon
+	[199696] = 67141,	-- Iskaaran Ice Axe
+	[199845] = 70797,	-- Jagged Serevite Harpoon Head
+	[199697] = 67140,	-- Polished Basalt Bracelet
+	[199641] = 70795,	-- Reinforced Irontree Harpoon Handle
+	[199846] = 70798,	-- Seavine Harpoon Rope
+	[199844] = 70796,	-- Serevite Harpoon Head
+	-- Various --
+	[202047] = 72248,	-- Gleaming Incarnate Thunderstone
+	[201791] = 72094,	-- How to Train a Dragonkin
+
+	------------------
+	-- PATCH 10.1.0 --
+	------------------
+	[205878] = 75968,	-- Obsidian Aspectral Earthstone
+	[205954] = 76017,	-- Three-Dimensional Compass
+
+	------------------
+	-- PATCH 10.1.5 --
+	------------------
+	[206473] = 76307,	-- Makeshift Grappling Hook
+	-- Imp --
+	[207178] = 76743,	-- Grimoire of the Darkfire Imp
+	[207295] = 76744,	-- Grimoire of the Dreadfire Imp
+	[129018] = 76369,	-- Grimoire of the Fel Imp
+	[207297] = 76746,	-- Grimoire of the Felblaze Imp
+	[207294] = 76747,	-- Grimoire of the Felfrost Imp
+	[207114] = 76742,	-- Grimoire of the Fiendish Imp
+	[207111] = 76737,	-- Grimoire of the Hellfire Fel Imp
+	[207296] = 76745,	-- Grimoire of the Netherbound Imp
+	[207113] = 76741,	-- Grimoire of the Trickster Fel Imp
+	[207112] = 76740,	-- Grimoire of the Void-Touched Fel Imp
+	-- Voidwalker --
+	[139311] = 76375,	-- Grimoire of the Voidlord
+	-- Succubus --
+	[147117] = 76377,	-- Orb of the Fel Temptress
+	[147119] = 76372,	-- Grimoire of the Shadow Succubus
+	[139310] = 76373,	-- Grimoire of the Shivarra
+	-- Felhunter --
+	[208051] = 77180,	-- Grimoire of the Antoran Felhunter
+	[208052] = 77181,	-- Grimoire of the Voracious Felmaw
+	[208050] = 77183,	-- Grimoire of the Xorothian Felhunter
+	[208048] = 77182,	-- Ritual of the Voidmaw Felhunter
+	-- Felguard --
+	[139315] = 76376,	-- Grimoire of the Wrathguard
+	-- Infernal --
+	[139314] = 76370,	-- Grimoire of the Abyssal
+
+	------------------
+	-- PATCH 10.1.7 --
+	------------------
+	[208551] = 77678,	-- Ambrosial Sporestone
+
+	------------------
+	-- PATCH 10.2.0 --
+	------------------
+	[210645] = 78479,	-- Feather of Friends
+	[210754] = 78527,	-- Feather of the Blazing Somnowl
+	[211280] = 78525,	-- Feather of the Smoke Red Moon
+	[210735] = 78523,	-- Mark of the Auric Dreamstag
+	[211081] = 78514,	-- Mark of the Auroral Dreamtalon
+	[211080] = 78512,	-- Mark of the Boreal Dreamtalon
+	[210683] = 78513,	-- Mark of the Dreamtalon Matriarch
+	[210669] = 78507,	-- Mark of the Evergreen Dreamsaber
+	[210751] = 78528,	-- Mark of the Hibernating Runebear
+	[210650] = 78503,	-- Mark of the Keen-Eyed Dreamsaber
+	[210738] = 78519,	-- Mark of the Loamy Umbraclaw
+	[210731] = 78522,	-- Mark of the Lush Dreamstag
+	[210674] = 78511,	-- Mark of the Sable Dreamtalon
+	[210535] = 78448,	-- Mark of the Slumbering Somnowl
+	[210736] = 78524,	-- Mark of the Smoldering Dreamstag
+	[210739] = 78520,	-- Mark of the Snowy Umbraclaw
+	[210684] = 78515,	-- Mark of the Thriving Dreamtalon
+	[210647] = 78481,	-- Mark of the Umbramane
+	[210729] = 78517,	-- Mark of the Verdant Bristlebruin
+	[210728] = 78521,	-- Moon-Blessed Claw
+	[210727] = 78518,	-- Pollenfused Bristlebruin Fur Sample
+	[210753] = 78516,	-- Scale of the Prismatic Whiskerfish
+	[211314] = 78842,	-- Cinder of Companionship
+	[210468] = 78422,	-- Emerald Blossom Dreamstone
+
+	------------------
+	-- PATCH 10.2.5 --
+	------------------
+	[213016] = 79457,	-- Grimoire of the Abyssal Darkglare
+	[212750] = 79359,	-- Grimoire of the Ancient Observer
+	[212983] = 79443,	-- Grimoire of the Blasted Observer
+	[212779] = 79374,	-- Grimoire of the Bloodrage Tyrant
+	[212991] = 79447,	-- Grimoire of the Dire Observer
+	[213015] = 79456,	-- Grimoire of the Eredathian Darkglare
+	[212780] = 79375,	-- Grimoire of the Felbrute Tyrant
+	[212989] = 79446,	-- Grimoire of the Mana-Gorged Observer
+	[212783] = 79376,	-- Grimoire of the Netherwalk Tyrant
+	[212993] = 79449,	-- Grimoire of the Plagued Observer
+	[213017] = 79458,	-- Grimoire of the Riftsmolder Darkglare
+	[212778] = 79373,	-- Grimoire of the Vile Tyrant
+	[212995] = 79450,	-- Grimoire of the Whispering Observer
+	[213014] = 79455,	-- Grimoire of the Xorothian Darkglare
+	[212984] = 79444,	-- Grimoire of the Zealous Observer
+	[212925] = 79392,	-- Hearthstone Card: Abomination
+	[212922] = 79390,	-- Hearthstone Card: Alley Cat
+	[212927] = 79394,	-- Hearthstone Card: Ancient of Lore
+	[212932] = 79399,	-- Hearthstone Card: Arcane Explosion
+	[212926] = 79393,	-- Hearthstone Card: Arcane Golem
+	[212933] = 79401,	-- Hearthstone Card: Arcane Shot
+	[212929] = 79396,	-- Hearthstone Card: Baron Geddon
+	[212930] = 79397,	-- Hearthstone Card: Blessing of Kings
+	[213019] = 79460,	-- Hearthstone Card: Cairne Bloodhoof
+	[212938] = 79406,	-- Hearthstone Card: Charged Devilsaur
+	[212921] = 79389,	-- Hearthstone Card: Chillwind Yeti
+	[212931] = 79398,	-- Hearthstone Card: Forbidden Words
+	[212923] = 79391,	-- Hearthstone Card: Grove Tender
+	[213224] = 79582,	-- Hearthstone Card: Hand of Protection
+	[212928] = 79395,	-- Hearthstone Card: Hogger
+	[212939] = 79403,	-- Hearthstone Card: Jive, Insect!
+	[212937] = 79402,	-- Hearthstone Card: Preparation
+	[212934] = 79400,	-- Hearthstone Card: Pyroblast
+	[212936] = 79405,	-- Hearthstone Card: Righteousness
+	[212871] = 79384,	-- Hearthstone Card: Scarlet Crusader
+	[212872] = 79385,	-- Hearthstone Card: Shadow Word: Ruin
+
+	------------------
+	-- PATCH 10.2.6 --
+	------------------
+	[216907] = 80093,	-- A Tiny Plumed Tricorne
+	[216890] = 80083,	-- Black Duck Disguise
+	[216897] = 80084,	-- Brown Duck Disguise
+	[216898] = 80085,	-- Mallard Duck Disguise
+	[216900] = 80087,	-- Pink Duck Disguise
+	[216901] = 80088,	-- White Duck Disguise
+	[216902] = 80089,	-- Yellow Duck Disguise
+
+	------------------
+	-- PATCH 11.0.2 --
+	------------------
+	[224553] = 82998,	-- Beledar's Attunement
+	[228944] = 84690,	-- Crypt Lord's Severed Thread
+	[228945] = 84691,	-- Executor's Severed Thread
+	[210826] = 76996,	-- Harvestbot Repair Kit
+	[229195] = 84006,	-- Queen's Pheromone
+	[228943] = 84689,	-- Spymaster's Severed Thread
+
+	------------------
+	-- PATCH 11.0.5 --
+	------------------
+	[230264] = 85224,	-- Bronze Celebration Titles: Broken Isles Enthusiast
+	[230261] = 85221,	-- Bronze Celebration Titles: Cataclysm Enthusiast
+	[230258] = 85218,	-- Bronze Celebration Titles: Classic Enthusiast
+	[230263] = 85223,	-- Bronze Celebration Titles: Draenor Enthusiast
+	[230268] = 85228,	-- Bronze Celebration Titles: Dragon Isles Enthusiast
+	[229826] = 85015,	-- Bronze Celebration Titles: Grizzly Hills Hiker
+	[231833] = 85517,	-- Bronze Celebration Titles: Karazhan Graduate
+	[230266] = 85226,	-- Bronze Celebration Titles: Kul Tiras Enthusiast
+	[231832] = 85516,	-- Bronze Celebration Titles: Molten Core Prospector
+	[230260] = 85220,	-- Bronze Celebration Titles: Northrend Enthusiast
+	[230259] = 85219,	-- Bronze Celebration Titles: Outland Enthusiast
+	[230262] = 85222,	-- Bronze Celebration Titles: Pandaria Enthusiast
+	[229827] = 85014,	-- Bronze Celebration Titles: Plaguelands Survivor
+	[230267] = 85227,	-- Bronze Celebration Titles: Shadowlands Enthusiast
+	[230265] = 85225,	-- Bronze Celebration Titles: Zuldazar Enthusiast
+
+	------------------
+	-- PATCH 11.0.7 --
+	------------------
+	[219291] = 81619,	-- Puntable Baby Greench
+	[219286] = 81617,	-- Puntable Globe Yeti
+	[234127] = 86423,	-- Puntable Grumpling
+	[219255] = 81616,	-- Puntable Rotten Little Helper
+	[219289] = 81618,	-- Puntable Tiny Snowman
+
+	------------------
+	-- PATCH 11.1.0 --
+	------------------
+	[235037] = 86630,	-- Crumpled Schematic: Wormhole Generator: Undermine
+	[236852] = 87353,	-- Gallagio Highroller's Boomstone
+	[235608] = 86878,	-- Nightfall Sanctum Campsite
+
+	------------------
+	-- PATCH 11.1.5 --
+	------------------
+	[242623] = 90710,	-- Enchanted Warbound Purifying Kit
+	[242919] = 90780,	-- Cracked Keystone
+	[242622] = 90709,	-- Warbound Purifying Kit
 }
