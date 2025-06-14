@@ -921,6 +921,9 @@ function app.ItemOverlayHooks()
 
 			if QuestInfoRewardsFrame and not WorldMapFrame:IsShown() then
 				rewardOverlay(QuestInfoRewardsFrame)
+				C_Timer.After(1, function()
+					rewardOverlay(QuestInfoRewardsFrame)
+				end)
 			end
 
 			if MapQuestInfoRewardsFrame and WorldMapFrame:IsShown() then
