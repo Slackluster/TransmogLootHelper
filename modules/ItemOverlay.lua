@@ -842,6 +842,7 @@ function app.ItemOverlayHooks()
 				local sellPrice = {}
 
 				for k, v in pairs(rewardsFrame.RewardButtons) do
+					C_QuestLog.SetSelectedQuest(v.questID)
 					local itemButton = QuestInfo_GetRewardButton(rewardsFrame, k)
 					if not itemButton.TLHOverlay then
 						itemButton.TLHOverlay = CreateFrame("Frame", nil, itemButton)
@@ -859,14 +860,16 @@ function app.ItemOverlayHooks()
 							C_QuestLog.SetSelectedQuest(GetQuestID())
 						end
 						
-						itemLink = GetQuestLogItemLink("choice", k) or GetQuestLogItemLink("reward", k)
+						itemLink = GetQuestLogItemLink(v.type, k)
 					elseif rewardsFrame == QuestInfoRewardsFrame then
-						itemLink = GetQuestItemLink("choice", k) or GetQuestItemLink("reward", k)
+						itemLink = GetQuestItemLink(v.type, k)
 					elseif rewardsFrame == MapQuestInfoRewardsFrame then
-						itemLink = GetQuestLogItemLink("choice", k) or GetQuestLogItemLink("reward", k)
+						itemLink = GetQuestLogItemLink(v.type, k)
 					end
 
-					if itemLink then
+					if v.objectType == "currency" then
+						itemButton.TLHOverlay:Hide()
+					elseif itemLink then
 						table.insert(sellPrice, { price = select(11, GetItemInfo(itemLink)), itemButton = itemButton})
 						app.ItemOverlay(itemButton.TLHOverlay, itemLink)
 						itemButton.TLHOverlay:SetAllPoints(itemButton.IconBorder)
