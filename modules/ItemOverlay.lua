@@ -842,7 +842,6 @@ function app.ItemOverlayHooks()
 				local sellPrice = {}
 
 				for k, v in pairs(rewardsFrame.RewardButtons) do
-					C_QuestLog.SetSelectedQuest(v.questID)
 					local itemButton = QuestInfo_GetRewardButton(rewardsFrame, k)
 					if not itemButton.TLHOverlay then
 						itemButton.TLHOverlay = CreateFrame("Frame", nil, itemButton)
