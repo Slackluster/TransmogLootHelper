@@ -853,25 +853,29 @@ function app.ItemOverlayHooks()
 					-- Get our quest rewards
 					local itemLink
 
-					if mode == "turnin" then
-						-- Set our map quest log to the currently displayed quest; stuff is being weird on quest turn-in
-						if GetQuestID() then
-							C_QuestLog.SetSelectedQuest(GetQuestID())
+					if v.type then
+						if mode == "turnin" then
+							-- Set our map quest log to the currently displayed quest; stuff is being weird on quest turn-in
+							if GetQuestID() then
+								C_QuestLog.SetSelectedQuest(GetQuestID())
+							end
+							
+							itemLink = GetQuestLogItemLink(v.type, k)
+						elseif rewardsFrame == QuestInfoRewardsFrame then
+							itemLink = GetQuestItemLink(v.type, k)
+						elseif rewardsFrame == MapQuestInfoRewardsFrame then
+							itemLink = GetQuestLogItemLink(v.type, k)
 						end
-						
-						itemLink = GetQuestLogItemLink(v.type, k)
-					elseif rewardsFrame == QuestInfoRewardsFrame then
-						itemLink = GetQuestItemLink(v.type, k)
-					elseif rewardsFrame == MapQuestInfoRewardsFrame then
-						itemLink = GetQuestLogItemLink(v.type, k)
-					end
 
-					if v.objectType == "currency" then
-						itemButton.TLHOverlay:Hide()
-					elseif itemLink then
-						table.insert(sellPrice, { price = select(11, GetItemInfo(itemLink)), itemButton = itemButton})
-						app.ItemOverlay(itemButton.TLHOverlay, itemLink)
-						itemButton.TLHOverlay:SetAllPoints(itemButton.IconBorder)
+						if v.objectType == "currency" then
+							itemButton.TLHOverlay:Hide()
+						elseif itemLink then
+							table.insert(sellPrice, { price = select(11, GetItemInfo(itemLink)), itemButton = itemButton})
+							app.ItemOverlay(itemButton.TLHOverlay, itemLink)
+							itemButton.TLHOverlay:SetAllPoints(itemButton.IconBorder)
+						else
+							itemButton.TLHOverlay:Hide()
+						end
 					else
 						itemButton.TLHOverlay:Hide()
 					end
