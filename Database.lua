@@ -6862,6 +6862,5 @@ app.QuestItem = {
 	-- PATCH 11.1.5 --
 	------------------
 	[242623] = 90710,	-- Enchanted Warbound Purifying Kit
-	[242919] = 90780,	-- Cracked Keystone
 	[242622] = 90709,	-- Warbound Purifying Kit
 }
