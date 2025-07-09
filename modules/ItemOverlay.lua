@@ -182,15 +182,15 @@ function app.ItemOverlay(overlay, itemLink, itemLocation, containerInfo)
 			-- Mounts
 			elseif classID == 15 and subclassID == 5 then
 				itemEquipLoc = "Mount"
-			-- Pets
-			elseif classID == 17 or (classID == 15 and subclassID == 2) then
-				itemEquipLoc = "Pet"
 			-- Recipes
 			elseif classID == 9 and subclassID ~= 0 then
 				itemEquipLoc = "Recipe"
 			-- Toys
 			elseif app.GetTooltipText(itemLink, ITEM_TOY_ONUSE) then
 				itemEquipLoc = "Toy"
+			-- Pets
+			elseif classID == 17 or (classID == 15 and subclassID == 2) then
+				itemEquipLoc = "Pet"
 			-- Illusions & Ensembles
 			elseif classID == 0 and subclassID == 8 then
 				local itemName = C_Item.GetItemInfo(itemLink)
