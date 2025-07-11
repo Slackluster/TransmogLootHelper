@@ -1735,6 +1735,18 @@ app.Event:Register("CHAT_MSG_ADDON", function(prefix, text, channel, sender, tar
 	end
 end)
 
+app.Event:Register("START_LOOT_ROLL", function(rollID, rollTime, lootHandle)
+	if TransmogLootHelper_Settings["hideGroupRolls"] and GroupLootHistoryFrame then
+		local hidden = false
+		GroupLootHistoryFrame:HookScript("OnShow", function()
+			if hidden == false then
+				GroupLootHistoryFrame:Hide()
+				hidden = true
+			end
+		end)
+	end
+end)
+
 --------------
 -- SETTINGS --
 --------------
@@ -1859,6 +1871,12 @@ function app.Settings()
 	end
 	local initializer = CreateSettingsButtonInitializer("Whisper Message", "Customize", onButtonClick, "Customize your whisper message.", true)
 	layout:AddInitializer(initializer)
+
+	layout:AddInitializer(CreateSettingsListSectionHeaderInitializer("Tweaks"))
+
+	local variable, name, tooltip = "hideGroupRolls", "Hide loot roll window", "Hide the window that shows loot rolls and their results. You can show the window again with |cff00ccff/loot|r."
+	local setting = Settings.RegisterAddOnSetting(category, appName.."_"..variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, false)
+	local parentSetting = Settings.CreateCheckbox(category, setting, tooltip)
 
 	layout:AddInitializer(CreateSettingsListSectionHeaderInitializer("Information"))
 
