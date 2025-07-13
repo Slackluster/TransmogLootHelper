@@ -1630,6 +1630,22 @@ function app.MessagePopup()
 	app.RenamePopup = frame
 end
 
+------------
+-- TWEAKS --
+------------
+
+app.Event:Register("START_LOOT_ROLL", function(rollID, rollTime, lootHandle)
+	if TransmogLootHelper_Settings["hideGroupRolls"] and GroupLootHistoryFrame then
+		local hidden = false
+		GroupLootHistoryFrame:HookScript("OnShow", function()
+			if hidden == false then
+				GroupLootHistoryFrame:Hide()
+				hidden = true
+			end
+		end)
+	end
+end)
+
 -----------------
 -- ADDON COMMS --
 -----------------
@@ -1732,18 +1748,6 @@ app.Event:Register("CHAT_MSG_ADDON", function(prefix, text, channel, sender, tar
 				end
 			end		
 		end
-	end
-end)
-
-app.Event:Register("START_LOOT_ROLL", function(rollID, rollTime, lootHandle)
-	if TransmogLootHelper_Settings["hideGroupRolls"] and GroupLootHistoryFrame then
-		local hidden = false
-		GroupLootHistoryFrame:HookScript("OnShow", function()
-			if hidden == false then
-				GroupLootHistoryFrame:Hide()
-				hidden = true
-			end
-		end)
 	end
 end)
 
