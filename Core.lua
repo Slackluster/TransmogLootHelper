@@ -1404,6 +1404,9 @@ end
 
 -- When an item is looted
 app.Event:Register("CHAT_MSG_LOOT", function(text, playerName, languageName, channelName, playerName2, specialFlags, zoneChannelID, channelIndex, channelBaseName, languageID, lineID, guid, bnSenderID, isMobile, isSubtitle, hideSenderInLetterbox, supressRaidIcons)
+	-- Only run while grouped
+	if not IsInGroup() then return end
+	
 	-- Extract item string
 	local itemString = string.match(text, "(|cnIQ.-|h%[.-%]|h)")
 
