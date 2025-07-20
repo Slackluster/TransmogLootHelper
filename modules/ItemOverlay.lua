@@ -588,21 +588,49 @@ function app.ItemOverlayHooks()
 	if TransmogLootHelper_Settings["overlay"] then
 		-- Hook our overlay onto all bag slots (thank you Plusmouse!)
 		local function bagsOverlay(container)
-			for _, itemButton in ipairs(container.Items) do
-				if not itemButton.TLHOverlay then
-					itemButton.TLHOverlay = CreateFrame("Frame", nil, itemButton)
-					itemButton.TLHOverlay:SetAllPoints(itemButton)
+			if not app.Flag["updatingBags"] then app.Flag["updatingBags"] = {} end
+			if not app.Flag["updatingBags"][container] then
+				app.Flag["updatingBags"][container] = { lastCall = nil, cooldown = false, queued = false, }
+			end
+
+			local state = app.Flag["updatingBags"][container]
+			if not state then
+				state = {
+					cooldown = false,
+					queued = false
+				}
+				app.Flag["updatingBags"][container] = state
+			end
+
+			if not state.cooldown then
+				state.cooldown = true
+
+				for _, itemButton in ipairs(container.Items) do
+					if not itemButton.TLHOverlay then
+						itemButton.TLHOverlay = CreateFrame("Frame", nil, itemButton)
+						itemButton.TLHOverlay:SetAllPoints(itemButton)
+					end
+			
+					local itemLocation = ItemLocation:CreateFromBagAndSlot(itemButton:GetBagID(), itemButton:GetID())
+					local exists = C_Item.DoesItemExist(itemLocation)
+					if exists then
+						local itemLink = C_Item.GetItemLink(itemLocation)
+						local containerInfo = C_Container.GetContainerItemInfo(itemButton:GetBagID(), itemButton:GetID())
+						app.ItemOverlay(itemButton.TLHOverlay, itemLink, itemLocation, containerInfo)
+					else
+						itemButton.TLHOverlay:Hide()
+					end
 				end
-		
-				local itemLocation = ItemLocation:CreateFromBagAndSlot(itemButton:GetBagID(), itemButton:GetID())
-				local exists = C_Item.DoesItemExist(itemLocation)
-				if exists then
-					local itemLink = C_Item.GetItemLink(itemLocation)
-					local containerInfo = C_Container.GetContainerItemInfo(itemButton:GetBagID(), itemButton:GetID())
-					app.ItemOverlay(itemButton.TLHOverlay, itemLink, itemLocation, containerInfo)
-				else
-					itemButton.TLHOverlay:Hide()
-				end
+
+				C_Timer.After(0.1, function()
+					state.cooldown = false
+					if state.queued then
+						state.queued = false
+						bagsOverlay(container)
+					end
+				end)
+			else
+				state.queued = true
 			end
 		end
 
