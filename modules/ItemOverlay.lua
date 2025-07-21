@@ -590,20 +590,11 @@ function app.ItemOverlayHooks()
 		local function bagsOverlay(container)
 			if not app.Flag["updatingBags"] then app.Flag["updatingBags"] = {} end
 			if not app.Flag["updatingBags"][container] then
-				app.Flag["updatingBags"][container] = { lastCall = nil, cooldown = false, queued = false, }
+				app.Flag["updatingBags"][container] = { cooldown = false, queued = false, }
 			end
 
-			local state = app.Flag["updatingBags"][container]
-			if not state then
-				state = {
-					cooldown = false,
-					queued = false
-				}
-				app.Flag["updatingBags"][container] = state
-			end
-
-			if not state.cooldown then
-				state.cooldown = true
+			if not app.Flag["updatingBags"][container].cooldown then
+				app.Flag["updatingBags"][container].cooldown = true
 
 				for _, itemButton in ipairs(container.Items) do
 					if not itemButton.TLHOverlay then
@@ -623,14 +614,14 @@ function app.ItemOverlayHooks()
 				end
 
 				C_Timer.After(0.1, function()
-					state.cooldown = false
-					if state.queued then
-						state.queued = false
+					app.Flag["updatingBags"][container].cooldown = false
+					if app.Flag["updatingBags"][container].queued then
+						app.Flag["updatingBags"][container].queued = false
 						bagsOverlay(container)
 					end
 				end)
 			else
-				state.queued = true
+				app.Flag["updatingBags"][container].queued = true
 			end
 		end
 
