@@ -588,40 +588,37 @@ function app.ItemOverlayHooks()
 	if TransmogLootHelper_Settings["overlay"] then
 		-- Hook our overlay onto all bag slots (thank you Plusmouse!)
 		local function bagsOverlay(container)
-			if not app.Flag["updatingBags"] then app.Flag["updatingBags"] = {} end
-			if not app.Flag["updatingBags"][container] then
-				app.Flag["updatingBags"][container] = { cooldown = false, queued = false, }
-			end
-
-			if not app.Flag["updatingBags"][container].cooldown then
-				app.Flag["updatingBags"][container].cooldown = true
-
-				for _, itemButton in ipairs(container.Items) do
-					if not itemButton.TLHOverlay then
-						itemButton.TLHOverlay = CreateFrame("Frame", nil, itemButton)
-						itemButton.TLHOverlay:SetAllPoints(itemButton)
-					end
-			
-					local itemLocation = ItemLocation:CreateFromBagAndSlot(itemButton:GetBagID(), itemButton:GetID())
-					local exists = C_Item.DoesItemExist(itemLocation)
-					if exists then
-						local itemLink = C_Item.GetItemLink(itemLocation)
-						local containerInfo = C_Container.GetContainerItemInfo(itemButton:GetBagID(), itemButton:GetID())
-						app.ItemOverlay(itemButton.TLHOverlay, itemLink, itemLocation, containerInfo)
-					else
-						itemButton.TLHOverlay:Hide()
-					end
-				end
-
+			if not app.BagThrottle then app.BagThrottle = {} end
+			if not app.BagThrottle[container] then
+				app.BagThrottle[container] = 0
 				C_Timer.After(0.1, function()
-					app.Flag["updatingBags"][container].cooldown = false
-					if app.Flag["updatingBags"][container].queued then
-						app.Flag["updatingBags"][container].queued = false
+					if app.BagThrottle[container] >= 1 then
+						app.BagThrottle[container] = nil
 						bagsOverlay(container)
+					else
+						app.BagThrottle[container] = nil
 					end
 				end)
 			else
-				app.Flag["updatingBags"][container].queued = true
+				app.BagThrottle[container] = 1
+				return
+			end
+
+			for _, itemButton in ipairs(container.Items) do
+				if not itemButton.TLHOverlay then
+					itemButton.TLHOverlay = CreateFrame("Frame", nil, itemButton)
+					itemButton.TLHOverlay:SetAllPoints(itemButton)
+				end
+		
+				local itemLocation = ItemLocation:CreateFromBagAndSlot(itemButton:GetBagID(), itemButton:GetID())
+				local exists = C_Item.DoesItemExist(itemLocation)
+				if exists then
+					local itemLink = C_Item.GetItemLink(itemLocation)
+					local containerInfo = C_Container.GetContainerItemInfo(itemButton:GetBagID(), itemButton:GetID())
+					app.ItemOverlay(itemButton.TLHOverlay, itemLink, itemLocation, containerInfo)
+				else
+					itemButton.TLHOverlay:Hide()
+				end
 			end
 		end
 
