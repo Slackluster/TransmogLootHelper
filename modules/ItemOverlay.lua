@@ -726,6 +726,21 @@ function app.ItemOverlayHooks()
 
 		-- Hook our overlay onto all guild bank slots
 		local function guildBankOverlay()
+			if not app.GuildBankThrottle then
+				app.GuildBankThrottle = 0
+				C_Timer.After(0.1, function()
+					if app.GuildBankThrottle >= 1 then
+						app.GuildBankThrottle = nil
+						guildBankOverlay()
+					else
+						app.GuildBankThrottle = nil
+					end
+				end)
+			else
+				app.GuildBankThrottle = 1
+				return
+			end
+
 			if GuildBankFrame and GuildBankFrame:IsShown() then
 				for i = 1, 7 do
 					for j = 1, 14 do
