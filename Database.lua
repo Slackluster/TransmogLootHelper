@@ -95,6 +95,7 @@ app.Icon = {
 	["INVTYPE_HOLDABLE"] = "Interface\\Icons\\inv_shield_06",
 
 	["Ensemble"] = "Interface\\Icons\\inv_chest_cloth_17",
+	["Arsenal"] = "Interface\\Icons\\achievement_arena_3v3_4",
 	["Illusion"] = "Interface\\Icons\\inv_misc_scrollrolled03",
 	["Mount"] = "Interface\\Icons\\ability_mount_ridinghorse",
 	["Pet"] = "Interface\\Icons\\inv_arfuspet_classic",

@@ -230,6 +230,23 @@ function app.ItemOverlay(overlay, itemLink, itemLocation, containerInfo)
 						break
 					end
 				end
+
+				-- Check if it's an arsenal
+				local localeArsenal = {
+					"Arsenal:",
+					"Arsenal :",
+					"Arsenale:",
+					"Арсенал:",
+					"병기:",
+					"军械：",
+					"武器庫：",
+				}
+				for k, v in pairs(localeArsenal) do
+					if itemName:find("^" .. v) then
+						itemEquipLoc = "Arsenal"
+						break
+					end
+				end
 			-- Check for other item types
 			else
 				-- Profession Knowledge
@@ -350,8 +367,8 @@ function app.ItemOverlay(overlay, itemLink, itemLocation, containerInfo)
 				else
 					hideOverlay()
 				end
-			-- Ensembles
-			elseif TransmogLootHelper_Settings["iconNewMog"] and itemEquipLoc == "Ensemble" then
+			-- Ensembles & Arsenals
+			elseif TransmogLootHelper_Settings["iconNewMog"] and (itemEquipLoc == "Ensemble" or itemEquipLoc == "Arsenal") then
 				-- Learned
 				if app.GetTooltipText(itemLink, ITEM_SPELL_KNOWN) then
 					if TransmogLootHelper_Settings["iconLearned"] then
