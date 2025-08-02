@@ -783,40 +783,6 @@ function app.ItemOverlayHooks()
 		app.Event:Register("TRANSMOG_COLLECTION_UPDATED", function() C_Timer.After(0.1, guildBankOverlay) end)
 		app.Event:Register("NEW_RECIPE_LEARNED", function() C_Timer.After(0.1, guildBankOverlay) end)
 
-		-- Hook our overlay onto all void bank slots
-		local function voidBankOverlay()
-			if VoidStorageFrame and VoidStorageFrame:IsShown() then
-				if not app.VoidBankHook then
-					VoidStorageFrame.Page1:HookScript("OnClick", voidBankOverlay)
-					VoidStorageFrame.Page2:HookScript("OnClick", voidBankOverlay)
-					app.VoidBankHook = true
-				end
-
-				for i = 1, 80 do
-					local itemButton = _G["VoidStorageStorageButton"..i]
-					if not itemButton.TLHOverlay then
-						itemButton.TLHOverlay = CreateFrame("Frame", nil, itemButton)
-						itemButton.TLHOverlay:SetAllPoints(itemButton)
-					end
-			
-					local slot = itemButton.slot + (80 * (_G["VoidStorageFrame"].page - 1))
-					local itemLink = GetVoidItemHyperlinkString(slot)
-					if itemLink then
-						app.ItemOverlay(itemButton.TLHOverlay, itemLink)
-						itemButton.TLHOverlay.text:SetText("")	-- No bind text for these
-					else
-						itemButton.TLHOverlay:Hide()
-					end
-				end
-			end
-		end
-
-		app.Event:Register("VOID_STORAGE_UPDATE", voidBankOverlay)
-		app.Event:Register("VOID_STORAGE_CONTENTS_UPDATE", voidBankOverlay)
-		-- Update if we learn a mog or recipe
-		app.Event:Register("TRANSMOG_COLLECTION_UPDATED", function() C_Timer.After(0.1, voidBankOverlay) end)
-		app.Event:Register("NEW_RECIPE_LEARNED", function() C_Timer.After(0.1, voidBankOverlay) end)
-
 		-- Hook our overlay onto all black market items
 		local function blackMarketOverlay()
 			if BlackMarketFrame and BlackMarketFrame:IsShown() then
