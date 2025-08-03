@@ -724,7 +724,7 @@ function app.ItemOverlayHooks()
 
 				-- Delay a bit if we're checking the Warbank for the first time
 				if not app.WarbankHook then
-					C_Timer.After(0.2, warbank)
+					C_Timer.After(1, warbank)
 					app.WarbankHook = true
 				else
 					warbank()
