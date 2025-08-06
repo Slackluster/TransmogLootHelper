@@ -672,17 +672,19 @@ function app.ItemOverlayHooks()
 							itemButton.TLHOverlay:SetAllPoints(itemButton)
 						end
 						
-						local itemLocation = ItemLocation:CreateFromBagAndSlot(BankPanel.selectedTabID, i)
-						local exists = false
-						if BankPanel.selectedTabID then
-							exists = C_Item.DoesItemExist(itemLocation)
-						end
-						if exists then
-							local itemLink = C_Item.GetItemLink(itemLocation)
-							local containerInfo = C_Container.GetContainerItemInfo(BankPanel.selectedTabID, i)
-							app.ItemOverlay(itemButton.TLHOverlay, itemLink, itemLocation, containerInfo)
-						elseif itemButton and itemButton.TLHOverlay then
-							itemButton.TLHOverlay:Hide()
+						if itemButton and itemButton.TLHOverlay then
+							local itemLocation = ItemLocation:CreateFromBagAndSlot(BankPanel.selectedTabID, i)
+							local exists = false
+							if BankPanel.selectedTabID then
+								exists = C_Item.DoesItemExist(itemLocation)
+							end
+							if exists then
+								local itemLink = C_Item.GetItemLink(itemLocation)
+								local containerInfo = C_Container.GetContainerItemInfo(BankPanel.selectedTabID, i)
+								app.ItemOverlay(itemButton.TLHOverlay, itemLink, itemLocation, containerInfo)
+							else
+								itemButton.TLHOverlay:Hide()
+							end
 						end
 					end
 				end
