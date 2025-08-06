@@ -622,7 +622,7 @@ function app.ItemOverlayHooks()
 			end
 
 			for _, itemButton in ipairs(container.Items) do
-				if not itemButton.TLHOverlay then
+				if itemButton and not itemButton.TLHOverlay then
 					itemButton.TLHOverlay = CreateFrame("Frame", nil, itemButton)
 					itemButton.TLHOverlay:SetAllPoints(itemButton)
 				end
@@ -639,104 +639,71 @@ function app.ItemOverlayHooks()
 			end
 		end
 
-		for i = 1, 13 do
-			hooksecurefunc(_G["ContainerFrame" .. i], "UpdateItems", bagsOverlay)
+		for i = 1, 6 do
+			if _G["ContainerFrame" .. i] then
+				hooksecurefunc(_G["ContainerFrame" .. i], "UpdateItems", bagsOverlay)
+			end
 		end
 		hooksecurefunc(ContainerFrameCombinedBags, "UpdateItems", bagsOverlay)
 
-		-- Hook our overlay onto all bank slots
+		-- Hook our overlay onto all (war)bank slots
 		local function bankOverlay()
-			if BankFrame then
-				for i = 1, NUM_BANKGENERIC_SLOTS do
-					local itemButton = _G["BankFrameItem"..i]
-					if not itemButton.TLHOverlay then
-						itemButton.TLHOverlay = CreateFrame("Frame", nil, itemButton)
-						itemButton.TLHOverlay:SetAllPoints(itemButton)
-					end
-
-					local itemLocation = ItemLocation:CreateFromBagAndSlot(-1, i)
-					local exists = C_Item.DoesItemExist(itemLocation)
-					if exists then
-						local itemLink = C_Item.GetItemLink(itemLocation)
-						local containerInfo = C_Container.GetContainerItemInfo(-1, i)
-						app.ItemOverlay(itemButton.TLHOverlay, itemLink, itemLocation, containerInfo)
+			if not app.BankThrottle then
+				app.BankThrottle = 0
+				C_Timer.After(0.1, function()
+					if app.BankThrottle >= 1 then
+						app.BankThrottle = nil
+						bankOverlay()
 					else
-						itemButton.TLHOverlay:Hide()
+						app.BankThrottle = nil
 					end
-				end
+				end)
+			else
+				app.BankThrottle = 1
+				return
 			end
-		end
-		
-		app.Event:Register("BANKFRAME_OPENED", bankOverlay)
-		app.Event:Register("PLAYERBANKSLOTS_CHANGED", bankOverlay)
 
-		-- Hook our overlay onto all reagent bank slots
-		local function reagentBankOverlay()
-			if ReagentBankFrame and ReagentBankFrame:IsShown() then
-				for i = 1, 98 do
-					local itemButton = _G["ReagentBankFrameItem"..i]
-					if not itemButton.TLHOverlay then
-						itemButton.TLHOverlay = CreateFrame("Frame", nil, itemButton)
-						itemButton.TLHOverlay:SetAllPoints(itemButton)
-					end
-			
-					local itemLocation = ItemLocation:CreateFromBagAndSlot(-3, i)
-					local exists = C_Item.DoesItemExist(itemLocation)
-					if exists then
-						local itemLink = C_Item.GetItemLink(itemLocation)
-						local containerInfo = C_Container.GetContainerItemInfo(-3, i)
-						app.ItemOverlay(itemButton.TLHOverlay, itemLink, itemLocation, containerInfo)
-					else
-						itemButton.TLHOverlay:Hide()
-					end
-				end
-			end
-		end
-
-		BankFrameTab2:HookScript("OnClick", reagentBankOverlay)
-		app.Event:Register("PLAYERREAGENTBANKSLOTS_CHANGED", reagentBankOverlay)
-		-- Update if we learn a mog or recipe
-		app.Event:Register("TRANSMOG_COLLECTION_UPDATED", function() C_Timer.After(0.1, reagentBankOverlay) end)
-		app.Event:Register("NEW_RECIPE_LEARNED", function() C_Timer.After(0.1, reagentBankOverlay) end)
-
-		-- Hook our overlay onto all warbank slots
-		local function warbankOverlay()
-			if AccountBankPanel and AccountBankPanel:IsShown() and BankFrame:IsShown() then
-				local function warbank()
+			if BankFrame and BankFrame:IsShown() then
+				local function bank()
 					for i = 1, 98 do
-						local itemButton = AccountBankPanel:FindItemButtonByContainerSlotID(i)
-						if not itemButton.TLHOverlay then
+						local itemButton = BankPanel:FindItemButtonByContainerSlotID(i)
+						if itemButton and not itemButton.TLHOverlay then
 							itemButton.TLHOverlay = CreateFrame("Frame", nil, itemButton)
 							itemButton.TLHOverlay:SetAllPoints(itemButton)
 						end
-		
-						local itemLocation = ItemLocation:CreateFromBagAndSlot(AccountBankPanel.selectedTabID, i)
-						local exists = C_Item.DoesItemExist(itemLocation)
+						
+						local itemLocation = ItemLocation:CreateFromBagAndSlot(BankPanel.selectedTabID, i)
+						local exists = false
+						if BankPanel.selectedTabID then
+							exists = C_Item.DoesItemExist(itemLocation)
+						end
 						if exists then
 							local itemLink = C_Item.GetItemLink(itemLocation)
-							local containerInfo = C_Container.GetContainerItemInfo(AccountBankPanel.selectedTabID, i)
+							local containerInfo = C_Container.GetContainerItemInfo(BankPanel.selectedTabID, i)
 							app.ItemOverlay(itemButton.TLHOverlay, itemLink, itemLocation, containerInfo)
-						else
+						elseif itemButton and itemButton.TLHOverlay then
 							itemButton.TLHOverlay:Hide()
 						end
 					end
 				end
 
-				-- Delay a bit if we're checking the Warbank for the first time
-				if not app.WarbankHook then
-					C_Timer.After(1, warbank)
-					app.WarbankHook = true
+				-- Delay a bit if we're checking the bank for the first time
+				if not app.BankHook then
+					C_Timer.After(1, bank)
+					app.BankHook = true
 				else
-					warbank()
+					bank()
 				end
 			end
 		end
 
-		hooksecurefunc(AccountBankPanel, "RefreshBankPanel", warbankOverlay)
-		app.Event:Register("BAG_UPDATE_DELAYED", warbankOverlay)
+		hooksecurefunc(BankPanel, "RefreshBankPanel", bankOverlay)
+		hooksecurefunc(BankPanel, "OnUpdate", bankOverlay)
+		app.Event:Register("BANKFRAME_OPENED", bankOverlay)
+		app.Event:Register("BAG_UPDATE_DELAYED", bankOverlay)
 		-- Update if we learn a mog or recipe
-		app.Event:Register("TRANSMOG_COLLECTION_UPDATED", function() C_Timer.After(0.1, warbankOverlay) end)
-		app.Event:Register("NEW_RECIPE_LEARNED", function() C_Timer.After(0.1, warbankOverlay) end)
+		app.Event:Register("TRANSMOG_COLLECTION_UPDATED", function() C_Timer.After(0.1, bankOverlay) end)
+		app.Event:Register("NEW_RECIPE_LEARNED", function() C_Timer.After(0.1, bankOverlay) end)
 
 		-- Hook our overlay onto all guild bank slots
 		local function guildBankOverlay()
@@ -1090,8 +1057,7 @@ function app.ItemOverlayHooks()
 		function api.UpdateOverlay()
 			C_Timer.After(1, function()
 				-- bagsOverlay()
-				reagentBankOverlay()
-				warbankOverlay()
+				bankOverlay()
 				merchantOverlay()
 				questOverlay()
 				worldQuestOverlay()
