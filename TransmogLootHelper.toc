@@ -1,4 +1,4 @@
-## Interface: 110107
+## Interface: 110200
 ## Title: |cffC69B6DTransmog Loot Helper|r
 ## Author: Sluimerstand
 ## IconTexture: Interface\AddOns\TransmogLootHelper\assets\tlh_icon.blp
