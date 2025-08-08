@@ -102,29 +102,18 @@ end
 
 -- Scan the tooltip for any text
 function app.GetTooltipText(itemLinkie, searchString)
-	-- Grab the original value for this setting
 	local cvar = C_CVar.GetCVarInfo("missingTransmogSourceInItemTooltips")
-
-	-- Enable this CVar, because we need it if checking for the Blizz text, which we do as a fallback
 	C_CVar.SetCVar("missingTransmogSourceInItemTooltips", 1)
-
-	-- Get our tooltip information
 	local tooltip = C_TooltipInfo.GetHyperlink(itemLinkie)
-
-	-- Return the CVar to its original setting
 	C_CVar.SetCVar("missingTransmogSourceInItemTooltips", cvar)
 
-	-- Read all the lines as plain text
 	if tooltip and tooltip["lines"] then
 		for k, v in ipairs(tooltip["lines"]) do
-			-- And if the search string was found
 			if v["leftText"] and v["leftText"]:find(searchString) then
 				return true
 			end
 		end
 	end
-
-	-- Otherwise
 	return false
 end
 
@@ -244,35 +233,28 @@ end)
 
 -- Send information to other TLH users
 function app.SendAddonMessage(message)
-	-- Check which channel to use
 	if IsInRaid(2) or IsInGroup(2) then
-		-- Share with instance group first
 		ChatThrottleLib:SendAddonMessage("NORMAL", "TransmogLootHelp", message, "INSTANCE_CHAT")
 	elseif IsInRaid() then
-		-- If not in an instance group, share it with the raid
 		ChatThrottleLib:SendAddonMessage("NORMAL", "TransmogLootHelp", message, "RAID")
 	elseif IsInGroup() then
-		-- If not in a raid group, share it with the party
 		ChatThrottleLib:SendAddonMessage("NORMAL", "TransmogLootHelp", message, "PARTY")
 	end
 end
 
 -- When joining a group
 app.Event:Register("GROUP_ROSTER_UPDATE", function(category, partyGUID)
-	-- Share our AddOn version with other users
 	local message = "version:"..C_AddOns.GetAddOnMetadata("TransmogLootHelper", "Version")
 	app.SendAddonMessage(message)
 end)
 
 -- When we receive information over the addon comms
 app.Event:Register("CHAT_MSG_ADDON", function(prefix, text, channel, sender, target, zoneChannelID, localID, name, instanceID)
-	-- If it's our message
 	if prefix == "TransmogLootHelp" then
 		-- Version
 		local version = text:match("version:(.+)")
 		if version then
 			if version ~= "@project-version@" then
-				-- Extract the interface and version from this
 				local expansion, major, minor, iteration = version:match("v(%d+)%.(%d+)%.(%d+)%-(%d%d%d)")
 				expansion = string.format("%02d", expansion)
 				major = string.format("%02d", major)
@@ -280,7 +262,6 @@ app.Event:Register("CHAT_MSG_ADDON", function(prefix, text, channel, sender, tar
 				local otherGameVersion = tonumber(expansion..major..minor)
 				local otherAddonVersion = tonumber(iteration)
 
-				-- Do the same for our local version
 				local localVersion = C_AddOns.GetAddOnMetadata("TransmogLootHelper", "Version")
 				if localVersion ~= "@project-version@" then
 					expansion, major, minor, iteration = localVersion:match("v(%d+)%.(%d+)%.(%d+)%-(%d%d%d)")
@@ -290,9 +271,7 @@ app.Event:Register("CHAT_MSG_ADDON", function(prefix, text, channel, sender, tar
 					local localGameVersion = tonumber(expansion..major..minor)
 					local localAddonVersion = tonumber(iteration)
 
-					-- Now compare our versions
 					if otherGameVersion > localGameVersion or (otherGameVersion == localGameVersion and otherAddonVersion > localAddonVersion) then
-						-- But only send the message once every 10 minutes
 						if GetServerTime() - app.Flag["versionCheck"] > 600 then
 							app.Print("There is a newer version of "..app.NameLong.." available: "..version)
 							app.Flag["versionCheck"] = GetServerTime()

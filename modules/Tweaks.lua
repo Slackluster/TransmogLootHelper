@@ -10,7 +10,6 @@ local appName, app = ...
 ------------------------
 
 app.Event:Register("PLAYER_INTERACTION_MANAGER_FRAME_SHOW", function(type)
-	-- Only run this if the setting is enabled
 	if TransmogLootHelper_Settings["catalystButton"] then
 		if type == 44 then
 			if not app.CatalystSkipButton then

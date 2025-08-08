@@ -37,7 +37,6 @@ end)
 
 -- Window tooltip body
 function app.WindowTooltip(text)
-	-- Tooltip
 	local frame = CreateFrame("Frame", nil, app.Window, "BackdropTemplate")
 	frame:SetFrameStrata("TOOLTIP")
 	frame:SetBackdrop({
@@ -56,7 +55,6 @@ function app.WindowTooltip(text)
 	string:SetJustifyH("LEFT")
 	string:SetText(text)
 
-	-- Set the tooltip size to fit its contents
 	frame:SetHeight(string:GetStringHeight()+20)
 	frame:SetWidth(string:GetStringWidth()+20)
 
@@ -65,7 +63,6 @@ end
 
 -- Window tooltip show/hide
 function app.WindowTooltipShow(frame)
-	-- Set the tooltip to either the left or right, depending on where the window is placed
 	if GetScreenWidth()/2-TransmogLootHelper_Settings["windowPosition"].width/2-app.Window:GetLeft() >= 0 then
 		frame:ClearAllPoints()
 		frame:SetPoint("LEFT", app.Window, "RIGHT", 0, 0)
@@ -79,10 +76,8 @@ end
 -- Move the window
 function app.MoveWindow()
 	if TransmogLootHelper_Settings["windowLocked"] then
-		-- Highlight the Unlock button
 		app.UnlockButton:LockHighlight()
 	else
-		-- Start moving the window, and hide any visible tooltips
 		app.Window:StartMoving()
 		GameTooltip:ClearLines()
 		GameTooltip:Hide()
@@ -91,18 +86,12 @@ end
 
 -- Save the window position and size
 function app.SaveWindow()
-	-- Stop highlighting the unlock button
 	app.UnlockButton:UnlockHighlight()
-
-	-- Stop moving or resizing the window
 	app.Window:StopMovingOrSizing()
 
-	-- Get the window properties
 	local left = app.Window:GetLeft()
 	local bottom = app.Window:GetBottom()
 	local width, height = app.Window:GetSize()
-
-	-- Save the window position and size
 	TransmogLootHelper_Settings["windowPosition"] = { ["left"] = left, ["bottom"] = bottom, ["width"] = width, ["height"] = height, }
 end
 
@@ -358,7 +347,6 @@ function app.Update()
 		end
 	end
 
-	-- Disable the clear button
 	app.ClearButton:Disable()
 
 	-- To count how many rows we end up with
@@ -467,10 +455,8 @@ function app.Update()
 			row:SetScript("OnDragStart", function() app.MoveWindow() end)
 			row:SetScript("OnDragStop", function() app.SaveWindow() end)
 			row:SetScript("OnEnter", function()
-				-- Show item tooltip if hovering over the actual row
 				GameTooltip:ClearLines()
 
-				-- Set the tooltip to either the left or right, depending on where the window is placed
 				if GetScreenWidth()/2-TransmogLootHelper_Settings["windowPosition"].width/2-app.Window:GetLeft() >= 0 then
 					GameTooltip:SetOwner(app.Window, "ANCHOR_NONE")
 					GameTooltip:SetPoint("LEFT", app.Window, "RIGHT")
@@ -480,7 +466,6 @@ function app.Update()
 				end
 				GameTooltip:SetHyperlink(lootInfo.item)
 
-				-- Check if empty line has been added
 				local emptyLine = false
 
 				-- If the player who looted the item learned an appearance from it
@@ -515,18 +500,14 @@ function app.Update()
 				if button == "LeftButton" then
 					-- Shift+LMB
 					if IsShiftKeyDown() == true then
-						-- Try write link to chat
 						ChatEdit_InsertLink(lootInfo.item)
 					else
 						if app.WeaponLoot[lootInfo.index].recentlyWhispered == 0 then
-							-- Send whisper message
 							local msg = string.gsub(TransmogLootHelper_Settings["message"], "%%item", lootInfo.item)
 							C_ChatInfo.SendChatMessage(msg, "WHISPER", nil, lootInfo.player)
-							-- Share with TLH users that we whispered this player
 							local message = "player:"..lootInfo.player
 							app.SendAddonMessage(message)
 
-							-- Add a timeout to prevent spamming
 							local whisperTime = GetServerTime()
 							app.WeaponLoot[lootInfo.index].recentlyWhispered = whisperTime
 							C_Timer.After(30, function()
@@ -542,9 +523,7 @@ function app.Update()
 					end
 				-- Shift+RMB
 				elseif button == "RightButton" and IsShiftKeyDown() then
-					-- Remove the item
 					table.remove(app.WeaponLoot, lootInfo.index)
-					-- And update the window
 					RunNextFrame(app.Update)
 					do return end
 				end
@@ -590,7 +569,6 @@ function app.Update()
 			end
 		end
 
-		-- Enable the clear button
 		app.ClearButton:Enable()
 	end
 
@@ -742,18 +720,14 @@ function app.Update()
 				if button == "LeftButton" then
 					-- Shift+LMB
 					if IsShiftKeyDown() == true then
-						-- Try write link to chat
 						ChatEdit_InsertLink(lootInfo.item)
 					else
 						if app.ArmourLoot[lootInfo.index].recentlyWhispered == 0 then
-							-- Send whisper message
 							local msg = string.gsub(TransmogLootHelper_Settings["message"], "%%item", lootInfo.item)
 							C_ChatInfo.SendChatMessage(msg, "WHISPER", nil, lootInfo.player)
-							-- Share with TLH users that we whispered this player
 							local message = "player:"..lootInfo.player
 							app.SendAddonMessage(message)
 
-							-- Add a timeout to prevent spamming
 							local whisperTime = GetServerTime()
 							app.ArmourLoot[lootInfo.index].recentlyWhispered = whisperTime
 							C_Timer.After(30, function()
@@ -769,9 +743,7 @@ function app.Update()
 					end
 				-- Shift+RMB
 				elseif button == "RightButton" and IsShiftKeyDown() then
-					-- Remove the item
 					table.remove(app.ArmourLoot, lootInfo.index)
-					-- And update the window
 					RunNextFrame(app.Update)
 					do return end
 				end
@@ -817,7 +789,6 @@ function app.Update()
 			end
 		end
 
-		-- Enable the clear button
 		app.ClearButton:Enable()
 	end
 
@@ -925,10 +896,8 @@ function app.Update()
 			row:SetScript("OnDragStart", function() app.MoveWindow() end)
 			row:SetScript("OnDragStop", function() app.SaveWindow() end)
 			row:SetScript("OnEnter", function()
-				-- Show item tooltip if hovering over the actual row
 				GameTooltip:ClearLines()
 
-				-- Set the tooltip to either the left or right, depending on where the window is placed
 				if GetScreenWidth()/2-TransmogLootHelper_Settings["windowPosition"].width/2-app.Window:GetLeft() >= 0 then
 					GameTooltip:SetOwner(app.Window, "ANCHOR_NONE")
 					GameTooltip:SetPoint("LEFT", app.Window, "RIGHT")
@@ -948,16 +917,13 @@ function app.Update()
 				if button == "LeftButton" then
 					-- Shift+LMB
 					if IsShiftKeyDown() == true then
-						-- Try write link to chat
 						ChatEdit_InsertLink(lootInfo.item)
 					else
 						app.Print("Debugging "..lootInfo.item.."  |  Filter reason: "..lootInfo.playerShort.."  |  itemType: "..lootInfo.itemType.."  |  Looted by: "..lootInfo.player)
 					end
 				-- Shift+RMB
 				elseif button == "RightButton" and IsShiftKeyDown() then
-					-- Remove the item
 					table.remove(app.FilteredLoot, lootInfo.index)
-					-- And update the window
 					RunNextFrame(app.Update)
 					do return end
 				end
@@ -1003,7 +969,6 @@ function app.Update()
 			end
 		end
 
-		-- Enable the clear button
 		app.ClearButton:Enable()
 	end
 
@@ -1057,19 +1022,16 @@ end
 
 -- Show window
 function app.Show()
-	-- Set window to its proper position and size
 	app.Window:ClearAllPoints()
 	app.Window:SetSize(TransmogLootHelper_Settings["windowPosition"].width, TransmogLootHelper_Settings["windowPosition"].height)
 	app.Window:SetPoint("BOTTOMLEFT", UIParent, "BOTTOMLEFT", TransmogLootHelper_Settings["windowPosition"].left, TransmogLootHelper_Settings["windowPosition"].bottom)
 
-	-- Show the windows
 	app.Window:Show()
 	app.Update()
 end
 
 -- Toggle window
 function app.Toggle()
-	-- Toggle tracking windows
 	if app.Window:IsShown() then
 		app.Window:Hide()
 	else
@@ -1092,17 +1054,14 @@ end
 -- Delay open/update window
 function app.Stagger(t, show)
 	C_Timer.After(t, function()
-		-- If it's been at least t seconds
 		if GetServerTime() - app.Flag["lastUpdate"] >= t then
 			if show and TransmogLootHelper_Settings["autoOpen"] then
 				app.Show()
 			else
 				app.Update()
 			end
-		-- Otherwise, check one more time with double delay
 		else
 			C_Timer.After(t, function()
-				-- If it's been at least t seconds
 				if GetServerTime() - app.Flag["lastUpdate"] >= t then
 					if show and TransmogLootHelper_Settings["autoOpen"] then
 						app.Show()
@@ -1117,16 +1076,13 @@ end
 
 -- Add to filtered loot and update the window
 function app.AddFilteredLoot(itemLink, itemID, itemTexture, playerName, itemType, filterReason)
-	-- Add to filtered loot and update the window
 	app.FilteredLoot[#app.FilteredLoot+1] = { item = itemLink, itemID = itemID, icon = itemTexture, player = playerName, playerShort = filterReason, color = "ffFFFFFF", itemType = itemType }
 
-	-- Check if the table exceeds 100 entries
 	if #app.FilteredLoot > 100 then
 		-- Remove the oldest entry
 		table.remove(app.FilteredLoot, 1)
 	end
 
-	-- Stagger show/update the window
 	app.Flag["lastUpdate"] = GetServerTime()
 	app.Stagger(1, false)
 end
@@ -1135,28 +1091,23 @@ end
 function app.RemoveLootedItem(itemID)
 	for k = #app.WeaponLoot, 1, -1 do
 		if app.WeaponLoot[k].itemID == itemID then
-			-- Remove entry from table
 			table.remove(app.WeaponLoot, k)
 		end
 	end
 
 	for k = #app.ArmourLoot, 1, -1 do
 		if app.ArmourLoot[k].itemID == itemID then
-			-- Remove entry from table
 			table.remove(app.ArmourLoot, k)
 		end
 	end
 
-	-- And update the window
 	app.Update()
 end
 
 -- When an item is looted
 app.Event:Register("CHAT_MSG_LOOT", function(text, playerName, languageName, channelName, playerName2, specialFlags, zoneChannelID, channelIndex, channelBaseName, languageID, lineID, guid, bnSenderID, isMobile, isSubtitle, hideSenderInLetterbox, supressRaidIcons)
-	-- Only run while grouped
 	if not IsInGroup() then return end
 
-	-- Extract item string
 	local itemString = string.match(text, "(|cnIQ.-|h%[.-%]|h)")
 
 	-- Only proceed if the item is equippable and a player is specified (aka it is not a need/greed roll)
@@ -1247,40 +1198,31 @@ end)
 
 -- When a new appearance is learned
 app.Event:Register("TRANSMOG_COLLECTION_SOURCE_ADDED", function(itemModifiedAppearanceID)
-	-- Grab the itemID
 	local itemID = C_TransmogCollection.GetSourceInfo(itemModifiedAppearanceID).itemID
-
-	-- Remove it from our own list
 	app.RemoveLootedItem(itemID)
 
-	-- Share the itemID with other TLH users
 	local message = "itemID:"..itemID
 	app.SendAddonMessage(message)
 end)
 
 -- When a group member loots an item
 app.Event:Register("CHAT_MSG_ADDON", function(prefix, text, channel, sender, target, zoneChannelID, localID, name, instanceID)
-	-- If it's our message
 	if prefix == "TransmogLootHelp" then
 		-- ItemID
 		local itemID = tonumber(text:match("itemID:(.+)"))
 		if itemID then
-			-- Check if it exists in our tables
 			for k, v in ipairs(app.WeaponLoot) do
 				if v.player == sender and v.itemID == itemID then
-					-- And if it does, mark it as new transmog for the looter
 					app.WeaponLoot[k].icon = app.IconMog
 				end
 			end
 
 			for k, v in ipairs(app.ArmourLoot) do
 				if v.player == sender and v.itemID == itemID then
-					-- And if it does, mark it as new transmog for the looter
 					app.ArmourLoot[k].icon = app.IconMog
 				end
 			end
 
-			-- Stagger show/update the window
 			app.Flag["lastUpdate"] = GetServerTime()
 			app.Stagger(1, false)
 		end
@@ -1288,12 +1230,10 @@ app.Event:Register("CHAT_MSG_ADDON", function(prefix, text, channel, sender, tar
 		-- Player
 		local player = text:match("player:(.+)")
 		if player then
-			-- Add the user to our table, if it doesn't exist there yet
 			if app.Whispered[player] == nil then
 				app.Whispered[player] = 0
 			end
 
-			-- Add +1 to the amount of times this player has been whispered by TLH users
 			for k, v in pairs(app.Whispered) do
 				if k == player then
 					app.Whispered[k] = app.Whispered[k] + 1
