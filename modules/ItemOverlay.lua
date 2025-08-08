@@ -4,7 +4,7 @@
 -- Item Overlay module
 
 -- Initialisation
-local appName, app =  ...	-- Returns the AddOn name and a unique table
+local appName, app = ...	-- Returns the AddOn name and a unique table
 local api = app.api	-- Our "API" prefix
 
 ------------------
@@ -421,7 +421,7 @@ function app.ItemOverlay(overlay, itemLink, itemLocation, containerInfo)
 				if not app.OverlayCache[itemLink].speciesID then
 					app.OverlayCache[itemLink].speciesID = select(13, C_PetJournal.GetPetInfoByItemID(itemID))
 				end
-				
+
 				-- Account for a Blizz API bug that is apparently present, this is why we can't have nice things
 				if app.OverlayCache[itemLink].speciesID then
 					numPets, maxAllowed = C_PetJournal.GetNumCollectedInfo(app.OverlayCache[itemLink].speciesID)
@@ -429,7 +429,7 @@ function app.ItemOverlay(overlay, itemLink, itemLocation, containerInfo)
 					numPets = 0
 					maxAllowed = 0
 				end
-				
+
 				if (maxAllowed == numPets and numPets ~= 0) or (not TransmogLootHelper_Settings["iconNewPetMax"] and numPets >= 1) then
 					if TransmogLootHelper_Settings["iconLearned"] then
 						showOverlay("green")
@@ -460,7 +460,7 @@ function app.ItemOverlay(overlay, itemLink, itemLocation, containerInfo)
 			elseif TransmogLootHelper_Settings["iconNewRecipe"] and itemEquipLoc == "Recipe" then
 				if app.SpellItem[itemID] then
 					local recipeID = app.SpellItem[itemID]
-					
+
 					if TransmogLootHelper_Cache.Recipes[recipeID] ~= nil then
 						-- Set profession icon
 						local _, _, tradeskill = C_TradeSkillUI.GetTradeSkillLineForRecipe(recipeID)
@@ -626,7 +626,7 @@ function app.ItemOverlayHooks()
 					itemButton.TLHOverlay = CreateFrame("Frame", nil, itemButton)
 					itemButton.TLHOverlay:SetAllPoints(itemButton)
 				end
-		
+
 				local itemLocation = ItemLocation:CreateFromBagAndSlot(itemButton:GetBagID(), itemButton:GetID())
 				local exists = C_Item.DoesItemExist(itemLocation)
 				if exists then
@@ -671,7 +671,7 @@ function app.ItemOverlayHooks()
 							itemButton.TLHOverlay = CreateFrame("Frame", nil, itemButton)
 							itemButton.TLHOverlay:SetAllPoints(itemButton)
 						end
-						
+
 						if itemButton and itemButton.TLHOverlay then
 							local itemLocation = ItemLocation:CreateFromBagAndSlot(BankPanel.selectedTabID, i)
 							local exists = false
@@ -732,7 +732,7 @@ function app.ItemOverlayHooks()
 							itemButton.TLHOverlay = CreateFrame("Frame", nil, itemButton)
 							itemButton.TLHOverlay:SetAllPoints(itemButton)
 						end
-				
+
 						local tab = GetCurrentGuildBankTab()
 						local slot = itemButton:GetID()
 						local itemLink = GetGuildBankItemLink(tab, slot)
@@ -842,7 +842,7 @@ function app.ItemOverlayHooks()
 							if GetQuestID() then
 								C_QuestLog.SetSelectedQuest(GetQuestID())
 							end
-							
+
 							itemLink = GetQuestLogItemLink(v.type, k)
 						elseif rewardsFrame == QuestInfoRewardsFrame then
 							itemLink = GetQuestItemLink(v.type, k)
@@ -868,7 +868,7 @@ function app.ItemOverlayHooks()
 					local highestPrice = 0
 					local highestItem = nil
 					local diff = -1
-				
+
 					for k, v in ipairs(sellPrice) do
 						-- If all items have the same value, we don't show an icon
 						if v.price > 1 and v.price ~= highestPrice then
@@ -1028,7 +1028,7 @@ function app.ItemOverlayHooks()
 
 		app.Event:Register("AUCTION_HOUSE_THROTTLED_SYSTEM_READY", auctionHouseOverlay)
 
-		--  Hook our overlay onto Great Vault rewards
+		-- Hook our overlay onto Great Vault rewards
 		local function greatVaultOverlay()
 			local function doTheThing()
 				if WeeklyRewardsFrame and WeeklyRewardsFrame:IsShown() then

@@ -1,9 +1,9 @@
-local appName, app =  ... -- Returns the AddOn name and a unique table
+local appName, app = ... -- Returns the AddOn name and a unique table
 
 -- BetterBags integration
 EventUtil.ContinueOnAddOnLoaded("BetterBags", function()
 	local betterbags = LibStub("AceAddon-3.0"):GetAddon("BetterBags")
-    local events = betterbags:GetModule("Events")
+	local events = betterbags:GetModule("Events")
 
 	local function UpdateButton(_, item)
 		if not item then return end

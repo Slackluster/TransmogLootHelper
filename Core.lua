@@ -18,22 +18,21 @@ app.Event.handlers = {}
 
 -- Register the event and add it to the handlers table
 function app.Event:Register(eventName, func)
-    if not self.handlers[eventName] then
-        self.handlers[eventName] = {}
-        self:RegisterEvent(eventName)
-    end
-    table.insert(self.handlers[eventName], func)
+	if not self.handlers[eventName] then
+		self.handlers[eventName] = {}
+		self:RegisterEvent(eventName)
+	end
+	table.insert(self.handlers[eventName], func)
 end
 
 -- Run all handlers for a given event, when it fires
 app.Event:SetScript("OnEvent", function(self, event, ...)
-    if self.handlers[event] then
-        for _, handler in ipairs(self.handlers[event]) do
-            handler(...)
-        end
-    end
+	if self.handlers[event] then
+		for _, handler in ipairs(self.handlers[event]) do
+			handler(...)
+		end
+	end
 end)
-
 
 ----------------------
 -- HELPER FUNCTIONS --
@@ -151,7 +150,7 @@ end
 function app.InitialiseCore()
 	-- Declare SavedVariables
 	if not TransmogLootHelper_Settings then TransmogLootHelper_Settings = {} end
-	
+
 	-- Enable default user settings
 	if TransmogLootHelper_Settings["hide"] == nil then TransmogLootHelper_Settings["hide"] = false end
 	if TransmogLootHelper_Settings["message"] == nil then TransmogLootHelper_Settings["message"] = "Do you need the %item you looted? If not, I'd like to have it for transmog. :)" end
@@ -462,12 +461,12 @@ function app.CreateWindow()
 	scrollFrame.ScrollBar:SetPoint("TOP", scrollFrame, 0, -3)
 	scrollFrame.ScrollBar:SetPoint("RIGHT", scrollFrame, 13, 0)
 	scrollFrame.ScrollBar:SetPoint("BOTTOM", scrollFrame, 0, -16)
-	
+
 	-- ScrollChild inside the ScrollFrame
 	local scrollChild = CreateFrame("Frame", nil, scrollFrame)
 	scrollFrame:SetScrollChild(scrollChild)
-	scrollChild:SetWidth(1)    -- This is automatically defined, so long as the attribute exists at all
-	scrollChild:SetHeight(1)    -- This is automatically defined, so long as the attribute exists at all
+	scrollChild:SetWidth(1)	-- This is automatically defined, so long as the attribute exists at all
+	scrollChild:SetHeight(1)	-- This is automatically defined, so long as the attribute exists at all
 	scrollChild:SetAllPoints(scrollFrame)
 	scrollChild:Show()
 	scrollFrame:SetScript("OnVerticalScroll", function() scrollChild:SetPoint("BOTTOMRIGHT", scrollFrame) end)
@@ -527,7 +526,7 @@ function app.Update()
 		end)
 		app.Window.Weapons:SetScript("OnClick", function(self)
 			local children = {self:GetChildren()}
-	
+
 			if app.ShowWeapons == true then
 				for _, child in ipairs(children) do child:Hide() end
 				app.Window.Armour:SetPoint("TOPLEFT", app.Window.Weapons, "BOTTOMLEFT", 0, -2)
@@ -540,7 +539,7 @@ function app.Update()
 				app.ShowWeapons = true
 			end
 		end)
-		
+
 		local weapon1 = app.Window.Weapons:CreateFontString("ARTWORK", nil, "GameFontNormal")
 		weapon1:SetPoint("LEFT", app.Window.Weapons)
 		weapon1:SetScale(1.1)
@@ -551,7 +550,7 @@ function app.Update()
 	if #app.WeaponLoot >= 1 then
 		app.WeaponsHeader:SetText("Weapons ("..#app.WeaponLoot..")")
 	else
-		app.WeaponsHeader:SetText("Weapons")	
+		app.WeaponsHeader:SetText("Weapons")
 	end
 
 	-- If there is loot to process
@@ -570,14 +569,14 @@ function app.Update()
 			for _, v in ipairs(customSortList) do
 				local indexA = string.find(a.item, v, 1, true)
 				local indexB = string.find(b.item, v, 1, true)
-		
+
 				if indexA == 1 and indexB ~= 1 then
 					return true
 				elseif indexA ~= 1 and indexB == 1 then
 					return false
 				end
 			end
-		
+
 			-- If custom sort index is the same, compare alphabetically
 			return string.gsub(a.item, ".-(:%|h)", "") < string.gsub(b.item, ".-(:%|h)", "")
 		end
@@ -642,7 +641,7 @@ function app.Update()
 				elseif count > 1 then
 					GameTooltip:AddLine("|c"..lootInfo.color..lootInfo.playerShort.."|R has been whispered by "..app.NameShort.." users "..count.." times")
 				end
-				
+
 				GameTooltip:Show()
 			end)
 			row:SetScript("OnLeave", function()
@@ -728,7 +727,7 @@ function app.Update()
 				end
 			end
 		end
-		
+
 		-- Enable the clear button
 		app.ClearButton:Enable()
 	end
@@ -751,7 +750,7 @@ function app.Update()
 		end)
 		app.Window.Armour:SetScript("OnClick", function(self)
 			local children = {self:GetChildren()}
-	
+
 			if app.ShowArmour == true then
 				for _, child in ipairs(children) do child:Hide() end
 				app.Window.Filtered:SetPoint("TOPLEFT", app.Window.Armour, "BOTTOMLEFT", 0, -2)
@@ -764,7 +763,7 @@ function app.Update()
 				app.ShowArmour = true
 			end
 		end)
-		
+
 		local armour1 = app.Window.Armour:CreateFontString("ARTWORK", nil, "GameFontNormal")
 		armour1:SetPoint("LEFT", app.Window.Armour)
 		armour1:SetScale(1.1)
@@ -797,14 +796,14 @@ function app.Update()
 			for _, v in ipairs(customSortList) do
 				local indexA = string.find(a.item, v, 1, true)
 				local indexB = string.find(b.item, v, 1, true)
-		
+
 				if indexA == 1 and indexB ~= 1 then
 					return true
 				elseif indexA ~= 1 and indexB == 1 then
 					return false
 				end
 			end
-		
+
 			-- If custom sort index is the same, compare alphabetically
 			return string.gsub(a.item, ".-(:%|h)", "") < string.gsub(b.item, ".-(:%|h)", "")
 		end
@@ -955,7 +954,7 @@ function app.Update()
 				end
 			end
 		end
-		
+
 		-- Enable the clear button
 		app.ClearButton:Enable()
 	end
@@ -987,7 +986,7 @@ function app.Update()
 				app.ShowFiltered = true
 			end
 		end)
-		
+
 		local filtered1 = app.Window.Filtered:CreateFontString("ARTWORK", nil, "GameFontNormal")
 		filtered1:SetPoint("LEFT", app.Window.Filtered)
 		filtered1:SetScale(1.1)
@@ -1023,19 +1022,19 @@ function app.Update()
 			if a.playerShort ~= b.playerShort then
 				return a.playerShort < b.playerShort
 			end
-			
+
 			-- Secondary sort by item quality
 			for _, v in ipairs(customSortList) do
 				local indexA = string.find(a.item, v, 1, true)
 				local indexB = string.find(b.item, v, 1, true)
-		
+
 				if indexA == 1 and indexB ~= 1 then
 					return true
 				elseif indexA ~= 1 and indexB == 1 then
 					return false
 				end
 			end
-		
+
 			-- If custom sort index is the same, compare alphabetically by the remaining part of the item string
 			return string.gsub(a.item, ".-(:%|h)", "") < string.gsub(b.item, ".-(:%|h)", "")
 		end
@@ -1141,7 +1140,7 @@ function app.Update()
 				end
 			end
 		end
-		
+
 		-- Enable the clear button
 		app.ClearButton:Enable()
 	end
@@ -1309,7 +1308,7 @@ function api.IsAppearanceCollected(itemLink)
 		local allSources = C_TransmogCollection.GetAllAppearanceSources(sourceInfo.visualID)
 		if #allSources == 0 then
 			allSources = {sourceID}
-	  	end
+		end
 
 		local anyCollected = false
 		for _, alternateSourceID in ipairs(allSources) do
@@ -1342,7 +1341,7 @@ end
 function app.GetTooltipText(itemLinkie, searchString)
 	-- Grab the original value for this setting
 	local cvar = C_CVar.GetCVarInfo("missingTransmogSourceInItemTooltips")
-	
+
 	-- Enable this CVar, because we need it if checking for the Blizz text, which we do as a fallback
 	C_CVar.SetCVar("missingTransmogSourceInItemTooltips", 1)
 
@@ -1376,7 +1375,7 @@ function app.AddFilteredLoot(itemLink, itemID, itemTexture, playerName, itemType
 		-- Remove the oldest entry
 		table.remove(app.FilteredLoot, 1)
 	end
-	
+
 	-- Stagger show/update the window
 	app.Flag["lastUpdate"] = GetServerTime()
 	app.Stagger(1, false)
@@ -1406,7 +1405,7 @@ end
 app.Event:Register("CHAT_MSG_LOOT", function(text, playerName, languageName, channelName, playerName2, specialFlags, zoneChannelID, channelIndex, channelBaseName, languageID, lineID, guid, bnSenderID, isMobile, isSubtitle, hideSenderInLetterbox, supressRaidIcons)
 	-- Only run while grouped
 	if not IsInGroup() then return end
-	
+
 	-- Extract item string
 	local itemString = string.match(text, "(|cnIQ.-|h%[.-%]|h)")
 
@@ -1596,7 +1595,7 @@ function app.MessagePopup()
 			if string.find(newValue, "%%item") ~= nil then
 				item = true
 			end
-			
+
 			if item == false then
 				-- Change the editbox border colour for some extra visual feedback
 				border:SetBackdropBorderColor(1, 0, 0)
@@ -1749,7 +1748,7 @@ app.Event:Register("CHAT_MSG_ADDON", function(prefix, text, channel, sender, tar
 				if k == player then
 					app.Whispered[k] = app.Whispered[k] + 1
 				end
-			end		
+			end
 		end
 	end
 end)
@@ -1792,7 +1791,7 @@ function app.Settings()
 		type = "data source",
 		text = app.NameLong,
 		icon = "Interface\\AddOns\\TransmogLootHelper\\assets\\tlh_icon",
-		
+
 		OnClick = function(self, button)
 			if button == "LeftButton" then
 				app.Toggle()
@@ -1800,13 +1799,13 @@ function app.Settings()
 				app.OpenSettings()
 			end
 		end,
-		
+
 		OnTooltipShow = function(tooltip)
 			if not tooltip or not tooltip.AddLine then return end
 			tooltip:AddLine(app.NameLong.."\nLMB|cffFFFFFF: Toggle the window\n|RRMB|cffFFFFFF: Show the settings|R")
 		end,
 	})
-					
+
 	local icon = LibStub("LibDBIcon-1.0", true)
 	icon:Register("TransmogLootHelper", miniButton, TransmogLootHelper_Settings)
 

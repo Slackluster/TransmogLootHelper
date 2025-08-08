@@ -10,7 +10,7 @@
 ## X-Wago-ID: EGPXOkG1
 
 ## SavedVariables: TransmogLootHelper_Settings, TransmogLootHelper_Cache
-## SavedVariablesPerCharacter: 
+## SavedVariablesPerCharacter:
 
 ## Category-enUS: Collections
 ## Category-deDE: Kriegsmeutesammlungen

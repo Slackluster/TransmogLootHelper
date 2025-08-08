@@ -1,4 +1,4 @@
-local appName, app =  ...	-- Returns the AddOn name and a unique table
+local appName, app = ...	-- Returns the AddOn name and a unique table
 
 -- Baganator icon integration
 EventUtil.ContinueOnAddOnLoaded("Baganator", function()
