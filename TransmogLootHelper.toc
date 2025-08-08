@@ -29,7 +29,10 @@ libs\LibDBIcon-1.0\LibDBIcon-1.0\LibDBIcon-1.0.lua
 libs\ChatThrottleLib\ChatThrottleLib.xml
 Core.lua
 Database.lua
+Settings.lua
 modules\ItemOverlay.lua
+modules\LootTracker.lua
+modules\Tweaks.lua
 integrations\ArkInventory.lua
 integrations\Baganator.lua
 integrations\BetterBags.lua

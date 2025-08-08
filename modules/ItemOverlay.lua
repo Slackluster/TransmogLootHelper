@@ -1,88 +1,30 @@
 --------------------------------------------
 -- Transmoog Loot Helper: ItemOverlay.lua --
 --------------------------------------------
--- Item Overlay module
 
 -- Initialisation
-local appName, app = ...	-- Returns the AddOn name and a unique table
-local api = app.api	-- Our "API" prefix
+local appName, app = ...
+local api = app.api
 
-------------------
--- INITIAL LOAD --
-------------------
+-------------
+-- ON LOAD --
+-------------
 
-function app.InitialiseCoreItemOverlay()
-	-- Declare SavedVariables
-	if not TransmogLootHelper_Cache then TransmogLootHelper_Cache = {} end
-	if not TransmogLootHelper_Cache.Recipes then TransmogLootHelper_Cache.Recipes = {} end
-
-	-- Declare session variables
-	app.OverlayCache = {}
-end
-
--- When the AddOn is fully loaded, actually run the components
 app.Event:Register("ADDON_LOADED", function(addOnName, containsBindings)
 	if addOnName == appName then
-		app.InitialiseCoreItemOverlay()
-		app.TooltipInfo()
+		if not TransmogLootHelper_Cache then TransmogLootHelper_Cache = {} end
+		if not TransmogLootHelper_Cache.Recipes then TransmogLootHelper_Cache.Recipes = {} end
+
+		app.OverlayCache = {}
+
 		app.ItemOverlayHooks()
-		app.SettingsItemOverlay()
+		app.TooltipInfo()
 	end
 end)
 
-----------------
--- ITEM ICONS --
-----------------
-
--- Tooltip information (to tell the user a recipe is not cached)
-function app.TooltipInfo()
-	local function OnTooltipSetItem(tooltip)
-		-- Only run any of this is the relevant setting is enabled
-		if TransmogLootHelper_Settings["iconNewRecipe"] then
-			-- Get item info from the last processed tooltip and the primary tooltip
-			local _, _, itemID = TooltipUtil.GetDisplayedItem(tooltip)
-			local _, _, primaryItemID = TooltipUtil.GetDisplayedItem(GameTooltip)
-
-			-- Stop if error, it will try again on its own REAL soon
-			if itemID == nil then
-				return
-			end
-
-			-- If the last processed tooltip isn't the same as the primary tooltip (aka, a compare tooltip), don't do anything
-			if itemID ~= primaryItemID then
-				return
-			end
-
-			-- Filter out recipe "books" that aren't associated with any profession
-			local _, _, _, _, _, _, _, _, _, _, _, classID, subclassID = C_Item.GetItemInfo(itemID)
-			if classID == 9 and subclassID == 0 then
-				return
-			end
-
-			-- Only run this if the item is known to be a recipe
-			if app.SpellItem[itemID] then
-				local recipeID = app.SpellItem[itemID]
-				if TransmogLootHelper_Cache.Recipes[recipeID] == nil then
-					tooltip:AddLine(" ")
-					tooltip:AddLine(app.IconTLH .. " " .. "Please open this profession to update the recipe's collection status.")
-				end
-			end
-		end
-	end
-	TooltipDataProcessor.AddTooltipPostCall(Enum.TooltipDataType.Item, OnTooltipSetItem)
-end
-
-function app.GetTooltipRedText(itemLink)
-	local tooltip = C_TooltipInfo.GetHyperlink(itemLink)
-	if tooltip and tooltip["lines"] then
-		for k, v in ipairs(tooltip["lines"]) do
-			if v.leftColor["r"] == 1 and v.leftColor["g"] > 0.1 and v.leftColor["g"] < 0.2 and v.leftColor["b"] > 0.1 and v.leftColor["b"] < 0.2 then
-				return true
-			end
-		end
-		return false
-	end
-end
+------------------
+-- ITEM OVERLAY --
+------------------
 
 -- Create and set our icon and text overlay
 function app.ItemOverlay(overlay, itemLink, itemLocation, containerInfo)
@@ -1099,6 +1041,48 @@ function app.ItemOverlayHooks()
 	end
 end
 
+---------------------
+-- RECIPE TRACKING --
+---------------------
+
+-- Tooltip information (to tell the user a recipe is not cached)
+function app.TooltipInfo()
+	local function OnTooltipSetItem(tooltip)
+		-- Only run any of this is the relevant setting is enabled
+		if TransmogLootHelper_Settings["iconNewRecipe"] then
+			-- Get item info from the last processed tooltip and the primary tooltip
+			local _, _, itemID = TooltipUtil.GetDisplayedItem(tooltip)
+			local _, _, primaryItemID = TooltipUtil.GetDisplayedItem(GameTooltip)
+
+			-- Stop if error, it will try again on its own REAL soon
+			if itemID == nil then
+				return
+			end
+
+			-- If the last processed tooltip isn't the same as the primary tooltip (aka, a compare tooltip), don't do anything
+			if itemID ~= primaryItemID then
+				return
+			end
+
+			-- Filter out recipe "books" that aren't associated with any profession
+			local _, _, _, _, _, _, _, _, _, _, _, classID, subclassID = C_Item.GetItemInfo(itemID)
+			if classID == 9 and subclassID == 0 then
+				return
+			end
+
+			-- Only run this if the item is known to be a recipe
+			if app.SpellItem[itemID] then
+				local recipeID = app.SpellItem[itemID]
+				if TransmogLootHelper_Cache.Recipes[recipeID] == nil then
+					tooltip:AddLine(" ")
+					tooltip:AddLine(app.IconTLH .. " " .. "Please open this profession to update the recipe's collection status.")
+				end
+			end
+		end
+	end
+	TooltipDataProcessor.AddTooltipPostCall(Enum.TooltipDataType.Item, OnTooltipSetItem)
+end
+
 -- Register a recipe's information
 function app.RegisterRecipe(recipeID)
 	-- Register if the recipe is known
@@ -1126,97 +1110,3 @@ app.Event:Register("TRADE_SKILL_SHOW", function()
 		end)
 	end
 end)
-
---------------
--- SETTINGS --
---------------
-
-function app.SettingsItemOverlay()
-	local category, layout = Settings.RegisterVerticalLayoutSubcategory(app.Category, "Item Overlay")
-	Settings.RegisterAddOnCategory(category)
-
-	local cbVariable, cbName, cbTooltip = "overlay", "Item Overlay", "Show an icon and text on items, to indicate collection status and more.\n\n|cffFF0000" .. REQUIRES_RELOAD .. ".|r Use |cffFFFFFF/reload|r or relog.\n\nBaganator: Icon position is managed by its own settings."
-	local cbSetting = Settings.RegisterAddOnSetting(category, appName.."_"..cbVariable, cbVariable, TransmogLootHelper_Settings, Settings.VarType.Boolean, cbName, true)
-
-	local ddVariable, ddName, ddTooltip = "iconPosition", "Icon Position", "The location of the icon on the item."
-	local function GetOptions()
-		local container = Settings.CreateControlTextContainer()
-		container:Add(0, "Top Left", "This may overlap with a crafted item's quality.")
-		container:Add(1, "Top Right", "No known overlap issues.")
-		container:Add(2, "Bottom Left", "No known overlap issues.")
-		container:Add(3, "Bottom Right", "No known overlap issues.")
-		return container:GetData()
-	end
-	local ddSetting = Settings.RegisterAddOnSetting(category, appName.."_"..ddVariable, ddVariable, TransmogLootHelper_Settings, Settings.VarType.Number, ddName, 1)
-
-	local initializer = CreateSettingsCheckboxDropdownInitializer(
-		cbSetting, cbName, cbTooltip,
-		ddSetting, GetOptions, ddName, ddTooltip)
-	layout:AddInitializer(initializer)
-
-	local variable, name, tooltip = "simpleIcon", "Simple Icons", "Use simple, high contrast icons designed to aid with color blindness."
-	local setting = Settings.RegisterAddOnSetting(category, appName .. "_" .. variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, false)
-	local parentSetting = Settings.CreateCheckbox(category, setting, tooltip)
-
-	local variable, name, tooltip = "animateIcon", "Icon Animation", "Show a pretty animated swirl on icons for learnable and usable icons."
-	local setting = Settings.RegisterAddOnSetting(category, appName .. "_" .. variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, true)
-	local parentSetting = Settings.CreateCheckbox(category, setting, tooltip)
-
-	layout:AddInitializer(CreateSettingsListSectionHeaderInitializer("Collection Info"))
-
-	local variable, name, tooltip = "iconNewMog", "Appearances", "Show an icon to indicate an item's appearance is unlearned."
-	local setting = Settings.RegisterAddOnSetting(category, appName .. "_" .. variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, true)
-	local parentSetting = Settings.CreateCheckbox(category, setting, tooltip)
-
-	local variable, name, tooltip = "iconNewSource", "Sources", "Show an icon to indicate an item's appearance source is unlearned."
-	local setting = Settings.RegisterAddOnSetting(category, appName .. "_" .. variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, false)
-	local subSetting = Settings.CreateCheckbox(category, setting, tooltip)
-	subSetting:SetParentInitializer(parentSetting, function() return TransmogLootHelper_Settings["iconNewMog"] end)
-
-	local variable, name, tooltip = "iconNewIllusion", "Illusions", "Show an icon to indicate an illusion is unlearned."
-	local setting = Settings.RegisterAddOnSetting(category, appName.."_"..variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, true)
-	Settings.CreateCheckbox(category, setting, tooltip)
-
-	local variable, name, tooltip = "iconNewMount", "Mounts", "Show an icon to indicate a mount is unlearned."
-	local setting = Settings.RegisterAddOnSetting(category, appName.."_"..variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, true)
-	Settings.CreateCheckbox(category, setting, tooltip)
-
-	local variable, name, tooltip = "iconNewPet", "Pets", "Show an icon to indicate a pet is unlearned."
-	local setting = Settings.RegisterAddOnSetting(category, appName .. "_" .. variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, true)
-	local parentSetting = Settings.CreateCheckbox(category, setting, tooltip)
-
-	local variable, name, tooltip = "iconNewPetMax", "Collect 3/3", "Also take the maximum number of pets you can own into account (usually 3)."
-	local setting = Settings.RegisterAddOnSetting(category, appName .. "_" .. variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, false)
-	local subSetting = Settings.CreateCheckbox(category, setting, tooltip)
-	subSetting:SetParentInitializer(parentSetting, function() return TransmogLootHelper_Settings["iconNewPet"] end)
-
-	local variable, name, tooltip = "iconNewToy", "Toys", "Show an icon to indicate an item's source is unlearned."
-	local setting = Settings.RegisterAddOnSetting(category, appName.."_"..variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, true)
-	Settings.CreateCheckbox(category, setting, tooltip)
-
-	local variable, name, tooltip = "iconNewRecipe", "Recipes", "Show an icon to indicate an item's source is unlearned."
-	local setting = Settings.RegisterAddOnSetting(category, appName.."_"..variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, true)
-	Settings.CreateCheckbox(category, setting, tooltip)
-
-	local variable, name, tooltip = "iconLearned", "Learned", "Show an icon to indicate the above tracked collectibles are learned."
-	local setting = Settings.RegisterAddOnSetting(category, appName.."_"..variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, false)
-	Settings.CreateCheckbox(category, setting, tooltip)
-
-	layout:AddInitializer(CreateSettingsListSectionHeaderInitializer("Other Info"))
-
-	local variable, name, tooltip = "iconQuestGold", "Quest Reward Sell Value", "Show an icon to indicate which quest reward has the highest vendor sell value, if there are multiple."
-	local setting = Settings.RegisterAddOnSetting(category, appName.."_"..variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, true)
-	Settings.CreateCheckbox(category, setting, tooltip)
-
-	local variable, name, tooltip = "iconUsable", "Usable Items", "Show an icon to indicate an item can be used (profession knowledge, unlockable customisations, and spellbooks)."
-	local setting = Settings.RegisterAddOnSetting(category, appName.."_"..variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, true)
-	Settings.CreateCheckbox(category, setting, tooltip)
-
-	local variable, name, tooltip = "iconContainer", "Openable Containers", "Show an icon to indicate an item can be opened, such as lockboxes and holiday boss bags."
-	local setting = Settings.RegisterAddOnSetting(category, appName.."_"..variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, true)
-	Settings.CreateCheckbox(category, setting, tooltip)
-
-	local variable, name, tooltip = "textBind", "Binding Status", "Show a text indicator for Bind-on-Equip items (BoE), Warbound items (BoA), and Warbound-until-Equipped (WuE) items.\n\nBaganator: Binding text is managed by its own settings."
-	local setting = Settings.RegisterAddOnSetting(category, appName.."_"..variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, true)
-	Settings.CreateCheckbox(category, setting, tooltip)
-end
