@@ -5,11 +5,49 @@
 -- Initialisation
 local appName, app = ...
 
-------------
--- TWEAKS --
-------------
+------------------------
+-- INSTANTLY CATALYSE --
+------------------------
 
--- Hide group loot rolls
+app.Event:Register("PLAYER_INTERACTION_MANAGER_FRAME_SHOW", function(type)
+	-- Only run this if the setting is enabled
+	if TransmogLootHelper_Settings["catalystButton"] then
+		if type == 44 then
+			if not app.CatalystSkipButton then
+				app.CatalystSkipButton = app.Button(ItemInteractionFrame, "Instantly Catalyze")
+				app.CatalystSkipButton:SetPoint("CENTER", ItemInteractionFrameTitleText, 0, -30)
+				app.CatalystSkipButton:SetScript("OnClick", function()
+					ItemInteractionFrame:CompleteItemInteraction()
+				end)
+			end
+			app.CatalystSkipButton:Show()
+		end
+	end
+end)
+
+app.Event:Register("PLAYER_INTERACTION_MANAGER_FRAME_HIDE", function(type)
+	if app.CatalystSkipButton then
+		app.CatalystSkipButton:Hide()
+	end
+end)
+
+---------------------
+-- MERCHANT FILTER --
+---------------------
+
+app.Event:Register("MERCHANT_SHOW", function()
+	if TransmogLootHelper_Settings["vendorAll"] then
+		RunNextFrame(function()
+			SetMerchantFilter(1)
+			MerchantFrame_Update()
+		end)
+	end
+end)
+
+---------------------------
+-- GROUP LOOT ROLL FRAME --
+---------------------------
+
 app.Event:Register("START_LOOT_ROLL", function(rollID, rollTime, lootHandle)
 	if TransmogLootHelper_Settings["hideGroupRolls"] and GroupLootHistoryFrame then
 		local hidden = false

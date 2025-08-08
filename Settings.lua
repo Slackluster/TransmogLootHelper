@@ -252,6 +252,14 @@ function app.Settings()
 	local category, layout = Settings.RegisterVerticalLayoutSubcategory(app.Category, "Tweaks")
 	Settings.RegisterAddOnCategory(category)
 
+	local variable, name, tooltip = "catalystButton", "Show Catalyst Button", "Show a button on the Revival Catalyst that allows you to instantly catalyze an item, skipping the 5 second confirmation timer."
+	local setting = Settings.RegisterAddOnSetting(category, appName .. "_" .. variable, variable, ProfessionShoppingList_Settings, Settings.VarType.Boolean, name, true)
+	Settings.CreateCheckbox(category, setting, tooltip)
+
+	local variable, name, tooltip = "vendorAll", "Disable Vendor Filter", "Automatically set all vendor filters to |cffFFFFFFAll|R to display items normally not shown to your class."
+	local setting = Settings.RegisterAddOnSetting(category, appName .. "_" .. variable, variable, ProfessionShoppingList_Settings, Settings.VarType.Boolean, name, true)
+	Settings.CreateCheckbox(category, setting, tooltip)
+
 	local variable, name, tooltip = "hideGroupRolls", "Hide loot roll window", "Hide the window that shows loot rolls and their results. You can show the window again with |cff00ccff/loot|r."
 	local setting = Settings.RegisterAddOnSetting(category, appName.."_"..variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, false)
 	local parentSetting = Settings.CreateCheckbox(category, setting, tooltip)
