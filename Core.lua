@@ -660,7 +660,7 @@ function app.Update()
 						if app.WeaponLoot[lootInfo.index].recentlyWhispered == 0 then
 							-- Send whisper message
 							local msg = string.gsub(TransmogLootHelper_Settings["message"], "%%item", lootInfo.item)
-							SendChatMessage(msg, "WHISPER", "", lootInfo.player)
+							C_ChatInfo.SendChatMessage(msg, "WHISPER", nil, lootInfo.player)
 							-- Share with TLH users that we whispered this player
 							local message = "player:"..lootInfo.player
 							app.SendAddonMessage(message)
@@ -887,7 +887,7 @@ function app.Update()
 						if app.ArmourLoot[lootInfo.index].recentlyWhispered == 0 then
 							-- Send whisper message
 							local msg = string.gsub(TransmogLootHelper_Settings["message"], "%%item", lootInfo.item)
-							SendChatMessage(msg, "WHISPER", "", lootInfo.player)
+							C_ChatInfo.SendChatMessage(msg, "WHISPER", nil, lootInfo.player)
 							-- Share with TLH users that we whispered this player
 							local message = "player:"..lootInfo.player
 							app.SendAddonMessage(message)
