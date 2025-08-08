@@ -1220,22 +1220,16 @@ app.Event:Register("CHAT_MSG_LOOT", function(text, playerName, languageName, cha
 						end
 					end
 
-					-- Filter for usable mog, if the setting is applied
-					if ((TransmogLootHelper_Settings["usableMog"] == true and equippable == true) or TransmogLootHelper_Settings["usableMog"] == false) and itemCategory ~= nil then
-						-- Write it into our loot variable
-						if itemCategory == "weapon" then
-							app.WeaponLoot[#app.WeaponLoot+1] = { item = itemLink, itemID = itemID, icon = itemTexture, player = playerName, playerShort = playerNameShort, color = classColor, recentlyWhispered = 0 }
-						elseif itemCategory == "armor" then
-							app.ArmourLoot[#app.ArmourLoot+1] = { item = itemLink, itemID = itemID, icon = itemTexture, player = playerName, playerShort = playerNameShort, color = classColor, recentlyWhispered = 0 }
-						end
-
-						-- Stagger show/update the window
-						app.Flag["lastUpdate"] = GetServerTime()
-						app.Stagger(1, true)
-					else
-						-- Add to filtered loot and update the window
-						app.AddFilteredLoot(itemLink, itemID, itemTexture, playerName, itemType, "Unusable transmog")
+					-- Add equippable items to our tracker
+					if itemCategory == "weapon" then
+						app.WeaponLoot[#app.WeaponLoot+1] = { item = itemLink, itemID = itemID, icon = itemTexture, player = playerName, playerShort = playerNameShort, color = classColor, recentlyWhispered = 0 }
+					elseif itemCategory == "armor" then
+						app.ArmourLoot[#app.ArmourLoot+1] = { item = itemLink, itemID = itemID, icon = itemTexture, player = playerName, playerShort = playerNameShort, color = classColor, recentlyWhispered = 0 }
 					end
+
+					-- Stagger show/update the window
+					app.Flag["lastUpdate"] = GetServerTime()
+					app.Stagger(1, true)
 				else
 					-- Add to filtered loot and update the window
 					app.AddFilteredLoot(itemLink, itemID, itemTexture, playerName, itemType, "Rarity too low")
