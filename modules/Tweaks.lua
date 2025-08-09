@@ -4,6 +4,7 @@
 
 -- Initialisation
 local appName, app = ...
+local L = app.locales
 
 ------------------------
 -- INSTANTLY CATALYSE --
