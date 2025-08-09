@@ -13,7 +13,7 @@ app.Event:Register("PLAYER_INTERACTION_MANAGER_FRAME_SHOW", function(type)
 	if TransmogLootHelper_Settings["catalystButton"] then
 		if type == 44 then
 			if not app.CatalystSkipButton then
-				app.CatalystSkipButton = app.Button(ItemInteractionFrame, "Instantly Catalyze")
+				app.CatalystSkipButton = app.Button(ItemInteractionFrame, L.CATALYSTBUTTON_LABEL)
 				app.CatalystSkipButton:SetPoint("CENTER", ItemInteractionFrameTitleText, 0, -30)
 				app.CatalystSkipButton:SetScript("OnClick", function()
 					ItemInteractionFrame:CompleteItemInteraction()

@@ -234,7 +234,7 @@ function app.CreateWindow()
 			app.Clear()
 		else
 			StaticPopupDialogs["CLEAR_LOOT"] = {
-				text = app.NameLong.."\nDo you want to clear all loot?",
+				text = app.NameLong .. "\n" .. L.CLEAR_CONFIRM,
 				button1 = YES,
 				button2 = NO,
 				OnAccept = function()
@@ -313,16 +313,16 @@ function app.CreateWindow()
 	app.Window.ScrollFrame = scrollFrame
 
 	-- Tooltips
-	app.LootHeaderTooltip = app.WindowTooltip("|RLMB|cffFFFFFF: Whisper and request the item\n|RShift+LMB|cffFFFFFF: Link the item\n|RShift+RMB|cffFFFFFF: Remove the item")
-	app.FilteredHeaderTooltip = app.WindowTooltip("|RLMB|cffFFFFFF: Debug this item\n|RShift+LMB|cffFFFFFF: Link the item\n|RShift+RMB|cffFFFFFF: Remove the item")
-	app.CloseButtonTooltip = app.WindowTooltip("Close the window")
-	app.LockButtonTooltip = app.WindowTooltip("Lock the window")
-	app.UnlockButtonTooltip = app.WindowTooltip("Unlock the window")
-	app.SettingsButtonTooltip = app.WindowTooltip("Open the settings")
-	app.ClearButtonTooltip = app.WindowTooltip("Clear all items\nHold Shift to skip confirmation")
-	app.SortButtonTooltip1 = app.WindowTooltip("Sort the items by newest first\nCurrent sorting:|cffFFFFFF alphabetical|R")
-	app.SortButtonTooltip2 = app.WindowTooltip("Sort the items alphabetically\nCurrent sorting:|cffFFFFFF newest first|R")
-	app.CornerButtonTooltip = app.WindowTooltip("Double-click|cffFFFFFF: Autosize to fit the window")
+	app.LootHeaderTooltip = app.WindowTooltip(L.WINDOW_HEADER_LOOT_DESC)
+	app.FilteredHeaderTooltip = app.WindowTooltip(L.WINDOW_HEADER_FILTERED_DESC)
+	app.CloseButtonTooltip = app.WindowTooltip(L.WINDOW_BUTTON_CLOSE)
+	app.LockButtonTooltip = app.WindowTooltip(L.WINDOW_BUTTON_LOCK)
+	app.UnlockButtonTooltip = app.WindowTooltip(L.WINDOW_BUTTON_UNLOCK)
+	app.SettingsButtonTooltip = app.WindowTooltip(L.WINDOW_BUTTON_SETTINGS)
+	app.ClearButtonTooltip = app.WindowTooltip(L.WINDOW_BUTTON_CLEAR)
+	app.SortButtonTooltip1 = app.WindowTooltip(L.WINDOW_BUTTON_SORT1)
+	app.SortButtonTooltip2 = app.WindowTooltip(L.WINDOW_BUTTON_SORT2)
+	app.CornerButtonTooltip = app.WindowTooltip(L.WINDOW_BUTTON_CORNER)
 end
 
 -- Update window contents
@@ -398,9 +398,9 @@ function app.Update()
 
 	-- Update header
 	if #app.WeaponLoot >= 1 then
-		app.WeaponsHeader:SetText("Weapons ("..#app.WeaponLoot..")")
+		app.WeaponsHeader:SetText(AUCTION_CATEGORY_WEAPONS .. " ("..#app.WeaponLoot..")")
 	else
-		app.WeaponsHeader:SetText("Weapons")
+		app.WeaponsHeader:SetText(AUCTION_CATEGORY_WEAPONS)
 	end
 
 	-- If there is loot to process
@@ -472,7 +472,7 @@ function app.Update()
 				if app.WeaponLoot[lootInfo.index].icon == app.IconMog then
 					GameTooltip:AddLine(" ")
 					emptyLine = true
-					GameTooltip:AddLine("|T"..app.IconMog..":0|t |c"..lootInfo.color..lootInfo.playerShort.."|R collected an appearance from this item")
+					GameTooltip:AddLine("|T" .. app.IconMog .. ":0|t |c" .. lootInfo.color .. lootInfo.playerShort .. "|R " .. L.PLAYER_COLLECTED_APPEARANCE)
 				end
 
 				-- Show how many times the player has been whispered by TLH users
@@ -484,9 +484,9 @@ function app.Update()
 					GameTooltip:AddLine(" ")
 				end
 				if count == 1 then
-					GameTooltip:AddLine("|c"..lootInfo.color..lootInfo.playerShort.."|R has been whispered by "..app.NameShort.." users "..count.." time")
+					GameTooltip:AddLine("|c" .. lootInfo.color .. lootInfo.playerShort .. "|R " .. L.PLAYER_WHISPERED .. count .. L.WHISPERED_TIME)
 				elseif count > 1 then
-					GameTooltip:AddLine("|c"..lootInfo.color..lootInfo.playerShort.."|R has been whispered by "..app.NameShort.." users "..count.." times")
+					GameTooltip:AddLine("|c" .. lootInfo.color .. lootInfo.playerShort .. "|R " .. L.PLAYER_WHISPERED .. count .. L.WHISPERED_TIMES)
 				end
 
 				GameTooltip:Show()
@@ -505,7 +505,7 @@ function app.Update()
 						if app.WeaponLoot[lootInfo.index].recentlyWhispered == 0 then
 							local msg = string.gsub(TransmogLootHelper_Settings["message"], "%%item", lootInfo.item)
 							C_ChatInfo.SendChatMessage(msg, "WHISPER", nil, lootInfo.player)
-							local message = "player:"..lootInfo.player
+							local message = "player:" .. lootInfo.player
 							app.SendAddonMessage(message)
 
 							local whisperTime = GetServerTime()
@@ -518,7 +518,7 @@ function app.Update()
 								end
 							end)
 						elseif app.WeaponLoot[lootInfo.index].recentlyWhispered ~= 0 then
-							app.Print("You may only whisper a player once every 30 seconds per item.")
+							app.Print(L.WHISPER_COOLDOWN)
 						end
 					end
 				-- Shift+RMB
@@ -615,9 +615,9 @@ function app.Update()
 	if #app.WeaponLoot >= 1 and app.ShowWeapons == true then offset = -16*#app.WeaponLoot end
 	app.Window.Armour:SetPoint("TOPLEFT", app.Window.Weapons, "BOTTOMLEFT", 0, offset)
 	if #app.ArmourLoot >= 1 then
-		app.ArmourHeader:SetText("Armor ("..#app.ArmourLoot..")")
+		app.ArmourHeader:SetText(AUCTION_CATEGORY_ARMOR .. " ("..#app.ArmourLoot..")")
 	else
-		app.ArmourHeader:SetText("Armor")
+		app.ArmourHeader:SetText(AUCTION_CATEGORY_ARMOR)
 	end
 
 	-- If there is loot to process
@@ -692,7 +692,7 @@ function app.Update()
 				if app.ArmourLoot[lootInfo.index].icon == app.IconMog then
 					GameTooltip:AddLine(" ")
 					emptyLine = true
-					GameTooltip:AddLine("|T"..app.IconMog..":0|t |c"..lootInfo.color..lootInfo.playerShort.."|R collected an appearance from this item")
+					GameTooltip:AddLine("|T" .. app.IconMog .. ":0|t |c" .. lootInfo.color .. lootInfo.playerShort .. "|R " .. L.PLAYER_COLLECTED_APPEARANCE)
 				end
 
 				-- Show how many times the player has been whispered by TLH users
@@ -704,9 +704,9 @@ function app.Update()
 					GameTooltip:AddLine(" ")
 				end
 				if count == 1 then
-					GameTooltip:AddLine("|c"..lootInfo.color..lootInfo.playerShort.."|R has been whispered by "..app.NameShort.." users "..count.." time")
+					GameTooltip:AddLine("|c" .. lootInfo.color .. lootInfo.playerShort .. "|R " .. L.PLAYER_WHISPERED .. count .. L.WHISPERED_TIME)
 				elseif count > 1 then
-					GameTooltip:AddLine("|c"..lootInfo.color..lootInfo.playerShort.."|R has been whispered by "..app.NameShort.." users "..count.." times")
+					GameTooltip:AddLine("|c" .. lootInfo.color .. lootInfo.playerShort .. "|R " .. L.PLAYER_WHISPERED .. count .. L.WHISPERED_TIMES)
 				end
 
 				GameTooltip:Show()
@@ -725,7 +725,7 @@ function app.Update()
 						if app.ArmourLoot[lootInfo.index].recentlyWhispered == 0 then
 							local msg = string.gsub(TransmogLootHelper_Settings["message"], "%%item", lootInfo.item)
 							C_ChatInfo.SendChatMessage(msg, "WHISPER", nil, lootInfo.player)
-							local message = "player:"..lootInfo.player
+							local message = "player:" .. lootInfo.player
 							app.SendAddonMessage(message)
 
 							local whisperTime = GetServerTime()
@@ -738,7 +738,7 @@ function app.Update()
 								end
 							end)
 						elseif app.ArmourLoot[lootInfo.index].recentlyWhispered ~= 0 then
-							app.Print("You may only whisper a player once every 30 seconds per item.")
+							app.Print(L.WHISPER_COOLDOWN)
 						end
 					end
 				-- Shift+RMB
@@ -831,11 +831,11 @@ function app.Update()
 	if #app.ArmourLoot >= 1 and app.ShowArmour == true then offset = -16*#app.ArmourLoot end
 	app.Window.Filtered:SetPoint("TOPLEFT", app.Window.Armour, "BOTTOMLEFT", 0, offset)
 	if #app.FilteredLoot >= 100 then
-		app.FilteredHeader:SetText("Filtered (100+)")
+		app.FilteredHeader:SetText(L.WINDOW_HEADER_FILTERED .. " (100+)")
 	elseif #app.FilteredLoot >= 1 then
-		app.FilteredHeader:SetText("Filtered ("..#app.FilteredLoot..")")
+		app.FilteredHeader:SetText(L.WINDOW_HEADER_FILTERED .. " ("..#app.FilteredLoot..")")
 	else
-		app.FilteredHeader:SetText("Filtered")
+		app.FilteredHeader:SetText(L.WINDOW_HEADER_FILTERED)
 	end
 
 	-- If there is loot to process
@@ -1136,7 +1136,7 @@ app.Event:Register("CHAT_MSG_LOOT", function(text, playerName, languageName, cha
 				-- Or if the item is Account/Warbound
 				or app.GetTooltipText(itemLink, ITEM_BIND_TO_ACCOUNT) or app.GetTooltipText(itemLink, ITEM_BIND_TO_ACCOUNT_UNTIL_EQUIP) or app.GetTooltipText(itemLink, ITEM_BIND_TO_BNETACCOUNT) or app.GetTooltipText(itemLink, ITEM_BNETACCOUNTBOUND) then
 					-- Add to filtered loot and update the window
-					app.AddFilteredLoot(itemLink, itemID, itemTexture, playerName, itemType, "Untradeable")
+					app.AddFilteredLoot(itemLink, itemID, itemTexture, playerName, itemType, L.FILTER_REASON_UNTRADEABLE)
 				-- Rarity filter
 				elseif itemQuality >= TransmogLootHelper_Settings["rarity"] then
 					-- Get the player's armor class
@@ -1183,13 +1183,13 @@ app.Event:Register("CHAT_MSG_LOOT", function(text, playerName, languageName, cha
 					app.Stagger(1, true)
 				else
 					-- Add to filtered loot and update the window
-					app.AddFilteredLoot(itemLink, itemID, itemTexture, playerName, itemType, "Rarity too low")
+					app.AddFilteredLoot(itemLink, itemID, itemTexture, playerName, itemType, L.FILTER_REASON_RARITY)
 				end
 			else
 				-- Ignore necks, rings, trinkets (as they never have a learnable appearance)
 				if itemType ~= app.Type["General"] or (itemType == app.Type["General"] and itemEquipLoc ~= "INVTYPE_FINGER"	and itemEquipLoc ~= "INVTYPE_TRINKET" and itemEquipLoc ~= "INVTYPE_NECK") then
 					-- Add to filtered loot and update the window
-					app.AddFilteredLoot(itemLink, itemID, itemTexture, playerName, itemType, "Known appearance")
+					app.AddFilteredLoot(itemLink, itemID, itemTexture, playerName, itemType, L.FILTER_REASON_KNOWN)
 				end
 			end
 		end

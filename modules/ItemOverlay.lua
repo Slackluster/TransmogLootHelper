@@ -484,23 +484,23 @@ function app.ItemOverlay(overlay, itemLink, itemLocation, containerInfo)
 				if C_Item.IsBound(itemLocation) then
 					overlay.text:SetText("")
 				else
-					overlay.text:SetText("|cff00CCFFWuE|r")
+					overlay.text:SetText("|cff00CCFF" .. L.BINDTEXT_WUE .. "|r")
 				end
 			-- WuE on vendor
 			elseif not itemLocation and app.GetTooltipText(itemLink, ITEM_BIND_TO_ACCOUNT_UNTIL_EQUIP) then
-				overlay.text:SetText("|cff00CCFFWuE|r")
+				overlay.text:SetText("|cff00CCFF" .. L.BINDTEXT_WUE .. "|r")
 			-- Soulbound + BoA
 			elseif itemLocation and C_Item.IsBound(itemLocation) then
 				-- BoA (ITEM_ACCOUNTBOUND and ITEM_BNETACCOUNTBOUND is the actual text, but it always returns the other two anyway)
 				if app.GetTooltipText(itemLink, ITEM_BIND_TO_ACCOUNT) or app.GetTooltipText(itemLink, ITEM_BIND_TO_BNETACCOUNT) then
-					overlay.text:SetText("|cff00CCFFBoA|r")
+					overlay.text:SetText("|cff00CCFF" .. L.BINDTEXT_BOP .. "|r")
 				-- Soulbound
 				else
 					overlay.text:SetText("")
 				end
 			-- BoE
 			elseif bindType == 2 or bindType == 3 then
-				overlay.text:SetText("BoE")
+				overlay.text:SetText(L.BINDTEXT_BOE)
 			else
 				overlay.text:SetText("")
 			end
@@ -1075,7 +1075,7 @@ function app.TooltipInfo()
 				local recipeID = app.SpellItem[itemID]
 				if TransmogLootHelper_Cache.Recipes[recipeID] == nil then
 					tooltip:AddLine(" ")
-					tooltip:AddLine(app.IconTLH .. " " .. "Please open this profession to update the recipe's collection status.")
+					tooltip:AddLine(app.IconTLH .. " " .. L.RECIPE_UNCACHED)
 				end
 			end
 		end

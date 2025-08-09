@@ -4,6 +4,7 @@
 
 -- Initialisation
 local appName, app = ...
+local L = app.locales
 
 -------------
 -- ON LOAD --
@@ -13,7 +14,7 @@ app.Event:Register("ADDON_LOADED", function(addOnName, containsBindings)
 	if addOnName == appName then
 		if not TransmogLootHelper_Settings then TransmogLootHelper_Settings = {} end
 		if TransmogLootHelper_Settings["hide"] == nil then TransmogLootHelper_Settings["hide"] = false end
-		if TransmogLootHelper_Settings["message"] == nil then TransmogLootHelper_Settings["message"] = "Do you need the %item you looted? If not, I'd like to have it for transmog. :)" end
+		if TransmogLootHelper_Settings["message"] == nil then TransmogLootHelper_Settings["message"] = L.DEFAULT_MESSAGE end
 		if TransmogLootHelper_Settings["windowPosition"] == nil then TransmogLootHelper_Settings["windowPosition"] = { ["left"] = 1295, ["bottom"] = 836, ["width"] = 200, ["height"] = 200, } end
 		if TransmogLootHelper_Settings["windowLocked"] == nil then TransmogLootHelper_Settings["windowLocked"] = false end
 		if TransmogLootHelper_Settings["windowSort"] == nil then TransmogLootHelper_Settings["windowSort"] = 1 end
@@ -45,7 +46,7 @@ end
 function TransmogLootHelper_Enter(self, button)
 	GameTooltip:ClearLines()
 	GameTooltip:SetOwner(type(self) ~= "string" and self or button, "ANCHOR_LEFT")
-	GameTooltip:AddLine(app.NameLong.."\nLMB|cffFFFFFF: Toggle the window\n|RRMB|cffFFFFFF: Show the settings|R")
+	GameTooltip:AddLine(app.NameLong .. "\n" .. L.SETTINGS_TOOLTIP)
 	GameTooltip:Show()
 end
 
@@ -72,7 +73,7 @@ function app.Settings()
 
 		OnTooltipShow = function(tooltip)
 			if not tooltip or not tooltip.AddLine then return end
-			tooltip:AddLine(app.NameLong.."\nLMB|cffFFFFFF: Toggle the window\n|RRMB|cffFFFFFF: Show the settings|R")
+			tooltip:AddLine(app.NameLong .. "\n" .. L.SETTINGS_TOOLTIP)
 		end,
 	})
 
@@ -94,16 +95,16 @@ function app.Settings()
 
 	layout:AddInitializer(CreateSettingsListSectionHeaderInitializer(C_AddOns.GetAddOnMetadata(appName, "Version")))
 
-	local cbVariable, cbName, cbTooltip = "overlay", "Item Overlay", "Show an icon and text on items, to indicate collection status and more.\n\n|cffFF0000" .. REQUIRES_RELOAD .. ".|r Use |cffFFFFFF/reload|r or relog.\n\nBaganator: Icon position is managed by its own settings."
+	local cbVariable, cbName, cbTooltip = "overlay", L.SETTINGS_ITEM_OVERLAY, L.SETTINGS_ITEM_OVERLAY_DESC
 	local cbSetting = Settings.RegisterAddOnSetting(category, appName.."_"..cbVariable, cbVariable, TransmogLootHelper_Settings, Settings.VarType.Boolean, cbName, true)
 
-	local ddVariable, ddName, ddTooltip = "iconPosition", "Icon Position", "The location of the icon on the item."
+	local ddVariable, ddName, ddTooltip = "iconPosition", L.SETTINGS_ICONPOS,L.SETTINGS_ICONPOS_DESC
 	local function GetOptions()
 		local container = Settings.CreateControlTextContainer()
-		container:Add(0, "Top Left", "This may overlap with a crafted item's quality.")
-		container:Add(1, "Top Right", "No known overlap issues.")
-		container:Add(2, "Bottom Left", "No known overlap issues.")
-		container:Add(3, "Bottom Right", "No known overlap issues.")
+		container:Add(0, L.SETTINGS_ICONPOS_TL, L.SETTINGS_ICONPOS_OVERLAP1)
+		container:Add(1, L.SETTINGS_ICONPOS_TR, L.SETTINGS_ICONPOS_OVERLAP0)
+		container:Add(2, L.SETTINGS_ICONPOS_BL, L.SETTINGS_ICONPOS_OVERLAP0)
+		container:Add(3, L.SETTINGS_ICONPOS_BR, L.SETTINGS_ICONPOS_OVERLAP0)
 		return container:GetData()
 	end
 	local ddSetting = Settings.RegisterAddOnSetting(category, appName.."_"..ddVariable, ddVariable, TransmogLootHelper_Settings, Settings.VarType.Number, ddName, 1)
@@ -113,47 +114,47 @@ function app.Settings()
 		ddSetting, GetOptions, ddName, ddTooltip)
 	layout:AddInitializer(initializer)
 
-	local variable, name, tooltip = "simpleIcon", "Simple Icons", "Use simple, high contrast icons designed to aid with color blindness."
+	local variable, name, tooltip = "simpleIcon", L.SETTINGS_ICON_SIMPLE, L.SETTINGS_ICON_SIMPLE_DESC
 	local setting = Settings.RegisterAddOnSetting(category, appName .. "_" .. variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, false)
 	local parentSetting = Settings.CreateCheckbox(category, setting, tooltip)
 
-	local variable, name, tooltip = "animateIcon", "Icon Animation", "Show a pretty animated swirl on icons for learnable and usable icons."
+	local variable, name, tooltip = "animateIcon", L.SETTINGS_ICON_ANIMATE, L.SETTINGS_ICON_ANIMATE_DESC
 	local setting = Settings.RegisterAddOnSetting(category, appName .. "_" .. variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, true)
 	local parentSetting = Settings.CreateCheckbox(category, setting, tooltip)
 
 	layout:AddInitializer(CreateSettingsListSectionHeaderInitializer("Collection Info"))
 
-	local variable, name, tooltip = "iconNewMog", "Appearances", "Show an icon to indicate an item's appearance is unlearned."
+	local variable, name, tooltip = "iconNewMog", L.SETTINGS_ICON_NEW_MOG, L.SETTINGS_ICON_NEW_MOG_DESC
 	local setting = Settings.RegisterAddOnSetting(category, appName .. "_" .. variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, true)
 	local parentSetting = Settings.CreateCheckbox(category, setting, tooltip)
 
-	local variable, name, tooltip = "iconNewSource", "Sources", "Show an icon to indicate an item's appearance source is unlearned."
+	local variable, name, tooltip = "iconNewSource", L.SETTINGS_ICON_NEW_SOURCE, L.SETTINGS_ICON_NEW_SOURCE_DESC
 	local setting = Settings.RegisterAddOnSetting(category, appName .. "_" .. variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, false)
 	local subSetting = Settings.CreateCheckbox(category, setting, tooltip)
 	subSetting:SetParentInitializer(parentSetting, function() return TransmogLootHelper_Settings["iconNewMog"] end)
 
-	local variable, name, tooltip = "iconNewIllusion", "Illusions", "Show an icon to indicate an illusion is unlearned."
+	local variable, name, tooltip = "iconNewIllusion", L.SETTINGS_ICON_NEW_ILLUSION, L.SETTINGS_ICON_NEW_ILLUSION_DESC
 	local setting = Settings.RegisterAddOnSetting(category, appName.."_"..variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, true)
 	Settings.CreateCheckbox(category, setting, tooltip)
 
-	local variable, name, tooltip = "iconNewMount", "Mounts", "Show an icon to indicate a mount is unlearned."
+	local variable, name, tooltip = "iconNewMount", L.SETTINGS_ICON_NEW_MOUNT, L.SETTINGS_ICON_NEW_MOUNT_DESC
 	local setting = Settings.RegisterAddOnSetting(category, appName.."_"..variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, true)
 	Settings.CreateCheckbox(category, setting, tooltip)
 
-	local variable, name, tooltip = "iconNewPet", "Pets", "Show an icon to indicate a pet is unlearned."
+	local variable, name, tooltip = "iconNewPet", L.SETTINGS_ICON_NEW_PET, L.SETTINGS_ICON_NEW_PET_DESC
 	local setting = Settings.RegisterAddOnSetting(category, appName .. "_" .. variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, true)
 	local parentSetting = Settings.CreateCheckbox(category, setting, tooltip)
 
-	local variable, name, tooltip = "iconNewPetMax", "Collect 3/3", "Also take the maximum number of pets you can own into account (usually 3)."
+	local variable, name, tooltip = "iconNewPetMax", L.SETTINGS_ICON_NEW_PET_MAX, L.SETTINGS_ICON_NEW_PET_MAX_DESC
 	local setting = Settings.RegisterAddOnSetting(category, appName .. "_" .. variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, false)
 	local subSetting = Settings.CreateCheckbox(category, setting, tooltip)
 	subSetting:SetParentInitializer(parentSetting, function() return TransmogLootHelper_Settings["iconNewPet"] end)
 
-	local variable, name, tooltip = "iconNewToy", "Toys", "Show an icon to indicate an item's source is unlearned."
+	local variable, name, tooltip = "iconNewToy", L.SETTINGS_ICON_NEW_TOY, L.SETTINGS_ICON_NEW_TOY_DESC
 	local setting = Settings.RegisterAddOnSetting(category, appName.."_"..variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, true)
 	Settings.CreateCheckbox(category, setting, tooltip)
 
-	local variable, name, tooltip = "iconNewRecipe", "Recipes", "Show an icon to indicate an item's source is unlearned."
+	local variable, name, tooltip = "iconNewRecipe", L.SETTINGS_ICON_NEW_RECIPE, L.SETTINGS_ICON_NEW_RECIPE_DESC
 	local setting = Settings.RegisterAddOnSetting(category, appName.."_"..variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, true)
 	Settings.CreateCheckbox(category, setting, tooltip)
 
@@ -161,21 +162,21 @@ function app.Settings()
 	local setting = Settings.RegisterAddOnSetting(category, appName.."_"..variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, false)
 	Settings.CreateCheckbox(category, setting, tooltip)
 
-	layout:AddInitializer(CreateSettingsListSectionHeaderInitializer("Other Info"))
+	layout:AddInitializer(CreateSettingsListSectionHeaderInitializer(L.SETTINGS_HEADER_OTHER_INFO))
 
-	local variable, name, tooltip = "iconQuestGold", "Quest Reward Sell Value", "Show an icon to indicate which quest reward has the highest vendor sell value, if there are multiple."
+	local variable, name, tooltip = "iconQuestGold", L.SETTINGS_ICON_QUEST_GOLD, L.SETTINGS_ICON_QUEST_GOLD_DESC
 	local setting = Settings.RegisterAddOnSetting(category, appName.."_"..variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, true)
 	Settings.CreateCheckbox(category, setting, tooltip)
 
-	local variable, name, tooltip = "iconUsable", "Usable Items", "Show an icon to indicate an item can be used (profession knowledge, unlockable customisations, and spellbooks)."
+	local variable, name, tooltip = "iconUsable", L.SETTINGS_ICON_USABLE, L.SETTINGS_ICON_USABLE_DESC
 	local setting = Settings.RegisterAddOnSetting(category, appName.."_"..variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, true)
 	Settings.CreateCheckbox(category, setting, tooltip)
 
-	local variable, name, tooltip = "iconContainer", "Openable Containers", "Show an icon to indicate an item can be opened, such as lockboxes and holiday boss bags."
+	local variable, name, tooltip = "iconContainer", L.SETTINGS_ICON_OPENABLE, L.SETTINGS_ICON_OPENABLE_DESC
 	local setting = Settings.RegisterAddOnSetting(category, appName.."_"..variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, true)
 	Settings.CreateCheckbox(category, setting, tooltip)
 
-	local variable, name, tooltip = "textBind", "Binding Status", "Show a text indicator for Bind-on-Equip items (BoE), Warbound items (BoA), and Warbound-until-Equipped (WuE) items.\n\nBaganator: Binding text is managed by its own settings."
+	local variable, name, tooltip = "textBind", L.SETTINGS_BINDTEXT, L.SETTINGS_BINDTEXT_DESC
 	local setting = Settings.RegisterAddOnSetting(category, appName.."_"..variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, true)
 	Settings.CreateCheckbox(category, setting, tooltip)
 
@@ -183,7 +184,7 @@ function app.Settings()
 	local category, layout = Settings.RegisterVerticalLayoutSubcategory(app.Category, "Loot Tracker")
 	Settings.RegisterAddOnCategory(category)
 
-	local variable, name, tooltip = "minimapIcon", "Minimap Icon", "Show the minimap icon. If you disable this, "..app.NameShort.." is still available from the AddOn Compartment."
+	local variable, name, tooltip = "minimapIcon", L.SETTINGS_MINIMAP, L.SETTINGS_MINIMAP_DESC
 	local setting = Settings.RegisterAddOnSetting(category, appName.."_"..variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, true)
 	Settings.CreateCheckbox(category, setting, tooltip)
 	setting:SetValueChangedCallback(function()
@@ -196,32 +197,32 @@ function app.Settings()
 		end
 	end)
 
-	local variable, name, tooltip = "autoOpen", "Auto Open Window", "Automatically show the "..app.NameShort.." window when an eligible item is looted."
+	local variable, name, tooltip = "autoOpen", L.SETTINGS_AUTO_OPEN, L.SETTINGS_AUTO_OPEN_DESC
 	local setting = Settings.RegisterAddOnSetting(category, appName.."_"..variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, true)
 	Settings.CreateCheckbox(category, setting, tooltip)
 
-	local variable, name, tooltip = "collectMode", "Collection Mode", "Set when "..app.NameShort.." should show new transmog looted by others."
+	local variable, name, tooltip = "collectMode", L.SETTINGS_COLLECTION_MODE, L.SETTINGS_COLLECTION_MODE_DESC
 	local function GetOptions()
 		local container = Settings.CreateControlTextContainer()
-		container:Add(1, "Appearances", "Show items only if they have a new appearance.")
-		container:Add(2, "Sources", "Show items if they are a new source, including for known appearances.")
+		container:Add(1, L.SETTINGS_MODE_APPEARANCES, L.SETTINGS_MODE_APPEARANCES_DESC)
+		container:Add(2, L.SETTINGS_MODE_SOURCES, L.SETTINGS_MODE_SOURCES_DESC)
 		return container:GetData()
 	end
 	local setting = Settings.RegisterAddOnSetting(category, appName.."_"..variable, variable, TransmogLootHelper_Settings, Settings.VarType.Number, name, 1)
 	Settings.CreateDropdown(category, setting, GetOptions, tooltip)
 
-	local variable, name, tooltip = "remixFilter", "Remix Filter", "Filter items below |cff0070dd"..ITEM_QUALITY3_DESC.."|r quality (untradeable) for Remix characters."
+	local variable, name, tooltip = "remixFilter", L.SETTINGS_REMIX_FILTER, L.SETTINGS_REMIX_FILTER_DESC
 	local setting = Settings.RegisterAddOnSetting(category, appName.."_"..variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, false)
 	local parentSetting = Settings.CreateCheckbox(category, setting, tooltip)
 
-	local variable, name, tooltip = "rarity", "Rarity", "Set from what quality and up "..app.NameShort.." should show loot."
+	local variable, name, tooltip = "rarity", L.SETTINGS_RARITY, L.SETTINGS_RARITY_DESC
 	local function GetOptions()
 		local container = Settings.CreateControlTextContainer()
-		container:Add(0, "|cff9d9d9d"..ITEM_QUALITY0_DESC.."|r")
-		container:Add(1, "|cffffffff"..ITEM_QUALITY1_DESC.."|r")
-		container:Add(2, "|cff1eff00"..ITEM_QUALITY2_DESC.."|r")
-		container:Add(3, "|cff0070dd"..ITEM_QUALITY3_DESC.."|r")
-		container:Add(4, "|cffa335ee"..ITEM_QUALITY4_DESC.."|r")
+		container:Add(0, "|cnIQ0"..ITEM_QUALITY0_DESC.."|r")
+		container:Add(1, "|cnIQ1"..ITEM_QUALITY1_DESC.."|r")
+		container:Add(2, "|cnIQ2"..ITEM_QUALITY2_DESC.."|r")
+		container:Add(3, "|cnIQ3"..ITEM_QUALITY3_DESC.."|r")
+		container:Add(4, "|cnIQ4"..ITEM_QUALITY4_DESC.."|r")
 		return container:GetData()
 	end
 	local setting = Settings.RegisterAddOnSetting(category, appName.."_"..variable, variable, TransmogLootHelper_Settings, Settings.VarType.Number, name, 3)
@@ -230,19 +231,19 @@ function app.Settings()
 	local function onButtonClick()
 		app.RenamePopup:Show()
 	end
-	local initializer = CreateSettingsButtonInitializer("Whisper Message", "Customize", onButtonClick, "Customize your whisper message.", true)
+	local initializer = CreateSettingsButtonInitializer(L.SETINGS_WHISPER, L.SETTINGS_WHISPER_CUSTOMIZE, onButtonClick, L.SETTINGS_WHISPER_CUSTOMIZE_DESC, true)
 	layout:AddInitializer(initializer)
 
-	layout:AddInitializer(CreateSettingsListSectionHeaderInitializer("Information"))
+	layout:AddInitializer(CreateSettingsListSectionHeaderInitializer(L.SETTINGS_HEADER_INFORMATION))
 
-	local variable, name, tooltip = "", "Slash Commands", "Type these in chat to use them!"
+	local variable, name, tooltip = "", L.SETTINGS_SLASH_TITLE, L.SETTINGS_SLASH_DESC
 	local function GetOptions()
 		local container = Settings.CreateControlTextContainer()
-		container:Add(1, "/tlh", "Toggle the window.")
-		container:Add(2, "/tlh settings", "Open these settings.")
-		container:Add(3, "/tlh resetpos", "Reset the window position.")
-		container:Add(4, "/tlh default", "Set the whisper message to its default.")
-		container:Add(5, "/tlh msg", "Customize the whisper message.")
+		container:Add(1, "/tlh", L.SETTINGS_SLASH_TOGGLE)
+		container:Add(2, "/tlh settings", L.WINDOW_BUTTON_SETTINGS)
+		container:Add(3, "/tlh resetpos", L.SETTINGS_SLASH_RESETPOS)
+		container:Add(4, "/tlh default", L.SETTINGS_SLASH_WHISPER_DEFAULT)
+		container:Add(5, "/tlh msg", L.SETTINGS_WHISPER_CUSTOMIZE_DESC)
 		return container:GetData()
 	end
 	local setting = Settings.RegisterAddOnSetting(category, appName.."_"..variable, variable, TransmogLootHelper_Settings, Settings.VarType.Number, name, 1)
@@ -252,15 +253,15 @@ function app.Settings()
 	local category, layout = Settings.RegisterVerticalLayoutSubcategory(app.Category, "Tweaks")
 	Settings.RegisterAddOnCategory(category)
 
-	local variable, name, tooltip = "catalystButton", "Show Catalyst Button", "Show a button on the Revival Catalyst that allows you to instantly catalyze an item, skipping the 5 second confirmation timer."
+	local variable, name, tooltip = "catalystButton", L.SETTINGS_CATALYST_BUTTON, L.SETTINGS_CATALYST_BUTTON_DESC
 	local setting = Settings.RegisterAddOnSetting(category, appName .. "_" .. variable, variable, ProfessionShoppingList_Settings, Settings.VarType.Boolean, name, true)
 	Settings.CreateCheckbox(category, setting, tooltip)
 
-	local variable, name, tooltip = "vendorAll", "Disable Vendor Filter", "Automatically set all vendor filters to |cffFFFFFFAll|R to display items normally not shown to your class."
+	local variable, name, tooltip = "vendorAll", L.SETTINGS_VENDOR_ALL, L.SETTINGS_VENDOR_ALL_DESC
 	local setting = Settings.RegisterAddOnSetting(category, appName .. "_" .. variable, variable, ProfessionShoppingList_Settings, Settings.VarType.Boolean, name, true)
 	Settings.CreateCheckbox(category, setting, tooltip)
 
-	local variable, name, tooltip = "hideGroupRolls", "Hide loot roll window", "Hide the window that shows loot rolls and their results. You can show the window again with |cff00ccff/loot|r."
+	local variable, name, tooltip = "hideGroupRolls", L.SETTINGS_HIDE_LOOT_ROLL_WINDOW, L.SETTINGS_HIDE_LOOT_ROLL_WINDOW_DESC
 	local setting = Settings.RegisterAddOnSetting(category, appName.."_"..variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, false)
 	local parentSetting = Settings.CreateCheckbox(category, setting, tooltip)
 end
@@ -295,7 +296,7 @@ function app.CreateMessagePopup()
 	string1:SetPoint("CENTER", frame, "CENTER", 0, 0)
 	string1:SetPoint("TOP", frame, "TOP", 0, -10)
 	string1:SetJustifyH("CENTER")
-	string1:SetText("Customize your whisper message:")
+	string1:SetText(L.WHISPER_POPUP_CUSTOMIZE)
 
 	-- Editbox
 	local editBox = CreateFrame("EditBox", nil, frame, "InputBoxTemplate")
@@ -351,7 +352,7 @@ function app.CreateMessagePopup()
 				end)
 
 				-- Set our feedback text message
-				string2:SetText(app.IconNotReady .. " Message does not include |cffC69B6D%item|r. Message is not updated.")
+				string2:SetText(app.IconNotReady .. " " .. L.WHISPER_POPUP_ERROR)
 			-- Edit the message if all is gucci
 			else
 				-- Change the editbox border colour for some extra visual feedback
@@ -361,7 +362,7 @@ function app.CreateMessagePopup()
 				end)
 
 				-- Set our feedback text message
-				string2:SetText(app.IconReady .. " Message is updated.")
+				string2:SetText(app.IconReady .. " " .. L.WHISPER_POPUP_SUCCESS)
 
 				-- Save the new message
 				TransmogLootHelper_Settings["message"] = newValue
@@ -369,7 +370,6 @@ function app.CreateMessagePopup()
 		end
 	end)
 	editBox:SetScript("OnEnterPressed", function(self)
-		-- This triggers the above script
 		self:ClearFocus()
 	end)
 	editBox:SetScript("OnEscapePressed", function(self)

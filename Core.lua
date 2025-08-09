@@ -4,9 +4,11 @@
 
 -- Initialisation
 local appName, app = ...	-- Returns the AddOn name and a unique table
-app.api = {}	-- Create a table to use for our "API"
+app.locales = {}	-- Localisation table
+app.api = {}	-- Our "API" prefix
 TransmogLootHelper = app.api	-- Create a namespace for our "API"
 local api = app.api
+local L = app.locales
 
 ---------------------------
 -- WOW API EVENT HANDLER --
@@ -203,8 +205,8 @@ app.Event:Register("ADDON_LOADED", function(addOnName, containsBindings)
 
 			-- Default message
 			if command == "default" then
-				TransmogLootHelper_Settings["message"] = "Do you need the %item you looted? If not, I'd like to have it for transmog. :)"
-				app.Print('Message set to: "'..TransmogLootHelper_Settings["message"]..'"')
+				TransmogLootHelper_Settings["message"] = L.DEFAULT_MESSAGE
+				app.Print(L.WHISPER_POPUP_SUCCESS, "'" .. TransmogLootHelper_Settings["message"] .. "'")
 			-- Customise message
 			elseif command == "msg" then
 				app.RenamePopup:Show()
@@ -221,7 +223,7 @@ app.Event:Register("ADDON_LOADED", function(addOnName, containsBindings)
 				app.Toggle()
 			-- Unlisted command
 			else
-				app.Print("Invalid command.")
+				app.Print(L.INVALID_COMMAND)
 			end
 		end
 	end
@@ -273,7 +275,7 @@ app.Event:Register("CHAT_MSG_ADDON", function(prefix, text, channel, sender, tar
 
 					if otherGameVersion > localGameVersion or (otherGameVersion == localGameVersion and otherAddonVersion > localAddonVersion) then
 						if GetServerTime() - app.Flag["versionCheck"] > 600 then
-							app.Print("There is a newer version of "..app.NameLong.." available: "..version)
+							app.Print(L.NEW_VERSION_AVAILABLE, version)
 							app.Flag["versionCheck"] = GetServerTime()
 						end
 					end
