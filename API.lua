@@ -1,6 +1,6 @@
----------------------------------
--- TransmogLootHelper: API.lua --
----------------------------------
+-----------------------------------
+-- Transmog Loot Helper: API.lua --
+-----------------------------------
 
 -- Update TLH's item overlay
 TransmogLootHelper.UpdateOverlay()
