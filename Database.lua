@@ -1,10 +1,9 @@
 ----------------------------------------
 -- Transmog Loot Helper: Database.lua --
 ----------------------------------------
--- Raw information to refer to
 
 -- Initialisation
-local appName, app = ...	-- Returns the addon name and a unique table
+local appName, app = ...
 
 -- Used strings
 app.Name = "Transmog Loot Helper"

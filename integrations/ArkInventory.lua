@@ -1,6 +1,6 @@
-local appName, app = ... -- Returns the AddOn name and a unique table
+local appName, app = ...
 
--- Baganator icon integration (thank you Plusmouse, again! I could not figure this one out)
+-- ArkInventory integration (thank you Plusmouse, again! I could not figure this one out)
 EventUtil.ContinueOnAddOnLoaded("ArkInventory", function()
 	local function InitButton(itemButton)
 		itemButton.TLHOverlay = CreateFrame("Frame", nil, itemButton)

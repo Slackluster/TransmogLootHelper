@@ -731,7 +731,7 @@ function app.ItemOverlayHooks()
 				app.MerchantHook = true
 			end
 
-			for i = 1, 99 do	-- Works for AddOns that expand the vendor frame up to 99 slots
+			for i = 1, 99 do	-- Works for addons that expand the vendor frame up to 99 slots
 				local itemButton = _G["MerchantItem" .. i .. "ItemButton"]
 				if itemButton then
 					if not itemButton.TLHOverlay then

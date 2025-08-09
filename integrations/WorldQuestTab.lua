@@ -1,5 +1,6 @@
-local appName, app = ...	-- Returns the AddOn name and a unique table
+local appName, app = ...
 
+-- World Quest Tab integration
 app.Event:Register("ADDON_LOADED", function(addOnName, containsBindings)
 	if addOnName == "WorldQuestTab" then
 		local function wqtRewardsList()

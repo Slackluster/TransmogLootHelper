@@ -36,7 +36,7 @@ L.WINDOW_BUTTON_CORNER =				"Double " .. app.IconLMB .. "|cffFFFFFF: Autosize to
 
 L.WINDOW_HEADER_LOOT_DESC =				"|R" .. app.IconLMB .. "|cffFFFFFF: Whisper and request the item\n|RShift " .. app.IconLMB .. "|cffFFFFFF: Link the item\n|RShift " .. app.IconRMB .. "|cffFFFFFF: Remove the item"
 L.WINDOW_HEADER_FILTERED =				"Filtered"
-L.WINDOW_HEADER_FILTERED_DESC =			"|R" .. app.IconRMB .. "|cffFFFFFF: Debug this item\n|RShift+LMB|cffFFFFFF: Link the item\n|RShift+RMB|cffFFFFFF: Remove the item"
+L.WINDOW_HEADER_FILTERED_DESC =			"|R" .. app.IconRMB .. "|cffFFFFFF: Debug this item\n|RShift " .. app.IconLMB .. "|cffFFFFFF: Link the item\n|RShift " .. app.IconRMB .. "|cffFFFFFF: Remove the item"
 
 L.PLAYER_COLLECTED_APPEARANCE =			"collected an appearance from this item"	-- Preceded by a character name
 L.PLAYER_WHISPERED =					"has been whispered by " .. app.NameShort .. " users"
@@ -103,7 +103,7 @@ L.SETTINGS_BINDTEXT_DESC =				"Show a text indicator for Bind-on-Equip items (Bo
 
 L.SETTINGS_HEADER_LOOT_TRACKER =		"Loot Tracker"
 L.SETTINGS_MINIMAP =					"Show Minimap Icon"
-L.SETTINGS_MINIMAP_DESC =				"Show the minimap icon. If you disable this, " .. app.NameShort .. " is still available from the AddOn Compartment."
+L.SETTINGS_MINIMAP_DESC =				"Show the minimap icon. If you disable this, " .. app.NameShort .. " is still available from the Addon Compartment."
 L.SETTINGS_AUTO_OPEN =					"Auto Open Window"
 L.SETTINGS_AUTO_OPEN_DESC =				"Automatically show the " .. app.NameShort .. " window when an eligible item is looted."
 L.SETTINGS_COLLECTION_MODE =			"Collection Mode"

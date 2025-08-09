@@ -5,6 +5,7 @@
 -- Initialisation
 local appName, app = ...
 local api = app.api
+local L = app.locales
 
 -------------
 -- ON LOAD --
@@ -398,7 +399,7 @@ function app.Update()
 
 	-- Update header
 	if #app.WeaponLoot >= 1 then
-		app.WeaponsHeader:SetText(AUCTION_CATEGORY_WEAPONS .. " ("..#app.WeaponLoot..")")
+		app.WeaponsHeader:SetText(AUCTION_CATEGORY_WEAPONS .. " (" .. #app.WeaponLoot .. ")")
 	else
 		app.WeaponsHeader:SetText(AUCTION_CATEGORY_WEAPONS)
 	end
@@ -472,7 +473,7 @@ function app.Update()
 				if app.WeaponLoot[lootInfo.index].icon == app.IconMog then
 					GameTooltip:AddLine(" ")
 					emptyLine = true
-					GameTooltip:AddLine("|T" .. app.IconMog .. ":0|t |c" .. lootInfo.color .. lootInfo.playerShort .. "|R " .. L.PLAYER_COLLECTED_APPEARANCE)
+					GameTooltip:AddLine("|T"..app.IconMog..":0|t |c" .. lootInfo.color .. lootInfo.playerShort .. "|R " .. L.PLAYER_COLLECTED_APPEARANCE)
 				end
 
 				-- Show how many times the player has been whispered by TLH users
@@ -541,7 +542,7 @@ function app.Update()
 			text2:SetPoint("RIGHT", app.Window.Child)
 			text2:SetJustifyH("RIGHT")
 			text2:SetTextColor(1, 1, 1)
-			text2:SetText("|c"..lootInfo.color..lootInfo.playerShort)
+			text2:SetText("|c" .. lootInfo.color .. lootInfo.playerShort)
 
 			local text1 = row:CreateFontString("ARTWORK", nil, "GameFontNormal")
 			text1:SetPoint("LEFT", icon1, "RIGHT", 3, 0)
@@ -615,7 +616,7 @@ function app.Update()
 	if #app.WeaponLoot >= 1 and app.ShowWeapons == true then offset = -16*#app.WeaponLoot end
 	app.Window.Armour:SetPoint("TOPLEFT", app.Window.Weapons, "BOTTOMLEFT", 0, offset)
 	if #app.ArmourLoot >= 1 then
-		app.ArmourHeader:SetText(AUCTION_CATEGORY_ARMOR .. " ("..#app.ArmourLoot..")")
+		app.ArmourHeader:SetText(AUCTION_CATEGORY_ARMOR .. " (" .. #app.ArmourLoot .. ")")
 	else
 		app.ArmourHeader:SetText(AUCTION_CATEGORY_ARMOR)
 	end
@@ -692,7 +693,7 @@ function app.Update()
 				if app.ArmourLoot[lootInfo.index].icon == app.IconMog then
 					GameTooltip:AddLine(" ")
 					emptyLine = true
-					GameTooltip:AddLine("|T" .. app.IconMog .. ":0|t |c" .. lootInfo.color .. lootInfo.playerShort .. "|R " .. L.PLAYER_COLLECTED_APPEARANCE)
+					GameTooltip:AddLine("|T"..app.IconMog..":0|t |c" .. lootInfo.color .. lootInfo.playerShort .. "|R " .. L.PLAYER_COLLECTED_APPEARANCE)
 				end
 
 				-- Show how many times the player has been whispered by TLH users
@@ -761,7 +762,7 @@ function app.Update()
 			text2:SetPoint("RIGHT", app.Window.Child)
 			text2:SetJustifyH("RIGHT")
 			text2:SetTextColor(1, 1, 1)
-			text2:SetText("|c"..lootInfo.color..lootInfo.playerShort)
+			text2:SetText("|c" .. lootInfo.color .. lootInfo.playerShort)
 
 			local text1 = row:CreateFontString("ARTWORK", nil, "GameFontNormal")
 			text1:SetPoint("LEFT", icon1, "RIGHT", 3, 0)
@@ -833,7 +834,7 @@ function app.Update()
 	if #app.FilteredLoot >= 100 then
 		app.FilteredHeader:SetText(L.WINDOW_HEADER_FILTERED .. " (100+)")
 	elseif #app.FilteredLoot >= 1 then
-		app.FilteredHeader:SetText(L.WINDOW_HEADER_FILTERED .. " ("..#app.FilteredLoot..")")
+		app.FilteredHeader:SetText(L.WINDOW_HEADER_FILTERED .. " (" .. #app.FilteredLoot .. ")")
 	else
 		app.FilteredHeader:SetText(L.WINDOW_HEADER_FILTERED)
 	end
@@ -919,7 +920,7 @@ function app.Update()
 					if IsShiftKeyDown() == true then
 						ChatEdit_InsertLink(lootInfo.item)
 					else
-						app.Print("Debugging "..lootInfo.item.."  |  Filter reason: "..lootInfo.playerShort.."  |  itemType: "..lootInfo.itemType.."  |  Looted by: "..lootInfo.player)
+						app.Print("Debugging " .. lootInfo.item .. "  |  Filter reason: " .. lootInfo.playerShort .. "  |  itemType: " .. lootInfo.itemType .. "  |  Looted by: " ..lootInfo.player)
 					end
 				-- Shift+RMB
 				elseif button == "RightButton" and IsShiftKeyDown() then
@@ -941,7 +942,7 @@ function app.Update()
 			text2:SetPoint("RIGHT", app.Window.Child)
 			text2:SetJustifyH("RIGHT")
 			text2:SetTextColor(1, 1, 1)
-			text2:SetText("|c"..lootInfo.color..lootInfo.playerShort)
+			text2:SetText("|c" .. lootInfo.color .. lootInfo.playerShort)
 
 			local text1 = row:CreateFontString("ARTWORK", nil, "GameFontNormal")
 			text1:SetPoint("LEFT", icon1, "RIGHT", 3, 0)

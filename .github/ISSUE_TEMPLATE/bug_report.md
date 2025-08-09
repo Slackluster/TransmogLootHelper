@@ -7,7 +7,7 @@ assignees: ''
 
 ---
 
-**AddOn version**
+**Addon version**
 _For example v11.0.2-006_
 
 **Have you taken a look at the addon's settings yet, to see if it's a feature that can be adjusted or disabled?**

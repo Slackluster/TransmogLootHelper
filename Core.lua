@@ -3,12 +3,12 @@
 ------------------------------------
 
 -- Initialisation
-local appName, app = ...	-- Returns the AddOn name and a unique table
+local appName, app = ...	-- Returns the addon name and a unique table
 app.locales = {}	-- Localisation table
 app.api = {}	-- Our "API" prefix
 TransmogLootHelper = app.api	-- Create a namespace for our "API"
-local api = app.api
 local L = app.locales
+local api = app.api
 
 ---------------------------
 -- WOW API EVENT HANDLER --
@@ -41,12 +41,12 @@ end)
 
 -- App colour
 function app.Colour(string)
-	return "|cffC69B6D"..string.."|R"
+	return "|cffC69B6D" .. string .. "|R"
 end
 
--- Print with AddOn prefix
+-- Print with addon prefix
 function app.Print(...)
-	print(app.NameShort..":", ...)
+	print(app.NameShort .. ":", ...)
 end
 
 -- Pop-up window
@@ -246,7 +246,7 @@ end
 
 -- When joining a group
 app.Event:Register("GROUP_ROSTER_UPDATE", function(category, partyGUID)
-	local message = "version:"..C_AddOns.GetAddOnMetadata("TransmogLootHelper", "Version")
+	local message = "version:" .. C_AddOns.GetAddOnMetadata("TransmogLootHelper", "Version")
 	app.SendAddonMessage(message)
 end)
 
@@ -261,7 +261,7 @@ app.Event:Register("CHAT_MSG_ADDON", function(prefix, text, channel, sender, tar
 				expansion = string.format("%02d", expansion)
 				major = string.format("%02d", major)
 				minor = string.format("%02d", minor)
-				local otherGameVersion = tonumber(expansion..major..minor)
+				local otherGameVersion = tonumber(expansion .. major .. minor)
 				local otherAddonVersion = tonumber(iteration)
 
 				local localVersion = C_AddOns.GetAddOnMetadata("TransmogLootHelper", "Version")
@@ -270,7 +270,7 @@ app.Event:Register("CHAT_MSG_ADDON", function(prefix, text, channel, sender, tar
 					expansion = string.format("%02d", expansion)
 					major = string.format("%02d", major)
 					minor = string.format("%02d", minor)
-					local localGameVersion = tonumber(expansion..major..minor)
+					local localGameVersion = tonumber(expansion .. major .. minor)
 					local localAddonVersion = tonumber(iteration)
 
 					if otherGameVersion > localGameVersion or (otherGameVersion == localGameVersion and otherAddonVersion > localAddonVersion) then

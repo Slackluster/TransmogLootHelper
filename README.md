@@ -1,5 +1,5 @@
 # Transmog Loot Helper
-A World of Warcraft AddOn. Download locations: [CurseForge](https://www.curseforge.com/wow/addons/transmog-loot-helper) | [Wago.io](https://addons.wago.io/addons/tlh)
+A World of Warcraft addon. Download locations: [CurseForge](https://www.curseforge.com/wow/addons/transmog-loot-helper) | [Wago.io](https://addons.wago.io/addons/tlh)
 
 # Description
 **Transmog Loot Helper** shows you transmog looted by your fellow party/raid members that you still need, and features icons to show items' collection status.
@@ -18,7 +18,7 @@ Includes icons for unlearned transmog, mounts, pets, toys, and recipes. These sh
 
 ![](https://media.forgecdn.net/attachments/description/1033752/description_17172ffd-6371-4979-a00d-b4da2bca0fa6.png)
 
-Currently supported AddOns:
+Currently supported addons:
 - ArkInventory
 - Baganator
 - BetterBags

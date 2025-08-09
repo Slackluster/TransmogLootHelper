@@ -33,7 +33,7 @@ function app.OpenSettings()
 	Settings.OpenToCategory(app.Category:GetID())
 end
 
--- AddOn Compartment Click
+-- Addon Compartment Click
 function TransmogLootHelper_Click(self, button)
 	if button == "LeftButton" then
 		app.Toggle()
@@ -42,7 +42,7 @@ function TransmogLootHelper_Click(self, button)
 	end
 end
 
--- AddOn Compartment Enter
+-- Addon Compartment Enter
 function TransmogLootHelper_Enter(self, button)
 	GameTooltip:ClearLines()
 	GameTooltip:SetOwner(type(self) ~= "string" and self or button, "ANCHOR_LEFT")
@@ -50,7 +50,7 @@ function TransmogLootHelper_Enter(self, button)
 	GameTooltip:Show()
 end
 
--- AddOn Compartment Leave
+-- Addon Compartment Leave
 function TransmogLootHelper_Leave()
 	GameTooltip:Hide()
 end
@@ -218,11 +218,11 @@ function app.Settings()
 	local variable, name, tooltip = "rarity", L.SETTINGS_RARITY, L.SETTINGS_RARITY_DESC
 	local function GetOptions()
 		local container = Settings.CreateControlTextContainer()
-		container:Add(0, "|cnIQ0"..ITEM_QUALITY0_DESC.."|r")
-		container:Add(1, "|cnIQ1"..ITEM_QUALITY1_DESC.."|r")
-		container:Add(2, "|cnIQ2"..ITEM_QUALITY2_DESC.."|r")
-		container:Add(3, "|cnIQ3"..ITEM_QUALITY3_DESC.."|r")
-		container:Add(4, "|cnIQ4"..ITEM_QUALITY4_DESC.."|r")
+		container:Add(0, "|cnIQ0" .. ITEM_QUALITY0_DESC .. "|r")
+		container:Add(1, "|cnIQ1" .. ITEM_QUALITY1_DESC .. "|r")
+		container:Add(2, "|cnIQ2" .. ITEM_QUALITY2_DESC .. "|r")
+		container:Add(3, "|cnIQ3" .. ITEM_QUALITY3_DESC .. "|r")
+		container:Add(4, "|cnIQ4" .. ITEM_QUALITY4_DESC .. "|r")
 		return container:GetData()
 	end
 	local setting = Settings.RegisterAddOnSetting(category, appName.."_"..variable, variable, TransmogLootHelper_Settings, Settings.VarType.Number, name, 3)

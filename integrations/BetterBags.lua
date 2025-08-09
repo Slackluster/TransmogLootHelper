@@ -1,4 +1,4 @@
-local appName, app = ... -- Returns the AddOn name and a unique table
+local appName, app = ...
 
 -- BetterBags integration
 EventUtil.ContinueOnAddOnLoaded("BetterBags", function()
