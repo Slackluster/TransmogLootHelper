@@ -254,15 +254,20 @@ function app.Settings()
 	local category, layout = Settings.RegisterVerticalLayoutSubcategory(app.Category, "Tweaks")
 	Settings.RegisterAddOnCategory(category)
 
-	local variable, name, tooltip = "catalystButton", L.SETTINGS_CATALYST_BUTTON, L.SETTINGS_CATALYST_BUTTON_DESC
+	local variable, name, tooltip = "instantCatalyst", L.SETTINGS_CATALYST, L.SETTINGS_CATALYST_DESC
 	local setting = Settings.RegisterAddOnSetting(category, appName .. "_" .. variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, true)
-	Settings.CreateCheckbox(category, setting, tooltip)
+	local parentSetting = Settings.CreateCheckbox(category, setting, tooltip)
+
+	local variable, name, tooltip = "instantCatalystTooltip", L.SETTINGS_INSTANT_TOOLTIP,L.SETTINGS_INSTANT_TOOLTIP_DESC
+	local setting = Settings.RegisterAddOnSetting(category, appName .. "_" .. variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, true)
+	local subSetting = Settings.CreateCheckbox(category, setting, tooltip)
+	subSetting:SetParentInitializer(parentSetting, function() return TransmogLootHelper_Settings["instantCatalyst"] end)
 
 	local variable, name, tooltip = "instantVault", L.SETTINGS_VAULT, L.SETTINGS_VAULT_DESC
 	local setting = Settings.RegisterAddOnSetting(category, appName .. "_" .. variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, true)
 	local parentSetting = Settings.CreateCheckbox(category, setting, tooltip)
 
-	local variable, name, tooltip = "instantVaultTooltip", L.SETTINGS_VAULT_TOOLTIP, L.SETTINGS_VAULT_TOOLTIP_DESC
+	local variable, name, tooltip = "instantVaultTooltip", L.SETTINGS_INSTANT_TOOLTIP,L.SETTINGS_INSTANT_TOOLTIP_DESC
 	local setting = Settings.RegisterAddOnSetting(category, appName .. "_" .. variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, true)
 	local subSetting = Settings.CreateCheckbox(category, setting, tooltip)
 	subSetting:SetParentInitializer(parentSetting, function() return TransmogLootHelper_Settings["instantVault"] end)

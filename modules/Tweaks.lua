@@ -6,34 +6,51 @@
 local appName, app = ...
 local L = app.locales
 
-------------------------
--- INSTANTLY CATALYSE --
-------------------------
+----------------------
+-- INSTANT CATALYST --
+----------------------
 
 app.Event:Register("PLAYER_INTERACTION_MANAGER_FRAME_SHOW", function(type)
-	if TransmogLootHelper_Settings["catalystButton"] then
-		if type == 44 then
-			if not app.CatalystSkipButton then
-				app.CatalystSkipButton = app.Button(ItemInteractionFrame, L.CATALYSTBUTTON_LABEL)
-				app.CatalystSkipButton:SetPoint("CENTER", ItemInteractionFrameTitleText, 0, -30)
-				app.CatalystSkipButton:SetScript("OnClick", function()
-					ItemInteractionFrame:CompleteItemInteraction()
-				end)
+	if TransmogLootHelper_Settings["catalystButton"] and type == 44 then
+		ItemInteractionFrame.ButtonFrame.ActionButton:HookScript("OnClick", function()
+			if IsShiftKeyDown() then
+				ItemInteractionFrame:CompleteItemInteraction()
 			end
-			app.CatalystSkipButton:Show()
-		end
+		end)
+
+		local buttonText = ItemInteractionFrame.ButtonFrame.ActionButton:GetText()
+		ItemInteractionFrame.ButtonFrame.ActionButton:HookScript("OnEvent", function(self, event, key, state)
+			if key == "LSHIFT" or key == "RSHIFT" then
+				if IsShiftKeyDown() then
+					ItemInteractionFrame.ButtonFrame.ActionButton:SetText(app.IconReady .. " " .. L.INSTANT_BUTTON)
+				else
+					ItemInteractionFrame.ButtonFrame.ActionButton:SetText(buttonText)
+				end
+				GameTooltip:Show()
+			end
+		end)
+		ItemInteractionFrame.ButtonFrame.ActionButton:HookScript("OnEnter", function(self)
+			if IsShiftKeyDown() then
+				ItemInteractionFrame.ButtonFrame.ActionButton:SetText(app.IconReady .. " " .. L.INSTANT_BUTTON)
+			end
+			if TransmogLootHelper_Settings["instantCatalystTooltip"] then
+				GameTooltip:SetOwner(self, "ANCHOR_BOTTOM")
+				GameTooltip:SetText(L.INSTANT_TOOLTIP)
+				GameTooltip:Show()
+			end
+			self:RegisterEvent("MODIFIER_STATE_CHANGED")
+		end)
+		ItemInteractionFrame.ButtonFrame.ActionButton:HookScript("OnLeave", function(self)
+			GameTooltip:Hide()
+			ItemInteractionFrame.ButtonFrame.ActionButton:SetText(buttonText)
+			self:UnregisterEvent("MODIFIER_STATE_CHANGED")
+		end)
 	end
 end)
 
-app.Event:Register("PLAYER_INTERACTION_MANAGER_FRAME_HIDE", function(type)
-	if app.CatalystSkipButton then
-		app.CatalystSkipButton:Hide()
-	end
-end)
-
----------------------------------
--- INSTANT GREAT VAULT REWARDS --
----------------------------------
+-------------------------
+-- INSTANT GREAT VAULT --
+-------------------------
 
 app.Event:Register("WEEKLY_REWARDS_UPDATE", function()
 	if TransmogLootHelper_Settings["instantVault"] and WeeklyRewardsFrame and WeeklyRewardsFrame:IsShown() then
@@ -46,21 +63,20 @@ app.Event:Register("WEEKLY_REWARDS_UPDATE", function()
 		WeeklyRewardsFrame.SelectRewardButton:HookScript("OnEvent", function(self, event, key, state)
 			if key == "LSHIFT" or key == "RSHIFT" then
 				if IsShiftKeyDown() then
-					WeeklyRewardsFrame.SelectRewardButton:SetText(app.IconReady .. " " .. L.VAULT_REWARD_BUTTON)
+					WeeklyRewardsFrame.SelectRewardButton:SetText(app.IconReady .. " " .. L.INSTANT_BUTTON)
 				else
 					WeeklyRewardsFrame.SelectRewardButton:SetText(WEEKLY_REWARDS_SELECT_REWARD)
 				end
 				GameTooltip:Show()
 			end
 		end)
-
 		WeeklyRewardsFrame.SelectRewardButton:HookScript("OnEnter", function(self)
 			if IsShiftKeyDown() then
-				WeeklyRewardsFrame.SelectRewardButton:SetText(app.IconReady .. " " .. L.VAULT_REWARD_BUTTON)
+				WeeklyRewardsFrame.SelectRewardButton:SetText(app.IconReady .. " " .. L.INSTANT_BUTTON)
 			end
 			if TransmogLootHelper_Settings["instantVaultTooltip"] then
 				GameTooltip:SetOwner(self, "ANCHOR_BOTTOM")
-				GameTooltip:SetText(L.VAULT_REWARD_TOOLTIP)
+				GameTooltip:SetText(L.INSTANT_TOOLTIP)
 				GameTooltip:Show()
 			end
 			self:RegisterEvent("MODIFIER_STATE_CHANGED")
