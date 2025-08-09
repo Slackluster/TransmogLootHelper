@@ -52,7 +52,7 @@ L.FILTER_REASON_KNOWN =					"Known appearance"
 L.CATALYSTBUTTON_LABEL =				"Instantly Catalyze"
 
 -- Settings
-L.SETTINGS_TOOLTIP =					app.IconLMB .. "|cffFFFFFF: Toggle the window.\n" ..
+L.SETTINGS_TOOLTIP =					app.IconLMB .. "|cffFFFFFF: Toggle the window\n" ..
 										app.IconRMB .. ": " .. L.WINDOW_BUTTON_SETTINGS
 L.SETTINGS_BAGANATOR =					"For Baganator users this is managed by Baganator's own settings."
 
