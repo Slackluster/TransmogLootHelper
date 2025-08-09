@@ -218,12 +218,13 @@ function app.Settings()
 	local variable, name, tooltip = "rarity", L.SETTINGS_RARITY, L.SETTINGS_RARITY_DESC
 	local function GetOptions()
 		local container = Settings.CreateControlTextContainer()
-		container:Add(0, "|cnIQ0" .. ITEM_QUALITY0_DESC .. "|r")
-		container:Add(1, "|cnIQ1" .. ITEM_QUALITY1_DESC .. "|r")
-		container:Add(2, "|cnIQ2" .. ITEM_QUALITY2_DESC .. "|r")
-		container:Add(3, "|cnIQ3" .. ITEM_QUALITY3_DESC .. "|r")
-		container:Add(4, "|cnIQ4" .. ITEM_QUALITY4_DESC .. "|r")
+		container:Add(0, "|cff" .. string.format("%02x%02x%02x", C_ColorOverrides.GetColorForQuality(0).r * 255, C_ColorOverrides.GetColorForQuality(0).g * 255, C_ColorOverrides.GetColorForQuality(0).b * 255) .. ITEM_QUALITY0_DESC .. "|r")
+		container:Add(1, "|cff" .. string.format("%02x%02x%02x", C_ColorOverrides.GetColorForQuality(1).r * 255, C_ColorOverrides.GetColorForQuality(1).g * 255, C_ColorOverrides.GetColorForQuality(1).b * 255) .. ITEM_QUALITY1_DESC .. "|r")
+		container:Add(2, "|cff" .. string.format("%02x%02x%02x", C_ColorOverrides.GetColorForQuality(2).r * 255, C_ColorOverrides.GetColorForQuality(2).g * 255, C_ColorOverrides.GetColorForQuality(2).b * 255) .. ITEM_QUALITY2_DESC .. "|r")
+		container:Add(3, "|cff" .. string.format("%02x%02x%02x", C_ColorOverrides.GetColorForQuality(3).r * 255, C_ColorOverrides.GetColorForQuality(3).g * 255, C_ColorOverrides.GetColorForQuality(3).b * 255) .. ITEM_QUALITY3_DESC .. "|r")
+		container:Add(4, "|cff" .. string.format("%02x%02x%02x", C_ColorOverrides.GetColorForQuality(4).r * 255, C_ColorOverrides.GetColorForQuality(4).g * 255, C_ColorOverrides.GetColorForQuality(4).b * 255) .. ITEM_QUALITY4_DESC .. "|r")
 		return container:GetData()
+
 	end
 	local setting = Settings.RegisterAddOnSetting(category, appName.."_"..variable, variable, TransmogLootHelper_Settings, Settings.VarType.Number, name, 3)
 	Settings.CreateDropdown(category, setting, GetOptions, tooltip)
