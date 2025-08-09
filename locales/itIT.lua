@@ -50,6 +50,8 @@ local L = app.locales
 
 -- Tweaks
 -- L.CATALYSTBUTTON_LABEL =				"Instantly Catalyze"
+-- L.VAULT_REWARD_TOOLTIP =				"Hold Shift to instantly receive your reward and skip the 5 second timer."
+-- L.VAULT_REWARD_BUTTON =					"Get it now!"
 
 -- Settings
 -- L.SETTINGS_TOOLTIP =					app.IconLMB .. "|cffFFFFFF: Toggle the window\n" ..
@@ -133,6 +135,10 @@ local L = app.locales
 -- L.SETTINGS_HEADER_TWEAKS =				"Tweaks"
 -- L.SETTINGS_CATALYST_BUTTON =			"Show Catalyst Button"
 -- L.SETTINGS_CATALYST_BUTTON_DESC =		"Show a button on the Revival Catalyst that allows you to instantly catalyze an item, skipping the 5 second confirmation timer."
+-- L.SETTINGS_VAULT =						"Instant Great Vault Rewards"
+-- L.SETTINGS_VAULT_DESC =					"Hold Shift to instantly receive your reward from the Great Vault and skip the 5 second timer."
+-- L.SETTINGS_VAULT_TOOLTIP =				"Show tooltip"
+-- L.SETTINGS_VAULT_TOOLTIP_DESC =			"Show the tooltip explaining how this feature works. The button text still changes when this is disabled."
 -- L.SETTINGS_VENDOR_ALL =					"Disable Vendor Filter"
 -- L.SETTINGS_VENDOR_ALL_DESC =			"Automatically set all vendor filters to |cffFFFFFFAll|r to display items normally not shown to your class."
 -- L.SETTINGS_HIDE_LOOT_ROLL_WINDOW =		"Hide loot roll window"

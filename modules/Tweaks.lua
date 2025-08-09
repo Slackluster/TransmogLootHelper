@@ -31,6 +31,48 @@ app.Event:Register("PLAYER_INTERACTION_MANAGER_FRAME_HIDE", function(type)
 	end
 end)
 
+---------------------------------
+-- INSTANT GREAT VAULT REWARDS --
+---------------------------------
+
+app.Event:Register("WEEKLY_REWARDS_UPDATE", function()
+	if TransmogLootHelper_Settings["instantVault"] and WeeklyRewardsFrame and WeeklyRewardsFrame:IsShown() then
+		WeeklyRewardsFrame.SelectRewardButton:HookScript("OnClick", function()
+			if IsShiftKeyDown() then
+				StaticPopupDialogs["CONFIRM_SELECT_WEEKLY_REWARD"].OnAccept(StaticPopup1, StaticPopup1.data)
+			end
+		end)
+
+		WeeklyRewardsFrame.SelectRewardButton:HookScript("OnEvent", function(self, event, key, state)
+			if key == "LSHIFT" or key == "RSHIFT" then
+				if IsShiftKeyDown() then
+					WeeklyRewardsFrame.SelectRewardButton:SetText(app.IconReady .. " " .. L.VAULT_REWARD_BUTTON)
+				else
+					WeeklyRewardsFrame.SelectRewardButton:SetText(WEEKLY_REWARDS_SELECT_REWARD)
+				end
+				GameTooltip:Show()
+			end
+		end)
+
+		WeeklyRewardsFrame.SelectRewardButton:HookScript("OnEnter", function(self)
+			if IsShiftKeyDown() then
+				WeeklyRewardsFrame.SelectRewardButton:SetText(app.IconReady .. " " .. L.VAULT_REWARD_BUTTON)
+			end
+			if TransmogLootHelper_Settings["instantVaultTooltip"] then
+				GameTooltip:SetOwner(self, "ANCHOR_BOTTOM")
+				GameTooltip:SetText(L.VAULT_REWARD_TOOLTIP)
+				GameTooltip:Show()
+			end
+			self:RegisterEvent("MODIFIER_STATE_CHANGED")
+		end)
+		WeeklyRewardsFrame.SelectRewardButton:HookScript("OnLeave", function(self)
+			GameTooltip:Hide()
+			WeeklyRewardsFrame.SelectRewardButton:SetText(WEEKLY_REWARDS_SELECT_REWARD)
+			self:UnregisterEvent("MODIFIER_STATE_CHANGED")
+		end)
+	end
+end)
+
 ---------------------
 -- MERCHANT FILTER --
 ---------------------
