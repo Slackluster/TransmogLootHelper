@@ -102,6 +102,16 @@ function app.Border(parent, a, b, c, d)
 	border:SetBackdropBorderColor(0.776, 0.608, 0.427)
 end
 
+-- Button
+function app.Button(parent, text)
+	local frame = CreateFrame("Button", nil, parent, "UIPanelButtonTemplate")
+	frame:SetText(text)
+	frame:SetWidth(frame:GetTextWidth()+20)
+
+	app.Border(frame, 0, 0, 0, -1)
+	return frame
+end
+
 -- Scan the tooltip for any text
 function app.GetTooltipText(itemLinkie, searchString)
 	local cvar = C_CVar.GetCVarInfo("missingTransmogSourceInItemTooltips")
