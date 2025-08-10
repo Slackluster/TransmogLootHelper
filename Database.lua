@@ -6419,6 +6419,21 @@ app.QuestItem = {
 	[235693] = 82175,	-- Delver's Dirigible Schematic: Rocket
 	[235692] = 82177,	-- Delver's Dirigible Schematic: Thrusters
 	[235691] = 82191,	-- Delver's Dirigible Schematic: Yellow Paint
+	[235697] = 82192,	-- Delver's Dirigible Schematic: Alliance Decal
+	[235694] = 82117,	-- Delver's Dirigible Schematic: Blue Paint
+	[235688] = 82174,	-- Delver's Dirigible Schematic: Fan
+	[235690] = 82169,	-- Delver's Dirigible Schematic: Harpoon
+	[235698] = 82194,	-- Delver's Dirigible Schematic: Horde Decal
+	[235689] = 82186,	-- Delver's Dirigible Schematic: Kite
+	[235695] = 82189,	-- Delver's Dirigible Schematic: Red Paint
+	[235692] = 82177,	-- Delver's Dirigible Schematic: Thrusters
+	[235691] = 82191,	-- Delver's Dirigible Schematic: Yellow Paint
+	[238178] = 88814,	-- Delver's Mana-Skimmer Schematic: Canister
+	[238177] = 88816,	-- Delver's Mana-Skimmer Schematic: Emitter
+	[238181] = 88820,	-- Delver's Mana-Skimmer Schematic: Energy Thrusters
+	[238179] = 88815,	-- Delver's Mana-Skimmer Schematic: Quad Glider
+	[238180] = 88817,	-- Delver's Mana-Skimmer Schematic: Void Paint
+	[238182] = 88819,	-- Delver's Mana-Skimmer Schematic: Hyperdrive
 
 	-- D.R.I.V.E. Customisations
 	[232982] = 85775,	-- Engine: The Pozzik Standard
@@ -6865,4 +6880,22 @@ app.QuestItem = {
 	------------------
 	[242623] = 90710,	-- Enchanted Warbound Purifying Kit
 	[242622] = 90709,	-- Warbound Purifying Kit
+
+	------------------
+	-- PATCH 11.1.7 --
+	------------------
+	[244905] = 90953,	-- Miniature Titan Disc: Charged Crystal
+	[244903] = 90951,	-- Miniature Titan Disc: Charged Touch
+	[244899] = 90947,	-- Miniature Titan Disc: Critical Chain
+	[244902] = 90950,	-- Miniature Titan Disc: Electric Current
+	[244900] = 90948,	-- Miniature Titan Disc: Spark Burst
+	[244901] = 90949,	-- Miniature Titan Disc: Statically Charged
+	[240200] = 90460,	-- Podium Upgrade: Longest Survival Run
+	[240201] = 90461,	-- Podium Upgrade: Longest Time in Spotlights
+	[240202] = 90462,	-- Podium Upgrade: Most Yards Traveled
+	[240199] = 90459,	-- Podium Upgrade: Scrappiest
+	[240203] = 90463,	-- Podium Upgrade: Scrappy
+	[240204] = 90464,	-- Podium Upgrade: Survival Run
+	[240205] = 90465,	-- Podium Upgrade: Time in Spotlights
+	[240206] = 90466,	-- Podium Upgrade: Yards Traveled
 }
