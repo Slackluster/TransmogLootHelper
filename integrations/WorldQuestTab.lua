@@ -3,8 +3,8 @@ local appName, app = ...
 -- World Quest Tab integration
 app.Event:Register("ADDON_LOADED", function(addOnName, containsBindings)
 	if addOnName == "WorldQuestTab" then
+		-- Put our icon on the rewards list
 		local function wqtRewardsList()
-			-- Put our icon on the rewards list
 			if WQT_QuestScrollFrame then
 				local wqtRewards = { WQT_QuestScrollFrame.Contents:GetChildren() }
 				for k, v in pairs(wqtRewards) do
@@ -33,7 +33,10 @@ app.Event:Register("ADDON_LOADED", function(addOnName, containsBindings)
 			end
 		end
 
-		WQT_WorldQuestFrame:RegisterCallback("UpdateQuestList", wqtRewardsList, appName)
+		-- Check if this exists, so this is compatible with both versions of World Quest Tab
+		if WQT_WorldQuestFrame and WQT_WorldQuestFrame.RegisterCallback then
+			WQT_WorldQuestFrame:RegisterCallback("UpdateQuestList", wqtRewardsList, appName)
+		end
 
 		-- Hook our overlay onto the world quest pins
 		local function wqtMapPins()
@@ -69,6 +72,9 @@ app.Event:Register("ADDON_LOADED", function(addOnName, containsBindings)
 
 		WorldMapFrame:HookScript("OnShow", wqtMapPins)
 		EventRegistry:RegisterCallback("MapCanvas.MapSet", wqtMapPins)
-		WQT_WorldQuestFrame:RegisterCallback("UpdateQuestList", wqtMapPins, appName)
+		-- Check if this exists, so this is compatible with both versions of World Quest Tab
+		if WQT_WorldQuestFrame and WQT_WorldQuestFrame.RegisterCallback then
+			WQT_WorldQuestFrame:RegisterCallback("UpdateQuestList", wqtMapPins, appName)
+		end
 	end
 end)
