@@ -11,7 +11,7 @@ local L = app.locales
 ----------------------
 
 app.Event:Register("PLAYER_INTERACTION_MANAGER_FRAME_SHOW", function(type)
-	if TransmogLootHelper_Settings["catalystButton"] and type == 44 then
+	if TransmogLootHelper_Settings["instantCatalyst"] and type == 44 then
 		ItemInteractionFrame.ButtonFrame.ActionButton:HookScript("OnClick", function()
 			if IsShiftKeyDown() then
 				ItemInteractionFrame:CompleteItemInteraction()
