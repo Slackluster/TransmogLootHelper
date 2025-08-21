@@ -232,7 +232,7 @@ function app.Settings()
 	local function onButtonClick()
 		app.RenamePopup:Show()
 	end
-	local initializer = CreateSettingsButtonInitializer(L.SETINGS_WHISPER, L.SETTINGS_WHISPER_CUSTOMIZE, onButtonClick, L.SETTINGS_WHISPER_CUSTOMIZE_DESC, true)
+	local initializer = CreateSettingsButtonInitializer(L.SETTINGS_WHISPER, L.SETTINGS_WHISPER_CUSTOMIZE, onButtonClick, L.SETTINGS_WHISPER_CUSTOMIZE_DESC, true)
 	layout:AddInitializer(initializer)
 
 	layout:AddInitializer(CreateSettingsListSectionHeaderInitializer(L.SETTINGS_HEADER_INFORMATION))
