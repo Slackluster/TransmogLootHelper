@@ -11,6 +11,7 @@ EventUtil.ContinueOnAddOnLoaded("Baganator", function()
 			if itemDetails.itemLocation then
 				containerInfo = C_Container.GetContainerItemInfo(itemDetails.itemLocation.bagID, itemDetails.itemLocation.slotIndex)
 			end
+			C_Item.RequestLoadItemDataByID(itemDetails.itemID)
 			app.ItemOverlay(icon.overlay, itemDetails.itemLink, nil, containerInfo)
 			return icon:IsShown()
 		end,
