@@ -97,6 +97,9 @@ function app.Settings()
 
 	local cbVariable, cbName, cbTooltip = "overlay", L.SETTINGS_ITEM_OVERLAY, L.SETTINGS_ITEM_OVERLAY_DESC
 	local cbSetting = Settings.RegisterAddOnSetting(category, appName.."_"..cbVariable, cbVariable, TransmogLootHelper_Settings, Settings.VarType.Boolean, cbName, true)
+	cbSetting:SetValueChangedCallback(function()
+		app.SettingsChanged()
+	end)
 
 	local ddVariable, ddName, ddTooltip = "iconPosition", L.SETTINGS_ICONPOS,L.SETTINGS_ICONPOS_DESC
 	local function GetOptions()
@@ -108,6 +111,9 @@ function app.Settings()
 		return container:GetData()
 	end
 	local ddSetting = Settings.RegisterAddOnSetting(category, appName.."_"..ddVariable, ddVariable, TransmogLootHelper_Settings, Settings.VarType.Number, ddName, 1)
+	ddSetting:SetValueChangedCallback(function()
+		app.SettingsChanged()
+	end)
 
 	local initializer = CreateSettingsCheckboxDropdownInitializer(
 		cbSetting, cbName, cbTooltip,
@@ -117,50 +123,83 @@ function app.Settings()
 	local variable, name, tooltip = "simpleIcon", L.SETTINGS_ICON_SIMPLE, L.SETTINGS_ICON_SIMPLE_DESC
 	local setting = Settings.RegisterAddOnSetting(category, appName .. "_" .. variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, false)
 	local parentSetting = Settings.CreateCheckbox(category, setting, tooltip)
+	setting:SetValueChangedCallback(function()
+		app.SettingsChanged()
+	end)
 
 	local variable, name, tooltip = "animateIcon", L.SETTINGS_ICON_ANIMATE, L.SETTINGS_ICON_ANIMATE_DESC
 	local setting = Settings.RegisterAddOnSetting(category, appName .. "_" .. variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, true)
 	local parentSetting = Settings.CreateCheckbox(category, setting, tooltip)
+	setting:SetValueChangedCallback(function()
+		app.SettingsChanged()
+	end)
 
 	layout:AddInitializer(CreateSettingsListSectionHeaderInitializer("Collection Info"))
 
 	local variable, name, tooltip = "iconNewMog", L.SETTINGS_ICON_NEW_MOG, L.SETTINGS_ICON_NEW_MOG_DESC
 	local setting = Settings.RegisterAddOnSetting(category, appName .. "_" .. variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, true)
 	local parentSetting = Settings.CreateCheckbox(category, setting, tooltip)
+	setting:SetValueChangedCallback(function()
+		app.SettingsChanged()
+	end)
 
 	local variable, name, tooltip = "iconNewSource", L.SETTINGS_ICON_NEW_SOURCE, L.SETTINGS_ICON_NEW_SOURCE_DESC
 	local setting = Settings.RegisterAddOnSetting(category, appName .. "_" .. variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, false)
 	local subSetting = Settings.CreateCheckbox(category, setting, tooltip)
 	subSetting:SetParentInitializer(parentSetting, function() return TransmogLootHelper_Settings["iconNewMog"] end)
+	setting:SetValueChangedCallback(function()
+		app.SettingsChanged()
+	end)
 
 	local variable, name, tooltip = "iconNewIllusion", L.SETTINGS_ICON_NEW_ILLUSION, L.SETTINGS_ICON_NEW_ILLUSION_DESC
 	local setting = Settings.RegisterAddOnSetting(category, appName.."_"..variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, true)
 	Settings.CreateCheckbox(category, setting, tooltip)
+	setting:SetValueChangedCallback(function()
+		app.SettingsChanged()
+	end)
 
 	local variable, name, tooltip = "iconNewMount", L.SETTINGS_ICON_NEW_MOUNT, L.SETTINGS_ICON_NEW_MOUNT_DESC
 	local setting = Settings.RegisterAddOnSetting(category, appName.."_"..variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, true)
 	Settings.CreateCheckbox(category, setting, tooltip)
+	setting:SetValueChangedCallback(function()
+		app.SettingsChanged()
+	end)
 
 	local variable, name, tooltip = "iconNewPet", L.SETTINGS_ICON_NEW_PET, L.SETTINGS_ICON_NEW_PET_DESC
 	local setting = Settings.RegisterAddOnSetting(category, appName .. "_" .. variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, true)
 	local parentSetting = Settings.CreateCheckbox(category, setting, tooltip)
+	setting:SetValueChangedCallback(function()
+		app.SettingsChanged()
+	end)
 
 	local variable, name, tooltip = "iconNewPetMax", L.SETTINGS_ICON_NEW_PET_MAX, L.SETTINGS_ICON_NEW_PET_MAX_DESC
 	local setting = Settings.RegisterAddOnSetting(category, appName .. "_" .. variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, false)
 	local subSetting = Settings.CreateCheckbox(category, setting, tooltip)
 	subSetting:SetParentInitializer(parentSetting, function() return TransmogLootHelper_Settings["iconNewPet"] end)
+	setting:SetValueChangedCallback(function()
+		app.SettingsChanged()
+	end)
 
 	local variable, name, tooltip = "iconNewToy", L.SETTINGS_ICON_NEW_TOY, L.SETTINGS_ICON_NEW_TOY_DESC
 	local setting = Settings.RegisterAddOnSetting(category, appName.."_"..variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, true)
 	Settings.CreateCheckbox(category, setting, tooltip)
+	setting:SetValueChangedCallback(function()
+		app.SettingsChanged()
+	end)
 
 	local variable, name, tooltip = "iconNewRecipe", L.SETTINGS_ICON_NEW_RECIPE, L.SETTINGS_ICON_NEW_RECIPE_DESC
 	local setting = Settings.RegisterAddOnSetting(category, appName.."_"..variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, true)
 	Settings.CreateCheckbox(category, setting, tooltip)
+	setting:SetValueChangedCallback(function()
+		app.SettingsChanged()
+	end)
 
 	local variable, name, tooltip = "iconLearned", "Learned", "Show an icon to indicate the above tracked collectibles are learned."
 	local setting = Settings.RegisterAddOnSetting(category, appName.."_"..variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, false)
 	Settings.CreateCheckbox(category, setting, tooltip)
+	setting:SetValueChangedCallback(function()
+		app.SettingsChanged()
+	end)
 
 	layout:AddInitializer(CreateSettingsListSectionHeaderInitializer(L.SETTINGS_HEADER_OTHER_INFO))
 
@@ -392,4 +431,10 @@ function app.CreateMessagePopup()
 	end)
 
 	app.RenamePopup = frame
+end
+
+function app.SettingsChanged()
+	if C_AddOns.IsAddOnLoaded("Baganator") then
+		Baganator.API.RequestItemButtonsRefresh()
+	end
 end

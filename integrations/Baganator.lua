@@ -24,4 +24,6 @@ EventUtil.ContinueOnAddOnLoaded("Baganator", function()
 		end,
 		{ corner = "top_right", priority = 1 }
 	)
+
+	app.Event:Register("TRANSMOG_COLLECTION_UPDATED", function() Baganator.API.RequestItemButtonsRefresh() end)
 end)
