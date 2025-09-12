@@ -142,13 +142,6 @@ function app.GetTooltipRedText(itemLink)
 	end
 end
 
--- THANK YOU RUNAWAY - soon to be turned into an API by ATT
-function app.GetATTInfo(itemLinkie)
-	local item = AllTheThings.GetCachedSearchResults(AllTheThings.SearchForLink, itemLinkie, nil, {IgnoreCache=true})
-	local table = {catalyst = item.filledCatalyst, upgrade = item.filledUpgrade}
-	return table
-end
-
 -- Get an item's SourceID (thank you Plusmouse!)
 function app.GetSourceID(itemLink)
 	local _, sourceID = C_TransmogCollection.GetItemInfo(itemLink)

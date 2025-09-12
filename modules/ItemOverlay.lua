@@ -306,11 +306,11 @@ function app.ItemOverlay(overlay, itemLink, itemLocation, containerInfo)
 				elseif TransmogLootHelper_Settings["iconNewSource"] and not api.IsSourceCollected(itemLink) then
 					showOverlay("yellow")
 				-- Catalyst mog
-				elseif C_AddOns.IsAddOnLoaded("AllTheThings") and app.GetATTInfo(itemLink).catalyst then
+				elseif C_AddOns.IsAddOnLoaded("AllTheThings") and AllTheThings.GetLinkReference and AllTheThings.GetLinkReference(itemLink).filledCatalyst then
 					overlay.texture:SetTexture("Interface\\AddOns\\AllTheThings\\assets\\Interface_Catalyst")
 					showOverlay("yellow")
 				-- Upgrade mog
-				elseif C_AddOns.IsAddOnLoaded("AllTheThings") and app.GetATTInfo(itemLink).upgrade then
+				elseif C_AddOns.IsAddOnLoaded("AllTheThings") and AllTheThings.GetLinkReference and AllTheThings.GetLinkReference(itemLink).filledUpgrade then
 					overlay.texture:SetTexture("Interface\\AddOns\\AllTheThings\\assets\\Interface_Upgrade")
 					showOverlay("yellow")
 				elseif TransmogLootHelper_Settings["iconLearned"] and not (classID == 15 and subclassID == 0) then
