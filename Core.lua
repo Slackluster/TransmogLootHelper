@@ -142,36 +142,11 @@ function app.GetTooltipRedText(itemLink)
 	end
 end
 
--- Scan tooltips after addons have handled them (use sparingly)
-function app.GetTooltipAddonText(itemLinkie, searchString, left, right)
-	if left == nil then left = true end
-	if right == nil then right = true end
-
-    GameTooltip:SetOwner(UIParent, "ANCHOR_NONE")
-    GameTooltip:SetHyperlink(itemLinkie)
-    GameTooltip:Show()
-
-	if not GameTooltip.GetName then return end
-	local name = GameTooltip:GetName()
-
-    for i = 1, GameTooltip:NumLines() do
-        local l = _G[name.."TextLeft"..i]
-        local r = _G[name.."TextRight"..i]
-
-        local leftText = l and l:GetText() or ""
-        local rightText = r and r:GetText() or ""
-
-        if left and leftText and leftText:find(searchString) then
-			GameTooltip:Hide()
-			return true
-		end
-		if right and rightText and rightText:find(searchString) then
-			GameTooltip:Hide()
-			return true
-		end
-    end
-
-	GameTooltip:Hide()
+-- THANK YOU RUNAWAY - soon to be turned into an API by ATT
+function app.GetATTInfo(itemLinkie)
+	local item = AllTheThings.GetCachedSearchResults(AllTheThings.SearchForLink, itemLinkie, nil, {IgnoreCache=true})
+	local table = {catalyst = item.filledCatalyst, upgrade = item.filledUpgrade}
+	return table
 end
 
 -- Get an item's SourceID (thank you Plusmouse!)
