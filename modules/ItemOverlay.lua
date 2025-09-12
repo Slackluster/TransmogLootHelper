@@ -306,13 +306,20 @@ function app.ItemOverlay(overlay, itemLink, itemLocation, containerInfo)
 				elseif TransmogLootHelper_Settings["iconNewSource"] and not api.IsSourceCollected(itemLink) then
 					showOverlay("yellow")
 				-- Catalyst mog
+				elseif TransmogLootHelper_Settings["iconNewCatalyst"] and C_AddOns.IsAddOnLoaded("TransmogUpgradeMaster") and TransmogUpgradeMaster_API.GetAppearanceMissingData(itemLink).catalystAppearanceMissing then
+					overlay.texture:SetAtlas("CreationCatalyst-32x32")
+					showOverlay("yellow")
 				elseif TransmogLootHelper_Settings["iconNewCatalyst"] and C_AddOns.IsAddOnLoaded("AllTheThings") and AllTheThings.GetLinkReference and AllTheThings.GetLinkReference(itemLink).filledCatalyst then
 					overlay.texture:SetTexture("Interface\\AddOns\\AllTheThings\\assets\\Interface_Catalyst")
 					showOverlay("yellow")
 				-- Upgrade mog
+				elseif TransmogLootHelper_Settings["iconNewUpgrade"] and C_AddOns.IsAddOnLoaded("TransmogUpgradeMaster") and (TransmogUpgradeMaster_API.GetAppearanceMissingData(itemLink).upgradeAppearanceMissing or TransmogUpgradeMaster_API.GetAppearanceMissingData(itemLink).catalystUpgradeAppearanceMissing) then
+					overlay.texture:SetAtlas("CovenantSanctum-Upgrade-Icon-Available")
+					showOverlay("yellow")
 				elseif TransmogLootHelper_Settings["iconNewUpgrade"] and C_AddOns.IsAddOnLoaded("AllTheThings") and AllTheThings.GetLinkReference and AllTheThings.GetLinkReference(itemLink).filledUpgrade then
 					overlay.texture:SetTexture("Interface\\AddOns\\AllTheThings\\assets\\Interface_Upgrade")
 					showOverlay("yellow")
+				-- Learned
 				elseif TransmogLootHelper_Settings["iconLearned"] and not (classID == 15 and subclassID == 0) then
 					showOverlay("green")
 				else
