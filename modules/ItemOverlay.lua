@@ -1066,32 +1066,20 @@ function app.TooltipInfo()
 	local function OnTooltipSetItem(tooltip)
 		-- Only run any of this is the relevant setting is enabled
 		if TransmogLootHelper_Settings["iconNewRecipe"] then
-			-- Get item info from the last processed tooltip and the primary tooltip
-			local _, _, itemID = TooltipUtil.GetDisplayedItem(tooltip)
-			local _, _, primaryItemID = TooltipUtil.GetDisplayedItem(GameTooltip)
+			local itemLink, itemID
+			local _, primaryItemLink, primaryItemID = TooltipUtil.GetDisplayedItem(GameTooltip)
+			if tooltip.GetItem then _, secondaryItemLink, secondaryItemID = tooltip:GetItem() end
 
-			-- Stop if error, it will try again on its own REAL soon
-			if itemID == nil then
-				return
-			end
-
-			-- If the last processed tooltip isn't the same as the primary tooltip (aka, a compare tooltip), don't do anything
-			if itemID ~= primaryItemID then
-				return
-			end
-
-			-- Filter out recipe "books" that aren't associated with any profession
-			local _, _, _, _, _, _, _, _, _, _, _, classID, subclassID = C_Item.GetItemInfo(itemID)
-			if classID == 9 and subclassID == 0 then
-				return
-			end
-
-			-- Only run this if the item is known to be a recipe
-			if app.SpellItem[itemID] then
-				local recipeID = app.SpellItem[itemID]
-				if TransmogLootHelper_Cache.Recipes[recipeID] == nil then
-					tooltip:AddLine(" ")
-					tooltip:AddLine(app.IconTLH .. " " .. L.RECIPE_UNCACHED)
+			-- Get our most accurate itemLink and itemID
+			itemID = primaryItemID or secondaryItemID
+			if itemID then
+				local _, _, _, _, _, _, _, _, _, _, _, classID, subclassID = C_Item.GetItemInfo(itemID)
+				if classID == 9 and subclassID ~= 0 and app.SpellItem[itemID] then
+					local recipeID = app.SpellItem[itemID]
+					if TransmogLootHelper_Cache.Recipes[recipeID] == nil then
+						tooltip:AddLine(" ")
+						tooltip:AddLine(app.IconTLH .. " " .. L.RECIPE_UNCACHED)
+					end
 				end
 			end
 		end
