@@ -211,6 +211,28 @@ function app.ItemOverlay(overlay, itemLink, itemLocation, containerInfo)
 					end
 				end
 
+				-- Other containers
+				local localeOtherContainers = {
+					"Use: Collect",
+					"Benutzen: Sammelt",
+					"Uso: Recoges",
+					"Uso: Recolecta",
+					"Utilise: Récupère",
+					"Usa: Fornisce",
+					"Uso: Coleta",
+					"Использование: Получить",
+					"使用: 收集",
+				}
+				for k, v in pairs(localeOtherContainers) do
+					if app.GetTooltipText(itemLink, v) then
+						itemEquipLoc = "Container"
+						break
+					elseif app.GetTooltipText(itemLink, "사용 효과:") and app.GetTooltipText(itemLink, "획득합니다") then	-- Can't search for 1 string as the word for "collect" is placed at the end of the sentence in Korean
+						itemEquipLoc = "Container"
+						break
+					end
+				end
+
 				-- Customisations and spellbooks
 				if app.QuestItem[itemID] or app.SpellItem[itemID] then
 					itemEquipLoc = "Customisation"
