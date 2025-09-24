@@ -227,10 +227,10 @@ function app.ItemOverlay(overlay, itemLink, itemLocation, containerInfo)
 					if app.GetTooltipText(itemLink, v) then
 						itemEquipLoc = "Container"
 						break
-					elseif app.GetTooltipText(itemLink, "사용 효과:") and app.GetTooltipText(itemLink, "획득합니다") then	-- Can't search for 1 string as the word for "collect" is placed at the end of the sentence in Korean
-						itemEquipLoc = "Container"
-						break
 					end
+				end
+				if app.GetTooltipText(itemLink, "사용 효과:") and app.GetTooltipText(itemLink, "획득합니다") then	-- Can't search for 1 string as the word for "collect" is placed at the end of the sentence in Korean
+					itemEquipLoc = "Container"
 				end
 
 				-- Customisations and spellbooks
