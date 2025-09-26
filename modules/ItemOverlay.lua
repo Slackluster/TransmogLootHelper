@@ -222,12 +222,12 @@ function app.ItemOverlay(overlay, itemLink, itemLocation, containerInfo)
 					"Usa: Fornisce",
 					"Uso: Coleta",
 					"Использование: Получить",
-					"사용 효과:"
+					"사용 효과:",
 					"使用: 收集",
 				}
 				for k, v in pairs(localeOtherContainers) do
 					-- Exception for the Korean string, as it contains two parts that aren't directly concatenated
-					if app.GetTooltipText(itemLink, v) and (v ~= "사용 효과:" or app.GetTooltipText(itemLink, "획득합니다"))
+					if app.GetTooltipText(itemLink, v) and (v ~= "사용 효과:" or app.GetTooltipText(itemLink, "획득합니다")) then
 						itemEquipLoc = "Container"
 						break
 					end
