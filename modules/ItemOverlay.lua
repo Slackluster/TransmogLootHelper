@@ -213,6 +213,7 @@ function app.ItemOverlay(overlay, itemLink, itemLocation, containerInfo)
 
 				-- Other containers
 				local localeOtherContainers = {
+					ITEM_OPENABLE,	-- <Right Click to Open>
 					"Use: Collect",
 					"Benutzen: Sammelt",
 					"Uso: Recoges",
@@ -221,16 +222,15 @@ function app.ItemOverlay(overlay, itemLink, itemLocation, containerInfo)
 					"Usa: Fornisce",
 					"Uso: Coleta",
 					"Использование: Получить",
+					"사용 효과:"
 					"使用: 收集",
 				}
 				for k, v in pairs(localeOtherContainers) do
-					if app.GetTooltipText(itemLink, v) then
+					-- Exception for the Korean string, as it contains two parts that aren't directly concatenated
+					if app.GetTooltipText(itemLink, v) and (v ~= "사용 효과:" or app.GetTooltipText(itemLink, "획득합니다"))
 						itemEquipLoc = "Container"
 						break
 					end
-				end
-				if app.GetTooltipText(itemLink, "사용 효과:") and app.GetTooltipText(itemLink, "획득합니다") then	-- Can't search for 1 string as the word for "collect" is placed at the end of the sentence in Korean
-					itemEquipLoc = "Container"
 				end
 
 				-- Customisations and spellbooks
