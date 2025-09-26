@@ -132,7 +132,7 @@ function app.ItemOverlay(overlay, itemLink, itemLocation, containerInfo)
 			elseif app.GetTooltipText(itemLink, ITEM_TOY_ONUSE) then
 				itemEquipLoc = "Toy"
 			-- Pets
-			elseif classID == 17 or (classID == 15 and subclassID == 2) then
+			elseif C_PetJournal.GetPetInfoByItemID(itemID) then
 				itemEquipLoc = "Pet"
 			-- Illusions & Ensembles
 			elseif classID == 0 and subclassID == 8 then
