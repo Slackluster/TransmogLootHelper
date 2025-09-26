@@ -3,16 +3,12 @@ local appName, app = ...
 -- Baganator integration
 EventUtil.ContinueOnAddOnLoaded("Baganator", function()
 	Baganator.API.RegisterCornerWidget("Transmog Loot Helper", "transmogloothelper",
-		function(icon, itemDetails)
-			if not C_Item.IsItemDataCachedByID(itemDetails.itemID) then
+        function(icon, itemDetails)
+            if not C_Item.IsItemDataCachedByID(itemDetails.itemID) then
+				C_Item.RequestLoadItemDataByID(itemDetails.itemID)
 				return
 			end
-			local containerInfo
-			if itemDetails.itemLocation then
-				containerInfo = C_Container.GetContainerItemInfo(itemDetails.itemLocation.bagID, itemDetails.itemLocation.slotIndex)
-			end
-			C_Item.RequestLoadItemDataByID(itemDetails.itemID)
-			app.ItemOverlay(icon.overlay, itemDetails.itemLink, nil, containerInfo)
+			app.ItemOverlay(icon.overlay, itemDetails.itemLink, nil, {hasLoot = itemDetails.hasLoot})
 			return icon:IsShown()
 		end,
 		function(itemButton)

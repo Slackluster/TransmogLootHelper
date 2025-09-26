@@ -116,7 +116,8 @@ end
 function app.GetTooltipText(itemLinkie, searchString)
 	local cvar = C_CVar.GetCVarInfo("missingTransmogSourceInItemTooltips")
 	C_CVar.SetCVar("missingTransmogSourceInItemTooltips", 1)
-	local tooltip = C_TooltipInfo.GetHyperlink(itemLinkie)
+	local tooltip = app.Tooltip[itemLinkie] or C_TooltipInfo.GetHyperlink(itemLinkie)
+	app.Tooltip[itemLinkie] = tooltip
 	C_CVar.SetCVar("missingTransmogSourceInItemTooltips", cvar)
 
 	if tooltip and tooltip["lines"] then
@@ -205,6 +206,7 @@ app.Event:Register("ADDON_LOADED", function(addOnName, containsBindings)
 	if addOnName == appName then
 		app.Flag = {}
 		app.Flag["versionCheck"] = 0
+		app.Tooltip = {}
 
 		C_ChatInfo.RegisterAddonMessagePrefix("TransmogLootHelp")
 
