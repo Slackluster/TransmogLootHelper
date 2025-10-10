@@ -1,5 +1,5 @@
 # Transmog Loot Helper
-A World of Warcraft addon. Download locations: [CurseForge](https://www.curseforge.com/wow/addons/transmog-loot-helper) | [Wago.io](https://addons.wago.io/addons/tlh)
+A World of Warcraft addon. Download locations: [CurseForge](https://www.curseforge.com/wow/addons/transmog-loot-helper) | [Wago](https://addons.wago.io/addons/tlh)
 
 # Description
 **Transmog Loot Helper** shows icons for unlearned transmog, mounts, pets, toys, and recipes. These show on items, in the Auction House, in your profession window, and on world quest pins.
@@ -30,3 +30,4 @@ Currently supported addons:
 
 #### Support me, if you want 👉👈😳
 [![](https://i.imgur.com/qGoTtXm.png)](https://www.buymeacoffee.com/SlacklusterYT)
+
