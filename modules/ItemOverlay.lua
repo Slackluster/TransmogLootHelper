@@ -120,10 +120,10 @@ function app.ItemOverlay(overlay, itemLink, itemLocation, containerInfo)
 		if containerInfo and containerInfo.hasLoot then
 			itemEquipLoc = "Container"
 		-- Mounts
-		elseif classID == 15 and subclassID == 5 then
+		elseif classID == Enum.ItemClass.Miscellaneous and subclassID == Enum.ItemMiscellaneousSubclass.Mount then
 			itemEquipLoc = "Mount"
 		-- Recipes
-		elseif classID == 9 and subclassID ~= 0 then
+		elseif classID == Enum.ItemClass.Recipe and subclassID ~= Enum.ItemRecipeSubclass.Book then
 			itemEquipLoc = "Recipe"
 		-- Toys
 		elseif app.GetTooltipText(itemLink, ITEM_TOY_ONUSE) then
@@ -131,8 +131,8 @@ function app.ItemOverlay(overlay, itemLink, itemLocation, containerInfo)
 		-- Pets
 		elseif C_PetJournal.GetPetInfoByItemID(itemID) then
 			itemEquipLoc = "Pet"
-		-- Illusions & Ensembles
-		elseif classID == 0 and subclassID == 8 then
+		-- Illusions, Ensembles, and Arsenals
+		elseif classID == Enum.ItemClass.Consumable and subclassID == Enum.ItemConsumableSubclass.Other then
 			local itemName = C_Item.GetItemInfo(itemLink)
 
 			-- Check if it's an illusion
