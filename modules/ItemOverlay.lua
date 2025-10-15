@@ -221,7 +221,6 @@ function app.ItemOverlay(overlay, itemLink, itemLocation, containerInfo)
 				"Использование: Получить",
 				"사용 효과:",
 				"使用: 收集",
-				C_Spell.GetSpellDescription(454738),	-- Open to gain some Gold.
 			}
 			for k, v in pairs(localeOtherContainers) do
 				-- Exception for the Korean string, as it contains two parts that aren't directly concatenated
