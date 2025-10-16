@@ -20,7 +20,7 @@ EventUtil.ContinueOnAddOnLoaded("ArkInventory", function()
 		end
 
 		if data.h then
-			app.ItemOverlay(itemButton.TLHOverlay, data.h, itemLocation, containerInfo)
+			app.ItemOverlay(itemButton.TLHOverlay, data.h, itemLocation, containerInfo, true)
 		else
 			itemButton.TLHOverlay:Hide()
 		end

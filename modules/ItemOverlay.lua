@@ -28,7 +28,7 @@ end)
 ------------------
 
 -- Create and set our icon and text overlay
-function app.ItemOverlay(overlay, itemLink, itemLocation, containerInfo)
+function app.ItemOverlay(overlay, itemLink, itemLocation, containerInfo, bagAddon)
 	-- Create our overlay
 	local function createOverlay()
 		-- Text
@@ -114,8 +114,13 @@ function app.ItemOverlay(overlay, itemLink, itemLocation, containerInfo)
 
 	-- Process our overlay
 	local function processOverlay(itemID)
+		local hasItemLocation = false
+		if itemLocation or bagAddon then
+			hasItemLocation = true
+		end
+
 		-- Cache our info, if we haven't yet.
-		if not app.OverlayCache[itemLink] then
+		if not app.OverlayCache[itemLink] or hasItemLocation and app.OverlayCache[itemLink].hasItemLocation == false then
 			-- Grab our item info, which is enough for appearances
 			local _, _, itemQuality, _, _, _, _, _, itemEquipLoc, _, _, classID, subclassID, bindType, _, _, _ = C_Item.GetItemInfo(itemLink)
 
@@ -249,7 +254,7 @@ function app.ItemOverlay(overlay, itemLink, itemLocation, containerInfo)
 			end
 
 			-- Cache this info, so we don't need to check it again
-			app.OverlayCache[itemLink] = { itemEquipLoc = itemEquipLoc, bindType = bindType, itemQuality = itemQuality }
+			app.OverlayCache[itemLink] = { itemEquipLoc = itemEquipLoc, bindType = bindType, itemQuality = itemQuality, hasItemLocation = hasItemLocation }
 		end
 
 		local itemEquipLoc = app.OverlayCache[itemLink].itemEquipLoc
