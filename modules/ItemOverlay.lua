@@ -16,6 +16,8 @@ app.Event:Register("ADDON_LOADED", function(addOnName, containsBindings)
 		if not TransmogLootHelper_Cache then TransmogLootHelper_Cache = {} end
 		if not TransmogLootHelper_Cache.Recipes then TransmogLootHelper_Cache.Recipes = {} end
 
+		app.OverlayCache = {}
+
 		app.ItemOverlayHooks()
 		app.TooltipInfo()
 	end
@@ -111,146 +113,148 @@ function app.ItemOverlay(overlay, itemLink, itemLocation, containerInfo)
 	createOverlay()
 
 	-- Process our overlay
-	local ourItem = {}
 	local function processOverlay(itemID)
-		-- Grab our item info, which is enough for appearances
-		local _, _, itemQuality, _, _, _, _, _, itemEquipLoc, _, _, classID, subclassID, bindType, _, _, _ = C_Item.GetItemInfo(itemLink)
+		-- Cache our info, if we haven't yet.
+		if not app.OverlayCache[itemLink] then
+			-- Grab our item info, which is enough for appearances
+			local _, _, itemQuality, _, _, _, _, _, itemEquipLoc, _, _, classID, subclassID, bindType, _, _, _ = C_Item.GetItemInfo(itemLink)
 
-		-- Containers
-		if containerInfo and containerInfo.hasLoot then
-			itemEquipLoc = "Container"
-		-- Mounts
-		elseif classID == Enum.ItemClass.Miscellaneous and subclassID == Enum.ItemMiscellaneousSubclass.Mount then
-			itemEquipLoc = "Mount"
-		-- Recipes
-		elseif classID == Enum.ItemClass.Recipe and subclassID ~= Enum.ItemRecipeSubclass.Book then
-			itemEquipLoc = "Recipe"
-		-- Toys
-		elseif app.GetTooltipText(itemLink, ITEM_TOY_ONUSE) then
-			itemEquipLoc = "Toy"
-		-- Pets
-		elseif C_PetJournal.GetPetInfoByItemID(itemID) then
-			itemEquipLoc = "Pet"
-		-- Illusions, Ensembles, and Arsenals
-		elseif classID == Enum.ItemClass.Consumable and subclassID == Enum.ItemConsumableSubclass.Other then
-			local itemName = C_Item.GetItemInfo(itemLink)
+			-- Containers
+			if containerInfo and containerInfo.hasLoot then
+				itemEquipLoc = "Container"
+			-- Mounts
+			elseif classID == Enum.ItemClass.Miscellaneous and subclassID == Enum.ItemMiscellaneousSubclass.Mount then
+				itemEquipLoc = "Mount"
+			-- Recipes
+			elseif classID == Enum.ItemClass.Recipe and subclassID ~= Enum.ItemRecipeSubclass.Book then
+				itemEquipLoc = "Recipe"
+			-- Toys
+			elseif app.GetTooltipText(itemLink, ITEM_TOY_ONUSE) then
+				itemEquipLoc = "Toy"
+			-- Pets
+			elseif C_PetJournal.GetPetInfoByItemID(itemID) then
+				itemEquipLoc = "Pet"
+			-- Illusions, Ensembles, and Arsenals
+			elseif classID == Enum.ItemClass.Consumable and subclassID == Enum.ItemConsumableSubclass.Other then
+				local itemName = C_Item.GetItemInfo(itemLink)
 
-			-- Check if it's an illusion
-			local localeIllusion = {
-				"Illusion:",
-				"Illusion :",
-				"Ilusión:",
-				"Illusione:",
-				"Ilusão:",
-				"Иллюзия",
-				"환영:",
-				"幻象：",
-			}
-			for k, v in pairs(localeIllusion) do
-				if itemName:find("^" .. v) then
-					itemEquipLoc = "Illusion"
-					break
+				-- Check if it's an illusion
+				local localeIllusion = {
+					"Illusion:",
+					"Illusion :",
+					"Ilusión:",
+					"Illusione:",
+					"Ilusão:",
+					"Иллюзия",
+					"환영:",
+					"幻象：",
+				}
+				for k, v in pairs(localeIllusion) do
+					if itemName:find("^" .. v) then
+						itemEquipLoc = "Illusion"
+						break
+					end
 				end
-			end
 
-			-- Check if it's an ensemble
-			local localeEnsemble = {
-				"Ensemble:",
-				"Ensemble :",
-				"Indumentaria:",
-				"Set:",
-				"Indumentária:",
-				"Комплект:",
-				"복장:",
-				"套装：",
-			}
-			for k, v in pairs(localeEnsemble) do
-				if itemName:find("^" .. v) then
-					itemEquipLoc = "Ensemble"
-					break
+				-- Check if it's an ensemble
+				local localeEnsemble = {
+					"Ensemble:",
+					"Ensemble :",
+					"Indumentaria:",
+					"Set:",
+					"Indumentária:",
+					"Комплект:",
+					"복장:",
+					"套装：",
+				}
+				for k, v in pairs(localeEnsemble) do
+					if itemName:find("^" .. v) then
+						itemEquipLoc = "Ensemble"
+						break
+					end
 				end
-			end
 
-			-- Check if it's an arsenal
-			local localeArsenal = {
-				"Arsenal:",
-				"Arsenal :",
-				"Arsenale:",
-				"Арсенал:",
-				"병기:",
-				"军械：",
-				"武器庫：",
-			}
-			for k, v in pairs(localeArsenal) do
-				if itemName:find("^" .. v) then
-					itemEquipLoc = "Arsenal"
-					break
+				-- Check if it's an arsenal
+				local localeArsenal = {
+					"Arsenal:",
+					"Arsenal :",
+					"Arsenale:",
+					"Арсенал:",
+					"병기:",
+					"军械：",
+					"武器庫：",
+				}
+				for k, v in pairs(localeArsenal) do
+					if itemName:find("^" .. v) then
+						itemEquipLoc = "Arsenal"
+						break
+					end
 				end
-			end
-		-- Check for other item types
-		else
-			-- Profession Knowledge
-			local localeProfessionKnowledge = {
-				"Use: Study to increase your",
-				"Benutzen: Studieren, um Euer",
-				"Uso: Estudia para aumentar",
-				"Utilise: Vous étudiez afin",
-				"Usa: Da studiare per aumentare",
-				"Uso: Estuda para aumentar",
-				"Использование: Изучить, повышая ваше",
-				"사용 효과: 연구합니다. 카즈 알가르",
-				"使用: 研究以使你的卡兹阿加",
-			}
-			for k, v in pairs(localeProfessionKnowledge) do
-				if app.GetTooltipText(itemLink, v) then
-					itemEquipLoc = "ProfessionKnowledge"
-					break
+			-- Check for other item types
+			else
+				-- Profession Knowledge
+				local localeProfessionKnowledge = {
+					"Use: Study to increase your",
+					"Benutzen: Studieren, um Euer",
+					"Uso: Estudia para aumentar",
+					"Utilise: Vous étudiez afin",
+					"Usa: Da studiare per aumentare",
+					"Uso: Estuda para aumentar",
+					"Использование: Изучить, повышая ваше",
+					"사용 효과: 연구합니다. 카즈 알가르",
+					"使用: 研究以使你的卡兹阿加",
+				}
+				for k, v in pairs(localeProfessionKnowledge) do
+					if app.GetTooltipText(itemLink, v) then
+						itemEquipLoc = "ProfessionKnowledge"
+						break
+					end
 				end
-			end
 
-			-- Other containers
-			local localeOtherContainers = {
-				ITEM_OPENABLE,	-- <Right Click to Open>
-				"Use: Collect",
-				"Benutzen: Sammelt",
-				"Uso: Recoges",
-				"Uso: Recolecta",
-				"Utilise: Récupère",
-				"Usa: Fornisce",
-				"Uso: Coleta",
-				"Использование: Получить",
-				"사용 효과:",
-				"使用: 收集",
-			}
-			for k, v in pairs(localeOtherContainers) do
-				-- Exception for the Korean string, as it contains two parts that aren't directly concatenated
-				if app.GetTooltipText(itemLink, v) and (v ~= "사용 효과:" or app.GetTooltipText(itemLink, "획득합니다")) then
-					itemEquipLoc = "Container"
-					break
+				-- Other containers
+				local localeOtherContainers = {
+					ITEM_OPENABLE,	-- <Right Click to Open>
+					"Use: Collect",
+					"Benutzen: Sammelt",
+					"Uso: Recoges",
+					"Uso: Recolecta",
+					"Utilise: Récupère",
+					"Usa: Fornisce",
+					"Uso: Coleta",
+					"Использование: Получить",
+					"사용 효과:",
+					"使用: 收集",
+				}
+				for k, v in pairs(localeOtherContainers) do
+					-- Exception for the Korean string, as it contains two parts that aren't directly concatenated
+					if app.GetTooltipText(itemLink, v) and (v ~= "사용 효과:" or app.GetTooltipText(itemLink, "획득합니다")) then
+						itemEquipLoc = "Container"
+						break
+					end
 				end
-			end
 
-			-- Customisations and spellbooks
-			if app.QuestItem[itemID] or app.SpellItem[itemID] then
-				itemEquipLoc = "Customisation"
+				-- Customisations and spellbooks
+				if app.QuestItem[itemID] or app.SpellItem[itemID] then
+					itemEquipLoc = "Customisation"
 
-				-- Check for profession books
-				if app.SpellItem[itemID] then
-					local _, _, tradeskill = C_TradeSkillUI.GetTradeSkillLineForRecipe(app.SpellItem[itemID])
+					-- Check for profession books
+					if app.SpellItem[itemID] then
+						local _, _, tradeskill = C_TradeSkillUI.GetTradeSkillLineForRecipe(app.SpellItem[itemID])
 
-					if app.Icon[tradeskill] then
-						itemEquipLoc = "Recipe"
+						if app.Icon[tradeskill] then
+							itemEquipLoc = "Recipe"
+						end
 					end
 				end
 			end
+
+			-- Cache this info, so we don't need to check it again
+			app.OverlayCache[itemLink] = { itemEquipLoc = itemEquipLoc, bindType = bindType, itemQuality = itemQuality }
 		end
 
-		-- Cache this info, so we don't need to check it again
-		ourItem = { itemEquipLoc = itemEquipLoc, bindType = bindType, itemQuality = itemQuality }
-
-		local itemEquipLoc = ourItem.itemEquipLoc
+		local itemEquipLoc = app.OverlayCache[itemLink].itemEquipLoc
 		local icon = app.Icon[itemEquipLoc]
-		local bindType = ourItem.bindType
+		local bindType = app.OverlayCache[itemLink].bindType
 
 		-- Set the icon's texture
 		overlay.texture:SetTexture(icon)
@@ -311,7 +315,7 @@ function app.ItemOverlay(overlay, itemLink, itemLocation, containerInfo)
 			-- Appearances
 			if TransmogLootHelper_Settings["iconNewMog"] and itemEquipLoc:find("INVTYPE") then
 				-- Legendaries and Artifacts can be a little weird
-				if (ourItem.itemQuality == 5 or ourItem.itemQuality == 6) and bindType == 1 then
+				if (app.OverlayCache[itemLink].itemQuality == 5 or app.OverlayCache[itemLink].itemQuality == 6) and bindType == 1 then
 					if TransmogLootHelper_Settings["iconLearned"] then
 						showOverlay("green")
 					else
@@ -394,13 +398,13 @@ function app.ItemOverlay(overlay, itemLink, itemLocation, containerInfo)
 			-- Pets
 			elseif TransmogLootHelper_Settings["iconNewPet"] and itemEquipLoc == "Pet" then
 				-- If we haven't grabbed this info from a pet cage, grab it now
-				if not ourItem.speciesID then
-					ourItem.speciesID = select(13, C_PetJournal.GetPetInfoByItemID(itemID))
+				if not app.OverlayCache[itemLink].speciesID then
+					app.OverlayCache[itemLink].speciesID = select(13, C_PetJournal.GetPetInfoByItemID(itemID))
 				end
 
 				-- Account for a Blizz API bug that is apparently present, this is why we can't have nice things
-				if ourItem.speciesID then
-					numPets, maxAllowed = C_PetJournal.GetNumCollectedInfo(ourItem.speciesID)
+				if app.OverlayCache[itemLink].speciesID then
+					numPets, maxAllowed = C_PetJournal.GetNumCollectedInfo(app.OverlayCache[itemLink].speciesID)
 				else
 					numPets = 0
 					maxAllowed = 0
@@ -548,11 +552,11 @@ function app.ItemOverlay(overlay, itemLink, itemLocation, containerInfo)
 	if not itemID or itemID == 82800 then
 		local speciesID = string.match(itemLink, "battlepet:(%d+):")
 		if speciesID then
-			ourItem = { itemEquipLoc = "Pet", bindType = 2, speciesID = speciesID }
+			app.OverlayCache[itemLink] = { itemEquipLoc = "Pet", bindType = 2, speciesID = speciesID }
 			processOverlay()
 		-- If this magical pet cage can't return the above info, in that case mark it as unknown
 		elseif itemID == 82800 then
-			ourItem = { itemEquipLoc = "Unknown" }
+			app.OverlayCache[itemLink] = { itemEquipLoc = "Unknown" }
 			processOverlay()
 		else
 			return
