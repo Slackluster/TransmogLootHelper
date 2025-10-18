@@ -205,7 +205,7 @@ end
 app.Event:Register("ADDON_LOADED", function(addOnName, containsBindings)
 	if addOnName == appName then
 		app.Flag = {}
-		app.Flag["versionCheck"] = 0
+		app.Flag.VersionCheck = 0
 		app.Tooltip = {}
 
 		C_ChatInfo.RegisterAddonMessagePrefix("TransmogLootHelp")
@@ -286,9 +286,9 @@ app.Event:Register("CHAT_MSG_ADDON", function(prefix, text, channel, sender, tar
 					local localAddonVersion = tonumber(iteration)
 
 					if otherGameVersion > localGameVersion or (otherGameVersion == localGameVersion and otherAddonVersion > localAddonVersion) then
-						if GetServerTime() - app.Flag["versionCheck"] > 600 then
+						if GetServerTime() - app.Flag.VersionCheck > 600 then
 							app.Print(L.NEW_VERSION_AVAILABLE, version)
-							app.Flag["versionCheck"] = GetServerTime()
+							app.Flag.VersionCheck = GetServerTime()
 						end
 					end
 				end

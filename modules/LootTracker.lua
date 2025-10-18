@@ -18,7 +18,7 @@ app.Event:Register("ADDON_LOADED", function(addOnName, containsBindings)
 		app.ClassID = PlayerUtil.GetClassID()
 		app.FilteredLoot = {}
 		app.FilteredRow = {}
-		app.Flag["lastUpdate"] = 0
+		app.Flag.LastUpdate = 0
 		app.Hidden = CreateFrame("Frame")
 		app.ShowArmour = true
 		app.ShowFiltered = false
@@ -1055,7 +1055,7 @@ end
 -- Delay open/update window
 function app.Stagger(t, show)
 	C_Timer.After(t, function()
-		if GetServerTime() - app.Flag["lastUpdate"] >= t then
+		if GetServerTime() - app.Flag.LastUpdate >= t then
 			if show and TransmogLootHelper_Settings["autoOpen"] then
 				app.Show()
 			else
@@ -1063,7 +1063,7 @@ function app.Stagger(t, show)
 			end
 		else
 			C_Timer.After(t, function()
-				if GetServerTime() - app.Flag["lastUpdate"] >= t then
+				if GetServerTime() - app.Flag.LastUpdate >= t then
 					if show and TransmogLootHelper_Settings["autoOpen"] then
 						app.Show()
 					else
@@ -1084,7 +1084,7 @@ function app.AddFilteredLoot(itemLink, itemID, itemTexture, playerName, itemType
 		table.remove(app.FilteredLoot, 1)
 	end
 
-	app.Flag["lastUpdate"] = GetServerTime()
+	app.Flag.LastUpdate = GetServerTime()
 	app.Stagger(1, false)
 end
 
@@ -1180,7 +1180,7 @@ app.Event:Register("CHAT_MSG_LOOT", function(text, playerName, languageName, cha
 					end
 
 					-- Stagger show/update the window
-					app.Flag["lastUpdate"] = GetServerTime()
+					app.Flag.LastUpdate = GetServerTime()
 					app.Stagger(1, true)
 				else
 					-- Add to filtered loot and update the window
@@ -1224,7 +1224,7 @@ app.Event:Register("CHAT_MSG_ADDON", function(prefix, text, channel, sender, tar
 				end
 			end
 
-			app.Flag["lastUpdate"] = GetServerTime()
+			app.Flag.LastUpdate = GetServerTime()
 			app.Stagger(1, false)
 		end
 
