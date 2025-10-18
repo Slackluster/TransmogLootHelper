@@ -552,6 +552,9 @@ function app.ItemOverlay(overlay, itemLink, itemLocation, containerInfo, bagAddo
 		end
 	end
 
+	local ignore = {
+		[37011] = true,	-- Magic Broom
+	}
 	local itemID = C_Item.GetItemInfoInstant(itemLink)
 	-- Caged pets don't return this info, except this one magical pet cage
 	if not itemID or itemID == 82800 then
@@ -566,7 +569,8 @@ function app.ItemOverlay(overlay, itemLink, itemLocation, containerInfo, bagAddo
 		else
 			return
 		end
-	-- But everything else does (that I know of so far)
+	elseif ignore[itemID] then
+		return
 	else
 		-- Cache the item by asking the server to give us the info
 		C_Item.RequestLoadItemDataByID(itemID)
