@@ -536,7 +536,7 @@ function app.ItemOverlay(overlay, itemLink, itemLocation, containerInfo, bagAddo
 			elseif itemLocation and C_Item.IsBound(itemLocation) then
 				-- BoA (ITEM_ACCOUNTBOUND and ITEM_BNETACCOUNTBOUND is the actual text, but it always returns the other two anyway)
 				if app.GetTooltipText(itemLink, ITEM_BIND_TO_ACCOUNT) or app.GetTooltipText(itemLink, ITEM_BIND_TO_BNETACCOUNT) then
-					overlay.text:SetText("|cff00CCFF" .. L.BINDTEXT_BOP .. "|r")
+					overlay.text:SetText("|cff00CCFF" .. L.BINDTEXT_BOA .. "|r")
 				-- Soulbound
 				else
 					overlay.text:SetText("")

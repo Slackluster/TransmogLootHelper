@@ -19,6 +19,7 @@ L.NEW_VERSION_AVAILABLE =				"Доступна новая версия " .. app.
 L.BINDTEXT_WUE =						"WuE"
 L.BINDTEXT_BOP =						"BoP"
 L.BINDTEXT_BOE =						"BoE"
+L.BINDTEXT_BOA =						"BoA"
 L.RECIPE_UNCACHED =						"Пожалуйста, откройте эту профессию, чтобы обновить статус коллекции рецепта."
 
 -- Loot tracker

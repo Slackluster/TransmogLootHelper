@@ -19,6 +19,7 @@ local L = app.locales
 -- L.BINDTEXT_WUE =						"WuE"
 -- L.BINDTEXT_BOP =						"BoP"
 -- L.BINDTEXT_BOE =						"BoE"
+-- L.BINDTEXT_BOA =						"BoA"
 -- L.RECIPE_UNCACHED =						"Please open this profession to update the recipe's collection status."
 
 -- Loot tracker
