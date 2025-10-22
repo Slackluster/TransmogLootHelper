@@ -89,7 +89,7 @@ function app.Settings()
 	end
 
 	-- Settings page
-	local category, layout = Settings.RegisterVerticalLayoutCategory(app.NameLong)
+	local category, layout = Settings.RegisterVerticalLayoutCategory(app.Name)
 	Settings.RegisterAddOnCategory(category)
 	app.Category = category
 
