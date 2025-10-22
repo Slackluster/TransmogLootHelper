@@ -443,7 +443,7 @@ function app.ItemOverlay(overlay, itemLink, itemLocation, containerInfo, bagAddo
 				overlay.animation:Stop()
 			-- Toys
 			elseif TransmogLootHelper_Settings["iconNewToy"] and itemEquipLoc == "Toy" then
-				if app.GetTooltipText(itemLink, ITEM_SPELL_KNOWN) then
+				if PlayerHasToy(itemID) then
 					if TransmogLootHelper_Settings["iconLearned"] then
 						showOverlay("green")
 					else
