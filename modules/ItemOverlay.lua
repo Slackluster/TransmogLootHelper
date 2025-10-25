@@ -134,7 +134,7 @@ function app.ItemOverlay(overlay, itemLink, itemLocation, containerInfo, bagAddo
 			elseif classID == Enum.ItemClass.Recipe and subclassID ~= Enum.ItemRecipeSubclass.Book then
 				itemEquipLoc = "Recipe"
 			-- Toys
-			elseif app.GetTooltipText(itemLink, ITEM_TOY_ONUSE) then
+			elseif app.IsToy(itemLink) then
 				itemEquipLoc = "Toy"
 			-- Pets
 			elseif C_PetJournal.GetPetInfoByItemID(itemID) then
@@ -366,7 +366,7 @@ function app.ItemOverlay(overlay, itemLink, itemLocation, containerInfo, bagAddo
 			-- Ensembles & Arsenals
 			elseif TransmogLootHelper_Settings["iconNewMog"] and (itemEquipLoc == "Ensemble" or itemEquipLoc == "Arsenal") then
 				-- Learned
-				if app.GetTooltipText(itemLink, ITEM_SPELL_KNOWN) then
+				if app.IsLearned(itemLink) then
 					if TransmogLootHelper_Settings["iconLearned"] then
 						showOverlay("green")
 					else
@@ -382,7 +382,7 @@ function app.ItemOverlay(overlay, itemLink, itemLocation, containerInfo, bagAddo
 			-- Illusions
 			elseif TransmogLootHelper_Settings["iconNewIllusion"] and itemEquipLoc == "Illusion" then
 				-- Learned
-				if app.GetTooltipText(itemLink, ITEM_SPELL_KNOWN) then
+				if app.IsLearned(itemLink) then
 					if TransmogLootHelper_Settings["iconLearned"] then
 						showOverlay("green")
 					else
@@ -398,7 +398,7 @@ function app.ItemOverlay(overlay, itemLink, itemLocation, containerInfo, bagAddo
 			-- Mounts
 			elseif TransmogLootHelper_Settings["iconNewMount"] and itemEquipLoc == "Mount" then
 				-- Learned
-				if app.GetTooltipText(itemLink, ITEM_SPELL_KNOWN) then
+				if app.IsLearned(itemLink) then
 					if TransmogLootHelper_Settings["iconLearned"] then
 						showOverlay("green")
 					else
@@ -500,7 +500,7 @@ function app.ItemOverlay(overlay, itemLink, itemLocation, containerInfo, bagAddo
 			-- Customisations (includes spellbooks)
 			elseif TransmogLootHelper_Settings["iconUsable"] and itemEquipLoc == "Customisation" then
 				-- Learned
-				if TransmogLootHelper_Cache.Recipes[app.SpellItem[itemID]] or (app.QuestItem[itemID] and C_QuestLog.IsQuestFlaggedCompleted(app.QuestItem[itemID])) or app.GetTooltipText(itemLink, ITEM_SPELL_KNOWN) then
+				if TransmogLootHelper_Cache.Recipes[app.SpellItem[itemID]] or (app.QuestItem[itemID] and C_QuestLog.IsQuestFlaggedCompleted(app.QuestItem[itemID])) or app.IsLearned(itemLink) then
 					if TransmogLootHelper_Settings["iconLearned"] then
 						showOverlay("green")
 					else
@@ -541,12 +541,11 @@ function app.ItemOverlay(overlay, itemLink, itemLocation, containerInfo, bagAddo
 					overlay.text:SetText("|cff00CCFF" .. L.BINDTEXT_WUE .. "|r")
 				end
 			-- WuE on vendor
-			elseif not itemLocation and app.GetTooltipText(itemLink, ITEM_BIND_TO_ACCOUNT_UNTIL_EQUIP) then
+			elseif not itemLocation and app.GetBonding(itemLink) == "WuE" then
 				overlay.text:SetText("|cff00CCFF" .. L.BINDTEXT_WUE .. "|r")
 			-- Soulbound + BoA
 			elseif itemLocation and C_Item.IsBound(itemLocation) then
-				-- BoA (ITEM_ACCOUNTBOUND and ITEM_BNETACCOUNTBOUND is the actual text, but it always returns the other two anyway)
-				if app.GetTooltipText(itemLink, ITEM_BIND_TO_ACCOUNT) or app.GetTooltipText(itemLink, ITEM_BIND_TO_BNETACCOUNT) then
+				if app.GetBonding(itemLink) == "BoA" then
 					overlay.text:SetText("|cff00CCFF" .. L.BINDTEXT_BOA .. "|r")
 				-- Soulbound
 				else

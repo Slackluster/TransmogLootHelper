@@ -130,6 +130,56 @@ function app.GetTooltipText(itemLinkie, searchString)
 	return false
 end
 
+function app.IsToy(itemLinkie)
+	local tooltip = app.Tooltip[itemLinkie] or C_TooltipInfo.GetHyperlink(itemLinkie)
+	app.Tooltip[itemLinkie] = tooltip
+
+	if tooltip and tooltip.lines then
+		for _, line in ipairs(tooltip.lines) do
+			if line.type == Enum.TooltipDataLineType.None then
+				if line.leftText and line.leftText:find(ITEM_TOY_ONUSE) then
+					return true
+				end
+			end
+		end
+	end
+	return false
+end
+
+function app.IsLearned(itemLinkie)
+	local tooltip = C_TooltipInfo.GetHyperlink(itemLinkie)
+
+	if tooltip and tooltip.lines then
+		for _, line in ipairs(tooltip.lines) do
+			if line.type == Enum.TooltipDataLineType.RestrictedSpellKnown then
+				return true
+			end
+		end
+	end
+	return false
+end
+
+function app.GetBonding(itemLinkie)
+	local tooltip = C_TooltipInfo.GetHyperlink(itemLinkie)
+
+	if tooltip and tooltip.lines then
+		for _, line in ipairs(tooltip.lines) do
+			if line.bonding then
+				if line.bonding == 1 or line.bonding == 2 or line.bonding == 4 or line.bonding == 5 then
+					return "BoA"
+				elseif line.bonding == 3 or line.bonding == 6 then
+					return "BoP"
+				elseif line.bonding == 7 or line.bonding == 8 then
+					return "BoE"
+				elseif line.bonding == 9 or line.bonding == 10 then
+					return "WuE"
+				end
+			end
+		end
+	end
+	return false
+end
+
 -- Detect unusable text on tooltips
 function app.GetTooltipRedText(itemLink)
 	local tooltip = C_TooltipInfo.GetHyperlink(itemLink)
