@@ -4,7 +4,7 @@ about: Items that are never tradeable, like world boss loot or gear from caches?
   me the itemIDs, and I'll filter them!
 title: "[Filter itemID] "
 labels: missing info
-assignees: ''
+assignees: Slackluster
 
 ---
 
