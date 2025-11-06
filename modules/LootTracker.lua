@@ -234,7 +234,7 @@ function app.CreateWindow()
 		if IsShiftKeyDown() == true then
 			app.Clear()
 		else
-			StaticPopupDialogs["CLEAR_LOOT"] = {
+			StaticPopupDialogs["TLH_CLEAR_LOOT"] = {
 				text = app.NameLong .. "\n" .. L.CLEAR_CONFIRM,
 				button1 = YES,
 				button2 = NO,
@@ -246,7 +246,7 @@ function app.CreateWindow()
 				hideOnEscape = true,
 				showAlert = true,
 			}
-			StaticPopup_Show("CLEAR_LOOT")
+			StaticPopup_Show("TLH_CLEAR_LOOT")
 		end
 	end)
 	app.ClearButton:SetScript("OnEnter", function()

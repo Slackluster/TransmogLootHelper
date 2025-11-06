@@ -428,11 +428,9 @@ function app.ItemOverlay(overlay, itemLink, itemLocation, containerInfo, bagAddo
 				end
 
 				-- Account for a Blizz API bug that is apparently present, this is why we can't have nice things
+				local numPets, maxAllowed = 0, 0
 				if app.OverlayCache[itemLink].speciesID then
 					numPets, maxAllowed = C_PetJournal.GetNumCollectedInfo(app.OverlayCache[itemLink].speciesID)
-				else
-					numPets = 0
-					maxAllowed = 0
 				end
 
 				if (maxAllowed == numPets and numPets ~= 0) or (not TransmogLootHelper_Settings["iconNewPetMax"] and numPets >= 1) then
@@ -1116,7 +1114,7 @@ function app.TooltipInfo()
 	local function OnTooltipSetItem(tooltip)
 		-- Only run any of this is the relevant setting is enabled
 		if TransmogLootHelper_Settings["iconNewRecipe"] then
-			local itemLink, itemID
+			local itemLink, itemID, secondaryItemLink, secondaryItemID
 			local _, primaryItemLink, primaryItemID = TooltipUtil.GetDisplayedItem(GameTooltip)
 			if tooltip.GetItem then _, secondaryItemLink, secondaryItemID = tooltip:GetItem() end
 
