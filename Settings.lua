@@ -362,7 +362,7 @@ function app.CreateMessagePopup()
 	end)
 
 	-- Text
-	local string1 = frame:CreateFontString("ARTWORK", nil, "GameFontNormal")
+	local string1 = frame:CreateFontString(nil, "ARTWORK", "GameFontNormal")
 	string1:SetPoint("CENTER", frame, "CENTER", 0, 0)
 	string1:SetPoint("TOP", frame, "TOP", 0, -10)
 	string1:SetJustifyH("CENTER")
@@ -390,7 +390,7 @@ function app.CreateMessagePopup()
 	border:SetBackdropBorderColor(0.776, 0.608, 0.427)
 
 	-- Text 2
-	local string2 = frame:CreateFontString("ARTWORK", nil, "GameFontNormal")
+	local string2 = frame:CreateFontString(nil, "ARTWORK", "GameFontNormal")
 	string2:SetPoint("CENTER", frame, "CENTER", 0, 0)
 	string2:SetPoint("TOP", frame, "TOP", 0, -60)
 	string2:SetJustifyH("CENTER")

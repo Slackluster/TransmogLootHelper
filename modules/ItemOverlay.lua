@@ -33,7 +33,7 @@ function app.ItemOverlay(overlay, itemLink, itemLocation, containerInfo, bagAddo
 	local function createOverlay()
 		-- Text
 		if not overlay.text then
-			overlay.text = overlay:CreateFontString("OVERLAY", nil, "GameFontNormalOutline")
+			overlay.text = overlay:CreateFontString(nil, "OVERLAY", "GameFontNormalOutline")
 			overlay.text:SetPoint("CENTER", overlay, 2, 1)
 			overlay.text:SetScale(0.85)
 		end
@@ -859,7 +859,7 @@ function app.ItemOverlayHooks()
 						if v.objectType == "currency" then
 							itemButton.TLHOverlay:Hide()
 						elseif itemLink then
-							table.insert(sellPrice, { price = select(11, GetItemInfo(itemLink)), itemButton = itemButton})
+							table.insert(sellPrice, { price = select(11, C_Item.GetItemInfo(itemLink)), itemButton = itemButton})
 							app.ItemOverlay(itemButton.TLHOverlay, itemLink)
 							itemButton.TLHOverlay:SetAllPoints(itemButton.IconBorder)
 						else
@@ -1087,7 +1087,7 @@ function app.ItemOverlayHooks()
 		local function cacheSpells()
 			C_Timer.After(0.9, function()
 				for k, v in pairs(app.SpellItem) do
-					if IsSpellKnown(v) or IsPlayerSpell(v) then
+					if C_SpellBook.IsSpellKnown(v) or C_SpellBook.IsSpellInSpellBook(v) then
 						TransmogLootHelper_Cache.Recipes[v] = true
 					end
 				end

@@ -76,7 +76,7 @@ function app.Popup(show, text)
 	end)
 
 	-- Text
-	local string = frame:CreateFontString("ARTWORK", nil, "GameFontNormal")
+	local string = frame:CreateFontString(nil, "ARTWORK", "GameFontNormal")
 	string:SetPoint("CENTER", frame, "CENTER", 0, 0)
 	string:SetPoint("TOP", frame, "TOP", 0, -25)
 	string:SetJustifyH("CENTER")

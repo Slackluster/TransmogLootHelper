@@ -51,7 +51,7 @@ function app.WindowTooltip(text)
 	frame:SetMovable(false)
 	frame:Hide()
 
-	local string = frame:CreateFontString("ARTWORK", nil, "GameFontNormal")
+	local string = frame:CreateFontString(nil, "ARTWORK", "GameFontNormal")
 	string:SetPoint("TOPLEFT", frame, "TOPLEFT", 10, -10)
 	string:SetJustifyH("LEFT")
 	string:SetText(text)
@@ -391,7 +391,7 @@ function app.Update()
 			end
 		end)
 
-		local weapon1 = app.Window.Weapons:CreateFontString("ARTWORK", nil, "GameFontNormal")
+		local weapon1 = app.Window.Weapons:CreateFontString(nil, "ARTWORK", "GameFontNormal")
 		weapon1:SetPoint("LEFT", app.Window.Weapons)
 		weapon1:SetScale(1.1)
 		app.WeaponsHeader = weapon1
@@ -532,19 +532,19 @@ function app.Update()
 
 			app.WeaponRow[rowNo1] = row
 
-			local icon1 = row:CreateFontString("ARTWORK", nil, "GameFontNormal")
+			local icon1 = row:CreateFontString(nil, "ARTWORK", "GameFontNormal")
 			icon1:SetPoint("LEFT", row)
 			icon1:SetScale(1.2)
 			icon1:SetText("|T"..(lootInfo.icon or "Interface\\Icons\\inv_misc_questionmark")..":0|t")
 
-			local text2 = row:CreateFontString("ARTWORK", nil, "GameFontNormal")
+			local text2 = row:CreateFontString(nil, "ARTWORK", "GameFontNormal")
 			text2:SetPoint("CENTER", icon1)
 			text2:SetPoint("RIGHT", app.Window.Child)
 			text2:SetJustifyH("RIGHT")
 			text2:SetTextColor(1, 1, 1)
 			text2:SetText("|c" .. lootInfo.color .. lootInfo.playerShort)
 
-			local text1 = row:CreateFontString("ARTWORK", nil, "GameFontNormal")
+			local text1 = row:CreateFontString(nil, "ARTWORK", "GameFontNormal")
 			text1:SetPoint("LEFT", icon1, "RIGHT", 3, 0)
 			text1:SetPoint("RIGHT", text2, "LEFT")
 			text1:SetTextColor(1, 1, 1)
@@ -605,7 +605,7 @@ function app.Update()
 			end
 		end)
 
-		local armour1 = app.Window.Armour:CreateFontString("ARTWORK", nil, "GameFontNormal")
+		local armour1 = app.Window.Armour:CreateFontString(nil, "ARTWORK", "GameFontNormal")
 		armour1:SetPoint("LEFT", app.Window.Armour)
 		armour1:SetScale(1.1)
 		app.ArmourHeader = armour1
@@ -752,19 +752,19 @@ function app.Update()
 
 			app.ArmourRow[rowNo2] = row
 
-			local icon1 = row:CreateFontString("ARTWORK", nil, "GameFontNormal")
+			local icon1 = row:CreateFontString(nil, "ARTWORK", "GameFontNormal")
 			icon1:SetPoint("LEFT", row)
 			icon1:SetScale(1.2)
 			icon1:SetText("|T"..(lootInfo.icon or "Interface\\Icons\\inv_misc_questionmark")..":0|t")
 
-			local text2 = row:CreateFontString("ARTWORK", nil, "GameFontNormal")
+			local text2 = row:CreateFontString(nil, "ARTWORK", "GameFontNormal")
 			text2:SetPoint("CENTER", icon1)
 			text2:SetPoint("RIGHT", app.Window.Child)
 			text2:SetJustifyH("RIGHT")
 			text2:SetTextColor(1, 1, 1)
 			text2:SetText("|c" .. lootInfo.color .. lootInfo.playerShort)
 
-			local text1 = row:CreateFontString("ARTWORK", nil, "GameFontNormal")
+			local text1 = row:CreateFontString(nil, "ARTWORK", "GameFontNormal")
 			text1:SetPoint("LEFT", icon1, "RIGHT", 3, 0)
 			text1:SetPoint("RIGHT", text2, "LEFT")
 			text1:SetTextColor(1, 1, 1)
@@ -821,7 +821,7 @@ function app.Update()
 			end
 		end)
 
-		local filtered1 = app.Window.Filtered:CreateFontString("ARTWORK", nil, "GameFontNormal")
+		local filtered1 = app.Window.Filtered:CreateFontString(nil, "ARTWORK", "GameFontNormal")
 		filtered1:SetPoint("LEFT", app.Window.Filtered)
 		filtered1:SetScale(1.1)
 		app.FilteredHeader = filtered1
@@ -932,19 +932,19 @@ function app.Update()
 
 			app.FilteredRow[rowNo3] = row
 
-			local icon1 = row:CreateFontString("ARTWORK", nil, "GameFontNormal")
+			local icon1 = row:CreateFontString(nil, "ARTWORK", "GameFontNormal")
 			icon1:SetPoint("LEFT", row)
 			icon1:SetScale(1.2)
 			icon1:SetText("|T"..(lootInfo.icon or "Interface\\Icons\\inv_misc_questionmark")..":0|t")
 
-			local text2 = row:CreateFontString("ARTWORK", nil, "GameFontNormal")
+			local text2 = row:CreateFontString(nil, "ARTWORK", "GameFontNormal")
 			text2:SetPoint("CENTER", icon1)
 			text2:SetPoint("RIGHT", app.Window.Child)
 			text2:SetJustifyH("RIGHT")
 			text2:SetTextColor(1, 1, 1)
 			text2:SetText("|c" .. lootInfo.color .. lootInfo.playerShort)
 
-			local text1 = row:CreateFontString("ARTWORK", nil, "GameFontNormal")
+			local text1 = row:CreateFontString(nil, "ARTWORK", "GameFontNormal")
 			text1:SetPoint("LEFT", icon1, "RIGHT", 3, 0)
 			text1:SetPoint("RIGHT", text2, "LEFT")
 			text1:SetTextColor(1, 1, 1)
