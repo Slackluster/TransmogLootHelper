@@ -54,6 +54,13 @@ L.INSTANT_BUTTON =						"Get it now!"
 L.INSTANT_TOOLTIP =						"Hold Shift to instantly receive your item and skip the 5 second timer."
 
 -- Settings
+L.SETTINGS_SUPPORT_TEXTLONG =			"Developing this addon takes a significant amount of time and effort.\nPlease consider financially supporting the developer."
+L.SETTINGS_SUPPORT_TEXT =				"Support"
+L.SETTINGS_SUPPORT_BUTTON =				"Link"
+L.SETTINGS_SUPPORT_DESC =				"Thank you!"
+L.SETTINGS_SUPPORT_COPY =				"Ctrl+C to copy:"
+L.SETTINGS_SUPPORT_COPIED =				"Link copied to clipboard"
+
 L.SETTINGS_TOOLTIP =					app.IconLMB .. "|cffFFFFFF: Toggle the window\n" ..
 										app.IconRMB .. ": " .. L.WINDOW_BUTTON_SETTINGS
 L.SETTINGS_BAGANATOR =					"For Baganator users this is managed by Baganator's own settings."
