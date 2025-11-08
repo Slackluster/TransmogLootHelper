@@ -2,7 +2,7 @@
 -- Equip Recommended Gear: frFR.lua --
 --------------------------------------
 -- French (France) localisation
--- Translator(s):
+-- Translator(s): Klep-Ysondre
 
 -- Initialisation
 if GetLocale() ~= "frFR" then return end
@@ -54,12 +54,12 @@ local L = app.locales
 -- L.INSTANT_TOOLTIP =						"Hold Shift to instantly receive your item and skip the 5 second timer."
 
 -- Settings
--- L.SETTINGS_SUPPORT_TEXTLONG =			"Developing this addon takes a significant amount of time and effort.\nPlease consider financially supporting the developer."
--- L.SETTINGS_SUPPORT_TEXT =				"Support"
--- L.SETTINGS_SUPPORT_BUTTON =				"Link"
--- L.SETTINGS_SUPPORT_DESC =				"Thank you!"
--- L.SETTINGS_SUPPORT_COPY =				"Ctrl+C to copy:"
--- L.SETTINGS_SUPPORT_COPIED =				"Link copied to clipboard"
+L.SETTINGS_SUPPORT_TEXTLONG =			"Le développement de cette extension demande beaucoup de temps et d’efforts.\nVeuillez envisager de soutenir financièrement le développeur."
+L.SETTINGS_SUPPORT_TEXT =				"Soutien"
+L.SETTINGS_SUPPORT_BUTTON =				"Lien"
+L.SETTINGS_SUPPORT_DESC =				"Merci !"
+L.SETTINGS_SUPPORT_COPY =				"Ctrl+C pour copier :"
+L.SETTINGS_SUPPORT_COPIED =				"Lien copié dans le presse-papiers"
 
 -- L.SETTINGS_TOOLTIP =					app.IconLMB .. "|cffFFFFFF: Toggle the window\n" ..
 -- 										app.IconRMB .. ": " .. L.WINDOW_BUTTON_SETTINGS
