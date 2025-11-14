@@ -56,15 +56,15 @@ function app.WindowTooltip(text)
 	string:SetJustifyH("LEFT")
 	string:SetText(text)
 
-	frame:SetHeight(string:GetStringHeight()+20)
-	frame:SetWidth(string:GetStringWidth()+20)
+	frame:SetHeight(string:GetStringHeight() + 20)
+	frame:SetWidth(string:GetStringWidth() + 20)
 
 	return frame
 end
 
 -- Window tooltip show/hide
 function app.WindowTooltipShow(frame)
-	if GetScreenWidth()/2-TransmogLootHelper_Settings["windowPosition"].width/2-app.Window:GetLeft() >= 0 then
+	if GetScreenWidth() / 2 - TransmogLootHelper_Settings["windowPosition"].width / 2 - app.Window:GetLeft() >= 0 then
 		frame:ClearAllPoints()
 		frame:SetPoint("LEFT", app.Window, "RIGHT", 0, 0)
 	else
@@ -93,7 +93,8 @@ function app.SaveWindow()
 	local left = app.Window:GetLeft()
 	local bottom = app.Window:GetBottom()
 	local width, height = app.Window:GetSize()
-	TransmogLootHelper_Settings["windowPosition"] = { ["left"] = left, ["bottom"] = bottom, ["width"] = width, ["height"] = height, }
+	TransmogLootHelper_Settings["windowPosition"] = { ["left"] = left, ["bottom"] = bottom, ["width"] = width, ["height"] =
+	height, }
 end
 
 -- Create the main window
@@ -123,7 +124,7 @@ function app.CreateWindow()
 	local corner = CreateFrame("Button", nil, app.Window)
 	corner:EnableMouse("true")
 	corner:SetPoint("BOTTOMRIGHT")
-	corner:SetSize(16,16)
+	corner:SetSize(16, 16)
 	corner:SetNormalTexture("Interface\\ChatFrame\\UI-ChatIM-SizeGrabber-Down")
 	corner:SetHighlightTexture("Interface\\ChatFrame\\UI-ChatIM-SizeGrabber-Highlight")
 	corner:SetPushedTexture("Interface\\ChatFrame\\UI-ChatIM-SizeGrabber-Up")
@@ -152,11 +153,11 @@ function app.CreateWindow()
 	app.LockButton = CreateFrame("Button", "", app.Window, "UIPanelCloseButton")
 	app.LockButton:SetPoint("TOPRIGHT", close, "TOPLEFT", -2, 0)
 	app.LockButton:SetNormalTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\buttons.blp")
-	app.LockButton:GetNormalTexture():SetTexCoord(183/256, 219/256, 1/128, 39/128)
+	app.LockButton:GetNormalTexture():SetTexCoord(183 / 256, 219 / 256, 1 / 128, 39 / 128)
 	app.LockButton:SetDisabledTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\buttons.blp")
-	app.LockButton:GetDisabledTexture():SetTexCoord(183/256, 219/256, 41/128, 79/128)
+	app.LockButton:GetDisabledTexture():SetTexCoord(183 / 256, 219 / 256, 41 / 128, 79 / 128)
 	app.LockButton:SetPushedTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\buttons.blp")
-	app.LockButton:GetPushedTexture():SetTexCoord(183/256, 219/256, 81/128, 119/128)
+	app.LockButton:GetPushedTexture():SetTexCoord(183 / 256, 219 / 256, 81 / 128, 119 / 128)
 	app.LockButton:SetScript("OnClick", function()
 		TransmogLootHelper_Settings["windowLocked"] = true
 		app.Window.Corner:Hide()
@@ -174,11 +175,11 @@ function app.CreateWindow()
 	app.UnlockButton = CreateFrame("Button", "", app.Window, "UIPanelCloseButton")
 	app.UnlockButton:SetPoint("TOPRIGHT", close, "TOPLEFT", -2, 0)
 	app.UnlockButton:SetNormalTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\buttons.blp")
-	app.UnlockButton:GetNormalTexture():SetTexCoord(148/256, 184/256, 1/128, 39/128)
+	app.UnlockButton:GetNormalTexture():SetTexCoord(148 / 256, 184 / 256, 1 / 128, 39 / 128)
 	app.UnlockButton:SetDisabledTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\buttons.blp")
-	app.UnlockButton:GetDisabledTexture():SetTexCoord(148/256, 184/256, 41/128, 79/128)
+	app.UnlockButton:GetDisabledTexture():SetTexCoord(148 / 256, 184 / 256, 41 / 128, 79 / 128)
 	app.UnlockButton:SetPushedTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\buttons.blp")
-	app.UnlockButton:GetPushedTexture():SetTexCoord(148/256, 184/256, 81/128, 119/128)
+	app.UnlockButton:GetPushedTexture():SetTexCoord(148 / 256, 184 / 256, 81 / 128, 119 / 128)
 	app.UnlockButton:SetScript("OnClick", function()
 		TransmogLootHelper_Settings["windowLocked"] = false
 		app.Window.Corner:Show()
@@ -206,11 +207,11 @@ function app.CreateWindow()
 	app.SettingsButton = CreateFrame("Button", "", app.Window, "UIPanelCloseButton")
 	app.SettingsButton:SetPoint("TOPRIGHT", app.LockButton, "TOPLEFT", -2, 0)
 	app.SettingsButton:SetNormalTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\buttons.blp")
-	app.SettingsButton:GetNormalTexture():SetTexCoord(112/256, 148/256, 1/128, 39/128)
+	app.SettingsButton:GetNormalTexture():SetTexCoord(112 / 256, 148 / 256, 1 / 128, 39 / 128)
 	app.SettingsButton:SetDisabledTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\buttons.blp")
-	app.SettingsButton:GetDisabledTexture():SetTexCoord(112/256, 148/256, 41/128, 79/128)
+	app.SettingsButton:GetDisabledTexture():SetTexCoord(112 / 256, 148 / 256, 41 / 128, 79 / 128)
 	app.SettingsButton:SetPushedTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\buttons.blp")
-	app.SettingsButton:GetPushedTexture():SetTexCoord(112/256, 148/256, 81/128, 119/128)
+	app.SettingsButton:GetPushedTexture():SetTexCoord(112 / 256, 148 / 256, 81 / 128, 119 / 128)
 	app.SettingsButton:SetScript("OnClick", function()
 		app.OpenSettings()
 	end)
@@ -225,11 +226,11 @@ function app.CreateWindow()
 	app.ClearButton = CreateFrame("Button", "", app.Window, "UIPanelCloseButton")
 	app.ClearButton:SetPoint("TOPRIGHT", app.SettingsButton, "TOPLEFT", -2, 0)
 	app.ClearButton:SetNormalTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\buttons.blp")
-	app.ClearButton:GetNormalTexture():SetTexCoord(1/256, 37/256, 1/128, 39/128)
+	app.ClearButton:GetNormalTexture():SetTexCoord(1 / 256, 37 / 256, 1 / 128, 39 / 128)
 	app.ClearButton:SetDisabledTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\buttons.blp")
-	app.ClearButton:GetDisabledTexture():SetTexCoord(1/256, 37/256, 41/128, 79/128)
+	app.ClearButton:GetDisabledTexture():SetTexCoord(1 / 256, 37 / 256, 41 / 128, 79 / 128)
 	app.ClearButton:SetPushedTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\buttons.blp")
-	app.ClearButton:GetPushedTexture():SetTexCoord(1/256, 37/256, 81/128, 119/128)
+	app.ClearButton:GetPushedTexture():SetTexCoord(1 / 256, 37 / 256, 81 / 128, 119 / 128)
 	app.ClearButton:SetScript("OnClick", function()
 		if IsShiftKeyDown() == true then
 			app.Clear()
@@ -260,11 +261,11 @@ function app.CreateWindow()
 	app.SortButton = CreateFrame("Button", "", app.Window, "UIPanelCloseButton")
 	app.SortButton:SetPoint("TOPRIGHT", app.ClearButton, "TOPLEFT", -2, 0)
 	app.SortButton:SetNormalTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\buttons.blp")
-	app.SortButton:GetNormalTexture():SetTexCoord(76/256, 112/256, 1/128, 39/128)
+	app.SortButton:GetNormalTexture():SetTexCoord(76 / 256, 112 / 256, 1 / 128, 39 / 128)
 	app.SortButton:SetDisabledTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\buttons.blp")
-	app.SortButton:GetDisabledTexture():SetTexCoord(76/256, 112/256, 41/128, 79/128)
+	app.SortButton:GetDisabledTexture():SetTexCoord(76 / 256, 112 / 256, 41 / 128, 79 / 128)
 	app.SortButton:SetPushedTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\buttons.blp")
-	app.SortButton:GetPushedTexture():SetTexCoord(76/256, 112/256, 81/128, 119/128)
+	app.SortButton:GetPushedTexture():SetTexCoord(76 / 256, 112 / 256, 81 / 128, 119 / 128)
 	app.SortButton:SetScript("OnClick", function()
 		if TransmogLootHelper_Settings["windowSort"] == 1 then
 			TransmogLootHelper_Settings["windowSort"] = 2
@@ -305,8 +306,8 @@ function app.CreateWindow()
 	-- ScrollChild inside the ScrollFrame
 	local scrollChild = CreateFrame("Frame", nil, scrollFrame)
 	scrollFrame:SetScrollChild(scrollChild)
-	scrollChild:SetWidth(1)	-- This is automatically defined, so long as the attribute exists at all
-	scrollChild:SetHeight(1)	-- This is automatically defined, so long as the attribute exists at all
+	scrollChild:SetWidth(1) -- This is automatically defined, so long as the attribute exists at all
+	scrollChild:SetHeight(1) -- This is automatically defined, so long as the attribute exists at all
 	scrollChild:SetAllPoints(scrollFrame)
 	scrollChild:Show()
 	scrollFrame:SetScript("OnVerticalScroll", function() scrollChild:SetPoint("BOTTOMRIGHT", scrollFrame) end)
@@ -362,7 +363,7 @@ function app.Update()
 	-- Create Weapons header
 	if not app.Window.Weapons then
 		app.Window.Weapons = CreateFrame("Button", nil, app.Window.Child)
-		app.Window.Weapons:SetSize(0,16)
+		app.Window.Weapons:SetSize(0, 16)
 		app.Window.Weapons:SetPoint("TOPLEFT", app.Window.Child, -1, 0)
 		app.Window.Weapons:SetPoint("RIGHT", app.Window.Child)
 		app.Window.Weapons:RegisterForDrag("LeftButton")
@@ -376,7 +377,7 @@ function app.Update()
 			app.LootHeaderTooltip:Hide()
 		end)
 		app.Window.Weapons:SetScript("OnClick", function(self)
-			local children = {self:GetChildren()}
+			local children = { self:GetChildren() }
 
 			if app.ShowWeapons == true then
 				for _, child in ipairs(children) do child:Hide() end
@@ -385,7 +386,7 @@ function app.Update()
 			else
 				for _, child in ipairs(children) do child:Show() end
 				local offset = -2
-				if #app.WeaponLoot >= 1 then offset = -16*#app.WeaponLoot end
+				if #app.WeaponLoot >= 1 then offset = -16 * #app.WeaponLoot end
 				app.Window.Armour:SetPoint("TOPLEFT", app.Window.Weapons, "BOTTOMLEFT", 0, offset)
 				app.ShowWeapons = true
 			end
@@ -408,13 +409,13 @@ function app.Update()
 	if #app.WeaponLoot >= 1 then
 		-- Custom comparison function based on the beginning of the string (thanks ChatGPT)
 		local customSortList = {
-			"|cnIQ6",	-- Artifact
-			"|cnIQ5",	-- Legendary
-			"|cnIQ4",	-- Epic
-			"|cnIQ3",	-- Rare
-			"|cnIQ2",	-- Uncommon
-			"|cnIQ1",	-- Common
-			"|cnIQ0",	-- Poor (quantity 0)
+			"|cnIQ6", -- Artifact
+			"|cnIQ5", -- Legendary
+			"|cnIQ4", -- Epic
+			"|cnIQ3", -- Rare
+			"|cnIQ2", -- Uncommon
+			"|cnIQ1", -- Common
+			"|cnIQ0", -- Poor (quantity 0)
 		}
 		local function customSort(a, b)
 			for _, v in ipairs(customSortList) do
@@ -435,7 +436,8 @@ function app.Update()
 		-- Sort loot
 		local weaponsSorted = {}
 		for k, v in pairs(app.WeaponLoot) do
-			weaponsSorted[#weaponsSorted+1] = { item = v.item, icon = v.icon, player = v.player, playerShort = v.playerShort, color = v.color, index = k}
+			weaponsSorted[#weaponsSorted + 1] = { item = v.item, icon = v.icon, player = v.player, playerShort = v
+			.playerShort, color = v.color, index = k }
 		end
 
 		if TransmogLootHelper_Settings["windowSort"] == 1 then
@@ -449,7 +451,7 @@ function app.Update()
 			rowNo1 = rowNo1 + 1
 
 			local row = CreateFrame("Button", nil, app.Window.Weapons)
-			row:SetSize(0,16)
+			row:SetSize(0, 16)
 			row:SetHighlightTexture("Interface\\QuestFrame\\UI-QuestTitleHighlight", "ADD")
 			row:RegisterForDrag("LeftButton")
 			row:RegisterForClicks("AnyDown")
@@ -458,7 +460,7 @@ function app.Update()
 			row:SetScript("OnEnter", function()
 				GameTooltip:ClearLines()
 
-				if GetScreenWidth()/2-TransmogLootHelper_Settings["windowPosition"].width/2-app.Window:GetLeft() >= 0 then
+				if GetScreenWidth() / 2 - TransmogLootHelper_Settings["windowPosition"].width / 2 - app.Window:GetLeft() >= 0 then
 					GameTooltip:SetOwner(app.Window, "ANCHOR_NONE")
 					GameTooltip:SetPoint("LEFT", app.Window, "RIGHT")
 				else
@@ -473,7 +475,9 @@ function app.Update()
 				if app.WeaponLoot[lootInfo.index].icon == app.IconMog then
 					GameTooltip:AddLine(" ")
 					emptyLine = true
-					GameTooltip:AddLine("|T"..app.IconMog..":0|t |c" .. lootInfo.color .. lootInfo.playerShort .. "|R " .. L.PLAYER_COLLECTED_APPEARANCE)
+					GameTooltip:AddLine("|T" ..
+					app.IconMog ..
+					":0|t |c" .. lootInfo.color .. lootInfo.playerShort .. "|R " .. L.PLAYER_COLLECTED_APPEARANCE)
 				end
 
 				-- Show how many times the player has been whispered by TLH users
@@ -485,9 +489,11 @@ function app.Update()
 					GameTooltip:AddLine(" ")
 				end
 				if count == 1 then
-					GameTooltip:AddLine("|c" .. lootInfo.color .. lootInfo.playerShort .. "|R " .. L.PLAYER_WHISPERED .. count .. L.WHISPERED_TIME)
+					GameTooltip:AddLine("|c" ..
+					lootInfo.color .. lootInfo.playerShort .. "|R " .. L.PLAYER_WHISPERED .. count .. L.WHISPERED_TIME)
 				elseif count > 1 then
-					GameTooltip:AddLine("|c" .. lootInfo.color .. lootInfo.playerShort .. "|R " .. L.PLAYER_WHISPERED .. count .. L.WHISPERED_TIMES)
+					GameTooltip:AddLine("|c" ..
+					lootInfo.color .. lootInfo.playerShort .. "|R " .. L.PLAYER_WHISPERED .. count .. L.WHISPERED_TIMES)
 				end
 
 				GameTooltip:Show()
@@ -522,7 +528,7 @@ function app.Update()
 							app.Print(L.WHISPER_COOLDOWN)
 						end
 					end
-				-- Shift+RMB
+					-- Shift+RMB
 				elseif button == "RightButton" and IsShiftKeyDown() then
 					table.remove(app.WeaponLoot, lootInfo.index)
 					RunNextFrame(app.Update)
@@ -535,7 +541,7 @@ function app.Update()
 			local icon1 = row:CreateFontString(nil, "ARTWORK", "GameFontNormal")
 			icon1:SetPoint("LEFT", row)
 			icon1:SetScale(1.2)
-			icon1:SetText("|T"..(lootInfo.icon or "Interface\\Icons\\inv_misc_questionmark")..":0|t")
+			icon1:SetText("|T" .. (lootInfo.icon or "Interface\\Icons\\inv_misc_questionmark") .. ":0|t")
 
 			local text2 = row:CreateFontString(nil, "ARTWORK", "GameFontNormal")
 			text2:SetPoint("CENTER", icon1)
@@ -552,7 +558,7 @@ function app.Update()
 			text1:SetJustifyH("LEFT")
 			text1:SetWordWrap(false)
 
-			maxLength1 = math.max(icon1:GetStringWidth()+text1:GetStringWidth()+text2:GetStringWidth(), maxLength1)
+			maxLength1 = math.max(icon1:GetStringWidth() + text1:GetStringWidth() + text2:GetStringWidth(), maxLength1)
 		end
 
 		if app.WeaponRow then
@@ -562,7 +568,7 @@ function app.Update()
 						row:SetPoint("TOPLEFT", app.Window.Weapons, "BOTTOMLEFT")
 						row:SetPoint("TOPRIGHT", app.Window.Weapons, "BOTTOMRIGHT")
 					else
-						local offset = -16*(i-1)
+						local offset = -16 * (i - 1)
 						row:SetPoint("TOPLEFT", app.Window.Weapons, "BOTTOMLEFT", 0, offset)
 						row:SetPoint("TOPRIGHT", app.Window.Weapons, "BOTTOMRIGHT", 0, offset)
 					end
@@ -576,7 +582,7 @@ function app.Update()
 	-- Create Armour header
 	if not app.Window.Armour then
 		app.Window.Armour = CreateFrame("Button", nil, app.Window.Child)
-		app.Window.Armour:SetSize(0,16)
+		app.Window.Armour:SetSize(0, 16)
 		app.Window.Armour:SetPoint("TOPLEFT", app.Window.Child, -1, 0)
 		app.Window.Armour:SetPoint("RIGHT", app.Window.Child)
 		app.Window.Armour:RegisterForDrag("LeftButton")
@@ -590,7 +596,7 @@ function app.Update()
 			app.LootHeaderTooltip:Hide()
 		end)
 		app.Window.Armour:SetScript("OnClick", function(self)
-			local children = {self:GetChildren()}
+			local children = { self:GetChildren() }
 
 			if app.ShowArmour == true then
 				for _, child in ipairs(children) do child:Hide() end
@@ -599,7 +605,7 @@ function app.Update()
 			else
 				for _, child in ipairs(children) do child:Show() end
 				local offset = -2
-				if #app.ArmourLoot >= 1 then offset = -16*#app.ArmourLoot end
+				if #app.ArmourLoot >= 1 then offset = -16 * #app.ArmourLoot end
 				app.Window.Filtered:SetPoint("TOPLEFT", app.Window.Armour, "BOTTOMLEFT", 0, offset)
 				app.ShowArmour = true
 			end
@@ -613,7 +619,7 @@ function app.Update()
 
 	-- Update header
 	local offset = -2
-	if #app.WeaponLoot >= 1 and app.ShowWeapons == true then offset = -16*#app.WeaponLoot end
+	if #app.WeaponLoot >= 1 and app.ShowWeapons == true then offset = -16 * #app.WeaponLoot end
 	app.Window.Armour:SetPoint("TOPLEFT", app.Window.Weapons, "BOTTOMLEFT", 0, offset)
 	if #app.ArmourLoot >= 1 then
 		app.ArmourHeader:SetText(AUCTION_CATEGORY_ARMOR .. " (" .. #app.ArmourLoot .. ")")
@@ -625,13 +631,13 @@ function app.Update()
 	if #app.ArmourLoot >= 1 then
 		-- Custom comparison function based on the beginning of the string (thanks ChatGPT)
 		local customSortList = {
-			"|cnIQ6",	-- Artifact
-			"|cnIQ5",	-- Legendary
-			"|cnIQ4",	-- Epic
-			"|cnIQ3",	-- Rare
-			"|cnIQ2",	-- Uncommon
-			"|cnIQ1",	-- Common
-			"|cnIQ0",	-- Poor (quantity 0)
+			"|cnIQ6", -- Artifact
+			"|cnIQ5", -- Legendary
+			"|cnIQ4", -- Epic
+			"|cnIQ3", -- Rare
+			"|cnIQ2", -- Uncommon
+			"|cnIQ1", -- Common
+			"|cnIQ0", -- Poor (quantity 0)
 		}
 		local function customSort(a, b)
 			for _, v in ipairs(customSortList) do
@@ -652,7 +658,8 @@ function app.Update()
 		-- Sort loot
 		local armourSorted = {}
 		for k, v in pairs(app.ArmourLoot) do
-			armourSorted[#armourSorted+1] = { item = v.item, icon = v.icon, player = v.player, playerShort = v.playerShort, color = v.color, index = k}
+			armourSorted[#armourSorted + 1] = { item = v.item, icon = v.icon, player = v.player, playerShort = v
+			.playerShort, color = v.color, index = k }
 		end
 
 		if TransmogLootHelper_Settings["windowSort"] == 1 then
@@ -666,7 +673,7 @@ function app.Update()
 			rowNo2 = rowNo2 + 1
 
 			local row = CreateFrame("Button", nil, app.Window.Armour)
-			row:SetSize(0,16)
+			row:SetSize(0, 16)
 			row:SetHighlightTexture("Interface\\QuestFrame\\UI-QuestTitleHighlight", "ADD")
 			row:RegisterForDrag("LeftButton")
 			row:RegisterForClicks("AnyDown")
@@ -677,7 +684,7 @@ function app.Update()
 				GameTooltip:ClearLines()
 
 				-- Set the tooltip to either the left or right, depending on where the window is placed
-				if GetScreenWidth()/2-TransmogLootHelper_Settings["windowPosition"].width/2-app.Window:GetLeft() >= 0 then
+				if GetScreenWidth() / 2 - TransmogLootHelper_Settings["windowPosition"].width / 2 - app.Window:GetLeft() >= 0 then
 					GameTooltip:SetOwner(app.Window, "ANCHOR_NONE")
 					GameTooltip:SetPoint("LEFT", app.Window, "RIGHT")
 				else
@@ -693,7 +700,9 @@ function app.Update()
 				if app.ArmourLoot[lootInfo.index].icon == app.IconMog then
 					GameTooltip:AddLine(" ")
 					emptyLine = true
-					GameTooltip:AddLine("|T"..app.IconMog..":0|t |c" .. lootInfo.color .. lootInfo.playerShort .. "|R " .. L.PLAYER_COLLECTED_APPEARANCE)
+					GameTooltip:AddLine("|T" ..
+					app.IconMog ..
+					":0|t |c" .. lootInfo.color .. lootInfo.playerShort .. "|R " .. L.PLAYER_COLLECTED_APPEARANCE)
 				end
 
 				-- Show how many times the player has been whispered by TLH users
@@ -705,9 +714,11 @@ function app.Update()
 					GameTooltip:AddLine(" ")
 				end
 				if count == 1 then
-					GameTooltip:AddLine("|c" .. lootInfo.color .. lootInfo.playerShort .. "|R " .. L.PLAYER_WHISPERED .. count .. L.WHISPERED_TIME)
+					GameTooltip:AddLine("|c" ..
+					lootInfo.color .. lootInfo.playerShort .. "|R " .. L.PLAYER_WHISPERED .. count .. L.WHISPERED_TIME)
 				elseif count > 1 then
-					GameTooltip:AddLine("|c" .. lootInfo.color .. lootInfo.playerShort .. "|R " .. L.PLAYER_WHISPERED .. count .. L.WHISPERED_TIMES)
+					GameTooltip:AddLine("|c" ..
+					lootInfo.color .. lootInfo.playerShort .. "|R " .. L.PLAYER_WHISPERED .. count .. L.WHISPERED_TIMES)
 				end
 
 				GameTooltip:Show()
@@ -742,7 +753,7 @@ function app.Update()
 							app.Print(L.WHISPER_COOLDOWN)
 						end
 					end
-				-- Shift+RMB
+					-- Shift+RMB
 				elseif button == "RightButton" and IsShiftKeyDown() then
 					table.remove(app.ArmourLoot, lootInfo.index)
 					RunNextFrame(app.Update)
@@ -755,7 +766,7 @@ function app.Update()
 			local icon1 = row:CreateFontString(nil, "ARTWORK", "GameFontNormal")
 			icon1:SetPoint("LEFT", row)
 			icon1:SetScale(1.2)
-			icon1:SetText("|T"..(lootInfo.icon or "Interface\\Icons\\inv_misc_questionmark")..":0|t")
+			icon1:SetText("|T" .. (lootInfo.icon or "Interface\\Icons\\inv_misc_questionmark") .. ":0|t")
 
 			local text2 = row:CreateFontString(nil, "ARTWORK", "GameFontNormal")
 			text2:SetPoint("CENTER", icon1)
@@ -772,7 +783,7 @@ function app.Update()
 			text1:SetJustifyH("LEFT")
 			text1:SetWordWrap(false)
 
-			maxLength2 = math.max(icon1:GetStringWidth()+text1:GetStringWidth()+text2:GetStringWidth(), maxLength2)
+			maxLength2 = math.max(icon1:GetStringWidth() + text1:GetStringWidth() + text2:GetStringWidth(), maxLength2)
 		end
 
 		if app.ArmourRow then
@@ -782,7 +793,7 @@ function app.Update()
 						row:SetPoint("TOPLEFT", app.Window.Armour, "BOTTOMLEFT")
 						row:SetPoint("TOPRIGHT", app.Window.Armour, "BOTTOMRIGHT")
 					else
-						local offset = -16*(i-1)
+						local offset = -16 * (i - 1)
 						row:SetPoint("TOPLEFT", app.Window.Armour, "BOTTOMLEFT", 0, offset)
 						row:SetPoint("TOPRIGHT", app.Window.Armour, "BOTTOMRIGHT", 0, offset)
 					end
@@ -796,7 +807,7 @@ function app.Update()
 	-- Create Filtered header
 	if not app.Window.Filtered then
 		app.Window.Filtered = CreateFrame("Button", nil, app.Window.Child)
-		app.Window.Filtered:SetSize(0,16)
+		app.Window.Filtered:SetSize(0, 16)
 		app.Window.Filtered:SetPoint("TOPLEFT", app.Window.Child, -1, 0)
 		app.Window.Filtered:SetPoint("RIGHT", app.Window.Child)
 		app.Window.Filtered:RegisterForDrag("LeftButton")
@@ -810,7 +821,7 @@ function app.Update()
 			app.FilteredHeaderTooltip:Hide()
 		end)
 		app.Window.Filtered:SetScript("OnClick", function(self)
-			local children = {self:GetChildren()}
+			local children = { self:GetChildren() }
 
 			if app.ShowFiltered == true then
 				for _, child in ipairs(children) do child:Hide() end
@@ -829,7 +840,7 @@ function app.Update()
 
 	-- Update header
 	local offset = -2
-	if #app.ArmourLoot >= 1 and app.ShowArmour == true then offset = -16*#app.ArmourLoot end
+	if #app.ArmourLoot >= 1 and app.ShowArmour == true then offset = -16 * #app.ArmourLoot end
 	app.Window.Filtered:SetPoint("TOPLEFT", app.Window.Armour, "BOTTOMLEFT", 0, offset)
 	if #app.FilteredLoot >= 100 then
 		app.FilteredHeader:SetText(L.WINDOW_HEADER_FILTERED .. " (100+)")
@@ -843,13 +854,13 @@ function app.Update()
 	if #app.FilteredLoot >= 1 then
 		-- Custom comparison function based on the beginning of the string & a key (thanks ChatGPT)
 		local customSortList = {
-			"|cnIQ6",	-- Artifact
-			"|cnIQ5",	-- Legendary
-			"|cnIQ4",	-- Epic
-			"|cnIQ3",	-- Rare
-			"|cnIQ2",	-- Uncommon
-			"|cnIQ1",	-- Common
-			"|cnIQ0",	-- Poor (quantity 0)
+			"|cnIQ6", -- Artifact
+			"|cnIQ5", -- Legendary
+			"|cnIQ4", -- Epic
+			"|cnIQ3", -- Rare
+			"|cnIQ2", -- Uncommon
+			"|cnIQ1", -- Common
+			"|cnIQ0", -- Poor (quantity 0)
 		}
 		local function customSort(a, b)
 			-- Primary sort by playerShort
@@ -876,7 +887,8 @@ function app.Update()
 		-- Sort loot
 		local filteredSorted = {}
 		for k, v in pairs(app.FilteredLoot) do
-			filteredSorted[#filteredSorted+1] = { item = v.item, icon = v.icon, player = v.player, playerShort = v.playerShort, color = v.color, itemType = v.itemType, index = k}
+			filteredSorted[#filteredSorted + 1] = { item = v.item, icon = v.icon, player = v.player, playerShort = v
+			.playerShort, color = v.color, itemType = v.itemType, index = k }
 		end
 
 		if TransmogLootHelper_Settings["windowSort"] == 1 then
@@ -890,7 +902,7 @@ function app.Update()
 			rowNo3 = rowNo3 + 1
 
 			local row = CreateFrame("Button", nil, app.Window.Filtered)
-			row:SetSize(0,16)
+			row:SetSize(0, 16)
 			row:SetHighlightTexture("Interface\\QuestFrame\\UI-QuestTitleHighlight", "ADD")
 			row:RegisterForDrag("LeftButton")
 			row:RegisterForClicks("AnyDown")
@@ -899,7 +911,7 @@ function app.Update()
 			row:SetScript("OnEnter", function()
 				GameTooltip:ClearLines()
 
-				if GetScreenWidth()/2-TransmogLootHelper_Settings["windowPosition"].width/2-app.Window:GetLeft() >= 0 then
+				if GetScreenWidth() / 2 - TransmogLootHelper_Settings["windowPosition"].width / 2 - app.Window:GetLeft() >= 0 then
 					GameTooltip:SetOwner(app.Window, "ANCHOR_NONE")
 					GameTooltip:SetPoint("LEFT", app.Window, "RIGHT")
 				else
@@ -920,9 +932,13 @@ function app.Update()
 					if IsShiftKeyDown() == true then
 						ChatEdit_InsertLink(lootInfo.item)
 					else
-						app.Print("Debugging " .. lootInfo.item .. "  |  Filter reason: " .. lootInfo.playerShort .. "  |  itemType: " .. lootInfo.itemType .. "  |  Looted by: " ..lootInfo.player)
+						app.Print("Debugging " ..
+						lootInfo.item ..
+						"  |  Filter reason: " ..
+						lootInfo.playerShort ..
+						"  |  itemType: " .. lootInfo.itemType .. "  |  Looted by: " .. lootInfo.player)
 					end
-				-- Shift+RMB
+					-- Shift+RMB
 				elseif button == "RightButton" and IsShiftKeyDown() then
 					table.remove(app.FilteredLoot, lootInfo.index)
 					RunNextFrame(app.Update)
@@ -935,7 +951,7 @@ function app.Update()
 			local icon1 = row:CreateFontString(nil, "ARTWORK", "GameFontNormal")
 			icon1:SetPoint("LEFT", row)
 			icon1:SetScale(1.2)
-			icon1:SetText("|T"..(lootInfo.icon or "Interface\\Icons\\inv_misc_questionmark")..":0|t")
+			icon1:SetText("|T" .. (lootInfo.icon or "Interface\\Icons\\inv_misc_questionmark") .. ":0|t")
 
 			local text2 = row:CreateFontString(nil, "ARTWORK", "GameFontNormal")
 			text2:SetPoint("CENTER", icon1)
@@ -952,7 +968,7 @@ function app.Update()
 			text1:SetJustifyH("LEFT")
 			text1:SetWordWrap(false)
 
-			maxLength3 = math.max(icon1:GetStringWidth()+text1:GetStringWidth()+text2:GetStringWidth(), maxLength3)
+			maxLength3 = math.max(icon1:GetStringWidth() + text1:GetStringWidth() + text2:GetStringWidth(), maxLength3)
 		end
 
 		if app.FilteredRow then
@@ -962,7 +978,7 @@ function app.Update()
 						row:SetPoint("TOPLEFT", app.Window.Filtered, "BOTTOMLEFT")
 						row:SetPoint("TOPRIGHT", app.Window.Filtered, "BOTTOMRIGHT")
 					else
-						local offset = -16*(i-1)
+						local offset = -16 * (i - 1)
 						row:SetPoint("TOPLEFT", app.Window.Filtered, "BOTTOMLEFT", 0, offset)
 						row:SetPoint("TOPRIGHT", app.Window.Filtered, "BOTTOMRIGHT", 0, offset)
 					end
@@ -974,24 +990,24 @@ function app.Update()
 	end
 
 	-- Hide rows that should be hidden
-	if #app.WeaponRow >=1 and app.ShowWeapons == false then
+	if #app.WeaponRow >= 1 and app.ShowWeapons == false then
 		for i, row in pairs(app.WeaponRow) do
 			row:Hide()
 		end
 	end
-	if #app.ArmourRow >=1 and app.ShowArmour == false then
+	if #app.ArmourRow >= 1 and app.ShowArmour == false then
 		for i, row in pairs(app.ArmourRow) do
 			row:Hide()
 		end
 	end
-	if #app.FilteredRow >=1 and app.ShowFiltered == false then
+	if #app.FilteredRow >= 1 and app.ShowFiltered == false then
 		for i, row in pairs(app.FilteredRow) do
 			row:Hide()
 		end
 	end
 
 	-- Corner button
-	app.Window.Corner:SetScript("OnDoubleClick", function (self, button)
+	app.Window.Corner:SetScript("OnDoubleClick", function(self, button)
 		local windowHeight = 64
 		local windowWidth = 0
 		if app.ShowWeapons == true then
@@ -1008,8 +1024,8 @@ function app.Update()
 		end
 		if windowHeight > 600 then windowHeight = 600 end
 		if windowWidth > 600 then windowWidth = 600 end
-		app.Window:SetHeight(math.max(140,windowHeight))
-		app.Window:SetWidth(math.max(140,windowWidth+40))
+		app.Window:SetHeight(math.max(140, windowHeight))
+		app.Window:SetWidth(math.max(140, windowWidth + 40))
 		app.Window.ScrollFrame:SetVerticalScroll(0)
 		app.SaveWindow()
 	end)
@@ -1024,8 +1040,10 @@ end
 -- Show window
 function app.Show()
 	app.Window:ClearAllPoints()
-	app.Window:SetSize(TransmogLootHelper_Settings["windowPosition"].width, TransmogLootHelper_Settings["windowPosition"].height)
-	app.Window:SetPoint("BOTTOMLEFT", UIParent, "BOTTOMLEFT", TransmogLootHelper_Settings["windowPosition"].left, TransmogLootHelper_Settings["windowPosition"].bottom)
+	app.Window:SetSize(TransmogLootHelper_Settings["windowPosition"].width,
+		TransmogLootHelper_Settings["windowPosition"].height)
+	app.Window:SetPoint("BOTTOMLEFT", UIParent, "BOTTOMLEFT", TransmogLootHelper_Settings["windowPosition"].left,
+		TransmogLootHelper_Settings["windowPosition"].bottom)
 
 	app.Window:Show()
 	app.Update()
@@ -1056,7 +1074,7 @@ end
 function app.Stagger(t, show)
 	C_Timer.After(t, function()
 		if GetServerTime() - app.Flag.LastUpdate >= t then
-			if show and TransmogLootHelper_Settings["autoOpen"] then
+			if show and TransmogLootHelper_Settings["autoOpen"] and PlayerGetTimerunningSeasonID() ~= 2 then
 				app.Show()
 			else
 				app.Update()
@@ -1064,7 +1082,7 @@ function app.Stagger(t, show)
 		else
 			C_Timer.After(t, function()
 				if GetServerTime() - app.Flag.LastUpdate >= t then
-					if show and TransmogLootHelper_Settings["autoOpen"] then
+					if show and TransmogLootHelper_Settings["autoOpen"] and PlayerGetTimerunningSeasonID() ~= 2 then
 						app.Show()
 					else
 						app.Update()
@@ -1077,7 +1095,8 @@ end
 
 -- Add to filtered loot and update the window
 function app.AddFilteredLoot(itemLink, itemID, itemTexture, playerName, itemType, filterReason)
-	app.FilteredLoot[#app.FilteredLoot+1] = { item = itemLink, itemID = itemID, icon = itemTexture, player = playerName, playerShort = filterReason, color = "ffFFFFFF", itemType = itemType }
+	app.FilteredLoot[#app.FilteredLoot + 1] = { item = itemLink, itemID = itemID, icon = itemTexture, player = playerName, playerShort =
+	filterReason, color = "ffFFFFFF", itemType = itemType }
 
 	if #app.FilteredLoot > 100 then
 		-- Remove the oldest entry
@@ -1106,140 +1125,148 @@ function app.RemoveLootedItem(itemID)
 end
 
 -- When an item is looted
-app.Event:Register("CHAT_MSG_LOOT", function(text, playerName, languageName, channelName, playerName2, specialFlags, zoneChannelID, channelIndex, channelBaseName, languageID, lineID, guid, bnSenderID, isMobile, isSubtitle, hideSenderInLetterbox, supressRaidIcons)
-	if not IsInGroup() then return end
+app.Event:Register("CHAT_MSG_LOOT",
+	function(text, playerName, languageName, channelName, playerName2, specialFlags, zoneChannelID, channelIndex,
+			 channelBaseName, languageID, lineID, guid, bnSenderID, isMobile, isSubtitle, hideSenderInLetterbox,
+			 supressRaidIcons)
+		if not IsInGroup() then return end
 
-	local itemString = string.match(text, "(|cnIQ.-|h%[.-%]|h)")
+		local itemString = string.match(text, "(|cnIQ.-|h%[.-%]|h)")
 
-	-- Only proceed if the item is equippable and a player is specified (aka it is not a need/greed roll)
-	if itemString and C_Item.IsEquippableItem(itemString) and guid ~= nil then
-		-- Player name
-		local playerNameShort = string.match(playerName, "^(.-)-")
-		local realmName = string.match(playerName, ".*-(.*)")
-		local unitName = playerNameShort, realmName
-		local selfName = UnitName("player")
+		-- Only proceed if the item is equippable and a player is specified (aka it is not a need/greed roll)
+		if itemString and C_Item.IsEquippableItem(itemString) and guid ~= nil then
+			-- Player name
+			local playerNameShort = string.match(playerName, "^(.-)-")
+			local realmName = string.match(playerName, ".*-(.*)")
+			local unitName = playerNameShort, realmName
+			local selfName = UnitName("player")
 
-		-- Class colour
-		local className, classFilename, classId = UnitClass(unitName)
-		local _, _, _, classColor = GetClassColor(classFilename)
+			-- Class colour
+			local className, classFilename, classId = UnitClass(unitName)
+			local _, _, _, classColor = GetClassColor(classFilename)
 
-		-- Get item info
-		local _, itemLink, itemQuality, _, _, _, _, _, itemEquipLoc, itemTexture, _, classID, subclassID = C_Item.GetItemInfo(itemString)
-		local itemID = C_Item.GetItemInfoInstant(itemString)
-		local itemType = classID.."."..subclassID
+			-- Get item info
+			local _, itemLink, itemQuality, _, _, _, _, _, itemEquipLoc, itemTexture, _, classID, subclassID = C_Item
+			.GetItemInfo(itemString)
+			local itemID = C_Item.GetItemInfoInstant(itemString)
+			local itemType = classID .. "." .. subclassID
 
-		-- Continue only if it's not an item we looted ourselves
-		if unitName ~= selfName then
-			-- Do stuff depending on if the appearance or source is new
-			if not api.IsAppearanceCollected(itemLink) or (not api.IsSourceCollected(itemLink) and TransmogLootHelper_Settings["collectMode"] == 2) then
-				-- Remix filter
-				if (TransmogLootHelper_Settings["remixFilter"] == true and PlayerGetTimerunningSeasonID() ~= nil and itemQuality < 3)
-				-- Or if the item is Account/Warbound
-				or app.GetBonding(itemLink) == "BoA" then
-					-- Add to filtered loot and update the window
-					app.AddFilteredLoot(itemLink, itemID, itemTexture, playerName, itemType, L.FILTER_REASON_UNTRADEABLE)
-				-- Rarity filter
-				elseif itemQuality >= TransmogLootHelper_Settings["rarity"] then
-					-- Get the player's armor class
-					local armorClass
-					for k, v in pairs(app.Armor) do
-						for _, v2 in pairs(v) do
-							if v2 == app.ClassID then
-								armorClass = k
-							end
-						end
-					end
-
-					local itemCategory = ""
-					local equippable = false
-					-- Check if the item can and should be equipped (armor -> class)
-					if (itemType == "4.0" and itemEquipLoc ~= "INVTYPE_HOLDABLE") or itemType == "4.1" or itemType == "4.2" or itemType == "4.3" or itemType == "4.4" then
-						itemCategory = "armor"
-						if itemType == app.Type["General"] or itemEquipLoc == "INVTYPE_CLOAK" or itemType == app.Type[armorClass] then
-							equippable = true
-						end
-					end
-					-- Check if a weapon can be equipped
-					for k, v in pairs(app.Type) do
-						if v == itemType and not ((itemType == "4.0" and itemEquipLoc ~= "INVTYPE_HOLDABLE") or itemType == "4.1" or itemType == "4.2" or itemType == "4.3" or itemType == "4.4") then
-							itemCategory = "weapon"
-							for _, v2 in pairs(app.Weapon[k]) do
-								-- Check if the item can and should be equipped (weapon -> spec)
+			-- Continue only if it's not an item we looted ourselves
+			if unitName ~= selfName then
+				-- Do stuff depending on if the appearance or source is new
+				if not api.IsAppearanceCollected(itemLink) or (not api.IsSourceCollected(itemLink) and TransmogLootHelper_Settings["collectMode"] == 2) then
+					-- Remix filter
+					if (TransmogLootHelper_Settings["remixFilter"] == true and PlayerGetTimerunningSeasonID() ~= nil and itemQuality < 3)
+						-- Or if the item is Account/Warbound
+						or app.GetBonding(itemLink) == "BoA" then
+						-- Add to filtered loot and update the window
+						app.AddFilteredLoot(itemLink, itemID, itemTexture, playerName, itemType,
+							L.FILTER_REASON_UNTRADEABLE)
+						-- Rarity filter
+					elseif itemQuality >= TransmogLootHelper_Settings["rarity"] then
+						-- Get the player's armor class
+						local armorClass
+						for k, v in pairs(app.Armor) do
+							for _, v2 in pairs(v) do
 								if v2 == app.ClassID then
-									equippable = true
+									armorClass = k
 								end
 							end
 						end
-					end
 
-					-- Add equippable items to our tracker
-					if itemCategory == "weapon" then
-						app.WeaponLoot[#app.WeaponLoot+1] = { item = itemLink, itemID = itemID, icon = itemTexture, player = playerName, playerShort = playerNameShort, color = classColor, recentlyWhispered = 0 }
-					elseif itemCategory == "armor" then
-						app.ArmourLoot[#app.ArmourLoot+1] = { item = itemLink, itemID = itemID, icon = itemTexture, player = playerName, playerShort = playerNameShort, color = classColor, recentlyWhispered = 0 }
-					end
+						local itemCategory = ""
+						local equippable = false
+						-- Check if the item can and should be equipped (armor -> class)
+						if (itemType == "4.0" and itemEquipLoc ~= "INVTYPE_HOLDABLE") or itemType == "4.1" or itemType == "4.2" or itemType == "4.3" or itemType == "4.4" then
+							itemCategory = "armor"
+							if itemType == app.Type["General"] or itemEquipLoc == "INVTYPE_CLOAK" or itemType == app.Type[armorClass] then
+								equippable = true
+							end
+						end
+						-- Check if a weapon can be equipped
+						for k, v in pairs(app.Type) do
+							if v == itemType and not ((itemType == "4.0" and itemEquipLoc ~= "INVTYPE_HOLDABLE") or itemType == "4.1" or itemType == "4.2" or itemType == "4.3" or itemType == "4.4") then
+								itemCategory = "weapon"
+								for _, v2 in pairs(app.Weapon[k]) do
+									-- Check if the item can and should be equipped (weapon -> spec)
+									if v2 == app.ClassID then
+										equippable = true
+									end
+								end
+							end
+						end
 
-					-- Stagger show/update the window
-					app.Flag.LastUpdate = GetServerTime()
-					app.Stagger(1, true)
+						-- Add equippable items to our tracker
+						if itemCategory == "weapon" then
+							app.WeaponLoot[#app.WeaponLoot + 1] = { item = itemLink, itemID = itemID, icon = itemTexture, player =
+							playerName, playerShort = playerNameShort, color = classColor, recentlyWhispered = 0 }
+						elseif itemCategory == "armor" then
+							app.ArmourLoot[#app.ArmourLoot + 1] = { item = itemLink, itemID = itemID, icon = itemTexture, player =
+							playerName, playerShort = playerNameShort, color = classColor, recentlyWhispered = 0 }
+						end
+
+						-- Stagger show/update the window
+						app.Flag.LastUpdate = GetServerTime()
+						app.Stagger(1, true)
+					else
+						-- Add to filtered loot and update the window
+						app.AddFilteredLoot(itemLink, itemID, itemTexture, playerName, itemType, L.FILTER_REASON_RARITY)
+					end
 				else
-					-- Add to filtered loot and update the window
-					app.AddFilteredLoot(itemLink, itemID, itemTexture, playerName, itemType, L.FILTER_REASON_RARITY)
-				end
-			else
-				-- Ignore necks, rings, trinkets (as they never have a learnable appearance)
-				if itemType ~= app.Type["General"] or (itemType == app.Type["General"] and itemEquipLoc ~= "INVTYPE_FINGER"	and itemEquipLoc ~= "INVTYPE_TRINKET" and itemEquipLoc ~= "INVTYPE_NECK") then
-					-- Add to filtered loot and update the window
-					app.AddFilteredLoot(itemLink, itemID, itemTexture, playerName, itemType, L.FILTER_REASON_KNOWN)
+					-- Ignore necks, rings, trinkets (as they never have a learnable appearance)
+					if itemType ~= app.Type["General"] or (itemType == app.Type["General"] and itemEquipLoc ~= "INVTYPE_FINGER" and itemEquipLoc ~= "INVTYPE_TRINKET" and itemEquipLoc ~= "INVTYPE_NECK") then
+						-- Add to filtered loot and update the window
+						app.AddFilteredLoot(itemLink, itemID, itemTexture, playerName, itemType, L.FILTER_REASON_KNOWN)
+					end
 				end
 			end
 		end
-	end
-end)
+	end)
 
 -- When a new appearance is learned
 app.Event:Register("TRANSMOG_COLLECTION_SOURCE_ADDED", function(itemModifiedAppearanceID)
 	local itemID = C_TransmogCollection.GetSourceInfo(itemModifiedAppearanceID).itemID
 	app.RemoveLootedItem(itemID)
 
-	local message = "itemID:"..itemID
+	local message = "itemID:" .. itemID
 	app.SendAddonMessage(message)
 end)
 
 -- When a group member loots an item
-app.Event:Register("CHAT_MSG_ADDON", function(prefix, text, channel, sender, target, zoneChannelID, localID, name, instanceID)
-	if prefix == "TransmogLootHelp" then
-		-- ItemID
-		local itemID = tonumber(text:match("itemID:(.+)"))
-		if itemID then
-			for k, v in ipairs(app.WeaponLoot) do
-				if v.player == sender and v.itemID == itemID then
-					app.WeaponLoot[k].icon = app.IconMog
+app.Event:Register("CHAT_MSG_ADDON",
+	function(prefix, text, channel, sender, target, zoneChannelID, localID, name, instanceID)
+		if prefix == "TransmogLootHelp" then
+			-- ItemID
+			local itemID = tonumber(text:match("itemID:(.+)"))
+			if itemID then
+				for k, v in ipairs(app.WeaponLoot) do
+					if v.player == sender and v.itemID == itemID then
+						app.WeaponLoot[k].icon = app.IconMog
+					end
 				end
+
+				for k, v in ipairs(app.ArmourLoot) do
+					if v.player == sender and v.itemID == itemID then
+						app.ArmourLoot[k].icon = app.IconMog
+					end
+				end
+
+				app.Flag.LastUpdate = GetServerTime()
+				app.Stagger(1, false)
 			end
 
-			for k, v in ipairs(app.ArmourLoot) do
-				if v.player == sender and v.itemID == itemID then
-					app.ArmourLoot[k].icon = app.IconMog
+			-- Player
+			local player = text:match("player:(.+)")
+			if player then
+				if app.Whispered[player] == nil then
+					app.Whispered[player] = 0
+				end
+
+				for k, v in pairs(app.Whispered) do
+					if k == player then
+						app.Whispered[k] = app.Whispered[k] + 1
+					end
 				end
 			end
-
-			app.Flag.LastUpdate = GetServerTime()
-			app.Stagger(1, false)
 		end
-
-		-- Player
-		local player = text:match("player:(.+)")
-		if player then
-			if app.Whispered[player] == nil then
-				app.Whispered[player] = 0
-			end
-
-			for k, v in pairs(app.Whispered) do
-				if k == player then
-					app.Whispered[k] = app.Whispered[k] + 1
-				end
-			end
-		end
-	end
-end)
+	end)
