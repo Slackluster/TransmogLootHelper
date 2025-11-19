@@ -470,10 +470,10 @@ function app.Update()
 				local emptyLine = false
 
 				-- If the player who looted the item learned an appearance from it
-				if app.WeaponLoot[lootInfo.index].icon == app.IconMog then
+				if app.WeaponLoot[lootInfo.index].icon == app.IconMaybeReady then
 					GameTooltip:AddLine(" ")
 					emptyLine = true
-					GameTooltip:AddLine("|T"..app.IconMog..":0|t |c" .. lootInfo.color .. lootInfo.playerShort .. "|R " .. L.PLAYER_COLLECTED_APPEARANCE)
+					GameTooltip:AddLine("|T"..app.IconMaybeReady..":0|t |c" .. lootInfo.color .. lootInfo.playerShort .. "|R " .. L.PLAYER_COLLECTED_APPEARANCE)
 				end
 
 				-- Show how many times the player has been whispered by TLH users
@@ -690,10 +690,10 @@ function app.Update()
 				local emptyLine = false
 
 				-- If the player who looted the item learned an appearance from it
-				if app.ArmourLoot[lootInfo.index].icon == app.IconMog then
+				if app.ArmourLoot[lootInfo.index].icon == app.IconMaybeReady then
 					GameTooltip:AddLine(" ")
 					emptyLine = true
-					GameTooltip:AddLine("|T"..app.IconMog..":0|t |c" .. lootInfo.color .. lootInfo.playerShort .. "|R " .. L.PLAYER_COLLECTED_APPEARANCE)
+					GameTooltip:AddLine("|T"..app.IconMaybeReady..":0|t |c" .. lootInfo.color .. lootInfo.playerShort .. "|R " .. L.PLAYER_COLLECTED_APPEARANCE)
 				end
 
 				-- Show how many times the player has been whispered by TLH users
@@ -1214,13 +1214,13 @@ app.Event:Register("CHAT_MSG_ADDON", function(prefix, text, channel, sender, tar
 		if itemID then
 			for k, v in ipairs(app.WeaponLoot) do
 				if v.player == sender and v.itemID == itemID then
-					app.WeaponLoot[k].icon = app.IconMog
+					app.WeaponLoot[k].icon = app.IconMaybeReady
 				end
 			end
 
 			for k, v in ipairs(app.ArmourLoot) do
 				if v.player == sender and v.itemID == itemID then
-					app.ArmourLoot[k].icon = app.IconMog
+					app.ArmourLoot[k].icon = app.IconMaybeReady
 				end
 			end
 

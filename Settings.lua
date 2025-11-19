@@ -16,7 +16,9 @@ app.Event:Register("ADDON_LOADED", function(addOnName, containsBindings)
 		if TransmogLootHelper_Settings["hide"] == nil then TransmogLootHelper_Settings["hide"] = false end
 		if TransmogLootHelper_Settings["message"] == nil then TransmogLootHelper_Settings["message"] = L.DEFAULT_MESSAGE end
 		if TransmogLootHelper_Settings["windowPosition"] == nil then TransmogLootHelper_Settings["windowPosition"] = { ["left"] = 1295, ["bottom"] = 836, ["width"] = 200, ["height"] = 200, } end
+		if TransmogLootHelper_Settings["remixWindowPosition"] == nil then TransmogLootHelper_Settings["remixWindowPosition"] = { ["left"] = 1295, ["bottom"] = 836, ["width"] = 200, ["height"] = 200, } end
 		if TransmogLootHelper_Settings["windowLocked"] == nil then TransmogLootHelper_Settings["windowLocked"] = false end
+		if TransmogLootHelper_Settings["remixWindowLocked"] == nil then TransmogLootHelper_Settings["remixWindowLocked"] = false end
 		if TransmogLootHelper_Settings["windowSort"] == nil then TransmogLootHelper_Settings["windowSort"] = 1 end
 
 		app.CreateMessagePopup()
@@ -37,7 +39,11 @@ end
 -- Addon Compartment Click
 function TransmogLootHelper_Click(self, button)
 	if button == "LeftButton" then
-		app.Toggle()
+		if PlayerGetTimerunningSeasonID() == 2 then
+			app.RemixToggle()
+		else
+			app.Toggle()
+		end
 	elseif button == "RightButton" then
 		app.OpenSettings()
 	end
@@ -66,7 +72,11 @@ function app.Settings()
 
 		OnClick = function(self, button)
 			if button == "LeftButton" then
-				app.Toggle()
+				if PlayerGetTimerunningSeasonID() == 2 then
+					app.RemixToggle()
+				else
+					app.Toggle()
+				end
 			elseif button == "RightButton" then
 				app.OpenSettings()
 			end

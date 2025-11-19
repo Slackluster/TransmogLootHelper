@@ -14,7 +14,7 @@ app.NameShort = app.Colour("TLH")
 app.IconTLH = "|TInterface\\AddOns\\TransmogLootHelper\\assets\\tlh_icon.blp:0|t"
 app.IconReady = "|TInterface\\RaidFrame\\ReadyCheck-Ready:0|t"
 app.IconNotReady = "|TInterface\\RaidFrame\\ReadyCheck-NotReady:0|t"
-app.IconMog = "Interface\\AddOns\\TransmogLootHelper\\assets\\newMog.blp"
+app.IconMaybeReady = "Interface\\AddOns\\TransmogLootHelper\\assets\\readycheck-ready-orange.blp"
 app.IconLMB = "|TInterface\\TutorialFrame\\UI-Tutorial-Frame:12:12:0:0:512:512:10:65:228:283|t"
 app.IconRMB = "|TInterface\\TutorialFrame\\UI-Tutorial-Frame:12:12:0:0:512:512:10:65:330:385|t"
 
