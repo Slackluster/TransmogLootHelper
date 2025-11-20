@@ -238,8 +238,7 @@ app.Event:Register("ADDON_LOADED", function(addOnName, containsBindings)
 				[247652] = { converted = false, characters = {}, },
 			}
 			TransmogLootHelper_Cache.LemixCharacters = {}
-
-			app.FirstLemixLoad = true
+			TransmogLootHelper_Cache.LemixCharacters["FirstLemixLoad"] = true
 		end
 
 		app.CreateRemixWindow()
@@ -783,8 +782,8 @@ app.LemixRaidLoot = {
 }
 
 app.Event:Register("PLAYER_ENTERING_WORLD", function()
-	if app.FirstLemixLoad then
-		app.FirstLemixLoad = nil
+	if TransmogLootHelper_Cache.LemixCharacters["FirstLemixLoad"] and PlayerGetTimerunningSeasonID() == 2 then
+		TransmogLootHelper_Cache.LemixCharacters["FirstLemixLoad"] = nil
 		app.RemixShow()
 
 		StaticPopupDialogs["TRANSMOGLOOTHELPER_LEMIX"] = {
