@@ -52,7 +52,6 @@ function app.RemixGetItems()
 			itemInfo.converted = true
 		else
 			local owned = C_Item.GetItemCount(itemID, true, false, false, false)
-			if not itemInfo.owned and owned >= 1 then itemInfo.owned = true end
 			if owned > 1 then
 				itemInfo.characters[app.CharacterName] = true
 			elseif owned == 1 then
@@ -64,8 +63,13 @@ function app.RemixGetItems()
 			else
 				itemInfo.characters[app.CharacterName] = nil
 			end
-			local next
-			if itemInfo.owned and owned == 0 and next(itemInfo.characters) == nil then itemInfo.owned = false end
+
+			local next = next
+			if not itemInfo.owned and next(itemInfo.characters) ~= nil then
+				itemInfo.owned = true
+			elseif itemInfo.owned and next(itemInfo.characters) == nil then
+				itemInfo.owned = false
+			end
 		end
 	end
 end
