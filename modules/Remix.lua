@@ -570,7 +570,7 @@ function app.UpdateRemixWindow()
 		raid.collected = 0
 		for i2, cat in ipairs(raid.categories) do
 			cat.collected = 0
-			for _, item in pairs(cat.items) do
+			for _, item in ipairs(cat.items) do
 				if TransmogLootHelper_Cache.Lemix[item.itemID] then
 					if TransmogLootHelper_Cache.Lemix[item.itemID].converted then
 						cat.collected = cat.collected + 1
@@ -607,16 +607,25 @@ function app.UpdateRemixWindow()
 			local catNode = raidNode:Insert({ index = 1, subindex = i2, Left1 = cat.name .. " (" .. cat.collected .. "/" .. #cat.items .. ")", collapsed = cat.collapsed })
 			if cat.collapsed then catNode:ToggleCollapsed() end
 
-			local collected2 = 0
-			for _, item in pairs(cat.items) do
+			local items = {}
+			for i, item in ipairs(cat.items) do
 				local gear = Item:CreateFromItemID(item.itemID)
 				gear:ContinueOnItemLoad(function()
-					catNode:Insert({
-						itemID = item.itemID,
-						Left1 = "|T" .. C_Item.GetItemIconByID(item.itemID) .. ":16|t",
-						Left2 = ("|c" .. item.qualityColor .. "[" .. GetItemInfo(item.itemID) .. "]" or "Unknown Item"),
-						Right = item.icon,
-					})
+					items[i] = item
+					items[i].inserted = false
+					if #items == #cat.items then
+						for i2, item2 in ipairs(items) do
+							if not item2.inserted then
+								item2.inserted = true
+								catNode:Insert({
+									itemID = item2.itemID,
+									Left1 = "|T" .. C_Item.GetItemIconByID(item2.itemID) .. ":16|t",
+									Left2 = ("|c" .. item2.qualityColor .. "[" .. GetItemInfo(item2.itemID) .. "]" or "Unknown Item"),
+									Right = item2.icon,
+								})
+							end
+						end
+					end
 				end)
 			end
 		end
