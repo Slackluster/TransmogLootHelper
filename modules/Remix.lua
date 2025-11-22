@@ -28,7 +28,7 @@ app.Event:Register("ADDON_LOADED", function(addOnName, containsBindings)
 		if not TransmogLootHelper_Settings["remixWindowFilter"] then TransmogLootHelper_Settings["remixWindowFilter"] = 0 end
 
 		app.CreateRemixWindow()
-		if PlayerGetTimerunningSeasonID() == 2 then app.RemixTooltipInfo() end
+		app.RemixTooltipInfo()
 	end
 end)
 
@@ -578,15 +578,17 @@ end)
 
 function app.RemixTooltipInfo()
 	local function OnTooltipSetItem(tooltip)
-		local itemLink, itemID, secondaryItemLink, secondaryItemID
-		local _, primaryItemLink, primaryItemID = TooltipUtil.GetDisplayedItem(GameTooltip)
-		if tooltip.GetItem then _, secondaryItemLink, secondaryItemID = tooltip:GetItem() end
+		if PlayerGetTimerunningSeasonID() == 2 then
+			local itemLink, itemID, secondaryItemLink, secondaryItemID
+			local _, primaryItemLink, primaryItemID = TooltipUtil.GetDisplayedItem(GameTooltip)
+			if tooltip.GetItem then _, secondaryItemLink, secondaryItemID = tooltip:GetItem() end
 
-		-- Get our most accurate itemLink and itemID
-		itemID = primaryItemID or secondaryItemID
-		if itemID and TransmogLootHelper_Cache.Lemix[itemID] and not TransmogLootHelper_Cache.Lemix[itemID].converted then
-			tooltip:AddLine(" ")
-			tooltip:AddLine(app.IconTLH .. " This item can be converted.")
+			-- Get our most accurate itemLink and itemID
+			itemID = primaryItemID or secondaryItemID
+			if itemID and TransmogLootHelper_Cache.Lemix[itemID] and not TransmogLootHelper_Cache.Lemix[itemID].converted then
+				tooltip:AddLine(" ")
+				tooltip:AddLine(app.IconTLH .. " This item can be converted.")
+			end
 		end
 	end
 	TooltipDataProcessor.AddTooltipPostCall(Enum.TooltipDataType.Item, OnTooltipSetItem)
