@@ -294,10 +294,37 @@ function app.CreateRemixWindow()
 		app.SettingsButtonTooltip:Hide()
 	end)
 
+	app.RemixHelpButton = CreateFrame("Button", "", app.RemixWindow, "UIPanelCloseButton")
+	app.RemixHelpButton:SetSize(40,40)
+	app.RemixHelpButton:SetPoint("TOPRIGHT", app.RemixSettingsButton, "TOPLEFT", 8, 8)
+	app.RemixHelpButton:SetNormalTexture("Interface\\Common\\help-i.blp")
+	app.RemixHelpButton:SetPushedTexture("Interface\\Common\\help-i.blp")
+	app.RemixHelpButton:SetScript("OnMouseDown", function()
+		app.RemixHelpButton:SetPoint("TOPRIGHT", app.RemixSettingsButton, "TOPLEFT", 9, 7)
+	end)
+	app.RemixHelpButton:SetScript("OnMouseUp", function()
+		app.RemixHelpButton:SetPoint("TOPRIGHT", app.RemixSettingsButton, "TOPLEFT", 8, 8)
+	end)
+	app.RemixHelpButton:SetScript("OnClick", function()
+		if not StaticPopupDialogs["TRANSMOGLOOTHELPER_LEMIX"] then
+			StaticPopupDialogs["TRANSMOGLOOTHELPER_LEMIX"] = {
+				text = "Hello Timerunner |c" .. TransmogLootHelper_Cache.LemixCharacters[app.CharacterName] .. UnitName("player") .. "|R!\n\n" .. app.NameLong .. " now lets you track\nwhat raid drops you have collected\nacross your characters.\n\nWhen converting a Timerunner to Retail, any Normal+ raid drop in your |cffFF0000bags and bank only|R will grant the appearances for their\nLFR, N, H, and M difficulty Remix variants.\n\nYou can view this list by clicking the minimap\nor addon compartment button for " .. app.NameShort .. ".",
+				button1 = CLOSE,
+				whileDead = true,
+			}
+		end
+		StaticPopup_Show("TRANSMOGLOOTHELPER_LEMIX")
+	end)
+	app.RemixHelpButton:SetScript("OnEnter", function()
+		app.RemixWindowTooltipShow(app.SettingsHelpTooltip)
+	end)
+	app.RemixHelpButton:SetScript("OnLeave", function()
+		app.SettingsHelpTooltip:Hide()
+	end)
+
 	app.CloseButtonTooltip = app.RemixWindowTooltip(L.WINDOW_BUTTON_CLOSE)
 	app.LockButtonTooltip = app.RemixWindowTooltip(L.WINDOW_BUTTON_LOCK)
 	app.UnlockButtonTooltip = app.RemixWindowTooltip(L.WINDOW_BUTTON_UNLOCK)
-	app.SettingsButtonTooltip = app.RemixWindowTooltip(L.WINDOW_BUTTON_SETTINGS)
 	if TransmogLootHelper_Settings["remixWindowFilter"] == 0 then
 		app.FilterButtonTooltip = app.RemixWindowTooltip("Hide converted items\nCurrent filter:|cffFFFFFF Show all items|R")
 	elseif TransmogLootHelper_Settings["remixWindowFilter"] == 1 then
@@ -305,6 +332,8 @@ function app.CreateRemixWindow()
 	elseif TransmogLootHelper_Settings["remixWindowFilter"] == 2 then
 		app.FilterButtonTooltip = app.RemixWindowTooltip("Show all items\nCurrent filter:|cffFFFFFF Hide owned items|R")
 	end
+	app.SettingsButtonTooltip = app.RemixWindowTooltip(L.WINDOW_BUTTON_SETTINGS)
+	app.SettingsHelpTooltip = app.RemixWindowTooltip(INFO)
 
 	local ScrollBox = CreateFrame("Frame", nil, app.RemixWindow, "WowScrollBoxList")
 	ScrollBox:SetPoint("TOPLEFT", app.RemixWindow, "TOPLEFT", 8, -4)
@@ -511,7 +540,6 @@ app.Event:Register("PLAYER_ENTERING_WORLD", function()
 	if TransmogLootHelper_Cache.LemixCharacters["FirstLemixLoad"] and PlayerGetTimerunningSeasonID() == 2 then
 		TransmogLootHelper_Cache.LemixCharacters["FirstLemixLoad"] = nil
 		app.RemixShow()
-
 		StaticPopupDialogs["TRANSMOGLOOTHELPER_LEMIX"] = {
 			text = "Hello Timerunner |c" .. TransmogLootHelper_Cache.LemixCharacters[app.CharacterName] .. UnitName("player") .. "|R!\n\n" .. app.NameLong .. " now lets you track\nwhat raid drops you have collected\nacross your characters.\n\nWhen converting a Timerunner to Retail, any Normal+ raid drop in your |cffFF0000bags and bank only|R will grant the appearances for their\nLFR, N, H, and M difficulty Remix variants.\n\nYou can view this list by clicking the minimap\nor addon compartment button for " .. app.NameShort .. ".",
 			button1 = CLOSE,
