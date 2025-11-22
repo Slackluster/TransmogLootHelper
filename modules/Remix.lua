@@ -18,7 +18,7 @@ app.Event:Register("ADDON_LOADED", function(addOnName, containsBindings)
 			for i, raid in ipairs(app.LemixRaidLoot) do
 				for i2, cat in ipairs(raid.categories) do
 					for _, itemID in pairs(cat.items) do
-						TransmogLootHelper_Cache.Lemix[itemID] = { converted = false, characters = {}, }
+						TransmogLootHelper_Cache.Lemix[itemID] = { converted = false, owned = false, characters = {} }
 					end
 				end
 			end
@@ -28,6 +28,7 @@ app.Event:Register("ADDON_LOADED", function(addOnName, containsBindings)
 		if not TransmogLootHelper_Settings["remixWindowFilter"] then TransmogLootHelper_Settings["remixWindowFilter"] = 0 end
 
 		app.CreateRemixWindow()
+		if PlayerGetTimerunningSeasonID() == 2 then app.RemixTooltipInfo() end
 	end
 end)
 
@@ -63,6 +64,8 @@ function app.RemixGetItems()
 			else
 				itemInfo.characters[app.CharacterName] = nil
 			end
+			local next
+			if itemInfo.owned and owned == 0 and next(itemInfo.characters) == nil then itemInfo.owned = false end
 		end
 	end
 end
@@ -568,3 +571,19 @@ app.Event:Register("CHAT_MSG_LOOT", function(text, playerName, languageName, cha
 		end
 	end
 end)
+
+function app.RemixTooltipInfo()
+	local function OnTooltipSetItem(tooltip)
+		local itemLink, itemID, secondaryItemLink, secondaryItemID
+		local _, primaryItemLink, primaryItemID = TooltipUtil.GetDisplayedItem(GameTooltip)
+		if tooltip.GetItem then _, secondaryItemLink, secondaryItemID = tooltip:GetItem() end
+
+		-- Get our most accurate itemLink and itemID
+		itemID = primaryItemID or secondaryItemID
+		if itemID and TransmogLootHelper_Cache.Lemix[itemID] and not TransmogLootHelper_Cache.Lemix[itemID].converted then
+			tooltip:AddLine(" ")
+			tooltip:AddLine(app.IconTLH .. " This item can be converted.")
+		end
+	end
+	TooltipDataProcessor.AddTooltipPostCall(Enum.TooltipDataType.Item, OnTooltipSetItem)
+end
