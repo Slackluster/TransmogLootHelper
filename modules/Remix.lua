@@ -495,9 +495,19 @@ function app.CreateRemixWindow()
 	local function Initializer(button, node)
 		local data = node:GetData()
 
-		button.LeftText1:SetText(data.Left1 or "")
-		button.LeftText2:SetText(data.Left2 or "")
-		button.RightText:SetText(data.Right or "")
+		if data.index then
+			button.LeftText1:SetText(data.Left1 or "???")
+			button.LeftText2:SetText("")
+			button.RightText:SetText("")
+		elseif data.itemID then
+			button.LeftText2:SetText("Retrieving...")
+			local item = Item:CreateFromItemID(data.itemID)
+			item:ContinueOnItemLoad(function()
+				button.LeftText1:SetText("|T" .. C_Item.GetItemIconByID(data.itemID) .. ":16|t")
+				button.LeftText2:SetText(("|c" .. data.qualityColor .. "[" .. C_Item.GetItemNameByID(data.itemID) .. "]") or "Retrieving?")
+				button.RightText:SetText(data.icon)
+			end)
+		end
 
 		button:SetScript("OnClick", function()
 			node:ToggleCollapsed()
@@ -600,33 +610,15 @@ function app.UpdateRemixWindow()
 	local DataProvider = CreateTreeDataProvider()
 
 	for i, raid in ipairs(app.LemixRaidLoot) do
-		local raidNode = DataProvider:Insert({ index = i, Left1 = raid.name .. " (" .. raid.collected .. "/" .. raid.total .. ")", collapsed = raid.collapsed })
+		local raidNode = DataProvider:Insert({ index = i, Left1 = raid.name .. " (" .. raid.collected .. "/" .. raid.total .. ")" })
 		if raid.collapsed then raidNode:ToggleCollapsed() end
 
 		for i2, cat in ipairs(raid.categories) do
-			local catNode = raidNode:Insert({ index = 1, subindex = i2, Left1 = cat.name .. " (" .. cat.collected .. "/" .. #cat.items .. ")", collapsed = cat.collapsed })
+			local catNode = raidNode:Insert({ index = i, subindex = i2, Left1 = cat.name .. " (" .. cat.collected .. "/" .. #cat.items .. ")" })
 			if cat.collapsed then catNode:ToggleCollapsed() end
 
-			local items = {}
-			for i, item in ipairs(cat.items) do
-				local gear = Item:CreateFromItemID(item.itemID)
-				gear:ContinueOnItemLoad(function()
-					items[i] = item
-					items[i].inserted = false
-					if #items == #cat.items then
-						for i2, item2 in ipairs(items) do
-							if not item2.inserted then
-								item2.inserted = true
-								catNode:Insert({
-									itemID = item2.itemID,
-									Left1 = "|T" .. C_Item.GetItemIconByID(item2.itemID) .. ":16|t",
-									Left2 = ("|c" .. item2.qualityColor .. "[" .. GetItemInfo(item2.itemID) .. "]" or "Unknown Item"),
-									Right = item2.icon,
-								})
-							end
-						end
-					end
-				end)
+			for _, item in ipairs(cat.items) do
+				catNode:Insert({ itemID = item.itemID, icon = item.icon, qualityColor = item.qualityColor })
 			end
 		end
 	end
