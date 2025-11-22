@@ -25,6 +25,7 @@ app.Event:Register("ADDON_LOADED", function(addOnName, containsBindings)
 			TransmogLootHelper_Cache.LemixCharacters = {}
 			TransmogLootHelper_Cache.LemixCharacters["FirstLemixLoad"] = true
 		end
+		if not TransmogLootHelper_Settings["remixWindowFilter"] then TransmogLootHelper_Settings["remixWindowFilter"] = 0 end
 
 		app.CreateRemixWindow()
 	end
@@ -49,10 +50,11 @@ function app.RemixGetItems()
 		elseif C_TransmogCollection.PlayerHasTransmog(itemID, 4) then
 			itemInfo.converted = true
 		else
-			local count = C_Item.GetItemCount(itemID, true, false, false, false)
-			if count > 1 then
+			local owned = C_Item.GetItemCount(itemID, true, false, false, false)
+			if not itemInfo.owned and owned >= 1 then itemInfo.owned = true end
+			if owned > 1 then
 				itemInfo.characters[app.CharacterName] = true
-			elseif count == 1 then
+			elseif owned == 1 then
 				if C_Item.IsEquippedItem(itemID) then
 					itemInfo.characters[app.CharacterName] = "equipped"
 				else
@@ -240,8 +242,42 @@ function app.CreateRemixWindow()
 		app.RemixUnlockButton:Hide()
 	end
 
+	app.RemixFilterButton = CreateFrame("Button", "", app.RemixWindow, "UIPanelCloseButton")
+	app.RemixFilterButton:SetPoint("TOPRIGHT", app.RemixLockButton, "TOPLEFT", -2, 0)
+	app.RemixFilterButton:SetNormalTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\buttons.blp")
+	app.RemixFilterButton:GetNormalTexture():SetTexCoord(76/256, 112/256, 1/128, 39/128)
+	app.RemixFilterButton:SetDisabledTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\buttons.blp")
+	app.RemixFilterButton:GetDisabledTexture():SetTexCoord(76/256, 112/256, 41/128, 79/128)
+	app.RemixFilterButton:SetPushedTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\buttons.blp")
+	app.RemixFilterButton:GetPushedTexture():SetTexCoord(76/256, 112/256, 81/128, 119/128)
+	app.RemixFilterButton:SetScript("OnClick", function()
+		if TransmogLootHelper_Settings["remixWindowFilter"] == 0 then
+			TransmogLootHelper_Settings["remixWindowFilter"] = 1
+			app.FilterButtonTooltip:Hide()
+			app.FilterButtonTooltip = app.RemixWindowTooltip("Hide owned items\nCurrent filter:|cffFFFFFF Hide converted items|R")
+			app.RemixWindowTooltipShow(app.FilterButtonTooltip)
+		elseif TransmogLootHelper_Settings["remixWindowFilter"] == 1 then
+			TransmogLootHelper_Settings["remixWindowFilter"] = 2
+			app.FilterButtonTooltip:Hide()
+			app.FilterButtonTooltip = app.RemixWindowTooltip("Show all items\nCurrent filter:|cffFFFFFF Hide owned items|R")
+			app.RemixWindowTooltipShow(app.FilterButtonTooltip)
+		elseif TransmogLootHelper_Settings["remixWindowFilter"] == 2 then
+			TransmogLootHelper_Settings["remixWindowFilter"] = 0
+			app.FilterButtonTooltip:Hide()
+			app.FilterButtonTooltip = app.RemixWindowTooltip("Hide converted items\nCurrent filter:|cffFFFFFF Show all items|R")
+			app.RemixWindowTooltipShow(app.FilterButtonTooltip)
+		end
+		app.UpdateRemixWindow()
+	end)
+	app.RemixFilterButton:SetScript("OnEnter", function()
+		app.RemixWindowTooltipShow(app.FilterButtonTooltip)
+	end)
+	app.RemixFilterButton:SetScript("OnLeave", function()
+		app.FilterButtonTooltip:Hide()
+	end)
+
 	app.RemixSettingsButton = CreateFrame("Button", "", app.RemixWindow, "UIPanelCloseButton")
-	app.RemixSettingsButton:SetPoint("TOPRIGHT", app.RemixLockButton, "TOPLEFT", -2, 0)
+	app.RemixSettingsButton:SetPoint("TOPRIGHT", app.RemixFilterButton, "TOPLEFT", -2, 0)
 	app.RemixSettingsButton:SetNormalTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\buttons.blp")
 	app.RemixSettingsButton:GetNormalTexture():SetTexCoord(112/256, 148/256, 1/128, 39/128)
 	app.RemixSettingsButton:SetDisabledTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\buttons.blp")
@@ -262,6 +298,13 @@ function app.CreateRemixWindow()
 	app.LockButtonTooltip = app.RemixWindowTooltip(L.WINDOW_BUTTON_LOCK)
 	app.UnlockButtonTooltip = app.RemixWindowTooltip(L.WINDOW_BUTTON_UNLOCK)
 	app.SettingsButtonTooltip = app.RemixWindowTooltip(L.WINDOW_BUTTON_SETTINGS)
+	if TransmogLootHelper_Settings["remixWindowFilter"] == 0 then
+		app.FilterButtonTooltip = app.RemixWindowTooltip("Hide converted items\nCurrent filter:|cffFFFFFF Show all items|R")
+	elseif TransmogLootHelper_Settings["remixWindowFilter"] == 1 then
+		app.FilterButtonTooltip = app.RemixWindowTooltip("Hide owned items\nCurrent filter:|cffFFFFFF Hide converted items|R")
+	elseif TransmogLootHelper_Settings["remixWindowFilter"] == 2 then
+		app.FilterButtonTooltip = app.RemixWindowTooltip("Show all items\nCurrent filter:|cffFFFFFF Hide owned items|R")
+	end
 
 	local ScrollBox = CreateFrame("Frame", nil, app.RemixWindow, "WowScrollBoxList")
 	ScrollBox:SetPoint("TOPLEFT", app.RemixWindow, "TOPLEFT", 8, -4)
@@ -362,48 +405,50 @@ function app.UpdateRemixWindow()
 	end
 
 	for i, raid in ipairs(app.LemixRaidLoot) do
-		raid.collected = 0
+		raid.owned = 0
 		for i2, cat in ipairs(raid.categories) do
-			cat.collected = 0
+			cat.owned = 0
 			for _, item in ipairs(cat.items) do
 				if TransmogLootHelper_Cache.Lemix[item.itemID] then
 					if TransmogLootHelper_Cache.Lemix[item.itemID].converted then
-						cat.collected = cat.collected + 1
+						cat.owned = cat.owned + 1
 						item.qualityColor = poorQualityColor
 						item.icon = app.IconReady
-					else
-						local haveItem = false
+					elseif TransmogLootHelper_Cache.Lemix[item.itemID].owned then
+						cat.owned = cat.owned + 1
 						for character, have in pairs(TransmogLootHelper_Cache.Lemix[item.itemID].characters) do
-							if have then
-								haveItem = true
-								if have == "equipped" then
-									item.icon = "|T"..app.IconMaybeReady..":0|t"
-								else
-									item.icon = app.IconReady
-									break
-								end
+							if have == "equipped" then
+								item.icon = "|T"..app.IconMaybeReady..":0|t"
+							else
+								item.icon = app.IconReady
+								break
 							end
 						end
-						if haveItem then cat.collected = cat.collected + 1 end
 					end
 				end
 			end
-			raid.collected = raid.collected + cat.collected
+			raid.owned = raid.owned + cat.owned
 		end
 	end
 
 	local DataProvider = CreateTreeDataProvider()
 
 	for i, raid in ipairs(app.LemixRaidLoot) do
-		local raidNode = DataProvider:Insert({ index = i, Left1 = raid.name .. " (" .. raid.collected .. "/" .. raid.total .. ")" })
+		local raidNode = DataProvider:Insert({ index = i, Left1 = raid.name .. " (" .. raid.owned .. "/" .. raid.total .. ")" })
 		if raid.collapsed then raidNode:ToggleCollapsed() end
 
 		for i2, cat in ipairs(raid.categories) do
-			local catNode = raidNode:Insert({ index = i, subindex = i2, Left1 = cat.name .. " (" .. cat.collected .. "/" .. #cat.items .. ")" })
+			local catNode = raidNode:Insert({ index = i, subindex = i2, Left1 = cat.name .. " (" .. cat.owned .. "/" .. #cat.items .. ")" })
 			if cat.collapsed then catNode:ToggleCollapsed() end
 
 			for _, item in ipairs(cat.items) do
-				catNode:Insert({ itemID = item.itemID, icon = item.icon, qualityColor = item.qualityColor })
+				if TransmogLootHelper_Settings["remixWindowFilter"] >= 1 and TransmogLootHelper_Cache.Lemix[item.itemID].converted then
+					-- Filter
+				elseif TransmogLootHelper_Settings["remixWindowFilter"] == 2 and TransmogLootHelper_Cache.Lemix[item.itemID].owned then
+					-- Filter
+				else
+					catNode:Insert({ itemID = item.itemID, icon = item.icon, qualityColor = item.qualityColor })
+				end
 			end
 		end
 	end
