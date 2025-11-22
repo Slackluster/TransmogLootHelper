@@ -548,44 +548,74 @@ end
 
 function app.UpdateRemixWindow()
 	app.RemixGetItems()
-	local DataProvider = CreateTreeDataProvider()
+	local _, _, _, poorQualityColor = C_Item.GetItemQualityColor(0)
+	local _, _, _, epicQualityColor = C_Item.GetItemQualityColor(4)
+
+	if not app.LemixRaidLootConverted then
+		for _, raid in ipairs(app.LemixRaidLoot) do
+			raid.collapsed = false
+			raid.total = 0
+			for _, cat in ipairs(raid.categories) do
+				cat.collapsed = false
+				raid.total = raid.total + #cat.items
+				for i, itemID in ipairs(cat.items) do
+					cat.items[i] = { itemID = itemID, icon = app.IconNotReady, qualityColor = epicQualityColor }
+				end
+			end
+		end
+		app.LemixRaidLootConverted = true
+	end
 
 	for i, raid in ipairs(app.LemixRaidLoot) do
-		local raidNode = DataProvider:Insert({ index = i, Left1 = raid.name, collapsed = raid.collapsed })
-		if raid.collapsed then raidNode:ToggleCollapsed() end
-
+		raid.collected = 0
 		for i2, cat in ipairs(raid.categories) do
-			local catNode = raidNode:Insert({ index = 1, subindex = i2, Left1 = cat.name, collapsed = cat.collapsed })
-			if cat.collapsed then catNode:ToggleCollapsed() end
-
-			for _, itemID in ipairs(cat.items) do
-				local _, _, _, qualityColor = C_Item.GetItemQualityColor(4)
-				local icon = app.IconNotReady
-				if TransmogLootHelper_Cache.Lemix[itemID] then
-					if TransmogLootHelper_Cache.Lemix[itemID].converted then
-						_, _, _, qualityColor = C_Item.GetItemQualityColor(0)
-						icon = app.IconReady
+			cat.collected = 0
+			for _, item in pairs(cat.items) do
+				if TransmogLootHelper_Cache.Lemix[item.itemID] then
+					if TransmogLootHelper_Cache.Lemix[item.itemID].converted then
+						cat.collected = cat.collected + 1
+						item.qualityColor = poorQualityColor
+						item.icon = app.IconReady
 					else
-						for character, have in pairs(TransmogLootHelper_Cache.Lemix[itemID].characters) do
+						local haveItem = false
+						for character, have in pairs(TransmogLootHelper_Cache.Lemix[item.itemID].characters) do
 							if have then
+								haveItem = true
 								if have == "equipped" then
-									icon = "|T"..app.IconMaybeReady..":0|t"
+									item.icon = "|T"..app.IconMaybeReady..":0|t"
 								else
-									icon = app.IconReady
+									item.icon = app.IconReady
 									break
 								end
 							end
 						end
+						if haveItem then cat.collected = cat.collected + 1 end
 					end
 				end
+			end
+			raid.collected = raid.collected + cat.collected
+		end
+	end
 
-				local item = Item:CreateFromItemID(itemID)
-				item:ContinueOnItemLoad(function()
+	local DataProvider = CreateTreeDataProvider()
+
+	for i, raid in ipairs(app.LemixRaidLoot) do
+		local raidNode = DataProvider:Insert({ index = i, Left1 = raid.name .. " (" .. raid.collected .. "/" .. raid.total .. ")", collapsed = raid.collapsed })
+		if raid.collapsed then raidNode:ToggleCollapsed() end
+
+		for i2, cat in ipairs(raid.categories) do
+			local catNode = raidNode:Insert({ index = 1, subindex = i2, Left1 = cat.name .. " (" .. cat.collected .. "/" .. #cat.items .. ")", collapsed = cat.collapsed })
+			if cat.collapsed then catNode:ToggleCollapsed() end
+
+			local collected2 = 0
+			for _, item in pairs(cat.items) do
+				local gear = Item:CreateFromItemID(item.itemID)
+				gear:ContinueOnItemLoad(function()
 					catNode:Insert({
-						itemID = itemID,
-						Left1 = "|T" .. C_Item.GetItemIconByID(itemID) .. ":16|t",
-						Left2 = ("|c" .. qualityColor .. "[" .. GetItemInfo(itemID) .. "]" or "Unknown Item"),
-						Right = icon,
+						itemID = item.itemID,
+						Left1 = "|T" .. C_Item.GetItemIconByID(item.itemID) .. ":16|t",
+						Left2 = ("|c" .. item.qualityColor .. "[" .. GetItemInfo(item.itemID) .. "]" or "Unknown Item"),
+						Right = item.icon,
 					})
 				end)
 			end
@@ -598,147 +628,50 @@ end
 app.LemixRaidLoot = {
 	[1] = {
 		name = "Emerald Nightmare",
-		collapsed = false,
 		categories = {
-			[1] = {
-				name = "Cloaks",
-				collapsed = false,
-				items = { 247560, 247512 },
-			},
-			[2] = {
-				name = "Cloth",
-				collapsed = false,
-				items = { 247517, 247514, 247513, 247520, 247521, 247507, 247561, 247505, 247515, 247519, 247518, 247509, 247516, 247522 },
-			},
-			[3] = {
-				name = "Leather",
-				collapsed = false,
-				items = { 247525, 247531, 247511, 247528, 247524, 247562, 247533, 247523, 247530, 247532, 247529, 247534, 247527, 247526, 247535 },
-			},
-			[4] = {
-				name = "Mail",
-				collapsed = false,
-				items = { 247544, 247537, 247541, 247564, 247538, 247506, 247536, 247504, 247547, 247542, 247546, 247545, 247540, 247543, 247036 },
-			},
-			[5] = {
-				name = "Plate",
-				collapsed = false,
-				items = { 247555, 247510, 247552, 247549, 247508, 247548, 247556, 247557, 247550, 247554, 247565, 247558, 247553, 247551, 247559 },
-			},
+			[1] = { name = "Cloaks", items = { 247560, 247512 } },
+			[2] = { name = "Cloth", items = { 247517, 247514, 247513, 247520, 247521, 247507, 247561, 247505, 247515, 247519, 247518, 247509, 247516, 247522 } },
+			[3] = { name = "Leather", items = { 247525, 247531, 247511, 247528, 247524, 247562, 247533, 247523, 247530, 247532, 247529, 247534, 247527, 247526, 247535 } },
+			[4] = { name = "Mail", items = { 247544, 247537, 247541, 247564, 247538, 247506, 247536, 247504, 247547, 247542, 247546, 247545, 247540, 247543, 247036 } },
+			[5] = { name = "Plate", items = { 247555, 247510, 247552, 247549, 247508, 247548, 247556, 247557, 247550, 247554, 247565, 247558, 247553, 247551, 247559 } },
 		},
 	},
 	[2] = {
 		name = "Trial of Valor",
-		collapsed = false,
 		categories = {
-			[1] = {
-				name = "Cloaks",
-				collapsed = false,
-				items = { 247591, 247592, 247568 },
-			},
-			[2] = {
-				name = "Cloth",
-				collapsed = false,
-				items = { 247567, 247571, 249684, 247569, 249685, 247584, 247566, 247570 },
-			},
-			[3] = {
-				name = "Leather",
-				collapsed = false,
-				items = { 247585, 247587, 247573, 249683, 247575, 247572, 247574, 249682 },
-			},
-			[4] = {
-				name = "Mail",
-				collapsed = false,
-				items = { 247576, 247579, 247588, 247589, 247577, 249680, 247578, 249681 },
-			},
-			[5] = {
-				name = "Plate",
-				collapsed = false,
-				items = { 247583, 247586, 247581, 249678, 247580, 247582, 247590, 249679 },
-			},
+			[1] = { name = "Cloaks", items = { 247591, 247592, 247568 } },
+			[2] = { name = "Cloth", items = { 247567, 247571, 249684, 247569, 249685, 247584, 247566, 247570 } },
+			[3] = { name = "Leather", items = { 247585, 247587, 247573, 249683, 247575, 247572, 247574, 249682 } },
+			[4] = { name = "Mail", items = { 247576, 247579, 247588, 247589, 247577, 249680, 247578, 249681 } },
+			[5] = { name = "Plate", items = { 247583, 247586, 247581, 249678, 247580, 247582, 247590, 249679 } },
 		},
 	},
 	[3] = {
 		name = "The Nighthold",
-		collapsed = false,
 		categories = {
-			[1] = {
-				name = "Cloaks",
-				collapsed = false,
-				items = { 247489, 247481, 247482, 247491, 247436, 247492, 247490 },
-			},
-			[2] = {
-				name = "Cloth",
-				collapsed = false,
-				items = { 247430, 247431, 247493, 247467, 247486, 247435, 247465, 247466 },
-			},
-			[3] = {
-				name = "Leather",
-				collapsed = false,
-				items = { 247469, 247438, 247439, 247441, 247488, 247440, 247494, 247437 },
-			},
-			[4] = {
-				name = "Mail",
-				collapsed = false,
-				items = { 247470, 247448, 247447, 247453, 247456, 247454, 247495 },
-			},
-			[5] = {
-				name = "Plate",
-				collapsed = false,
-				items = { 247458, 247473, 247460, 247496, 247472, 247477, 247475, 247464, 247471, 247484 },
-			},
+			[1] = { name = "Cloaks", items = { 247489, 247481, 247482, 247491, 247436, 247492, 247490 } },
+			[2] = { name = "Cloth", items = { 247430, 247431, 247493, 247467, 247486, 247435, 247465, 247466 } },
+			[3] = { name = "Leather", items = { 247469, 247438, 247439, 247441, 247488, 247440, 247494, 247437 } },
+			[4] = { name = "Mail", items = { 247470, 247448, 247447, 247453, 247456, 247454, 247495 } },
+			[5] = { name = "Plate", items = { 247458, 247473, 247460, 247496, 247472, 247477, 247475, 247464, 247471, 247484 } },
 		},
 	},
 	[4] = {
 		name = "Tomb of Sargeras",
-		collapsed = false,
 		categories = {
-			[1] = {
-				name = "Cloth",
-				collapsed = false,
-				items = { 247617, 247596, 247594, 247599, 247598, 247618, 247595, 247597 },
-			},
-			[2] = {
-				name = "Leather",
-				collapsed = false,
-				items = { 247605, 247602, 247620, 247603, 247601, 247600, 247604, 247619, 247616 },
-			},
-			[3] = {
-				name = "Mail",
-				collapsed = false,
-				items = { 247608, 247606, 247610, 247622, 247607, 247621, 247609 },
-			},
-			[4] = {
-				name = "Plate",
-				collapsed = false,
-				items = { 247615, 247624, 247611, 247613, 247614, 247623, 247612 },
-			},
+			[1] = { name = "Cloth", items = { 247617, 247596, 247594, 247599, 247598, 247618, 247595, 247597 } },
+			[2] = { name = "Leather", items = { 247605, 247602, 247620, 247603, 247601, 247600, 247604, 247619, 247616 } },
+			[3] = { name = "Mail", items = { 247608, 247606, 247610, 247622, 247607, 247621, 247609 } },
+			[4] = { name = "Plate", items = { 247615, 247624, 247611, 247613, 247614, 247623, 247612 } },
 		},
 	},
 	[5] = {
 		name = "Antorus, the Burning Throne",
-		collapsed = false,
 		categories = {
-			[1] = {
-				name = "Cloth",
-				collapsed = false,
-				items = { 247632, 247627, 247630, 247629, 247628, 247631, 247626, 247625 },
-			},
-			[2] = {
-				name = "Leather",
-				collapsed = false,
-				items = { 247637, 247654, 247635, 247653, 247638, 247633, 247636, 247634 },
-			},
-			[3] = {
-				name = "Mail",
-				collapsed = false,
-				items = { 247639, 247641, 247656, 247640, 247643, 247642, 247651, 247655 },
-			},
-			[4] = {
-				name = "Plate",
-				collapsed = false,
-				items = { 247645, 247644, 247646, 247648, 247649, 247647, 247650, 247652 },
-			},
+			[1] = { name = "Cloth", items = { 247632, 247627, 247630, 247629, 247628, 247631, 247626, 247625 } },
+			[2] = { name = "Leather", items = { 247637, 247654, 247635, 247653, 247638, 247633, 247636, 247634 } },
+			[3] = { name = "Mail", items = { 247639, 247641, 247656, 247640, 247643, 247642, 247651, 247655 } },
+			[4] = { name = "Plate", items = { 247645, 247644, 247646, 247648, 247649, 247647, 247650, 247652 } },
 		},
 	},
 }
