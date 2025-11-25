@@ -50,7 +50,9 @@ function app.RemixGetItems()
 			end
 		elseif C_TransmogCollection.PlayerHasTransmog(itemID, 4) then
 			itemInfo.converted = true
-		else
+		end
+
+		if not itemInfo.converted then
 			local owned = C_Item.GetItemCount(itemID, true, false, false, false)
 			if owned > 1 then
 				itemInfo.characters[app.CharacterName] = true
