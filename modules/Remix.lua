@@ -366,21 +366,52 @@ function app.CreateRemixWindow()
 			button.LeftText2:SetText("")
 			button.RightText:SetText("")
 		elseif data.itemID then
+			local _, _, _, poorQualityColor = C_Item.GetItemQualityColor(0)
+			local _, _, _, epicQualityColor = C_Item.GetItemQualityColor(4)
+			local icon = app.IconNotReady
+			local qualityColor = epicQualityColor
+
+			if TransmogLootHelper_Cache.Lemix[data.itemID].converted then
+				qualityColor = poorQualityColor
+				icon = app.IconReady
+			else
+				for character, have in pairs(TransmogLootHelper_Cache.Lemix[data.itemID].characters) do
+					if have == "equipped" then
+						icon = "|T"..app.IconMaybeReady..":0|t"
+					else
+						icon = app.IconReady
+						break
+					end
+				end
+			end
+
 			button.LeftText2:SetText("Retrieving...")
 			local item = Item:CreateFromItemID(data.itemID)
 			item:ContinueOnItemLoad(function()
 				button.LeftText1:SetText("|T" .. C_Item.GetItemIconByID(data.itemID) .. ":16|t")
-				button.LeftText2:SetText(("|c" .. data.qualityColor .. "[" .. C_Item.GetItemNameByID(data.itemID) .. "]") or "N/A")
-				button.RightText:SetText(data.icon)
+				button.LeftText2:SetText(("|c" .. qualityColor .. "[" .. C_Item.GetItemNameByID(data.itemID) .. "]") or "N/A")
+				button.RightText:SetText(icon)
 			end)
 		end
 
 		button:SetScript("OnClick", function()
-			node:ToggleCollapsed()
-			if data.subindex then
-				app.LemixRaidLoot[data.index].categories[data.subindex].collapsed = node:IsCollapsed()
-			elseif data.index then
-				app.LemixRaidLoot[data.index].collapsed = node:IsCollapsed()
+			if IsShiftKeyDown() and not data.index then
+				if not TransmogLootHelper_Cache.Lemix[data.itemID].owned then
+					TransmogLootHelper_Cache.LemixCharacters["Manually checked"] = "ffe6cc80"
+					TransmogLootHelper_Cache.Lemix[data.itemID].characters["Manually checked"] = true
+					TransmogLootHelper_Cache.Lemix[data.itemID].owned = true
+				else
+					TransmogLootHelper_Cache.Lemix[data.itemID].characters["Manually checked"] = nil
+					TransmogLootHelper_Cache.Lemix[data.itemID].owned = false
+				end
+				app.UpdateRemixWindow()
+			else
+				node:ToggleCollapsed()
+				if data.subindex then
+					app.LemixRaidLoot[data.index].categories[data.subindex].collapsed = node:IsCollapsed()
+				elseif data.index then
+					app.LemixRaidLoot[data.index].collapsed = node:IsCollapsed()
+				end
 			end
 		end)
 		button:RegisterForDrag("LeftButton")
@@ -393,6 +424,7 @@ function app.CreateRemixWindow()
 				if TransmogLootHelper_Cache.Lemix[data.itemID].converted then
 					text = "Item already converted!"
 				else
+					text = ""
 					for character, have in pairs(TransmogLootHelper_Cache.Lemix[data.itemID].characters) do
 						if have then
 							if notFirst then
@@ -406,6 +438,9 @@ function app.CreateRemixWindow()
 						end
 					end
 				end
+			end
+			if text == "" and not data.index then
+				text = "Shift+click to manually toggle this item as collected"
 			end
 			if text ~= "" then
 				app.Players = app.RemixWindowTooltip(text)
@@ -424,8 +459,6 @@ end
 
 function app.UpdateRemixWindow()
 	app.RemixGetItems()
-	local _, _, _, poorQualityColor = C_Item.GetItemQualityColor(0)
-	local _, _, _, epicQualityColor = C_Item.GetItemQualityColor(4)
 
 	if not app.LemixRaidLootConverted then
 		for _, raid in ipairs(app.LemixRaidLoot) do
@@ -435,7 +468,7 @@ function app.UpdateRemixWindow()
 				cat.collapsed = false
 				raid.total = raid.total + #cat.items
 				for i, itemID in ipairs(cat.items) do
-					cat.items[i] = { itemID = itemID, icon = app.IconNotReady, qualityColor = epicQualityColor }
+					cat.items[i] = { itemID = itemID }
 				end
 			end
 		end
@@ -450,18 +483,8 @@ function app.UpdateRemixWindow()
 				if TransmogLootHelper_Cache.Lemix[item.itemID] then
 					if TransmogLootHelper_Cache.Lemix[item.itemID].converted then
 						cat.owned = cat.owned + 1
-						item.qualityColor = poorQualityColor
-						item.icon = app.IconReady
 					elseif TransmogLootHelper_Cache.Lemix[item.itemID].owned then
 						cat.owned = cat.owned + 1
-						for character, have in pairs(TransmogLootHelper_Cache.Lemix[item.itemID].characters) do
-							if have == "equipped" then
-								item.icon = "|T"..app.IconMaybeReady..":0|t"
-							else
-								item.icon = app.IconReady
-								break
-							end
-						end
 					end
 				end
 			end
@@ -485,7 +508,7 @@ function app.UpdateRemixWindow()
 				elseif TransmogLootHelper_Settings["remixWindowFilter"] == 2 and TransmogLootHelper_Cache.Lemix[item.itemID].owned then
 					-- Filter
 				else
-					catNode:Insert({ itemID = item.itemID, icon = item.icon, qualityColor = item.qualityColor })
+					catNode:Insert({ itemID = item.itemID })
 				end
 			end
 		end
