@@ -8,7 +8,7 @@ EventUtil.ContinueOnAddOnLoaded("Baganator", function()
 				C_Item.RequestLoadItemDataByID(itemDetails.itemID)
 				return
 			end
-			app.ItemOverlay(icon.overlay, itemDetails.itemLink, nil, {hasLoot = itemDetails.hasLoot}, true)
+			app.ItemOverlay(icon.overlay, itemDetails.itemLink, nil, { hasLoot = itemDetails.hasLoot }, true)
 			return icon:IsShown()
 		end,
 		function(itemButton)
