@@ -154,6 +154,7 @@ function app.CreateRemixWindow()
 	app.RemixWindow = CreateFrame("Frame", nil, UIParent, "BackdropTemplate")
 	app.RemixWindow:SetPoint("CENTER")
 	app.RemixWindow:SetSize(300, 300)
+	app.RemixWindow:SetFrameStrata("HIGH")
 	app.RemixWindow:SetBackdrop({
 		bgFile = "Interface/Tooltips/UI-Tooltip-Background",
 		edgeFile = "Interface/Tooltips/UI-Tooltip-Border",
