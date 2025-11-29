@@ -100,7 +100,7 @@ function app.ItemOverlay(overlay, itemLink, itemLocation, containerInfo, bagAddo
 		end
 
 		-- Set the icon's position
-		if not bagAddon then
+		if not (bagAddon and C_AddOns.IsAddOnLoaded("Baganator")) then
 			if TransmogLootHelper_Settings["iconPosition"] == 0 then
 				overlay.icon:SetPoint("CENTER", overlay, "TOPLEFT", 4, -4)
 			elseif TransmogLootHelper_Settings["iconPosition"] == 1 then
