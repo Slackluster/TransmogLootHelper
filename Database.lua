@@ -102,6 +102,7 @@ app.Icon = {
 	["Pet"] = "Interface\\Icons\\inv_arfuspet_classic",
 	["Toy"] = "Interface\\Icons\\trade_archaeology_chestoftinyglassanimals",
 	["Recipe"] = "Interface\\Icons\\inv_misc_note_01",
+	["Decor"] = "Interface\\Icons\\ui_homestone-64",
 
 	[164] = "Interface\\Icons\\ui_profession_blacksmithing",
 	[165] = "Interface\\Icons\\ui_profession_leatherworking",

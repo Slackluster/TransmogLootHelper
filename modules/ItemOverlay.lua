@@ -15,6 +15,7 @@ app.Event:Register("ADDON_LOADED", function(addOnName, containsBindings)
 	if addOnName == appName then
 		if not TransmogLootHelper_Cache then TransmogLootHelper_Cache = {} end
 		if not TransmogLootHelper_Cache.Recipes then TransmogLootHelper_Cache.Recipes = {} end
+		if not TransmogLootHelper_Cache.Decor then TransmogLootHelper_Cache.Decor = {} end
 
 		app.OverlayCache = {}
 
@@ -129,6 +130,9 @@ function app.ItemOverlay(overlay, itemLink, itemLocation, containerInfo, bagAddo
 			-- Containers
 			if containerInfo and containerInfo.hasLoot then
 				itemEquipLoc = "Container"
+			-- Decor
+			elseif C_Item.IsDecorItem(itemLink) then
+				itemEquipLoc = "Decor"
 			-- Mounts
 			elseif classID == Enum.ItemClass.Miscellaneous and subclassID == Enum.ItemMiscellaneousSubclass.Mount then
 				itemEquipLoc = "Mount"
@@ -500,6 +504,45 @@ function app.ItemOverlay(overlay, itemLink, itemLocation, containerInfo, bagAddo
 					end
 				else
 					hideOverlay()
+				end
+			-- Decor
+			elseif TransmogLootHelper_Settings["iconNewDecor"] and itemEquipLoc == "Decor" then
+				if not TransmogLootHelper_Cache.Decor[itemID] then
+					local decorInfo = C_HousingCatalog.GetCatalogEntryInfoByItem(itemID, true)
+					if decorInfo then
+						TransmogLootHelper_Cache.Decor[itemID] = { recordID = decorInfo.entryID.recordID, owned = false, grantsXP = false, xp = decorInfo.firstAcquisitionBonus }
+						if (decorInfo.quantity + decorInfo.remainingRedeemable + decorInfo.numPlaced) >= 1 then
+							TransmogLootHelper_Cache.Decor[itemID].owned = true
+						elseif decorInfo.firstAcquisitionBonus > 0 then
+							TransmogLootHelper_Cache.Decor[itemID].grantsXP = true
+						end
+					end
+				end
+
+				if TransmogLootHelper_Cache.Decor[itemID] then
+					if TransmogLootHelper_Cache.Decor[itemID].xp > 0 then
+						overlay.texture:SetTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\ui_homestone-64-blue.blp")
+					end
+
+					if TransmogLootHelper_Settings["iconNewDecorXP"] then
+						if TransmogLootHelper_Cache.Decor[itemID].grantsXP then
+							showOverlay("purple")
+						elseif TransmogLootHelper_Settings["iconLearned"] and TransmogLootHelper_Cache.Decor[itemID].xp > 0 then
+							showOverlay("green")
+						else
+							hideOverlay()
+						end
+					else
+						if TransmogLootHelper_Cache.Decor[itemID].owned then
+							if TransmogLootHelper_Settings["iconLearned"] then
+								showOverlay("green")
+							else
+								hideOverlay()
+							end
+						else
+							showOverlay("purple")
+						end
+					end
 				end
 			-- Profession Knowledge
 			elseif TransmogLootHelper_Settings["iconUsable"] and itemEquipLoc == "ProfessionKnowledge" then
@@ -1166,5 +1209,43 @@ app.Event:Register("TRADE_SKILL_SHOW", function()
 				app.RegisterRecipe(recipeID)
 			end
 		end)
+	end
+end)
+
+--------------------
+-- DECOR TRACKING --
+--------------------
+
+app.Event:Register("NEW_HOUSING_ITEM_ACQUIRED", function(itemType, itemName, icon)
+	if itemName then
+		local itemID = C_Item.GetItemIDForItemInfo(itemName)
+		if itemID then
+			if not TransmogLootHelper_Cache.Decor[itemID] then
+				TransmogLootHelper_Cache.Decor[itemID] = { owned = true, grantsXP = false }
+			end
+			local decorInfo = C_HousingCatalog.GetCatalogEntryInfoByItem(itemID, true)
+			if decorInfo then
+				TransmogLootHelper_Cache.Decor[itemID].recordID = decorInfo.entryID.recordID
+				TransmogLootHelper_Cache.Decor[itemID].xp = decorInfo.firstAcquisitionBonus
+			end
+			api.UpdateOverlay()
+		end
+	end
+end)
+
+app.Event:Register("HOUSING_STORAGE_ENTRY_UPDATED", function(entryID)
+	if entryID then
+		local decorInfo = C_HousingCatalog.GetCatalogEntryInfoByRecordID(Enum.HousingCatalogEntryType.Decor, entryID.recordID, true)
+		if decorInfo then
+			if not TransmogLootHelper_Cache.Decor[decorInfo.itemID] then
+				TransmogLootHelper_Cache.Decor[decorInfo.itemID] = { recordID = entryID.recordID, owned = false, grantsXP = false, xp = decorInfo.firstAcquisitionBonus }
+			end
+
+			if (decorInfo.quantity + decorInfo.remainingRedeemable + decorInfo.numPlaced) >= 1 then
+				TransmogLootHelper_Cache.Decor[decorInfo.itemID].owned = true
+			elseif decorInfo.firstAcquisitionBonus > 0 then
+				TransmogLootHelper_Cache.Decor[decorInfo.itemID].grantsXP = true
+			end
+		end
 	end
 end)

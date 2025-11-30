@@ -282,6 +282,21 @@ function app.Settings()
 		app.SettingsChanged()
 	end)
 
+	local variable, name, tooltip = "iconNewDecor", L.SETTINGS_ICON_NEW_DECOR, L.SETTINGS_ICON_NEW_DECOR_DESC
+	local setting = Settings.RegisterAddOnSetting(category, appName.."_"..variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, true)
+	Settings.CreateCheckbox(category, setting, tooltip)
+	setting:SetValueChangedCallback(function()
+		app.SettingsChanged()
+	end)
+
+	local variable, name, tooltip = "iconNewDecorXP", L.SETTINGS_ICON_NEW_DECORXP, L.SETTINGS_ICON_NEW_DECORXP_DESC
+	local setting = Settings.RegisterAddOnSetting(category, appName .. "_" .. variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, false)
+	local subSetting = Settings.CreateCheckbox(category, setting, tooltip)
+	subSetting:SetParentInitializer(parentSetting, function() return TransmogLootHelper_Settings["iconNewDecor"] end)
+	setting:SetValueChangedCallback(function()
+		app.SettingsChanged()
+	end)
+
 	local variable, name, tooltip = "iconLearned", "Learned", "Show an icon to indicate the above tracked collectibles are learned."
 	local setting = Settings.RegisterAddOnSetting(category, appName.."_"..variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, false)
 	Settings.CreateCheckbox(category, setting, tooltip)
