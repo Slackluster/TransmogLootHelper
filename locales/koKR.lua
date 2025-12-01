@@ -21,6 +21,10 @@ local L = app.locales
 -- L.BINDTEXT_BOE =						"BoE"
 -- L.BINDTEXT_BOA =						"BoA"
 -- L.RECIPE_UNCACHED =						"Please open this profession to update the recipe's collection status."
+-- L.DECOR_UNCACHED =						"Open the House Editor to cache decor."
+-- L.DECOR_OWNED =							"Owned:"
+-- L.DECOR_PLACED =						"Placed:"
+-- L.DECOR_STORAGE =						"Storage:"
 
 -- Loot tracker
 -- L.DEFAULT_MESSAGE = 					"Do you need the %item you looted? If not, I'd like to have it for transmog. :)"
