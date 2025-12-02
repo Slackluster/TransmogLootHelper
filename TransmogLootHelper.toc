@@ -1,4 +1,4 @@
-## Interface: 110207
+## Interface: 120000
 ## Title: |cffC69B6DTransmog Loot Helper|r
 ## Author: Slackluster
 ## IconTexture: Interface\AddOns\TransmogLootHelper\assets\tlh_icon.blp
