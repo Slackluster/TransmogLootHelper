@@ -21,6 +21,9 @@ app.Event:Register("ADDON_LOADED", function(addOnName, containsBindings)
 
 		app.ItemOverlayHooks()
 		app.TooltipInfo()
+		C_Timer.After(1, function()
+			C_HousingCatalog.CreateCatalogSearcher()	-- Cache Decor, since Blizzard doesn't do it itself
+		end)
 	end
 end)
 
@@ -511,7 +514,7 @@ function app.ItemOverlay(overlay, itemLink, itemLocation, containerInfo, bagAddo
 				local recordID = app.Decor[itemID] or (decorInfo and decorInfo.entryID.recordID)
 
 				if recordID then
-					if not TransmogLootHelper_Cache.Decor[recordID] then
+					if not TransmogLootHelper_Cache.Decor[recordID] and decorInfo then
 						TransmogLootHelper_Cache.Decor[recordID] = { owned = 0 }
 						TransmogLootHelper_Cache.Decor[recordID].grantsXP = false
 						TransmogLootHelper_Cache.Decor[recordID].xp = decorInfo.firstAcquisitionBonus
@@ -532,13 +535,13 @@ function app.ItemOverlay(overlay, itemLink, itemLocation, containerInfo, bagAddo
 						else
 							hideOverlay()
 						end
-					elseif (TransmogLootHelper_Cache.Decor[recordID].placed and (TransmogLootHelper_Cache.Decor[recordID].owned + TransmogLootHelper_Cache.Decor[recordID].placed) > 0) or TransmogLootHelper_Cache.Decor[recordID].owned > 0 then
+					elseif TransmogLootHelper_Cache.Decor[recordID].owned > 0 then
 						if TransmogLootHelper_Settings["iconLearned"] then
 							showOverlay("green")
 						else
 							hideOverlay()
 						end
-					elseif TransmogLootHelper_Cache.Decor[recordID].placed then
+					else
 						showOverlay("purple")
 					end
 				else
@@ -1172,18 +1175,7 @@ function app.TooltipInfo()
 			itemID = primaryItemID or secondaryItemID
 			if itemID then
 				local _, _, _, _, _, _, _, _, _, _, _, classID, subclassID = C_Item.GetItemInfo(itemID)
-				if C_Item.IsDecorItem(itemID) then
-					local decorInfo = C_HousingCatalog.GetCatalogEntryInfoByItem(itemID, true)
-					local recordID = app.Decor[itemID] or (decorInfo and decorInfo.entryID.recordID)
-
-					if not TransmogLootHelper_Cache.Decor[recordID] or not TransmogLootHelper_Cache.Decor[recordID].placed then
-						tooltip:AddLine(" ")
-						tooltip:AddLine(app.IconTLH .. " " .. L.DECOR_UNCACHED)
-					elseif not app.Flag.CachedDecor then
-						tooltip:AddLine(" ")
-						tooltip:AddLine(app.IconTLH .. " " .. L.DECOR_OWNED .. " |cffFFFFFF" .. (TransmogLootHelper_Cache.Decor[recordID].owned + TransmogLootHelper_Cache.Decor[recordID].placed) .. " (" .. L.DECOR_PLACED .. " " .. TransmogLootHelper_Cache.Decor[recordID].placed .. ", " .. L.DECOR_STORAGE .. " " .. TransmogLootHelper_Cache.Decor[recordID].owned .. ")")
-					end
-				elseif classID == 9 and subclassID ~= 0 and app.SpellItem[itemID] then
+				if classID == 9 and subclassID ~= 0 and app.SpellItem[itemID] then
 					local recipeID = app.SpellItem[itemID]
 					if TransmogLootHelper_Cache.Recipes[recipeID] == nil then
 						tooltip:AddLine(" ")
@@ -1247,42 +1239,19 @@ app.Event:Register("HOUSE_DECOR_ADDED_TO_CHEST", function(decorGUID, recordID)
 	api.UpdateOverlay()
 end)
 
--- Thanks for bricking this, Blizz, like it wasn't broken enough already
--- app.Event:Register("HOUSING_STORAGE_ENTRY_UPDATED", function(entryID)
--- 	if entryID then
--- 		local decorInfo = C_HousingCatalog.GetCatalogEntryInfoByRecordID(Enum.HousingCatalogEntryType.Decor, entryID.recordID, true)
--- 		if decorInfo then
--- 			if decorInfo.quantity > 100000 then decorInfo.quantity = 0 end	-- This sometimes returns 4294967295 instead of 0
-
--- 			if not TransmogLootHelper_Cache.Decor[entryID.recordID] then
--- 				TransmogLootHelper_Cache.Decor[entryID.recordID] = { grantsXP = false, xp = decorInfo.firstAcquisitionBonus }
--- 				if (decorInfo.quantity + decorInfo.remainingRedeemable + decorInfo.numPlaced) == 0 and decorInfo.firstAcquisitionBonus > 0 then
--- 					TransmogLootHelper_Cache.Decor[entryID.recordID].grantsXP = true
--- 				end
--- 			end
-
--- 			TransmogLootHelper_Cache.Decor[entryID.recordID].owned = decorInfo.quantity + decorInfo.remainingRedeemable
--- 			TransmogLootHelper_Cache.Decor[entryID.recordID].placed = decorInfo.numPlaced
--- 		end
--- 	end
--- end)
-
+-- This is also triggered when we run C_HousingCatalog.CreateCatalogSearcher()
 app.Event:Register("HOUSING_STORAGE_UPDATED", function()
-	app.Flag.CachedDecor = true
 	for itemID, recordID in pairs(app.Decor) do
 		local decorInfo = C_HousingCatalog.GetCatalogEntryInfoByRecordID(Enum.HousingCatalogEntryType.Decor, recordID, true)
 		if decorInfo then
-			if decorInfo.quantity > 100000 then decorInfo.quantity = 0 end	-- This sometimes returns 4294967295 instead of 0
-
 			if not TransmogLootHelper_Cache.Decor[recordID] then
 				TransmogLootHelper_Cache.Decor[recordID] = { grantsXP = false, xp = decorInfo.firstAcquisitionBonus }
-				if (decorInfo.quantity + decorInfo.remainingRedeemable + decorInfo.numPlaced) == 0 and decorInfo.firstAcquisitionBonus > 0 then
+				if (decorInfo.numStored + decorInfo.numPlaced) == 0 and decorInfo.firstAcquisitionBonus > 0 then
 					TransmogLootHelper_Cache.Decor[recordID].grantsXP = true
 				end
 			end
 
-			TransmogLootHelper_Cache.Decor[recordID].owned = decorInfo.quantity + decorInfo.remainingRedeemable
-			TransmogLootHelper_Cache.Decor[recordID].placed = decorInfo.numPlaced
+			TransmogLootHelper_Cache.Decor[recordID].owned = decorInfo.numStored + decorInfo.numPlaced
 		end
 	end
 end)

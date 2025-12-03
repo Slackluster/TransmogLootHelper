@@ -21,10 +21,6 @@ L.BINDTEXT_BOP =						"BoP"
 L.BINDTEXT_BOE =						"BoE"
 L.BINDTEXT_BOA =						"BoA"
 L.RECIPE_UNCACHED =						"Пожалуйста, откройте эту профессию, чтобы обновить статус коллекции рецепта."
-L.DECOR_UNCACHED =						"Откройте редактор домов, чтобы кэшировать декор."
-L.DECOR_OWNED =							"В собственности:"
-L.DECOR_PLACED =						"Размещено:"
-L.DECOR_STORAGE =						"Хранилище:"
 
 -- Loot tracker
 L.DEFAULT_MESSAGE = 					"Нужен ли вам предмет %item, который вы добыли? Если нет, я хотел бы взять его для трансмога. :)"
