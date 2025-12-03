@@ -508,36 +508,39 @@ function app.ItemOverlay(overlay, itemLink, itemLocation, containerInfo, bagAddo
 			-- Decor
 			elseif TransmogLootHelper_Settings["iconNewDecor"] and itemEquipLoc == "Decor" then
 				local decorInfo = C_HousingCatalog.GetCatalogEntryInfoByItem(itemID, true)
+				local recordID = app.Decor[itemID] or (decorInfo and decorInfo.entryID.recordID)
 
-				if decorInfo and not TransmogLootHelper_Cache.Decor[decorInfo.entryID.recordID] then
-					TransmogLootHelper_Cache.Decor[decorInfo.entryID.recordID] = { owned = 0 }
-					TransmogLootHelper_Cache.Decor[decorInfo.entryID.recordID].grantsXP = false
-					TransmogLootHelper_Cache.Decor[decorInfo.entryID.recordID].xp = decorInfo.firstAcquisitionBonus
-					if decorInfo.firstAcquisitionBonus > 0 then
-						TransmogLootHelper_Cache.Decor[decorInfo.entryID.recordID].grantsXP = true
+				if recordID then
+					if not TransmogLootHelper_Cache.Decor[recordID] then
+						TransmogLootHelper_Cache.Decor[recordID] = { owned = 0 }
+						TransmogLootHelper_Cache.Decor[recordID].grantsXP = false
+						TransmogLootHelper_Cache.Decor[recordID].xp = decorInfo.firstAcquisitionBonus
+						if decorInfo.firstAcquisitionBonus > 0 then
+							TransmogLootHelper_Cache.Decor[recordID].grantsXP = true
+						end
 					end
-				end
 
-				if TransmogLootHelper_Cache.Decor[decorInfo.entryID.recordID].xp > 0 then
-					overlay.texture:SetTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\ui_homestone-64-blue.blp")
-				end
+					if TransmogLootHelper_Cache.Decor[recordID].xp and TransmogLootHelper_Cache.Decor[recordID].xp > 0 then
+						overlay.texture:SetTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\ui_homestone-64-blue.blp")
+					end
 
-				if TransmogLootHelper_Settings["iconNewDecorXP"] then
-					if TransmogLootHelper_Cache.Decor[decorInfo.entryID.recordID].grantsXP then
+					if TransmogLootHelper_Settings["iconNewDecorXP"] then
+						if TransmogLootHelper_Cache.Decor[recordID].grantsXP then
+							showOverlay("purple")
+						elseif TransmogLootHelper_Settings["iconLearned"] and TransmogLootHelper_Cache.Decor[recordID].xp > 0 then
+							showOverlay("green")
+						else
+							hideOverlay()
+						end
+					elseif (TransmogLootHelper_Cache.Decor[recordID].placed and (TransmogLootHelper_Cache.Decor[recordID].owned + TransmogLootHelper_Cache.Decor[recordID].placed) > 0) or TransmogLootHelper_Cache.Decor[recordID].owned > 0 then
+						if TransmogLootHelper_Settings["iconLearned"] then
+							showOverlay("green")
+						else
+							hideOverlay()
+						end
+					elseif TransmogLootHelper_Cache.Decor[recordID].placed then
 						showOverlay("purple")
-					elseif TransmogLootHelper_Settings["iconLearned"] and TransmogLootHelper_Cache.Decor[decorInfo.entryID.recordID].xp > 0 then
-						showOverlay("green")
-					else
-						hideOverlay()
 					end
-				elseif (TransmogLootHelper_Cache.Decor[decorInfo.entryID.recordID].placed and (TransmogLootHelper_Cache.Decor[decorInfo.entryID.recordID].owned + TransmogLootHelper_Cache.Decor[decorInfo.entryID.recordID].placed) > 0) or TransmogLootHelper_Cache.Decor[decorInfo.entryID.recordID].owned > 0 then
-					if TransmogLootHelper_Settings["iconLearned"] then
-						showOverlay("green")
-					else
-						hideOverlay()
-					end
-				elseif TransmogLootHelper_Cache.Decor[decorInfo.entryID.recordID].placed then
-					showOverlay("purple")
 				else
 					showOverlay("yellow")
 					overlay.animation:Stop()
@@ -1171,13 +1174,14 @@ function app.TooltipInfo()
 				local _, _, _, _, _, _, _, _, _, _, _, classID, subclassID = C_Item.GetItemInfo(itemID)
 				if C_Item.IsDecorItem(itemID) then
 					local decorInfo = C_HousingCatalog.GetCatalogEntryInfoByItem(itemID, true)
+					local recordID = app.Decor[itemID] or (decorInfo and decorInfo.entryID.recordID)
 
-					if not TransmogLootHelper_Cache.Decor[decorInfo.entryID.recordID] or not TransmogLootHelper_Cache.Decor[decorInfo.entryID.recordID].placed then
+					if not TransmogLootHelper_Cache.Decor[recordID] or not TransmogLootHelper_Cache.Decor[recordID].placed then
 						tooltip:AddLine(" ")
 						tooltip:AddLine(app.IconTLH .. " " .. L.DECOR_UNCACHED)
 					elseif not app.Flag.CachedDecor then
 						tooltip:AddLine(" ")
-						tooltip:AddLine(app.IconTLH .. " " .. L.DECOR_OWNED .. " |cffFFFFFF" .. (TransmogLootHelper_Cache.Decor[decorInfo.entryID.recordID].owned + TransmogLootHelper_Cache.Decor[decorInfo.entryID.recordID].placed) .. " (" .. L.DECOR_PLACED .. " " .. TransmogLootHelper_Cache.Decor[decorInfo.entryID.recordID].placed .. ", " .. L.DECOR_STORAGE .. " " .. TransmogLootHelper_Cache.Decor[decorInfo.entryID.recordID].owned .. ")")
+						tooltip:AddLine(app.IconTLH .. " " .. L.DECOR_OWNED .. " |cffFFFFFF" .. (TransmogLootHelper_Cache.Decor[recordID].owned + TransmogLootHelper_Cache.Decor[recordID].placed) .. " (" .. L.DECOR_PLACED .. " " .. TransmogLootHelper_Cache.Decor[recordID].placed .. ", " .. L.DECOR_STORAGE .. " " .. TransmogLootHelper_Cache.Decor[recordID].owned .. ")")
 					end
 				elseif classID == 9 and subclassID ~= 0 and app.SpellItem[itemID] then
 					local recipeID = app.SpellItem[itemID]
@@ -1265,7 +1269,7 @@ end)
 
 app.Event:Register("HOUSING_STORAGE_UPDATED", function()
 	app.Flag.CachedDecor = true
-	for _, recordID in pairs(app.Decor) do
+	for itemID, recordID in pairs(app.Decor) do
 		local decorInfo = C_HousingCatalog.GetCatalogEntryInfoByRecordID(Enum.HousingCatalogEntryType.Decor, recordID, true)
 		if decorInfo then
 			if decorInfo.quantity > 100000 then decorInfo.quantity = 0 end	-- This sometimes returns 4294967295 instead of 0
