@@ -44,12 +44,10 @@ function app.RemixGetItems()
 	end
 
 	for itemID, itemInfo in pairs(TransmogLootHelper_Cache.Lemix) do
-		if itemID == 247036 then
-			if C_TransmogCollection.PlayerHasTransmog(itemID, 3) and C_TransmogCollection.PlayerHasTransmog(itemID, 4) and C_TransmogCollection.PlayerHasTransmog(itemID, 5) and C_TransmogCollection.PlayerHasTransmog(itemID, 6) then
-				itemInfo.converted = true
-			end
-		elseif C_TransmogCollection.PlayerHasTransmog(itemID, 4) then
+		if C_TransmogCollection.PlayerHasTransmog(itemID, 3) and C_TransmogCollection.PlayerHasTransmog(itemID, 4) and C_TransmogCollection.PlayerHasTransmog(itemID, 5) and C_TransmogCollection.PlayerHasTransmog(itemID, 6) then
 			itemInfo.converted = true
+		else
+			itemInfo.converted = false
 		end
 
 		if not itemInfo.converted then
@@ -264,7 +262,7 @@ function app.CreateRemixWindow()
 		if TransmogLootHelper_Settings["remixWindowFilter"] == 0 then
 			TransmogLootHelper_Settings["remixWindowFilter"] = 1
 			app.FilterButtonTooltip:Hide()
-			app.FilterButtonTooltip = app.RemixWindowTooltip("Hide owned items\nCurrent filter:|cffFFFFFF Hide converted items|R")
+			app.FilterButtonTooltip = app.RemixWindowTooltip("Hide owned items\nCurrent filter:|cffFFFFFF Hide fully collected items|R")
 			app.RemixWindowTooltipShow(app.FilterButtonTooltip)
 		elseif TransmogLootHelper_Settings["remixWindowFilter"] == 1 then
 			TransmogLootHelper_Settings["remixWindowFilter"] = 2
@@ -274,7 +272,7 @@ function app.CreateRemixWindow()
 		elseif TransmogLootHelper_Settings["remixWindowFilter"] == 2 then
 			TransmogLootHelper_Settings["remixWindowFilter"] = 0
 			app.FilterButtonTooltip:Hide()
-			app.FilterButtonTooltip = app.RemixWindowTooltip("Hide converted items\nCurrent filter:|cffFFFFFF Show all items|R")
+			app.FilterButtonTooltip = app.RemixWindowTooltip("Hide fully collected items\nCurrent filter:|cffFFFFFF Show all items|R")
 			app.RemixWindowTooltipShow(app.FilterButtonTooltip)
 		end
 		app.UpdateRemixWindow()
