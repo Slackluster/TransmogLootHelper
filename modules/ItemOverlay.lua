@@ -509,32 +509,36 @@ function app.ItemOverlay(overlay, itemLink, itemLocation, containerInfo, bagAddo
 			elseif TransmogLootHelper_Settings["iconNewDecor"] and itemEquipLoc == "Decor" then
 				local decorInfo = C_HousingCatalog.GetCatalogEntryInfoByItem(itemID, true)
 
-				if TransmogLootHelper_Cache.Decor[decorInfo.entryID.recordID] then
-					if TransmogLootHelper_Cache.Decor[decorInfo.entryID.recordID].xp > 0 then
-						overlay.texture:SetTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\ui_homestone-64-blue.blp")
+				if not TransmogLootHelper_Cache.Decor[decorInfo.entryID.recordID] and decorInfo then
+					TransmogLootHelper_Cache.Decor[decorInfo.entryID.recordID] = { owned = 0 }
+					TransmogLootHelper_Cache.Decor[decorInfo.entryID.recordID].grantsXP = false
+					TransmogLootHelper_Cache.Decor[decorInfo.entryID.recordID].xp = decorInfo.firstAcquisitionBonus
+					if decorInfo.firstAcquisitionBonus > 0 then
+						TransmogLootHelper_Cache.Decor[decorInfo.entryID.recordID].grantsXP = true
 					end
+				end
 
-					if TransmogLootHelper_Settings["iconNewDecorXP"] then
-						if TransmogLootHelper_Cache.Decor[decorInfo.entryID.recordID].grantsXP then
-							showOverlay("purple")
-						elseif TransmogLootHelper_Settings["iconLearned"] and TransmogLootHelper_Cache.Decor[decorInfo.entryID.recordID].xp > 0 then
-							showOverlay("green")
-						else
-							hideOverlay()
-						end
+				if TransmogLootHelper_Cache.Decor[decorInfo.entryID.recordID].xp > 0 then
+					overlay.texture:SetTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\ui_homestone-64-blue.blp")
+				end
+
+				if TransmogLootHelper_Settings["iconNewDecorXP"] then
+					if TransmogLootHelper_Cache.Decor[decorInfo.entryID.recordID].grantsXP then
+						showOverlay("purple")
+					elseif TransmogLootHelper_Settings["iconLearned"] and TransmogLootHelper_Cache.Decor[decorInfo.entryID.recordID].xp > 0 then
+						showOverlay("green")
 					else
-						if (TransmogLootHelper_Cache.Decor[decorInfo.entryID.recordID].placed and (TransmogLootHelper_Cache.Decor[decorInfo.entryID.recordID].owned + TransmogLootHelper_Cache.Decor[decorInfo.entryID.recordID].placed) > 0) or TransmogLootHelper_Cache.Decor[decorInfo.entryID.recordID].owned > 0 then
-							if TransmogLootHelper_Settings["iconLearned"] then
-								showOverlay("green")
-							else
-								hideOverlay()
-							end
-						else
-							showOverlay("purple")
-						end
+						hideOverlay()
 					end
+				elseif (TransmogLootHelper_Cache.Decor[decorInfo.entryID.recordID].placed and (TransmogLootHelper_Cache.Decor[decorInfo.entryID.recordID].owned + TransmogLootHelper_Cache.Decor[decorInfo.entryID.recordID].placed) > 0) or TransmogLootHelper_Cache.Decor[decorInfo.entryID.recordID].owned > 0 then
+					if TransmogLootHelper_Settings["iconLearned"] then
+						showOverlay("green")
+					else
+						hideOverlay()
+					end
+				elseif TransmogLootHelper_Cache.Decor[decorInfo.entryID.recordID].placed then
+					showOverlay("purple")
 				else
-					overlay.texture:SetTexture(app.Icon["Unknown"])
 					showOverlay("yellow")
 					overlay.animation:Stop()
 				end
@@ -1239,21 +1243,41 @@ app.Event:Register("HOUSE_DECOR_ADDED_TO_CHEST", function(decorGUID, recordID)
 	api.UpdateOverlay()
 end)
 
-app.Event:Register("HOUSING_STORAGE_ENTRY_UPDATED", function(entryID)
-	if entryID then
-		local decorInfo = C_HousingCatalog.GetCatalogEntryInfoByRecordID(Enum.HousingCatalogEntryType.Decor, entryID.recordID, true)
+-- Thanks for bricking this, Blizz, like it wasn't broken enough already
+-- app.Event:Register("HOUSING_STORAGE_ENTRY_UPDATED", function(entryID)
+-- 	if entryID then
+-- 		local decorInfo = C_HousingCatalog.GetCatalogEntryInfoByRecordID(Enum.HousingCatalogEntryType.Decor, entryID.recordID, true)
+-- 		if decorInfo then
+-- 			if decorInfo.quantity > 100000 then decorInfo.quantity = 0 end	-- This sometimes returns 4294967295 instead of 0
+
+-- 			if not TransmogLootHelper_Cache.Decor[entryID.recordID] then
+-- 				TransmogLootHelper_Cache.Decor[entryID.recordID] = { grantsXP = false, xp = decorInfo.firstAcquisitionBonus }
+-- 				if (decorInfo.quantity + decorInfo.remainingRedeemable + decorInfo.numPlaced) == 0 and decorInfo.firstAcquisitionBonus > 0 then
+-- 					TransmogLootHelper_Cache.Decor[entryID.recordID].grantsXP = true
+-- 				end
+-- 			end
+
+-- 			TransmogLootHelper_Cache.Decor[entryID.recordID].owned = decorInfo.quantity + decorInfo.remainingRedeemable
+-- 			TransmogLootHelper_Cache.Decor[entryID.recordID].placed = decorInfo.numPlaced
+-- 		end
+-- 	end
+-- end)
+
+app.Event:Register("HOUSING_STORAGE_UPDATED", function()
+	for _, recordID in pairs(app.Decor) do
+		local decorInfo = C_HousingCatalog.GetCatalogEntryInfoByRecordID(Enum.HousingCatalogEntryType.Decor, recordID, true)
 		if decorInfo then
 			if decorInfo.quantity > 100000 then decorInfo.quantity = 0 end	-- This sometimes returns 4294967295 instead of 0
 
-			if not TransmogLootHelper_Cache.Decor[entryID.recordID] then
-				TransmogLootHelper_Cache.Decor[entryID.recordID] = { grantsXP = false, xp = decorInfo.firstAcquisitionBonus }
+			if not TransmogLootHelper_Cache.Decor[recordID] then
+				TransmogLootHelper_Cache.Decor[recordID] = { grantsXP = false, xp = decorInfo.firstAcquisitionBonus }
 				if (decorInfo.quantity + decorInfo.remainingRedeemable + decorInfo.numPlaced) == 0 and decorInfo.firstAcquisitionBonus > 0 then
-					TransmogLootHelper_Cache.Decor[entryID.recordID].grantsXP = true
+					TransmogLootHelper_Cache.Decor[recordID].grantsXP = true
 				end
 			end
 
-			TransmogLootHelper_Cache.Decor[entryID.recordID].owned = decorInfo.quantity + decorInfo.remainingRedeemable
-			TransmogLootHelper_Cache.Decor[entryID.recordID].placed = decorInfo.numPlaced
+			TransmogLootHelper_Cache.Decor[recordID].owned = decorInfo.quantity + decorInfo.remainingRedeemable
+			TransmogLootHelper_Cache.Decor[recordID].placed = decorInfo.numPlaced
 		end
 	end
 end)
