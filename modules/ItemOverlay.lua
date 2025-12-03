@@ -509,7 +509,7 @@ function app.ItemOverlay(overlay, itemLink, itemLocation, containerInfo, bagAddo
 			elseif TransmogLootHelper_Settings["iconNewDecor"] and itemEquipLoc == "Decor" then
 				local decorInfo = C_HousingCatalog.GetCatalogEntryInfoByItem(itemID, true)
 
-				if not TransmogLootHelper_Cache.Decor[decorInfo.entryID.recordID] and decorInfo then
+				if decorInfo and not TransmogLootHelper_Cache.Decor[decorInfo.entryID.recordID] then
 					TransmogLootHelper_Cache.Decor[decorInfo.entryID.recordID] = { owned = 0 }
 					TransmogLootHelper_Cache.Decor[decorInfo.entryID.recordID].grantsXP = false
 					TransmogLootHelper_Cache.Decor[decorInfo.entryID.recordID].xp = decorInfo.firstAcquisitionBonus
