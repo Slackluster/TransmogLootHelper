@@ -1175,7 +1175,7 @@ function app.TooltipInfo()
 					if not TransmogLootHelper_Cache.Decor[decorInfo.entryID.recordID] or not TransmogLootHelper_Cache.Decor[decorInfo.entryID.recordID].placed then
 						tooltip:AddLine(" ")
 						tooltip:AddLine(app.IconTLH .. " " .. L.DECOR_UNCACHED)
-					else
+					elseif not app.Flag.CachedDecor then
 						tooltip:AddLine(" ")
 						tooltip:AddLine(app.IconTLH .. " " .. L.DECOR_OWNED .. " |cffFFFFFF" .. (TransmogLootHelper_Cache.Decor[decorInfo.entryID.recordID].owned + TransmogLootHelper_Cache.Decor[decorInfo.entryID.recordID].placed) .. " (" .. L.DECOR_PLACED .. " " .. TransmogLootHelper_Cache.Decor[decorInfo.entryID.recordID].placed .. ", " .. L.DECOR_STORAGE .. " " .. TransmogLootHelper_Cache.Decor[decorInfo.entryID.recordID].owned .. ")")
 					end
@@ -1264,6 +1264,7 @@ end)
 -- end)
 
 app.Event:Register("HOUSING_STORAGE_UPDATED", function()
+	app.Flag.CachedDecor = true
 	for _, recordID in pairs(app.Decor) do
 		local decorInfo = C_HousingCatalog.GetCatalogEntryInfoByRecordID(Enum.HousingCatalogEntryType.Decor, recordID, true)
 		if decorInfo then
