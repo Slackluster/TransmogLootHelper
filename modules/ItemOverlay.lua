@@ -524,6 +524,22 @@ function app.ItemOverlay(overlay, itemLink, itemLocation, containerInfo, bagAddo
 						overlay.texture:SetTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\ui_homestone-64-blue.blp")
 					end
 
+					-- Double-check quantity if zero, because decor placed in your other house doesn't return via API
+					if TransmogLootHelper_Cache.Decor[recordID].owned == 0 then
+						local tooltip = C_TooltipInfo.GetHyperlink(itemLink)
+						if tooltip and tooltip["lines"] then
+							for k, v in ipairs(tooltip["lines"]) do
+								if v.type == 0 and v.leftText then
+									local compareText = v.leftText:gsub("%d+", "%%d")
+									if compareText == HOUSING_DECOR_OWNED_COUNT_FORMAT then
+										TransmogLootHelper_Cache.Decor[recordID].owned = tonumber(v.leftText:match("%d+")) or 0
+										break
+									end
+								end
+							end
+						end
+					end
+
 					if TransmogLootHelper_Settings["iconNewDecorXP"] then
 						if TransmogLootHelper_Cache.Decor[recordID].grantsXP then
 							showOverlay("purple")
