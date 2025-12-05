@@ -21,9 +21,6 @@ app.Event:Register("ADDON_LOADED", function(addOnName, containsBindings)
 
 		app.ItemOverlayHooks()
 		app.TooltipInfo()
-		C_Timer.After(1, function()
-			C_HousingCatalog.CreateCatalogSearcher()	-- Cache Decor, since Blizzard doesn't do it itself
-		end)
 	end
 end)
 
@@ -1223,6 +1220,10 @@ end)
 --------------------
 -- DECOR TRACKING --
 --------------------
+
+app.Event:Register("PLAYER_ENTERING_WORLD", function(isInitialLogin, isReloadingUi)
+	C_HousingCatalog.CreateCatalogSearcher()	-- Cache Decor
+end)
 
 app.Event:Register("HOUSE_DECOR_ADDED_TO_CHEST", function(decorGUID, recordID)
 	if not TransmogLootHelper_Cache.Decor[recordID] then
