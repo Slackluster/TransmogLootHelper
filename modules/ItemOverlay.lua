@@ -507,8 +507,14 @@ function app.ItemOverlay(overlay, itemLink, itemLocation, containerInfo, bagAddo
 				end
 			-- Decor
 			elseif TransmogLootHelper_Settings["iconNewDecor"] and itemEquipLoc == "Decor" then
-				local decorInfo = C_HousingCatalog.GetCatalogEntryInfoByItem(itemID, true)
-				local recordID = app.Decor[itemID] or (decorInfo and decorInfo.entryID.recordID)
+				local decorInfo, recordID
+				if app.Decor[itemID] then
+					decorInfo = C_HousingCatalog.GetCatalogEntryInfoByRecordID(Enum.HousingCatalogEntryType.Decor, app.Decor[itemID], true)
+					recordID = decorInfo.entryID.recordID or app.Decor[itemID]
+				else
+					decorInfo = C_HousingCatalog.GetCatalogEntryInfoByItem(itemID, true)
+					recordID = decorInfo.entryID.recordID
+				end
 
 				if recordID then
 					if not TransmogLootHelper_Cache.Decor[recordID] and decorInfo then
