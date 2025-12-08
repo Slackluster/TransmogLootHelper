@@ -44,7 +44,12 @@ function app.RemixGetItems()
 	end
 
 	for itemID, itemInfo in pairs(TransmogLootHelper_Cache.Lemix) do
-		if C_TransmogCollection.PlayerHasTransmog(itemID, 0) and C_TransmogCollection.PlayerHasTransmog(itemID, 1) and C_TransmogCollection.PlayerHasTransmog(itemID, 3) and C_TransmogCollection.PlayerHasTransmog(itemID, 4) then
+		if not itemInfo.L then itemInfo.L = C_TransmogCollection.PlayerHasTransmog(itemID, 4) end
+		if not itemInfo.N then itemInfo.N = C_TransmogCollection.PlayerHasTransmog(itemID, 0) end
+		if not itemInfo.H then itemInfo.H = C_TransmogCollection.PlayerHasTransmog(itemID, 1) end
+		if not itemInfo.M then itemInfo.M = C_TransmogCollection.PlayerHasTransmog(itemID, 3) end
+
+		if itemInfo.L and itemInfo.N and itemInfo.H and itemInfo.M then
 			itemInfo.converted = true
 		else
 			itemInfo.converted = false
