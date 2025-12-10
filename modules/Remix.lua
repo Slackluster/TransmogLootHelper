@@ -49,6 +49,19 @@ function app.RemixGetItems()
 		if not itemInfo.H then itemInfo.H = C_TransmogCollection.PlayerHasTransmog(itemID, 1) end
 		if not itemInfo.M then itemInfo.M = C_TransmogCollection.PlayerHasTransmog(itemID, 3) end
 
+		-- These items don't have a modID3 (Mythic)
+		local oddItems = {
+			[249678] = true,
+			[249679] = true,
+			[249680] = true,
+			[249681] = true,
+			[249682] = true,
+			[249683] = true,
+			[249684] = true,
+			[249685] = true,
+		}
+		if oddItems[itemID] then itemInfo.M = true end
+
 		if itemInfo.L and itemInfo.N and itemInfo.H and itemInfo.M then
 			itemInfo.converted = true
 		else
