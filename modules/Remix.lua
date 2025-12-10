@@ -44,12 +44,7 @@ function app.RemixGetItems()
 	end
 
 	for itemID, itemInfo in pairs(TransmogLootHelper_Cache.Lemix) do
-		if not itemInfo.L then itemInfo.L = C_TransmogCollection.PlayerHasTransmog(itemID, 4) end
-		if not itemInfo.N then itemInfo.N = C_TransmogCollection.PlayerHasTransmog(itemID, 0) end
-		if not itemInfo.H then itemInfo.H = C_TransmogCollection.PlayerHasTransmog(itemID, 1) end
-		if not itemInfo.M then itemInfo.M = C_TransmogCollection.PlayerHasTransmog(itemID, 3) end
-
-		-- These items don't have a modID3 (Mythic)
+		-- These items don't have a modID 3 (Mythic)
 		local oddItems = {
 			[249678] = true,
 			[249679] = true,
@@ -61,6 +56,11 @@ function app.RemixGetItems()
 			[249685] = true,
 		}
 		if oddItems[itemID] then itemInfo.M = true end
+
+		if not itemInfo.L then itemInfo.L = C_TransmogCollection.PlayerHasTransmog(itemID, 4) end
+		if not itemInfo.N then itemInfo.N = C_TransmogCollection.PlayerHasTransmog(itemID, 0) end
+		if not itemInfo.H then itemInfo.H = C_TransmogCollection.PlayerHasTransmog(itemID, 1) end
+		if not itemInfo.M then itemInfo.M = C_TransmogCollection.PlayerHasTransmog(itemID, 3) end
 
 		if itemInfo.L and itemInfo.N and itemInfo.H and itemInfo.M then
 			itemInfo.converted = true
