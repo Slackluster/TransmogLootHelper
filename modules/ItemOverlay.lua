@@ -611,7 +611,7 @@ function app.ItemOverlay(overlay, itemLink, itemLocation, containerInfo, bagAddo
 		end
 
 		-- Set the bind text
-		if TransmogLootHelper_Settings["textBind"] and not (bagAddon and C_AddOns.IsAddOnLoaded("Baganator")) then
+		if TransmogLootHelper_Settings["textBind"] and not C_AddOns.IsAddOnLoaded("Baganator") then
 			-- WuE
 			if itemLocation and C_Item.IsBoundToAccountUntilEquip(itemLocation) then
 				if C_Item.IsBound(itemLocation) then
