@@ -346,14 +346,14 @@ function app.ItemOverlay(overlay, itemLink, itemLocation, containerInfo, bagAddo
 				end
 
 				-- Legendaries and Artifacts can be a little weird
-				if (app.OverlayCache[itemLink].itemQuality == 5 or app.OverlayCache[itemLink].itemQuality == 6) and bindType == 1 then
-					if TransmogLootHelper_Settings["iconLearned"] then
-						showOverlay("green")
-					else
-						hideOverlay()
-					end
+				-- if (app.OverlayCache[itemLink].itemQuality == 5 or app.OverlayCache[itemLink].itemQuality == 6) and bindType == 1 then
+				-- 	if TransmogLootHelper_Settings["iconLearned"] then
+				-- 		showOverlay("green")
+				-- 	else
+				-- 		hideOverlay()
+				-- 	end
 				-- Remix conversion
-				elseif PlayerGetTimerunningSeasonID() == 2 and TransmogLootHelper_Settings["iconNewSource"] and TransmogLootHelper_Cache.Lemix[itemID] and not TransmogLootHelper_Cache.Lemix[itemID].converted then
+				if PlayerGetTimerunningSeasonID() == 2 and TransmogLootHelper_Settings["iconNewSource"] and TransmogLootHelper_Cache.Lemix[itemID] and not TransmogLootHelper_Cache.Lemix[itemID].converted then
 					overlay.texture:SetTexture(4622478)
 					showOverlay("yellow")
 				-- New appearance
