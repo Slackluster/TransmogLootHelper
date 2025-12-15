@@ -7164,6 +7164,17 @@ app.QuestItem = {
 	[240204] = 90464,	-- Podium Upgrade: Survival Run
 	[240205] = 90465,	-- Podium Upgrade: Time in Spotlights
 	[240206] = 90466,	-- Podium Upgrade: Yards Traveled
+
+	------------------
+	-- PATCH 11.2.0 --
+	------------------
+
+	[246737] = 91521,	-- K'areshi Voidstone
+
+	------------------
+	-- PATCH 11.2.5 --
+	------------------
+	[249242] = 91961,	-- Bronze Celebration Titles: Khaz Algar Enthusiast
 }
 
 app.Decor = {
