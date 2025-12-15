@@ -145,6 +145,18 @@ function app.ItemOverlay(overlay, itemLink, itemLocation, containerInfo, bagAddo
 			-- Pets
 			elseif C_PetJournal.GetPetInfoByItemID(itemID) then
 				itemEquipLoc = "Pet"
+			-- Customisations and spellbooks
+			elseif app.QuestItem[itemID] or app.SpellItem[itemID] then
+				itemEquipLoc = "Customisation"
+
+				-- Check for profession books
+				if app.SpellItem[itemID] then
+					local _, _, tradeskill = C_TradeSkillUI.GetTradeSkillLineForRecipe(app.SpellItem[itemID])
+
+					if app.Icon[tradeskill] then
+						itemEquipLoc = "Recipe"
+					end
+				end
 			-- Illusions, Ensembles, and Arsenals
 			elseif classID == Enum.ItemClass.Consumable and subclassID == Enum.ItemConsumableSubclass.Other then
 				local itemName = C_Item.GetItemInfo(itemLink)
@@ -252,20 +264,6 @@ function app.ItemOverlay(overlay, itemLink, itemLocation, containerInfo, bagAddo
 					if app.GetTooltipText(itemLink, v) and (v ~= "사용 효과:" or app.GetTooltipText(itemLink, "획득합니다")) then
 						itemEquipLoc = "Container"
 						break
-					end
-				end
-
-				-- Customisations and spellbooks
-				if app.QuestItem[itemID] or app.SpellItem[itemID] then
-					itemEquipLoc = "Customisation"
-
-					-- Check for profession books
-					if app.SpellItem[itemID] then
-						local _, _, tradeskill = C_TradeSkillUI.GetTradeSkillLineForRecipe(app.SpellItem[itemID])
-
-						if app.Icon[tradeskill] then
-							itemEquipLoc = "Recipe"
-						end
 					end
 				end
 			end
