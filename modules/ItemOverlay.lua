@@ -131,7 +131,7 @@ function app.ItemOverlay(overlay, itemLink, itemLocation, containerInfo, bagAddo
 			if containerInfo and containerInfo.hasLoot then
 				itemEquipLoc = "Container"
 			-- Decor
-			elseif C_Item.IsDecorItem(itemLink) then
+			elseif C_Item.IsDecorItem(itemLink) or app.Decor[itemID] then
 				itemEquipLoc = "Decor"
 			-- Mounts
 			elseif classID == Enum.ItemClass.Miscellaneous and subclassID == Enum.ItemMiscellaneousSubclass.Mount then
