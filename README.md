@@ -30,4 +30,3 @@ Currently supported addons:
 
 #### Support me, if you want 👉👈😳
 [![](https://i.imgur.com/qGoTtXm.png)](https://www.buymeacoffee.com/SlacklusterYT)
-
