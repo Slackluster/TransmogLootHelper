@@ -16,14 +16,18 @@ app.Event:Register("ADDON_LOADED", function(addOnName, containsBindings)
 		if TransmogLootHelper_Settings["hide"] == nil then TransmogLootHelper_Settings["hide"] = false end
 		if TransmogLootHelper_Settings["message"] == nil then TransmogLootHelper_Settings["message"] = L.DEFAULT_MESSAGE end
 		if TransmogLootHelper_Settings["windowPosition"] == nil then TransmogLootHelper_Settings["windowPosition"] = { ["left"] = 1295, ["bottom"] = 836, ["width"] = 200, ["height"] = 200, } end
-		if TransmogLootHelper_Settings["remixWindowPosition"] == nil then TransmogLootHelper_Settings["remixWindowPosition"] = { ["left"] = 1295, ["bottom"] = 836, ["width"] = 200, ["height"] = 200, } end
 		if TransmogLootHelper_Settings["windowLocked"] == nil then TransmogLootHelper_Settings["windowLocked"] = false end
-		if TransmogLootHelper_Settings["remixWindowLocked"] == nil then TransmogLootHelper_Settings["remixWindowLocked"] = false end
 		if TransmogLootHelper_Settings["windowSort"] == nil then TransmogLootHelper_Settings["windowSort"] = 1 end
 
 		app.CreateMessagePopup()
 		app.CreateLinkCopiedFrame()
 		app.Settings()
+
+		-- Midnight cleanup
+		if TransmogLootHelper_Settings["remixWindowFilter"] then TransmogLootHelper_Settings["remixWindowFilter"] = nil end
+		if TransmogLootHelper_Settings["remixWindowLocked"] then TransmogLootHelper_Settings["remixWindowLocked"] = nil end
+		if TransmogLootHelper_Settings["remixWindowPosition"] then TransmogLootHelper_Settings["remixWindowPosition"] = nil end
+		if TransmogLootHelper_Cache.Lemix then TransmogLootHelper_Cache.Lemix = nil end
 	end
 end)
 
