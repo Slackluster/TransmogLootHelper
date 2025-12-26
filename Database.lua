@@ -124,7 +124,7 @@ app.Icon = {
 	["Unknown"] = "Interface\\Icons\\inv_misc_questionMark",
 }
 
--- ItemID -> SpellID (sourced from Collectionator's "RecipesToSpellIDs.lua")
+-- ItemID -> SpellID
 app.SpellItem = {
 	[728] = 2543,
 	[2406] = 2158,
@@ -7177,6 +7177,7 @@ app.QuestItem = {
 	[249242] = 91961,	-- Bronze Celebration Titles: Khaz Algar Enthusiast
 }
 
+-- ItemID -> DecorID / RecordID
 app.Decor = {
 	[113503] = 15339,
 	[132822] = 1718,

@@ -320,6 +320,17 @@ function app.Settings()
 	local setting = Settings.RegisterAddOnSetting(category, appName.."_"..variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, true)
 	Settings.CreateCheckbox(category, setting, tooltip)
 
+	layout:AddInitializer(CreateSettingsListSectionHeaderInitializer(L.SETTINGS_HEADER_INFORMATION))
+
+	local variable, name, tooltip = "", L.SETTINGS_SLASH_TITLE, L.SETTINGS_SLASH_DESC
+	local function GetOptions()
+		local container = Settings.CreateControlTextContainer()
+		container:Add(1, "/tlh delete " .. app.Colour("character"), L.SETTINGS_SLASH_DELETE_DESC)
+		return container:GetData()
+	end
+	local setting = Settings.RegisterAddOnSetting(category, appName.."_"..variable, variable, TransmogLootHelper_Settings, Settings.VarType.Number, name, 1)
+	Settings.CreateDropdown(category, setting, GetOptions, tooltip)
+
 	-- Subcategory: Loot Tracker
 	local category, layout = Settings.RegisterVerticalLayoutSubcategory(app.Category, "Loot Tracker")
 	Settings.RegisterAddOnCategory(category)

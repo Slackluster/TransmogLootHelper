@@ -11,6 +11,8 @@ local L = app.locales
 
 -- Slash commands
 L.INVALID_COMMAND =						"Invalid command."
+L.DELETED_ENTRIES =						"Deleted entries:"
+L.DELETED_REMOVED =						"Unique collectibles removed:"
 
 -- Version comms
 L.NEW_VERSION_AVAILABLE =				"There is a newer version of " .. app.NameLong .. " available:"
@@ -150,6 +152,7 @@ L.SETTINGS_SLASH_DESC =					"Type these in chat to use them!"
 L.SETTINGS_SLASH_TOGGLE =				"Toggle the tracking window."
 L.SETTINGS_SLASH_RESETPOS =				"Reset the tracking window position."
 L.SETTINGS_SLASH_WHISPER_DEFAULT =		"Set the whisper message to its default."
+L.SETTINGS_SLASH_DELETE_DESC =			"Delete a character's cache, marking their unique recipes etc. as unlearned. Use with " .. app.Colour("Character-Realm") .. "."
 
 L.SETTINGS_HEADER_TWEAKS =				"Tweaks"
 L.SETTINGS_CATALYST =					"Instant Catalyst"

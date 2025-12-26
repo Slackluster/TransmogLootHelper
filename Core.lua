@@ -294,6 +294,9 @@ app.Event:Register("ADDON_LOADED", function(addOnName, containsBindings)
 				TransmogLootHelper_Settings["windowPosition"] = { ["left"] = GetScreenWidth()/2-100, ["bottom"] = GetScreenHeight()/2-100, ["width"] = 200, ["height"] = 200, }
 				TransmogLootHelper_Settings["pcWindowPosition"] = TransmogLootHelper_Settings["windowPosition"]
 				app.Show()
+			-- Delete character from cache
+			elseif command == "delete" then
+				api.DeleteCharacter(rest)
 			-- Toggle window
 			elseif command == "" then
 				app.Toggle()

@@ -18,9 +18,26 @@ app.Event:Register("ADDON_LOADED", function(addOnName, containsBindings)
 		if not TransmogLootHelper_Cache.Decor then TransmogLootHelper_Cache.Decor = {} end
 
 		app.OverlayCache = {}
+		app.CharacterName = UnitName("player") .. "-" .. GetNormalizedRealmName()
 
 		app.ItemOverlayHooks()
 		app.TooltipInfo()
+
+		-- Midnight cleanup
+		if not TransmogLootHelper_Cache.Midnight then
+			StaticPopupDialogs["TRANSMOGLOOTHELPER_MIDNIGHT"] = {
+				text = app.NameLong .. "\n\n"
+					.. "Cached recipes have been reset\n"
+					.. "to allow cleanup of specific characters.\n\n"
+					.. "Please open your professions again\n"
+					.. "to cache your recipes!",
+				button1 = OKAY,
+				whileDead = true,
+			}
+			StaticPopup_Show("TRANSMOGLOOTHELPER_MIDNIGHT")
+			TransmogLootHelper_Cache.Recipes = {}
+			TransmogLootHelper_Cache.Midnight = true
+		end
 	end
 end)
 
@@ -461,7 +478,7 @@ function app.ItemOverlay(overlay, itemLink, itemLocation, containerInfo, bagAddo
 				if app.SpellItem[itemID] then
 					local recipeID = app.SpellItem[itemID]
 
-					if TransmogLootHelper_Cache.Recipes[recipeID] ~= nil then
+					if TransmogLootHelper_Cache.Recipes[recipeID] then
 						-- Set profession icon
 						local _, _, tradeskill = C_TradeSkillUI.GetTradeSkillLineForRecipe(recipeID)
 						if app.Icon[tradeskill] then
@@ -469,14 +486,14 @@ function app.ItemOverlay(overlay, itemLink, itemLocation, containerInfo, bagAddo
 						end
 
 						-- Learned
-						if TransmogLootHelper_Cache.Recipes[recipeID] then
+						if TransmogLootHelper_Cache.Recipes[recipeID].learned then
 							if TransmogLootHelper_Settings["iconLearned"] then
 								showOverlay("green")
 							else
 								hideOverlay()
 							end
 						-- Unlearned
-						elseif not TransmogLootHelper_Cache.Recipes[recipeID] then
+						else
 							if C_TradeSkillUI.IsRecipeProfessionLearned(recipeID) then
 								showOverlay("purple")
 							else
@@ -566,7 +583,7 @@ function app.ItemOverlay(overlay, itemLink, itemLocation, containerInfo, bagAddo
 			-- Customisations (includes spellbooks)
 			elseif TransmogLootHelper_Settings["iconUsable"] and itemEquipLoc == "Customisation" then
 				-- Learned
-				if TransmogLootHelper_Cache.Recipes[app.SpellItem[itemID]] or (app.QuestItem[itemID] and C_QuestLog.IsQuestFlaggedCompletedOnAccount(app.QuestItem[itemID])) or app.IsLearned(itemLink) then
+				if (TransmogLootHelper_Cache.Recipes[app.SpellItem[itemID]] and TransmogLootHelper_Cache.Recipes[app.SpellItem[itemID]].learned) or (app.QuestItem[itemID] and C_QuestLog.IsQuestFlaggedCompletedOnAccount(app.QuestItem[itemID])) or app.IsLearned(itemLink) then
 					if TransmogLootHelper_Settings["iconLearned"] then
 						showOverlay("green")
 					else
@@ -1138,16 +1155,16 @@ function app.ItemOverlayHooks()
 		end)
 
 		app.Event:Register("NEW_RECIPE_LEARNED", function(recipeID, recipeLevel, baseRecipeID)
-			TransmogLootHelper_Cache.Recipes[recipeID] = true	-- Also cache the recipe as learned, otherwise updating the overlay won't do much good
+			app.CacheRecipe(recipeID, true)
 			api.UpdateOverlay()
 		end)
 
 		-- Cache player spells, for books that teach these
 		local function cacheSpells()
-			C_Timer.After(0.9, function()
-				for k, v in pairs(app.SpellItem) do
-					if C_SpellBook.IsSpellKnown(v) or C_SpellBook.IsSpellInSpellBook(v) then
-						TransmogLootHelper_Cache.Recipes[v] = true
+			C_Timer.After(1, function()
+				for itemID, spellID in pairs(app.SpellItem) do
+					if C_SpellBook.IsSpellKnown(spellID) or C_SpellBook.IsSpellInSpellBook(spellID) then
+						app.CacheRecipe(spellID, true)
 					end
 				end
 			end)
@@ -1198,33 +1215,64 @@ end
 -- RECIPE TRACKING --
 ---------------------
 
--- Register a recipe's information
-function app.RegisterRecipe(recipeID)
-	-- Register if the recipe is known
-	local recipeLearned = C_TradeSkillUI.GetRecipeInfo(recipeID).learned
-
-	-- Create the table entry
-	if not TransmogLootHelper_Cache.Recipes[recipeID] then
-		TransmogLootHelper_Cache.Recipes[recipeID] = recipeLearned
+function app.CacheRecipe(spellID, learned)
+	if not TransmogLootHelper_Cache.Recipes[spellID] then
+		TransmogLootHelper_Cache.Recipes[spellID] = { learned = false, knownBy = {} }
 	end
+	if learned then
+		TransmogLootHelper_Cache.Recipes[spellID].learned = true
 
-	-- But only update the recipe learned info if it's our own profession window, and it's true (to avoid the recipe marking as unlearned from viewing the same profession on alts)
-	if not C_TradeSkillUI.IsTradeSkillLinked() and not C_TradeSkillUI.IsTradeSkillGuild() and recipeLearned then
-		TransmogLootHelper_Cache.Recipes[recipeID] = recipeLearned
+		local exists = false
+		for i, character in ipairs(TransmogLootHelper_Cache.Recipes[spellID].knownBy) do
+			if character == app.CharacterName then
+				exists = true
+				break
+			end
+		end
+
+		if not exists then
+			table.insert(TransmogLootHelper_Cache.Recipes[spellID].knownBy, app.CharacterName)
+		end
 	end
 end
 
--- When a tradeskill window is opened
 app.Event:Register("TRADE_SKILL_SHOW", function()
 	if not InCombatLockdown() then
-		-- Register all recipes for this profession, on a delay so we give all this info time to load.
-		C_Timer.After(2, function()
-			for _, recipeID in pairs(C_TradeSkillUI.GetAllRecipeIDs()) do
-				app.RegisterRecipe(recipeID)
+		C_Timer.After(2, function()	-- Delay to ensure data is available
+			if not C_TradeSkillUI.IsTradeSkillLinked() and not C_TradeSkillUI.IsTradeSkillGuild() then
+				for _, recipeID in pairs(C_TradeSkillUI.GetAllRecipeIDs()) do
+					if C_TradeSkillUI.GetRecipeInfo(recipeID).learned then
+						app.CacheRecipe(recipeID, true)
+					else
+						app.CacheRecipe(recipeID)
+					end
+				end
+				api.UpdateOverlay()
 			end
 		end)
 	end
 end)
+
+function api.DeleteCharacter(characterName)
+	local removed = 0
+	local unlearned = 0
+	for recipeID, recipeInfo in pairs(TransmogLootHelper_Cache.Recipes) do
+		local oldRemoved = removed
+		for i = #recipeInfo.knownBy, 1, -1 do
+			if recipeInfo.knownBy[i]:lower() == characterName:lower() then
+				table.remove(recipeInfo.knownBy, i)
+				removed = removed + 1
+			end
+		end
+		if oldRemoved ~= removed and #recipeInfo.knownBy == 0 then
+			recipeInfo.learned = false
+			unlearned = unlearned + 1
+		end
+	end
+	app.Print(L.DELETED_ENTRIES .. " " .. removed)
+	app.Print(L.DELETED_REMOVED .. " " .. unlearned)
+	api.UpdateOverlay()
+end
 
 --------------------
 -- DECOR TRACKING --

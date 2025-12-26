@@ -11,6 +11,8 @@ local L = app.locales
 
 -- Slash commands
 L.INVALID_COMMAND =						"Неверная команда."
+-- L.DELETED_ENTRIES =						"Deleted entries:"
+-- L.DELETED_REMOVED =						"Unique collectibles removed:"
 
 -- Version comms
 L.NEW_VERSION_AVAILABLE =				"Доступна новая версия " .. app.NameLong .. ":"
