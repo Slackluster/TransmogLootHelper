@@ -15,7 +15,7 @@ local L = app.locales
 -- L.DELETED_REMOVED =						"Unique collectibles removed:"
 
 -- Version comms
--- L.NEW_VERSION_AVAILABLE =				"There is a newer version of " .. app.NameLong .. " available:"
+L.NEW_VERSION_AVAILABLE =				"Une nouvelle version de " .. app.NameLong .. " est disponible :"
 
 -- Item overlay
 -- L.BINDTEXT_WUE =						"WuE"
