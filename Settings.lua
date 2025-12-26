@@ -328,8 +328,8 @@ function app.Settings()
 		container:Add(1, "/tlh delete " .. app.Colour("character"), L.SETTINGS_SLASH_DELETE_DESC)
 		return container:GetData()
 	end
-	local setting = Settings.RegisterAddOnSetting(category, appName.."_"..variable, variable, TransmogLootHelper_Settings, Settings.VarType.Number, name, 1)
-	Settings.CreateDropdown(category, setting, GetOptions, tooltip)
+	local setting1 = Settings.RegisterAddOnSetting(category, appName.."_"..variable, variable, TransmogLootHelper_Settings, Settings.VarType.Number, name, 1)
+	Settings.CreateDropdown(category, setting1, GetOptions, tooltip)
 
 	-- Subcategory: Loot Tracker
 	local category, layout = Settings.RegisterVerticalLayoutSubcategory(app.Category, "Loot Tracker")
@@ -383,7 +383,7 @@ function app.Settings()
 
 	layout:AddInitializer(CreateSettingsListSectionHeaderInitializer(L.SETTINGS_HEADER_INFORMATION))
 
-	local variable, name, tooltip = "", L.SETTINGS_SLASH_TITLE, L.SETTINGS_SLASH_DESC
+	--local variable, name, tooltip = "", L.SETTINGS_SLASH_TITLE, L.SETTINGS_SLASH_DESC
 	local function GetOptions()
 		local container = Settings.CreateControlTextContainer()
 		container:Add(1, "/tlh", L.SETTINGS_SLASH_TOGGLE)
@@ -393,8 +393,8 @@ function app.Settings()
 		container:Add(5, "/tlh msg", L.SETTINGS_WHISPER_CUSTOMIZE_DESC)
 		return container:GetData()
 	end
-	local setting = Settings.RegisterAddOnSetting(category, appName.."_"..variable, variable, TransmogLootHelper_Settings, Settings.VarType.Number, name, 1)
-	Settings.CreateDropdown(category, setting, GetOptions, tooltip)
+	--local setting = Settings.RegisterAddOnSetting(category, appName.."_"..variable, variable, TransmogLootHelper_Settings, Settings.VarType.Number, name, 1)
+	Settings.CreateDropdown(category, setting1, GetOptions, tooltip)
 
 	-- Subcategory: Tweaks
 	local category, layout = Settings.RegisterVerticalLayoutSubcategory(app.Category, "Tweaks")
