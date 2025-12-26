@@ -24,10 +24,11 @@ app.Event:Register("ADDON_LOADED", function(addOnName, containsBindings)
 		app.Settings()
 
 		-- Midnight cleanup
-		if TransmogLootHelper_Settings["remixWindowFilter"] then TransmogLootHelper_Settings["remixWindowFilter"] = nil end
-		if TransmogLootHelper_Settings["remixWindowLocked"] then TransmogLootHelper_Settings["remixWindowLocked"] = nil end
-		if TransmogLootHelper_Settings["remixWindowPosition"] then TransmogLootHelper_Settings["remixWindowPosition"] = nil end
-		if TransmogLootHelper_Cache.Lemix then TransmogLootHelper_Cache.Lemix = nil end
+		if TransmogLootHelper_Settings["remixFilter"] ~= nil then TransmogLootHelper_Settings["remixFilter"] = nil end
+		if TransmogLootHelper_Settings["remixWindowFilter"] ~= nil then TransmogLootHelper_Settings["remixWindowFilter"] = nil end
+		if TransmogLootHelper_Settings["remixWindowLocked"] ~= nil then TransmogLootHelper_Settings["remixWindowLocked"] = nil end
+		if TransmogLootHelper_Settings["remixWindowPosition"] ~= nil then TransmogLootHelper_Settings["remixWindowPosition"] = nil end
+		if TransmogLootHelper_Cache.Lemix ~= nil then TransmogLootHelper_Cache.Lemix = nil end
 	end
 end)
 
@@ -43,11 +44,7 @@ end
 -- Addon Compartment Click
 function TransmogLootHelper_Click(self, button)
 	if button == "LeftButton" then
-		if PlayerGetTimerunningSeasonID() == 2 then
-			app.RemixToggle()
-		else
-			app.Toggle()
-		end
+		app.Toggle()
 	elseif button == "RightButton" then
 		app.OpenSettings()
 	end
@@ -76,11 +73,7 @@ function app.Settings()
 
 		OnClick = function(self, button)
 			if button == "LeftButton" then
-				if PlayerGetTimerunningSeasonID() == 2 then
-					app.RemixToggle()
-				else
-					app.Toggle()
-				end
+				app.Toggle()
 			elseif button == "RightButton" then
 				app.OpenSettings()
 			end
@@ -356,10 +349,6 @@ function app.Settings()
 	end
 	local setting = Settings.RegisterAddOnSetting(category, appName.."_"..variable, variable, TransmogLootHelper_Settings, Settings.VarType.Number, name, 1)
 	Settings.CreateDropdown(category, setting, GetOptions, tooltip)
-
-	local variable, name, tooltip = "remixFilter", L.SETTINGS_REMIX_FILTER, L.SETTINGS_REMIX_FILTER_DESC
-	local setting = Settings.RegisterAddOnSetting(category, appName.."_"..variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, false)
-	local parentSetting = Settings.CreateCheckbox(category, setting, tooltip)
 
 	local variable, name, tooltip = "rarity", L.SETTINGS_RARITY, L.SETTINGS_RARITY_DESC
 	local function GetOptions()

@@ -296,11 +296,7 @@ app.Event:Register("ADDON_LOADED", function(addOnName, containsBindings)
 				app.Show()
 			-- Toggle window
 			elseif command == "" then
-				if PlayerGetTimerunningSeasonID() == 2 then
-					app.RemixToggle()
-				else
-					app.Toggle()
-				end
+				app.Toggle()
 			-- Unlisted command
 			else
 				app.Print(L.INVALID_COMMAND)

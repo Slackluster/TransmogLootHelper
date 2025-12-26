@@ -1134,10 +1134,8 @@ app.Event:Register("CHAT_MSG_LOOT", function(text, playerName, languageName, cha
 		if unitName ~= selfName then
 			-- Do stuff depending on if the appearance or source is new
 			if not api.IsAppearanceCollected(itemLink) or (not api.IsSourceCollected(itemLink) and TransmogLootHelper_Settings["collectMode"] == 2) then
-				-- Remix filter
-				if (TransmogLootHelper_Settings["remixFilter"] == true and PlayerGetTimerunningSeasonID() ~= nil and itemQuality < 3)
-				-- Or if the item is Account/Warbound
-				or app.GetBonding(itemLink) == "BoA" then
+				-- If the item is Account/Warbound
+				if app.GetBonding(itemLink) == "BoA" then
 					-- Add to filtered loot and update the window
 					app.AddFilteredLoot(itemLink, itemID, itemTexture, playerName, itemType, L.FILTER_REASON_UNTRADEABLE)
 				-- Rarity filter
