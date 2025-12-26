@@ -18,7 +18,6 @@ app.Event:Register("ADDON_LOADED", function(addOnName, containsBindings)
 		if not TransmogLootHelper_Cache.Decor then TransmogLootHelper_Cache.Decor = {} end
 
 		app.OverlayCache = {}
-		app.CharacterName = UnitName("player") .. "-" .. GetNormalizedRealmName()
 
 		app.ItemOverlayHooks()
 		app.TooltipInfo()
@@ -1216,6 +1215,8 @@ end
 ---------------------
 
 function app.CacheRecipe(spellID, learned)
+	app.CharacterName = UnitName("player") .. "-" .. GetNormalizedRealmName()
+
 	if not TransmogLootHelper_Cache.Recipes[spellID] then
 		TransmogLootHelper_Cache.Recipes[spellID] = { learned = false, knownBy = {} }
 	end
