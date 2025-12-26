@@ -1057,7 +1057,7 @@ end
 function app.Stagger(t, show)
 	C_Timer.After(t, function()
 		if GetServerTime() - app.Flag.LastUpdate >= t then
-			if show and TransmogLootHelper_Settings["autoOpen"] and PlayerGetTimerunningSeasonID() ~= 2 then
+			if show and TransmogLootHelper_Settings["autoOpen"] then
 				app.Show()
 			else
 				app.Update()
@@ -1065,7 +1065,7 @@ function app.Stagger(t, show)
 		else
 			C_Timer.After(t, function()
 				if GetServerTime() - app.Flag.LastUpdate >= t then
-					if show and TransmogLootHelper_Settings["autoOpen"] and PlayerGetTimerunningSeasonID() ~= 2 then
+					if show and TransmogLootHelper_Settings["autoOpen"] then
 						app.Show()
 					else
 						app.Update()
