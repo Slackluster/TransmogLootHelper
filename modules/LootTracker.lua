@@ -706,9 +706,9 @@ function app.Update()
 					GameTooltip:AddLine(" ")
 				end
 				if count == 1 then
-					GameTooltip:AddLine("|c" .. lootInfo.color .. lootInfo.playerShort .. "|R " .. L.PLAYER_WHISPERED .. count .. L.WHISPERED_TIME)
+					GameTooltip:AddLine("|c" .. lootInfo.color .. lootInfo.playerShort .. "|R " .. L.PLAYER_WHISPERED .. " " .. count .. " " .. L.WHISPERED_TIME)
 				elseif count > 1 then
-					GameTooltip:AddLine("|c" .. lootInfo.color .. lootInfo.playerShort .. "|R " .. L.PLAYER_WHISPERED .. count .. L.WHISPERED_TIMES)
+					GameTooltip:AddLine("|c" .. lootInfo.color .. lootInfo.playerShort .. "|R " .. L.PLAYER_WHISPERED .. " " .. count .. " " .. L.WHISPERED_TIMES)
 				end
 
 				GameTooltip:Show()
