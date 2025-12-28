@@ -45,7 +45,7 @@ end)
 ------------------
 
 -- Create and set our icon and text overlay
-function app.ItemOverlay(overlay, itemLink, itemLocation, containerInfo, bagAddon)
+function app.ItemOverlay(overlay, itemLink, itemLocation, containerInfo, bagAddon, additionalInfo)
 	-- Create our overlay
 	local function createOverlay()
 		-- Text
@@ -651,6 +651,7 @@ function app.ItemOverlay(overlay, itemLink, itemLocation, containerInfo, bagAddo
 	-- Caged pets don't return this info, except this one magical pet cage
 	if not itemID or itemID == 82800 then
 		local speciesID = string.match(itemLink, "battlepet:(%d+):")
+		if additionalInfo and type(additionalInfo) == "number" then speciesID = additionalInfo end
 		if speciesID then
 			app.OverlayCache[itemLink] = { itemEquipLoc = "Pet", bindType = 2, speciesID = speciesID }
 			processOverlay()
@@ -1091,7 +1092,11 @@ function app.ItemOverlayHooks()
 								if itemID then
 									local _, itemLink = C_Item.GetItemInfo(itemID)
 									if itemLink then
-										app.ItemOverlay(v.TLHOverlay, itemLink)
+										if itemID == 82800 and rowData.itemKey.battlePetSpeciesID then	-- Can't extract pet info from this preview cage
+											app.ItemOverlay(v.TLHOverlay, itemLink, nil, nil, nil, rowData.itemKey.battlePetSpeciesID)
+										else
+											app.ItemOverlay(v.TLHOverlay, itemLink)
+										end
 										v.TLHOverlay.text:SetText("")	-- No bind text for these
 
 										v.TLHOverlay.icon:ClearAllPoints()
