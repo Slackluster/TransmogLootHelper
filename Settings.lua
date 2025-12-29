@@ -478,7 +478,7 @@ function app.CreateMessagePopup()
 		insets = { left = 4, right = 4, top = 4, bottom = 4 },
 	})
 	border:SetBackdropColor(0, 0, 0, 0)
-	border:SetBackdropBorderColor(0.776, 0.608, 0.427)
+	border:SetBackdropBorderColor(0.25, 0.78, 0.92)
 
 	-- Text 2
 	local string2 = frame:CreateFontString(nil, "ARTWORK", "GameFontNormal")
@@ -490,7 +490,7 @@ function app.CreateMessagePopup()
 	-- Edit functions
 	editBox:SetScript("OnEditFocusGained", function(self)
 		-- Reset our visual feedback
-		border:SetBackdropBorderColor(0.776, 0.608, 0.427)
+		border:SetBackdropBorderColor(0.25, 0.78, 0.92)
 		string2:SetText("")
 	end)
 	editBox:SetScript("OnEditFocusLost", function(self)
@@ -509,7 +509,7 @@ function app.CreateMessagePopup()
 				-- Change the editbox border colour for some extra visual feedback
 				border:SetBackdropBorderColor(1, 0, 0)
 				C_Timer.After(3, function()
-					border:SetBackdropBorderColor(0.776, 0.608, 0.427)
+					border:SetBackdropBorderColor(0.25, 0.78, 0.92)
 				end)
 
 				-- Set our feedback text message
@@ -519,7 +519,7 @@ function app.CreateMessagePopup()
 				-- Change the editbox border colour for some extra visual feedback
 				border:SetBackdropBorderColor(0, 1, 0)
 				C_Timer.After(3, function()
-					border:SetBackdropBorderColor(0.776, 0.608, 0.427)
+					border:SetBackdropBorderColor(0.25, 0.78, 0.92)
 				end)
 
 				-- Set our feedback text message

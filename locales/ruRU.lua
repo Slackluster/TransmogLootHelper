@@ -143,7 +143,7 @@ L.SETTINGS_WHISPER =					"Сообщение шепотом"
 L.SETTINGS_WHISPER_CUSTOMIZE =			"Настроить"
 L.SETTINGS_WHISPER_CUSTOMIZE_DESC =		"Настроить сообщение шепотом."
 L.WHISPER_POPUP_CUSTOMIZE = 			"Настройте ваше сообщение шепотом:"
-L.WHISPER_POPUP_ERROR = 				"Сообщение не содержит |cffC69B6D%item|r. Сообщение не обновлено."
+L.WHISPER_POPUP_ERROR = 				"Сообщение не содержит |cff3FC7EB%item|r. Сообщение не обновлено."
 L.WHISPER_POPUP_SUCCESS =				"Сообщение обновлено."
 
 L.SETTINGS_HEADER_INFORMATION =			"Информация"

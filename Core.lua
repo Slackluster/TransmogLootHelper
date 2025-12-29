@@ -41,7 +41,7 @@ end)
 
 -- App colour
 function app.Colour(string)
-	return "|cffC69B6D" .. string .. "|R"
+	return "|cff3FC7EB" .. string .. "|R"
 end
 
 -- Print with addon prefix
@@ -99,7 +99,7 @@ function app.Border(parent, a, b, c, d)
 		insets = { left = 4, right = 4, top = 4, bottom = 4 },
 	})
 	border:SetBackdropColor(0, 0, 0, 0)
-	border:SetBackdropBorderColor(0.776, 0.608, 0.427)
+	border:SetBackdropBorderColor(0.25, 0.78, 0.92)
 end
 
 -- Button

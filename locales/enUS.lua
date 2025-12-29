@@ -143,7 +143,7 @@ L.SETTINGS_WHISPER =					"Whisper Message"
 L.SETTINGS_WHISPER_CUSTOMIZE =			"Customize"
 L.SETTINGS_WHISPER_CUSTOMIZE_DESC =		"Customize the whisper message."
 L.WHISPER_POPUP_CUSTOMIZE = 			"Customize your whisper message:"
-L.WHISPER_POPUP_ERROR = 				"Message does not include |cffC69B6D%item|r. Message is not updated."
+L.WHISPER_POPUP_ERROR = 				"Message does not include |cff3FC7EB%item|r. Message is not updated."
 L.WHISPER_POPUP_SUCCESS =				"Message is updated."
 
 L.SETTINGS_HEADER_INFORMATION =			"Information"
