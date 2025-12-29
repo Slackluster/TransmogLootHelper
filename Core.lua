@@ -274,6 +274,9 @@ app.Event:Register("ADDON_LOADED", function(addOnName, containsBindings)
 
 		C_ChatInfo.RegisterAddonMessagePrefix("TransmogLootHelp")
 
+		SLASH_RELOADUI1 = "/rl"
+		SlashCmdList.RELOADUI = ReloadUI
+
 		SLASH_TransmogLootHelper1 = "/tlh";
 		function SlashCmdList.TransmogLootHelper(msg, editBox)
 			-- Split message into command and rest
