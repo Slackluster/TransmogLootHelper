@@ -156,7 +156,7 @@ function app.ItemOverlay(overlay, itemLink, itemLocation, containerInfo, bagAddo
 			elseif classID == Enum.ItemClass.Recipe and subclassID ~= Enum.ItemRecipeSubclass.Book then
 				itemEquipLoc = "Recipe"
 			-- Toys
-			elseif app.IsToy(itemLink) then
+			elseif C_ToyBox.GetToyInfo(itemID) then
 				itemEquipLoc = "Toy"
 			-- Pets
 			elseif C_PetJournal.GetPetInfoByItemID(itemID) then
