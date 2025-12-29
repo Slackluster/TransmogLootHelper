@@ -144,22 +144,6 @@ function app.GetTransmogText(itemLinkie, searchString)
 	return false
 end
 
-function app.IsToy(itemLinkie)
-	local tooltip = app.Tooltip[itemLinkie] or C_TooltipInfo.GetHyperlink(itemLinkie)
-	app.Tooltip[itemLinkie] = tooltip
-
-	if tooltip and tooltip.lines then
-		for _, line in ipairs(tooltip.lines) do
-			if line.type == Enum.TooltipDataLineType.None then
-				if line.leftText and line.leftText:find(ITEM_TOY_ONUSE) then
-					return true
-				end
-			end
-		end
-	end
-	return false
-end
-
 function app.IsLearned(itemLinkie)
 	local tooltip = C_TooltipInfo.GetHyperlink(itemLinkie)
 
