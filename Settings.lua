@@ -28,8 +28,8 @@ app.Event:Register("ADDON_LOADED", function(addOnName, containsBindings)
 		if TransmogLootHelper_Settings["remixWindowFilter"] ~= nil then TransmogLootHelper_Settings["remixWindowFilter"] = nil end
 		if TransmogLootHelper_Settings["remixWindowLocked"] ~= nil then TransmogLootHelper_Settings["remixWindowLocked"] = nil end
 		if TransmogLootHelper_Settings["remixWindowPosition"] ~= nil then TransmogLootHelper_Settings["remixWindowPosition"] = nil end
-		if TransmogLootHelper_Cache.Lemix ~= nil then TransmogLootHelper_Cache.Lemix = nil end
-		if TransmogLootHelper_Cache.LemixCharacters ~= nil then TransmogLootHelper_Cache.LemixCharacters = nil end
+		if TransmogLootHelper_Cache and TransmogLootHelper_Cache.Lemix ~= nil then TransmogLootHelper_Cache.Lemix = nil end
+		if TransmogLootHelper_Cache and TransmogLootHelper_Cache.LemixCharacters ~= nil then TransmogLootHelper_Cache.LemixCharacters = nil end
 	end
 end)
 
