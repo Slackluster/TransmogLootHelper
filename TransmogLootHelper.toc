@@ -1,7 +1,7 @@
 ## Interface: 120000
 ## Title: |cff3FC7EBTransmog Loot Helper|r
 ## Author: Slackluster
-## IconTexture: Interface\AddOns\TransmogLootHelper\assets\tlh_icon.blp
+## IconTexture: Interface\AddOns\TransmogLootHelper\assets\icon.png
 ## AddonCompartmentFunc: TransmogLootHelper_Click
 ## AddonCompartmentFuncOnEnter: TransmogLootHelper_Enter
 ## AddonCompartmentFuncOnLeave: TransmogLootHelper_Leave

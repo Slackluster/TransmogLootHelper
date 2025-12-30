@@ -70,7 +70,7 @@ function app.Settings()
 	local miniButton = LibStub("LibDataBroker-1.1"):NewDataObject("TransmogLootHelper", {
 		type = "data source",
 		text = app.NameLong,
-		icon = "Interface\\AddOns\\TransmogLootHelper\\assets\\tlh_icon",
+		icon = "Interface\\AddOns\\TransmogLootHelper\\assets\\icon.png",
 
 		OnClick = function(self, button)
 			if button == "LeftButton" then
