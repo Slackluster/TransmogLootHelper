@@ -366,18 +366,12 @@ function app.ItemOverlay(overlay, itemLink, itemLocation, containerInfo, bagAddo
 				elseif TransmogLootHelper_Settings["iconNewSource"] and not api.IsSourceCollected(itemLink) then
 					showOverlay("yellow")
 				-- Catalyst mog
-				elseif TransmogLootHelper_Settings["iconNewCatalyst"] and tumInfo and tumInfo.catalystAppearanceMissing then
+				elseif TransmogLootHelper_Settings["iconNewCatalyst"] and ((tumInfo and tumInfo.catalystAppearanceMissing) or (attInfo and attInfo.filledCatalyst)) then
 					overlay.texture:SetAtlas("CreationCatalyst-32x32")
 					showOverlay("yellow")
-				elseif TransmogLootHelper_Settings["iconNewCatalyst"] and attInfo and attInfo.filledCatalyst then
-					overlay.texture:SetTexture("Interface\\AddOns\\AllTheThings\\assets\\Interface_Catalyst")
-					showOverlay("yellow")
 				-- Upgrade mog
-				elseif TransmogLootHelper_Settings["iconNewUpgrade"] and tumInfo and tumInfo.catalystUpgradeAppearanceMissing then
+				elseif TransmogLootHelper_Settings["iconNewUpgrade"] and ((tumInfo and tumInfo.catalystUpgradeAppearanceMissing) or (attInfo and attInfo.filledUpgrade)) then
 					overlay.texture:SetAtlas("CovenantSanctum-Upgrade-Icon-Available")
-					showOverlay("yellow")
-				elseif TransmogLootHelper_Settings["iconNewUpgrade"] and attInfo and attInfo.filledUpgrade then
-					overlay.texture:SetTexture("Interface\\AddOns\\AllTheThings\\assets\\Interface_Upgrade")
 					showOverlay("yellow")
 				-- Learned
 				elseif TransmogLootHelper_Settings["iconLearned"] and not (classID == 15 and subclassID == 0) then
