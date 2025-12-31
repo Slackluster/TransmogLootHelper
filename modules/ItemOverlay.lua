@@ -1210,7 +1210,7 @@ end
 ---------------------
 
 function app.CacheRecipe(spellID, learned)
-	app.CharacterName = UnitName("player") .. "-" .. GetNormalizedRealmName()
+	app.CharacterName = app.CharacterName or UnitName("player") .. "-" .. GetNormalizedRealmName()
 
 	if not TransmogLootHelper_Cache.Recipes[spellID] then
 		TransmogLootHelper_Cache.Recipes[spellID] = { learned = false, knownBy = {} }
