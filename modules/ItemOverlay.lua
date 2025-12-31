@@ -1165,7 +1165,7 @@ function app.ItemOverlayHooks()
 		end
 
 		app.Event:Register("PLAYER_ENTERING_WORLD", function(isInitialLogin, isReloadingUi)
-			cacheSpells()
+			if isInitialLogin or isReloadingUi then cacheSpells() end
 		end)
 
 		app.Event:Register("SPELLS_CHANGED", function()
