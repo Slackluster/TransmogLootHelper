@@ -269,7 +269,7 @@ app.Event:Register("ADDON_LOADED", function(addOnName, containsBindings)
 			-- Default message
 			if command == "default" then
 				TransmogLootHelper_Settings["message"] = L.DEFAULT_MESSAGE
-				app.Print(L.WHISPER_POPUP_SUCCESS, "'" .. TransmogLootHelper_Settings["message"] .. "'")
+				app.Print(L.WHISPER_POPUP_SUCCESS, "\"" .. TransmogLootHelper_Settings["message"] .. "\"")
 			-- Customise message
 			elseif command == "msg" then
 				app.RenamePopup:Show()

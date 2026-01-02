@@ -42,5 +42,5 @@ EventUtil.ContinueOnAddOnLoaded("BetterBags", function()
 			item.TLHOverlay:Hide()
 		end
 	end
-	events:RegisterMessage('item/Updated', UpdateButton)
+	events:RegisterMessage("item/Updated", UpdateButton)
 end)
