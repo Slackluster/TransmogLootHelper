@@ -27,8 +27,8 @@ app.Event:Register("ADDON_LOADED", function(addOnName, containsBindings)
 		app.WeaponRow = {}
 		app.Whispered = {}
 
-		app.CreateWindow()
-		app.Update()
+		app:CreateWindow()
+		app:UpdateWindow()
 	end
 end)
 
@@ -37,7 +37,7 @@ end)
 ------------
 
 -- Window tooltip body
-function app.WindowTooltip(text)
+function app:CreateWindowTooltip(text)
 	local frame = CreateFrame("Frame", nil, app.Window, "BackdropTemplate")
 	frame:SetFrameStrata("TOOLTIP")
 	frame:SetBackdrop({
@@ -63,7 +63,7 @@ function app.WindowTooltip(text)
 end
 
 -- Window tooltip show/hide
-function app.WindowTooltipShow(frame)
+function app:ShowWindowTooltip(frame)
 	if GetScreenWidth()/2-TransmogLootHelper_Settings["windowPosition"].width/2-app.Window:GetLeft() >= 0 then
 		frame:ClearAllPoints()
 		frame:SetPoint("LEFT", app.Window, "RIGHT", 0, 0)
@@ -75,7 +75,7 @@ function app.WindowTooltipShow(frame)
 end
 
 -- Move the window
-function app.MoveWindow()
+function app:MoveWindow()
 	if TransmogLootHelper_Settings["windowLocked"] then
 		app.UnlockButton:LockHighlight()
 	else
@@ -86,7 +86,7 @@ function app.MoveWindow()
 end
 
 -- Save the window position and size
-function app.SaveWindow()
+function app:SaveWindow()
 	app.UnlockButton:UnlockHighlight()
 	app.Window:StopMovingOrSizing()
 
@@ -97,7 +97,7 @@ function app.SaveWindow()
 end
 
 -- Create the main window
-function app.CreateWindow()
+function app:CreateWindow()
 	-- Create popup frame
 	app.Window = CreateFrame("Frame", nil, UIParent, "BackdropTemplate")
 	app.Window:SetPoint("CENTER")
@@ -117,8 +117,8 @@ function app.CreateWindow()
 	app.Window:SetResizable(true)
 	app.Window:SetResizeBounds(140, 140, 600, 600)
 	app.Window:RegisterForDrag("LeftButton")
-	app.Window:SetScript("OnDragStart", function() app.MoveWindow() end)
-	app.Window:SetScript("OnDragStop", function() app.SaveWindow() end)
+	app.Window:SetScript("OnDragStart", function() app:MoveWindow() end)
+	app.Window:SetScript("OnDragStop", function() app:SaveWindow() end)
 	app.Window:Hide()
 
 	-- Resize corner
@@ -134,7 +134,7 @@ function app.CreateWindow()
 		GameTooltip:ClearLines()
 		GameTooltip:Hide()
 	end)
-	corner:SetScript("OnMouseUp", function() app.SaveWindow() end)
+	corner:SetScript("OnMouseUp", function() app:SaveWindow() end)
 	app.Window.Corner = corner
 
 	-- Close button
@@ -144,7 +144,7 @@ function app.CreateWindow()
 		app.Window:Hide()
 	end)
 	close:SetScript("OnEnter", function()
-		app.WindowTooltipShow(app.CloseButtonTooltip)
+		app:ShowWindowTooltip(app.CloseButtonTooltip)
 	end)
 	close:SetScript("OnLeave", function()
 		app.CloseButtonTooltip:Hide()
@@ -166,7 +166,7 @@ function app.CreateWindow()
 		app.UnlockButton:Show()
 	end)
 	app.LockButton:SetScript("OnEnter", function()
-		app.WindowTooltipShow(app.LockButtonTooltip)
+		app:ShowWindowTooltip(app.LockButtonTooltip)
 	end)
 	app.LockButton:SetScript("OnLeave", function()
 		app.LockButtonTooltip:Hide()
@@ -188,7 +188,7 @@ function app.CreateWindow()
 		app.UnlockButton:Hide()
 	end)
 	app.UnlockButton:SetScript("OnEnter", function()
-		app.WindowTooltipShow(app.UnlockButtonTooltip)
+		app:ShowWindowTooltip(app.UnlockButtonTooltip)
 	end)
 	app.UnlockButton:SetScript("OnLeave", function()
 		app.UnlockButtonTooltip:Hide()
@@ -214,10 +214,10 @@ function app.CreateWindow()
 	app.SettingsButton:SetPushedTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\buttons.blp")
 	app.SettingsButton:GetPushedTexture():SetTexCoord(112/256, 148/256, 81/128, 119/128)
 	app.SettingsButton:SetScript("OnClick", function()
-		app.OpenSettings()
+		app:OpenSettings()
 	end)
 	app.SettingsButton:SetScript("OnEnter", function()
-		app.WindowTooltipShow(app.SettingsButtonTooltip)
+		app:ShowWindowTooltip(app.SettingsButtonTooltip)
 	end)
 	app.SettingsButton:SetScript("OnLeave", function()
 		app.SettingsButtonTooltip:Hide()
@@ -234,14 +234,14 @@ function app.CreateWindow()
 	app.ClearButton:GetPushedTexture():SetTexCoord(1/256, 37/256, 81/128, 119/128)
 	app.ClearButton:SetScript("OnClick", function()
 		if IsShiftKeyDown() == true then
-			app.Clear()
+			app:Clear()
 		else
 			StaticPopupDialogs["TLH_CLEAR_LOOT"] = {
 				text = app.NameLong .. "\n" .. L.CLEAR_CONFIRM,
 				button1 = YES,
 				button2 = NO,
 				OnAccept = function()
-					app.Clear()
+					app:Clear()
 				end,
 				timeout = 0,
 				whileDead = true,
@@ -252,7 +252,7 @@ function app.CreateWindow()
 		end
 	end)
 	app.ClearButton:SetScript("OnEnter", function()
-		app.WindowTooltipShow(app.ClearButtonTooltip)
+		app:ShowWindowTooltip(app.ClearButtonTooltip)
 	end)
 	app.ClearButton:SetScript("OnLeave", function()
 		app.ClearButtonTooltip:Hide()
@@ -271,19 +271,19 @@ function app.CreateWindow()
 		if TransmogLootHelper_Settings["windowSort"] == 1 then
 			TransmogLootHelper_Settings["windowSort"] = 2
 			app.SortButtonTooltip1:Hide()
-			app.WindowTooltipShow(app.SortButtonTooltip2)
+			app:ShowWindowTooltip(app.SortButtonTooltip2)
 		elseif TransmogLootHelper_Settings["windowSort"] == 2 then
 			TransmogLootHelper_Settings["windowSort"] = 1
 			app.SortButtonTooltip2:Hide()
-			app.WindowTooltipShow(app.SortButtonTooltip1)
+			app:ShowWindowTooltip(app.SortButtonTooltip1)
 		end
-		app.Update()
+		app:UpdateWindow()
 	end)
 	app.SortButton:SetScript("OnEnter", function()
 		if TransmogLootHelper_Settings["windowSort"] == 1 then
-			app.WindowTooltipShow(app.SortButtonTooltip1)
+			app:ShowWindowTooltip(app.SortButtonTooltip1)
 		elseif TransmogLootHelper_Settings["windowSort"] == 2 then
-			app.WindowTooltipShow(app.SortButtonTooltip2)
+			app:ShowWindowTooltip(app.SortButtonTooltip2)
 		end
 	end)
 	app.SortButton:SetScript("OnLeave", function()
@@ -316,20 +316,20 @@ function app.CreateWindow()
 	app.Window.ScrollFrame = scrollFrame
 
 	-- Tooltips
-	app.LootHeaderTooltip = app.WindowTooltip(L.WINDOW_HEADER_LOOT_DESC)
-	app.FilteredHeaderTooltip = app.WindowTooltip(L.WINDOW_HEADER_FILTERED_DESC)
-	app.CloseButtonTooltip = app.WindowTooltip(L.WINDOW_BUTTON_CLOSE)
-	app.LockButtonTooltip = app.WindowTooltip(L.WINDOW_BUTTON_LOCK)
-	app.UnlockButtonTooltip = app.WindowTooltip(L.WINDOW_BUTTON_UNLOCK)
-	app.SettingsButtonTooltip = app.WindowTooltip(L.WINDOW_BUTTON_SETTINGS)
-	app.ClearButtonTooltip = app.WindowTooltip(L.WINDOW_BUTTON_CLEAR)
-	app.SortButtonTooltip1 = app.WindowTooltip(L.WINDOW_BUTTON_SORT1)
-	app.SortButtonTooltip2 = app.WindowTooltip(L.WINDOW_BUTTON_SORT2)
-	app.CornerButtonTooltip = app.WindowTooltip(L.WINDOW_BUTTON_CORNER)
+	app.LootHeaderTooltip = app:CreateWindowTooltip(L.WINDOW_HEADER_LOOT_DESC)
+	app.FilteredHeaderTooltip = app:CreateWindowTooltip(L.WINDOW_HEADER_FILTERED_DESC)
+	app.CloseButtonTooltip = app:CreateWindowTooltip(L.WINDOW_BUTTON_CLOSE)
+	app.LockButtonTooltip = app:CreateWindowTooltip(L.WINDOW_BUTTON_LOCK)
+	app.UnlockButtonTooltip = app:CreateWindowTooltip(L.WINDOW_BUTTON_UNLOCK)
+	app.SettingsButtonTooltip = app:CreateWindowTooltip(L.WINDOW_BUTTON_SETTINGS)
+	app.ClearButtonTooltip = app:CreateWindowTooltip(L.WINDOW_BUTTON_CLEAR)
+	app.SortButtonTooltip1 = app:CreateWindowTooltip(L.WINDOW_BUTTON_SORT1)
+	app.SortButtonTooltip2 = app:CreateWindowTooltip(L.WINDOW_BUTTON_SORT2)
+	app.CornerButtonTooltip = app:CreateWindowTooltip(L.WINDOW_BUTTON_CORNER)
 end
 
 -- Update window contents
-function app.Update()
+function app:UpdateWindow()
 	-- Hide existing rows
 	if app.WeaponRow then
 		for i, row in pairs(app.WeaponRow) do
@@ -369,10 +369,10 @@ function app.Update()
 		app.Window.Weapons:SetPoint("RIGHT", app.Window.Child)
 		app.Window.Weapons:RegisterForDrag("LeftButton")
 		app.Window.Weapons:SetHighlightTexture("Interface\\QuestFrame\\UI-QuestTitleHighlight", "ADD")
-		app.Window.Weapons:SetScript("OnDragStart", function() app.MoveWindow() end)
-		app.Window.Weapons:SetScript("OnDragStop", function() app.SaveWindow() end)
+		app.Window.Weapons:SetScript("OnDragStart", function() app:MoveWindow() end)
+		app.Window.Weapons:SetScript("OnDragStop", function() app:SaveWindow() end)
 		app.Window.Weapons:SetScript("OnEnter", function()
-			app.WindowTooltipShow(app.LootHeaderTooltip)
+			app:ShowWindowTooltip(app.LootHeaderTooltip)
 		end)
 		app.Window.Weapons:SetScript("OnLeave", function()
 			app.LootHeaderTooltip:Hide()
@@ -455,8 +455,8 @@ function app.Update()
 			row:SetHighlightTexture("Interface\\QuestFrame\\UI-QuestTitleHighlight", "ADD")
 			row:RegisterForDrag("LeftButton")
 			row:RegisterForClicks("AnyDown")
-			row:SetScript("OnDragStart", function() app.MoveWindow() end)
-			row:SetScript("OnDragStop", function() app.SaveWindow() end)
+			row:SetScript("OnDragStart", function() app:MoveWindow() end)
+			row:SetScript("OnDragStop", function() app:SaveWindow() end)
 			row:SetScript("OnEnter", function()
 				GameTooltip:ClearLines()
 
@@ -509,7 +509,7 @@ function app.Update()
 							local msg = string.gsub(TransmogLootHelper_Settings["message"], "%%item", lootInfo.item)
 							C_ChatInfo.SendChatMessage(msg, "WHISPER", nil, lootInfo.player)
 							local message = "player:" .. lootInfo.player
-							app.SendAddonMessage(message)
+							app:SendAddonMessage(message)
 
 							local whisperTime = GetServerTime()
 							app.WeaponLoot[lootInfo.index].recentlyWhispered = whisperTime
@@ -521,7 +521,7 @@ function app.Update()
 								end
 							end)
 						elseif app.WeaponLoot[lootInfo.index].recentlyWhispered ~= 0 then
-							app.Print(L.WHISPER_COOLDOWN)
+							app:Print(L.WHISPER_COOLDOWN)
 						end
 					end
 				-- Shift+RMB
@@ -583,10 +583,10 @@ function app.Update()
 		app.Window.Armour:SetPoint("RIGHT", app.Window.Child)
 		app.Window.Armour:RegisterForDrag("LeftButton")
 		app.Window.Armour:SetHighlightTexture("Interface\\QuestFrame\\UI-QuestTitleHighlight", "ADD")
-		app.Window.Armour:SetScript("OnDragStart", function() app.MoveWindow() end)
-		app.Window.Armour:SetScript("OnDragStop", function() app.SaveWindow() end)
+		app.Window.Armour:SetScript("OnDragStart", function() app:MoveWindow() end)
+		app.Window.Armour:SetScript("OnDragStop", function() app:SaveWindow() end)
 		app.Window.Armour:SetScript("OnEnter", function()
-			app.WindowTooltipShow(app.LootHeaderTooltip)
+			app:ShowWindowTooltip(app.LootHeaderTooltip)
 		end)
 		app.Window.Armour:SetScript("OnLeave", function()
 			app.LootHeaderTooltip:Hide()
@@ -672,8 +672,8 @@ function app.Update()
 			row:SetHighlightTexture("Interface\\QuestFrame\\UI-QuestTitleHighlight", "ADD")
 			row:RegisterForDrag("LeftButton")
 			row:RegisterForClicks("AnyDown")
-			row:SetScript("OnDragStart", function() app.MoveWindow() end)
-			row:SetScript("OnDragStop", function() app.SaveWindow() end)
+			row:SetScript("OnDragStart", function() app:MoveWindow() end)
+			row:SetScript("OnDragStop", function() app:SaveWindow() end)
 			row:SetScript("OnEnter", function()
 				-- Show item tooltip if hovering over the actual row
 				GameTooltip:ClearLines()
@@ -729,7 +729,7 @@ function app.Update()
 							local msg = string.gsub(TransmogLootHelper_Settings["message"], "%%item", lootInfo.item)
 							C_ChatInfo.SendChatMessage(msg, "WHISPER", nil, lootInfo.player)
 							local message = "player:" .. lootInfo.player
-							app.SendAddonMessage(message)
+							app:SendAddonMessage(message)
 
 							local whisperTime = GetServerTime()
 							app.ArmourLoot[lootInfo.index].recentlyWhispered = whisperTime
@@ -741,7 +741,7 @@ function app.Update()
 								end
 							end)
 						elseif app.ArmourLoot[lootInfo.index].recentlyWhispered ~= 0 then
-							app.Print(L.WHISPER_COOLDOWN)
+							app:Print(L.WHISPER_COOLDOWN)
 						end
 					end
 				-- Shift+RMB
@@ -803,10 +803,10 @@ function app.Update()
 		app.Window.Filtered:SetPoint("RIGHT", app.Window.Child)
 		app.Window.Filtered:RegisterForDrag("LeftButton")
 		app.Window.Filtered:SetHighlightTexture("Interface\\QuestFrame\\UI-QuestTitleHighlight", "ADD")
-		app.Window.Filtered:SetScript("OnDragStart", function() app.MoveWindow() end)
-		app.Window.Filtered:SetScript("OnDragStop", function() app.SaveWindow() end)
+		app.Window.Filtered:SetScript("OnDragStart", function() app:MoveWindow() end)
+		app.Window.Filtered:SetScript("OnDragStop", function() app:SaveWindow() end)
 		app.Window.Filtered:SetScript("OnEnter", function()
-			app.WindowTooltipShow(app.FilteredHeaderTooltip)
+			app:ShowWindowTooltip(app.FilteredHeaderTooltip)
 		end)
 		app.Window.Filtered:SetScript("OnLeave", function()
 			app.FilteredHeaderTooltip:Hide()
@@ -896,8 +896,8 @@ function app.Update()
 			row:SetHighlightTexture("Interface\\QuestFrame\\UI-QuestTitleHighlight", "ADD")
 			row:RegisterForDrag("LeftButton")
 			row:RegisterForClicks("AnyDown")
-			row:SetScript("OnDragStart", function() app.MoveWindow() end)
-			row:SetScript("OnDragStop", function() app.SaveWindow() end)
+			row:SetScript("OnDragStart", function() app:MoveWindow() end)
+			row:SetScript("OnDragStop", function() app:SaveWindow() end)
 			row:SetScript("OnEnter", function()
 				GameTooltip:ClearLines()
 
@@ -922,7 +922,7 @@ function app.Update()
 					if IsShiftKeyDown() == true then
 						ChatEdit_InsertLink(lootInfo.item)
 					else
-						app.Print("Debugging " .. lootInfo.item .. "  |  Filter reason: " .. lootInfo.playerShort .. "  |  itemType: " .. lootInfo.itemType .. "  |  Looted by: " ..lootInfo.player)
+						app:Print("Debugging " .. lootInfo.item .. "  |  Filter reason: " .. lootInfo.playerShort .. "  |  itemType: " .. lootInfo.itemType .. "  |  Looted by: " ..lootInfo.player)
 					end
 				-- Shift+RMB
 				elseif button == "RightButton" and IsShiftKeyDown() then
@@ -1013,10 +1013,10 @@ function app.Update()
 		app.Window:SetHeight(math.max(140,windowHeight))
 		app.Window:SetWidth(math.max(140,windowWidth+40))
 		app.Window.ScrollFrame:SetVerticalScroll(0)
-		app.SaveWindow()
+		app:SaveWindow()
 	end)
 	app.Window.Corner:SetScript("OnEnter", function()
-		app.WindowTooltipShow(app.CornerButtonTooltip)
+		app:ShowWindowTooltip(app.CornerButtonTooltip)
 	end)
 	app.Window.Corner:SetScript("OnLeave", function()
 		app.CornerButtonTooltip:Hide()
@@ -1024,30 +1024,32 @@ function app.Update()
 end
 
 -- Show window
-function app.Show()
+function app:ShowWindow()
 	app.Window:ClearAllPoints()
 	app.Window:SetSize(TransmogLootHelper_Settings["windowPosition"].width, TransmogLootHelper_Settings["windowPosition"].height)
 	app.Window:SetPoint("BOTTOMLEFT", UIParent, "BOTTOMLEFT", TransmogLootHelper_Settings["windowPosition"].left, TransmogLootHelper_Settings["windowPosition"].bottom)
 
 	app.Window:Show()
-	app.Update()
+	app:UpdateWindow()
 end
 
 -- Toggle window
-function api.Toggle()
+function api:ToggleWindow()
+	assert(self == api, "Call TransmogLootHelper:ToggleWindow(), not TransmogLootHelper.ToggleWindow()")
+
 	if app.Window:IsShown() then
 		app.Window:Hide()
 	else
-		app.Show()
+		app:ShowWindow()
 	end
 end
 
 -- Clear all entries
-function app.Clear()
+function app:Clear()
 	app.WeaponLoot = {}
 	app.ArmourLoot = {}
 	app.FilteredLoot = {}
-	app.Update()
+	app:UpdateWindow()
 end
 
 -------------------
@@ -1055,21 +1057,21 @@ end
 -------------------
 
 -- Delay open/update window
-function app.Stagger(t, show)
+function app:Stagger(t, show)
 	C_Timer.After(t, function()
 		if GetServerTime() - app.Flag.LastUpdate >= t then
 			if show and TransmogLootHelper_Settings["autoOpen"] then
-				app.Show()
+				app:ShowWindow()
 			else
-				app.Update()
+				app:UpdateWindow()
 			end
 		else
 			C_Timer.After(t, function()
 				if GetServerTime() - app.Flag.LastUpdate >= t then
 					if show and TransmogLootHelper_Settings["autoOpen"] then
-						app.Show()
+						app:ShowWindow()
 					else
-						app.Update()
+						app:UpdateWindow()
 					end
 				end
 			end)
@@ -1078,7 +1080,7 @@ function app.Stagger(t, show)
 end
 
 -- Add to filtered loot and update the window
-function app.AddFilteredLoot(itemLink, itemID, itemTexture, playerName, itemType, filterReason)
+function app:AddFilteredLoot(itemLink, itemID, itemTexture, playerName, itemType, filterReason)
 	app.FilteredLoot[#app.FilteredLoot+1] = { item = itemLink, itemID = itemID, icon = itemTexture, player = playerName, playerShort = filterReason, color = "ffFFFFFF", itemType = itemType }
 
 	if #app.FilteredLoot > 100 then
@@ -1087,11 +1089,11 @@ function app.AddFilteredLoot(itemLink, itemID, itemTexture, playerName, itemType
 	end
 
 	app.Flag.LastUpdate = GetServerTime()
-	app.Stagger(1, false)
+	app:Stagger(1, false)
 end
 
 -- Remove item and update the window
-function app.RemoveLootedItem(itemID)
+function app:RemoveLootedItem(itemID)
 	for k = #app.WeaponLoot, 1, -1 do
 		if app.WeaponLoot[k].itemID == itemID then
 			table.remove(app.WeaponLoot, k)
@@ -1104,7 +1106,7 @@ function app.RemoveLootedItem(itemID)
 		end
 	end
 
-	app.Update()
+	app:UpdateWindow()
 end
 
 -- When an item is looted
@@ -1134,11 +1136,11 @@ app.Event:Register("CHAT_MSG_LOOT", function(text, playerName, languageName, cha
 		-- Continue only if it's not an item we looted ourselves
 		if unitName ~= selfName then
 			-- Do stuff depending on if the appearance or source is new
-			if not api.IsAppearanceCollected(itemLink) or (not api.IsSourceCollected(itemLink) and TransmogLootHelper_Settings["collectMode"] == 2) then
+			if not api:IsAppearanceCollected(itemLink) or (not api:IsSourceCollected(itemLink) and TransmogLootHelper_Settings["collectMode"] == 2) then
 				-- If the item is Account/Warbound
-				if app.GetBonding(itemLink) == "BoA" then
+				if app:GetBonding(itemLink) == "BoA" then
 					-- Add to filtered loot and update the window
-					app.AddFilteredLoot(itemLink, itemID, itemTexture, playerName, itemType, L.FILTER_REASON_UNTRADEABLE)
+					app:AddFilteredLoot(itemLink, itemID, itemTexture, playerName, itemType, L.FILTER_REASON_UNTRADEABLE)
 				-- Rarity filter
 				elseif itemQuality >= TransmogLootHelper_Settings["rarity"] then
 					-- Get the player's armor class
@@ -1182,16 +1184,16 @@ app.Event:Register("CHAT_MSG_LOOT", function(text, playerName, languageName, cha
 
 					-- Stagger show/update the window
 					app.Flag.LastUpdate = GetServerTime()
-					app.Stagger(1, true)
+					app:Stagger(1, true)
 				else
 					-- Add to filtered loot and update the window
-					app.AddFilteredLoot(itemLink, itemID, itemTexture, playerName, itemType, L.FILTER_REASON_RARITY)
+					app:AddFilteredLoot(itemLink, itemID, itemTexture, playerName, itemType, L.FILTER_REASON_RARITY)
 				end
 			else
 				-- Ignore necks, rings, trinkets (as they never have a learnable appearance)
 				if itemType ~= app.Type["General"] or (itemType == app.Type["General"] and itemEquipLoc ~= "INVTYPE_FINGER"	and itemEquipLoc ~= "INVTYPE_TRINKET" and itemEquipLoc ~= "INVTYPE_NECK") then
 					-- Add to filtered loot and update the window
-					app.AddFilteredLoot(itemLink, itemID, itemTexture, playerName, itemType, L.FILTER_REASON_KNOWN)
+					app:AddFilteredLoot(itemLink, itemID, itemTexture, playerName, itemType, L.FILTER_REASON_KNOWN)
 				end
 			end
 		end
@@ -1201,10 +1203,10 @@ end)
 -- When a new appearance is learned
 app.Event:Register("TRANSMOG_COLLECTION_SOURCE_ADDED", function(itemModifiedAppearanceID)
 	local itemID = C_TransmogCollection.GetSourceInfo(itemModifiedAppearanceID).itemID
-	app.RemoveLootedItem(itemID)
+	app:RemoveLootedItem(itemID)
 
 	local message = "itemID:"..itemID
-	app.SendAddonMessage(message)
+	app:SendAddonMessage(message)
 end)
 
 -- When a group member loots an item
@@ -1226,7 +1228,7 @@ app.Event:Register("CHAT_MSG_ADDON", function(prefix, text, channel, sender, tar
 			end
 
 			app.Flag.LastUpdate = GetServerTime()
-			app.Stagger(1, false)
+			app:Stagger(1, false)
 		end
 
 		-- Player

@@ -37,7 +37,7 @@ EventUtil.ContinueOnAddOnLoaded("BetterBags", function()
 		end
 
 		if itemLink then
-			app.ItemOverlay(item.TLHOverlay, itemLink, itemLocation, containerInfo, true)
+			app:CreateItemOverlay(item.TLHOverlay, itemLink, itemLocation, containerInfo, true)
 		elseif item.isFreeSlot or not itemLink then
 			item.TLHOverlay:Hide()
 		end

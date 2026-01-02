@@ -16,7 +16,7 @@ app.Event:Register("ADDON_LOADED", function(addOnName, containsBindings)
 				if bestIndex and bestType then
 					local itemLink = GetQuestLogItemLink(bestType, bestIndex, data.questInfo.questID)
 					if itemLink then
-						app.ItemOverlay(rewardsFrame.TLHOverlay, itemLink)
+						app:CreateItemOverlay(rewardsFrame.TLHOverlay, itemLink)
 						rewardsFrame.TLHOverlay.icon:SetScale(0.9)
 						rewardsFrame.TLHOverlay.text:SetText("")
 					end
@@ -37,7 +37,7 @@ app.Event:Register("ADDON_LOADED", function(addOnName, containsBindings)
 				if bestIndex and bestType then
 					local itemLink = GetQuestLogItemLink(bestType, bestIndex, pin.questID)
 					if itemLink then
-						app.ItemOverlay(pin.TLHOverlay, itemLink)
+						app:CreateItemOverlay(pin.TLHOverlay, itemLink)
 						pin.TLHOverlay.text:SetText("")
 					end
 				end

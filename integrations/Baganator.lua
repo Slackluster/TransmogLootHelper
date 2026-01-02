@@ -8,12 +8,12 @@ EventUtil.ContinueOnAddOnLoaded("Baganator", function()
 				C_Item.RequestLoadItemDataByID(itemDetails.itemID)
 				return
 			end
-			app.ItemOverlay(icon.overlay, itemDetails.itemLink, nil, { hasLoot = itemDetails.hasLoot }, true)
+			app:CreateItemOverlay(icon.overlay, itemDetails.itemLink, nil, { hasLoot = itemDetails.hasLoot }, true)
 			return icon:IsShown()
 		end,
 		function(itemButton)
 			local overlay = CreateFrame("Frame", nil, itemButton)
-			app.ItemOverlay(overlay, "item:65500")
+			app:CreateItemOverlay(overlay, "item:65500")
 			overlay.icon.padding = -2
 			overlay.icon.overlay = overlay
 			return overlay.icon
