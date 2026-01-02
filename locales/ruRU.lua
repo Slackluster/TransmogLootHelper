@@ -56,6 +56,9 @@ L.INSTANT_BUTTON =						"Получить сейчас!"
 L.INSTANT_TOOLTIP =						"Удерживайте Shift, чтобы мгновенно получить предмет, пропуская 5-секундный таймер."
 
 -- Settings
+L.SETTINGS_TOOLTIP =					app.NameLong .. "\n|cffFFFFFF" .. app.IconLMB .. ": Переключить окно\n" .. app.IconRMB .. ": " .. L.WINDOW_BUTTON_SETTINGS
+
+-- L.SETTINGS_VERSION =					GAME_VERSION_LABEL .. ":"	-- "Version"
 L.SETTINGS_SUPPORT_TEXTLONG =			"Разработка этого аддона требует значительного времени и усилий.\nПожалуйста, рассмотрите возможность финансовой поддержки разработчика."
 L.SETTINGS_SUPPORT_TEXT =				"Поддержать"
 L.SETTINGS_SUPPORT_BUTTON =				"Buy Me a Coffee" -- Brand name, if there isn't a localised version, keep it the way it is
@@ -69,11 +72,17 @@ L.SETTINGS_ISSUES_DESC =				"Просмотреть трекер ошибок н
 L.SETTINGS_URL_COPY =					"Ctrl+C — скопировать:"
 L.SETTINGS_URL_COPIED =					"Ссылка скопирована в буфер обмена"
 
-L.SETTINGS_TOOLTIP =					app.IconLMB .. "|cffFFFFFF: Переключить окно\n" ..
-										app.IconRMB .. ": " .. L.WINDOW_BUTTON_SETTINGS
-L.SETTINGS_BAGANATOR =					"Для пользователей Baganator это управляется собственными настройками Baganator."
+L.SETTINGS_KEYSLASH_TITLE =				SETTINGS_KEYBINDINGS_LABEL .. " & Слэш-команды"	-- "Keybindings"
+-- _G["BINDING_NAME_TLH_TOGGLEWINDOW"] =	"Toggle Window"
+-- L.SETTINGS_SLASH_TOGGLE =				"Toggle the tracking window"
+-- L.SETTINGS_SLASH_RESETPOS =				"Reset the tracking window position"
+-- L.SETTINGS_SLASH_WHISPER_DEFAULT =		"Set the whisper message to its default"
+-- L.SETTINGS_SLASH_DELETE_DESC =			"Mark a character's unique recipes etc. as unlearned"
+-- L.SETTINGS_SLASH_CHARREALM =			"Character-Realm"
 
+-- L.GENERAL =								GENERAL	-- "General"
 L.SETTINGS_ITEM_OVERLAY	=				"Накладка на предметы"
+L.SETTINGS_BAGANATOR =					"Для пользователей Baganator это управляется собственными настройками Baganator."
 L.SETTINGS_ITEM_OVERLAY_DESC =			"Показывать иконку и текст на предметах, чтобы указать статус коллекции и прочее.\n\n|cffFF0000" .. REQUIRES_RELOAD .. ".|r Используйте |cffFFFFFF/reload|r или перезайдите.\n\n" .. L.SETTINGS_BAGANATOR
 L.SETTINGS_ICONPOS =					"Позиция иконки"
 L.SETTINGS_ICONPOS_DESC =				"Местоположение иконки на предмете."
@@ -141,17 +150,10 @@ L.SETTINGS_RARITY =						"Редкость"
 L.SETTINGS_RARITY_DESC =				"Установить, начиная с какого качества " .. app.NameShort .. " должен показывать лут."
 L.SETTINGS_WHISPER =					"Сообщение шепотом"
 L.SETTINGS_WHISPER_CUSTOMIZE =			"Настроить"
-L.SETTINGS_WHISPER_CUSTOMIZE_DESC =		"Настроить сообщение шепотом."
+L.SETTINGS_WHISPER_CUSTOMIZE_DESC =		"Настроить сообщение шепотом"
 L.WHISPER_POPUP_CUSTOMIZE = 			"Настройте ваше сообщение шепотом:"
 L.WHISPER_POPUP_ERROR = 				"Сообщение не содержит |cff3FC7EB%item|r. Сообщение не обновлено."
 L.WHISPER_POPUP_SUCCESS =				"Сообщение обновлено."
-
-L.SETTINGS_HEADER_INFORMATION =			"Информация"
-L.SETTINGS_SLASH_TITLE =				"Команды чата"
-L.SETTINGS_SLASH_DESC =					"Введите их в чат, чтобы использовать!"
-L.SETTINGS_SLASH_TOGGLE =				"Переключить окно отслеживания."
-L.SETTINGS_SLASH_RESETPOS =				"Сбросить позицию окна отслеживания."
-L.SETTINGS_SLASH_WHISPER_DEFAULT =		"Установить сообщение шепотом по умолчанию."
 
 L.SETTINGS_HEADER_TWEAKS =				"Хитрости"
 L.SETTINGS_CATALYST =					"Мгновенная катализация"

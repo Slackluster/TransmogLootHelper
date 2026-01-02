@@ -35,7 +35,7 @@ L.WINDOW_BUTTON_SETTINGS =				"Open the settings"
 L.WINDOW_BUTTON_CLEAR =					"Clear all items\nHold Shift to skip confirmation"
 L.WINDOW_BUTTON_SORT1 =					"Sort by newest first\nCurrent sorting:|cffFFFFFF alphabetical|R"
 L.WINDOW_BUTTON_SORT2 =					"Sort alphabetically\nCurrent sorting:|cffFFFFFF newest first|R"
-L.WINDOW_BUTTON_CORNER =				"Double " .. app.IconLMB .. "|cffFFFFFF: Autosize to fit the window"
+L.WINDOW_BUTTON_CORNER =				"Double " .. app.IconLMB .. "|cffFFFFFF: Autosize to fit the window|R"
 
 L.WINDOW_HEADER_LOOT_DESC =				"|R" .. app.IconLMB .. "|cffFFFFFF: Whisper and request the item\n|RShift " .. app.IconLMB .. "|cffFFFFFF: Link the item\n|RShift " .. app.IconRMB .. "|cffFFFFFF: Remove the item"
 L.WINDOW_HEADER_FILTERED =				"Filtered"
@@ -56,6 +56,9 @@ L.INSTANT_BUTTON =						"Get it now!"
 L.INSTANT_TOOLTIP =						"Hold Shift to instantly receive your item and skip the 5 second timer."
 
 -- Settings
+L.SETTINGS_TOOLTIP =					app.NameLong .. "\n|cffFFFFFF" .. app.IconLMB .. ": Toggle the window\n" .. app.IconRMB .. ": " .. L.WINDOW_BUTTON_SETTINGS
+
+L.SETTINGS_VERSION =					GAME_VERSION_LABEL .. ":"	-- "Version"
 L.SETTINGS_SUPPORT_TEXTLONG =			"Developing this addon takes a significant amount of time and effort.\nPlease consider financially supporting the developer."
 L.SETTINGS_SUPPORT_TEXT =				"Support"
 L.SETTINGS_SUPPORT_BUTTON =				"Buy Me a Coffee"	-- Brand name, if there isn't a localised version, keep it the way it is
@@ -69,11 +72,17 @@ L.SETTINGS_ISSUES_DESC =				"View the issue tracker on GitHub."
 L.SETTINGS_URL_COPY =					"Ctrl+C to copy:"
 L.SETTINGS_URL_COPIED =					"Link copied to clipboard"
 
-L.SETTINGS_TOOLTIP =					app.IconLMB .. "|cffFFFFFF: Toggle the window\n" ..
-										app.IconRMB .. ": " .. L.WINDOW_BUTTON_SETTINGS
-L.SETTINGS_BAGANATOR =					"For Baganator users this is managed by Baganator's own settings."
+L.SETTINGS_KEYSLASH_TITLE =				SETTINGS_KEYBINDINGS_LABEL .. " & Slash Commands"	-- "Keybindings"
+_G["BINDING_NAME_TLH_TOGGLEWINDOW"] =	"Toggle Window"
+L.SETTINGS_SLASH_TOGGLE =				"Toggle the tracking window"
+L.SETTINGS_SLASH_RESETPOS =				"Reset the tracking window position"
+L.SETTINGS_SLASH_WHISPER_DEFAULT =		"Set the whisper message to its default"
+L.SETTINGS_SLASH_DELETE_DESC =			"Mark a character's unique recipes etc. as unlearned"
+L.SETTINGS_SLASH_CHARREALM =			"Character-Realm"
 
+L.GENERAL =								GENERAL	-- "General"
 L.SETTINGS_ITEM_OVERLAY	=				"Item Overlay"
+L.SETTINGS_BAGANATOR =					"For Baganator users this is managed by Baganator's own settings."
 L.SETTINGS_ITEM_OVERLAY_DESC =			"Show an icon and text on items, to indicate collection status and more.\n\n|cffFF0000" .. REQUIRES_RELOAD .. ".|r Use |cffFFFFFF/reload|r or relog.\n\n" .. L.SETTINGS_BAGANATOR
 L.SETTINGS_ICONPOS =					"Icon Position"
 L.SETTINGS_ICONPOS_DESC =				"The location of the icon on the item."
@@ -141,18 +150,10 @@ L.SETTINGS_RARITY =						"Rarity"
 L.SETTINGS_RARITY_DESC =				"Set from what quality and up " .. app.NameShort .. " should show loot."
 L.SETTINGS_WHISPER =					"Whisper Message"
 L.SETTINGS_WHISPER_CUSTOMIZE =			"Customize"
-L.SETTINGS_WHISPER_CUSTOMIZE_DESC =		"Customize the whisper message."
+L.SETTINGS_WHISPER_CUSTOMIZE_DESC =		"Customize the whisper message"
 L.WHISPER_POPUP_CUSTOMIZE = 			"Customize your whisper message:"
 L.WHISPER_POPUP_ERROR = 				"Message does not include |cff3FC7EB%item|r. Message is not updated."
 L.WHISPER_POPUP_SUCCESS =				"Message is updated."
-
-L.SETTINGS_HEADER_INFORMATION =			"Information"
-L.SETTINGS_SLASH_TITLE =				"Slash Commands"
-L.SETTINGS_SLASH_DESC =					"Type these in chat to use them!"
-L.SETTINGS_SLASH_TOGGLE =				"Toggle the tracking window."
-L.SETTINGS_SLASH_RESETPOS =				"Reset the tracking window position."
-L.SETTINGS_SLASH_WHISPER_DEFAULT =		"Set the whisper message to its default."
-L.SETTINGS_SLASH_DELETE_DESC =			"Delete a character's cache, marking their unique recipes etc. as unlearned. Use with " .. app.Colour("Character-Realm") .. "."
 
 L.SETTINGS_HEADER_TWEAKS =				"Tweaks"
 L.SETTINGS_CATALYST =					"Instant Catalyst"

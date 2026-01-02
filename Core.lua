@@ -261,7 +261,7 @@ app.Event:Register("ADDON_LOADED", function(addOnName, containsBindings)
 		SLASH_RELOADUI1 = "/rl"
 		SlashCmdList.RELOADUI = ReloadUI
 
-		SLASH_TransmogLootHelper1 = "/tlh";
+		SLASH_TransmogLootHelper1 = "/tlh"
 		function SlashCmdList.TransmogLootHelper(msg, editBox)
 			-- Split message into command and rest
 			local command, rest = msg:match("^(%S*)%s*(.-)$")
@@ -286,7 +286,7 @@ app.Event:Register("ADDON_LOADED", function(addOnName, containsBindings)
 				api.DeleteCharacter(rest)
 			-- Toggle window
 			elseif command == "" then
-				app.Toggle()
+				api.Toggle()
 			-- Unlisted command
 			else
 				app.Print(L.INVALID_COMMAND)

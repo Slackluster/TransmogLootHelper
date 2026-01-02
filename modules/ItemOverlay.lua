@@ -910,7 +910,7 @@ function app.ItemOverlayHooks()
 
 					if v.type then
 						if mode == "turnin" then
-							-- Set our map quest log to the currently displayed quest; stuff is being weird on quest turn-in
+							-- Set our map quest log to the currently displayed quest, stuff is being weird on quest turn-in
 							if GetQuestID() then
 								C_QuestLog.SetSelectedQuest(GetQuestID())
 							end

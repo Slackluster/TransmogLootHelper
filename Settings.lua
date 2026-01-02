@@ -5,6 +5,7 @@
 -- Initialisation
 local appName, app = ...
 local L = app.locales
+local api = app.api
 
 -------------
 -- ON LOAD --
@@ -45,7 +46,7 @@ end
 -- Addon Compartment Click
 function TransmogLootHelper_Click(self, button)
 	if button == "LeftButton" then
-		app.Toggle()
+		api.Toggle()
 	elseif button == "RightButton" then
 		app.OpenSettings()
 	end
@@ -55,7 +56,7 @@ end
 function TransmogLootHelper_Enter(self, button)
 	GameTooltip:ClearLines()
 	GameTooltip:SetOwner(type(self) ~= "string" and self or button, "ANCHOR_LEFT")
-	GameTooltip:AddLine(app.NameLong .. "\n" .. L.SETTINGS_TOOLTIP)
+	GameTooltip:AddLine(L.SETTINGS_TOOLTIP)
 	GameTooltip:Show()
 end
 
@@ -74,7 +75,7 @@ function app.Settings()
 
 		OnClick = function(self, button)
 			if button == "LeftButton" then
-				app.Toggle()
+				api.Toggle()
 			elseif button == "RightButton" then
 				app.OpenSettings()
 			end
@@ -82,7 +83,7 @@ function app.Settings()
 
 		OnTooltipShow = function(tooltip)
 			if not tooltip or not tooltip.AddLine then return end
-			tooltip:AddLine(app.NameLong .. "\n" .. L.SETTINGS_TOOLTIP)
+			tooltip:AddLine(L.SETTINGS_TOOLTIP)
 		end,
 	})
 
@@ -105,13 +106,21 @@ function app.Settings()
 	TransmogLootHelper_SettingsTextMixin = {}
 	function TransmogLootHelper_SettingsTextMixin:Init(initializer)
 		local data = initializer:GetData()
-		self.Text:SetTextToFit(data.text)
+		self.LeftText:SetTextToFit(data.leftText)
+		self.MiddleText:SetTextToFit(data.middleText)
+		self.RightText:SetTextToFit(data.rightText)
 	end
 
-	local data = {text = L.SETTINGS_SUPPORT_TEXTLONG}
+	local data = { leftText = L.SETTINGS_VERSION .. " |cffFFFFFF" .. C_AddOns.GetAddOnMetadata(appName, "Version") }
 	local text = layout:AddInitializer(Settings.CreateElementInitializer("TransmogLootHelper_SettingsText", data))
 	function text:GetExtent()
-		return 28 + select(2, string.gsub(data.text, "\n", "")) * 12
+		return 14
+	end
+
+	local data = { leftText = L.SETTINGS_SUPPORT_TEXTLONG }
+	local text = layout:AddInitializer(Settings.CreateElementInitializer("TransmogLootHelper_SettingsText", data))
+	function text:GetExtent()
+		return 28 + select(2, string.gsub(data.leftText, "\n", "")) * 12
 	end
 
 	StaticPopupDialogs["TRANSMOGLOOTHELPER_URL"] = {
@@ -163,7 +172,78 @@ function app.Settings()
 	end
 	layout:AddInitializer(CreateSettingsButtonInitializer(L.SETTINGS_ISSUES_TEXT, L.SETTINGS_ISSUES_BUTTON, onIssuesButtonClick, L.SETTINGS_ISSUES_DESC, true))
 
-	layout:AddInitializer(CreateSettingsListSectionHeaderInitializer(C_AddOns.GetAddOnMetadata(appName, "Version")))
+	TransmogLootHelper_SettingsExpandMixin = CreateFromMixins(SettingsExpandableSectionMixin)
+
+	function TransmogLootHelper_SettingsExpandMixin:Init(initializer)
+		SettingsExpandableSectionMixin.Init(self, initializer)
+		self.data = initializer.data
+	end
+
+	function TransmogLootHelper_SettingsExpandMixin:OnExpandedChanged(expanded)
+		SettingsInbound.RepairDisplay()
+	end
+
+	function TransmogLootHelper_SettingsExpandMixin:CalculateHeight()
+		return 24
+	end
+
+	function TransmogLootHelper_SettingsExpandMixin:OnExpandedChanged(expanded)
+		self:EvaluateVisibility(expanded)
+        SettingsInbound.RepairDisplay()
+	end
+
+	function TransmogLootHelper_SettingsExpandMixin:EvaluateVisibility(expanded)
+		if expanded then
+			self.Button.Right:SetAtlas("Options_ListExpand_Right_Expanded", TextureKitConstants.UseAtlasSize)
+		else
+			self.Button.Right:SetAtlas("Options_ListExpand_Right", TextureKitConstants.UseAtlasSize)
+		end
+	end
+
+	local function createExpandableSection(layout, name)
+		local initializer = CreateFromMixins(SettingsExpandableSectionInitializer)
+		local data = { name = name, expanded = false }
+
+		initializer:Init("TransmogLootHelper_SettingsExpandTemplate", data)
+		initializer.GetExtent = ScrollBoxFactoryInitializerMixin.GetExtent
+
+		layout:AddInitializer(initializer)
+
+		return initializer, function()
+			return initializer.data.expanded
+		end
+	end
+
+	local expandInitializer, isExpanded = createExpandableSection(layout, L.SETTINGS_KEYSLASH_TITLE)
+
+		local action = "TLH_TOGGLEWINDOW"
+		local bindingIndex = C_KeyBindings.GetBindingIndex(action)
+		local initializer = CreateKeybindingEntryInitializer(bindingIndex, true)
+		local keybind = layout:AddInitializer(initializer)
+		keybind:AddShownPredicate(isExpanded)
+
+		local data = { leftText = "|cffFFFFFF"
+			.. "/tlh" .. "\n\n"
+			.. "/tlh resetpos" .. "\n\n"
+			.. "/tlh settings" .. "\n\n"
+			.. "/tlh delete " .. app.Colour(L.SETTINGS_SLASH_CHARREALM) .. "\n\n"
+			.. "/tlh msg " .. "\n\n"
+			.. "/tlh default ",
+		middleText =
+			L.SETTINGS_SLASH_TOGGLE .. "\n\n" ..
+			L.SETTINGS_SLASH_RESETPOS .. "\n\n" ..
+			L.WINDOW_BUTTON_SETTINGS .. "\n\n" ..
+			L.SETTINGS_SLASH_DELETE_DESC .. "\n\n" ..
+			L.SETTINGS_WHISPER_CUSTOMIZE_DESC .. "\n\n" ..
+			L.SETTINGS_SLASH_WHISPER_DEFAULT
+		}
+		local text = layout:AddInitializer(Settings.CreateElementInitializer("TransmogLootHelper_SettingsText", data))
+		function text:GetExtent()
+			return 28 + select(2, string.gsub(data.leftText, "\n", "")) * 12
+		end
+		text:AddShownPredicate(isExpanded)
+
+	layout:AddInitializer(CreateSettingsListSectionHeaderInitializer(L.GENERAL))
 
 	local cbVariable, cbName, cbTooltip = "overlay", L.SETTINGS_ITEM_OVERLAY, L.SETTINGS_ITEM_OVERLAY_DESC
 	local cbSetting = Settings.RegisterAddOnSetting(category, appName.."_"..cbVariable, cbVariable, TransmogLootHelper_Settings, Settings.VarType.Boolean, cbName, true)
@@ -320,17 +400,6 @@ function app.Settings()
 	local setting = Settings.RegisterAddOnSetting(category, appName.."_"..variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, true)
 	Settings.CreateCheckbox(category, setting, tooltip)
 
-	layout:AddInitializer(CreateSettingsListSectionHeaderInitializer(L.SETTINGS_HEADER_INFORMATION))
-
-	local variable, name, tooltip = "", L.SETTINGS_SLASH_TITLE, L.SETTINGS_SLASH_DESC
-	local function GetOptions()
-		local container = Settings.CreateControlTextContainer()
-		container:Add(1, "/tlh delete " .. app.Colour("character"), L.SETTINGS_SLASH_DELETE_DESC)
-		return container:GetData()
-	end
-	local setting1 = Settings.RegisterAddOnSetting(category, appName.."_"..variable, variable, TransmogLootHelper_Settings, Settings.VarType.Number, name, 1)
-	Settings.CreateDropdown(category, setting1, GetOptions, tooltip)
-
 	-- Subcategory: Loot Tracker
 	local category, layout = Settings.RegisterVerticalLayoutSubcategory(app.Category, "Loot Tracker")
 	Settings.RegisterAddOnCategory(category)
@@ -379,22 +448,7 @@ function app.Settings()
 	local function onRenameButtonClick()
 		app.RenamePopup:Show()
 	end
-	layout:AddInitializer(CreateSettingsButtonInitializer(L.SETTINGS_WHISPER, L.SETTINGS_WHISPER_CUSTOMIZE, onRenameButtonClick, L.SETTINGS_WHISPER_CUSTOMIZE_DESC, true))
-
-	layout:AddInitializer(CreateSettingsListSectionHeaderInitializer(L.SETTINGS_HEADER_INFORMATION))
-
-	--local variable, name, tooltip = "", L.SETTINGS_SLASH_TITLE, L.SETTINGS_SLASH_DESC
-	local function GetOptions()
-		local container = Settings.CreateControlTextContainer()
-		container:Add(1, "/tlh", L.SETTINGS_SLASH_TOGGLE)
-		container:Add(2, "/tlh settings", L.WINDOW_BUTTON_SETTINGS)
-		container:Add(3, "/tlh resetpos", L.SETTINGS_SLASH_RESETPOS)
-		container:Add(4, "/tlh default", L.SETTINGS_SLASH_WHISPER_DEFAULT)
-		container:Add(5, "/tlh msg", L.SETTINGS_WHISPER_CUSTOMIZE_DESC)
-		return container:GetData()
-	end
-	--local setting = Settings.RegisterAddOnSetting(category, appName.."_"..variable, variable, TransmogLootHelper_Settings, Settings.VarType.Number, name, 1)
-	Settings.CreateDropdown(category, setting1, GetOptions, tooltip)
+	layout:AddInitializer(CreateSettingsButtonInitializer(L.SETTINGS_WHISPER, L.SETTINGS_WHISPER_CUSTOMIZE, onRenameButtonClick, L.SETTINGS_WHISPER_CUSTOMIZE_DESC .. ".", true))
 
 	-- Subcategory: Tweaks
 	local category, layout = Settings.RegisterVerticalLayoutSubcategory(app.Category, "Tweaks")

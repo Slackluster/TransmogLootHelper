@@ -1,0 +1,5 @@
+<Bindings>
+  <Binding name="TLH_TOGGLEWINDOW" category="Transmog Loot Helper">
+    TransmogLootHelper.Toggle()
+  </Binding>
+</Bindings>

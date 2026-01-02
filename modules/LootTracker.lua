@@ -1034,7 +1034,7 @@ function app.Show()
 end
 
 -- Toggle window
-function app.Toggle()
+function api.Toggle()
 	if app.Window:IsShown() then
 		app.Window:Hide()
 	else
