@@ -370,7 +370,7 @@ function app:CreateItemOverlay(overlay, itemLink, itemLocation, containerInfo, b
 					overlay.texture:SetAtlas("CreationCatalyst-32x32")
 					showOverlay("yellow")
 				-- Upgrade mog
-				elseif TransmogLootHelper_Settings["iconNewUpgrade"] and ((tumInfo and tumInfo.catalystUpgradeAppearanceMissing) or (attInfo and attInfo.filledUpgrade)) then
+				elseif TransmogLootHelper_Settings["iconNewUpgrade"] and ((tumInfo and tumInfo.upgradeAppearanceMissing) or (attInfo and attInfo.filledUpgrade)) then
 					overlay.texture:SetAtlas("CovenantSanctum-Upgrade-Icon-Available")
 					showOverlay("yellow")
 				-- Learned
