@@ -9,6 +9,7 @@ local appName, app = ...
 app.Name = "Transmog Loot Helper"
 app.NameLong = app:Colour("Transmog Loot Helper")
 app.NameShort = app:Colour("TLH")
+app.NamePrefix = "TransmogLootHelp"
 
 -- Used textures
 app.IconTLH = "|TInterface\\AddOns\\TransmogLootHelper\\assets\\icon.png:0|t"
