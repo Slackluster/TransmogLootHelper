@@ -6685,7 +6685,6 @@ app.QuestItem = {
 	[235693] = 82175,	-- Delver's Dirigible Schematic: Rocket
 	[235692] = 82177,	-- Delver's Dirigible Schematic: Thrusters
 	[235691] = 82191,	-- Delver's Dirigible Schematic: Yellow Paint
-	[235697] = 82192,	-- Delver's Dirigible Schematic: Alliance Decal
 	[235694] = 82117,	-- Delver's Dirigible Schematic: Blue Paint
 	[235688] = 82174,	-- Delver's Dirigible Schematic: Fan
 	[235690] = 82169,	-- Delver's Dirigible Schematic: Harpoon
