@@ -503,7 +503,7 @@ function app:UpdateWindow()
 				if button == "LeftButton" then
 					-- Shift+LMB
 					if IsShiftKeyDown() == true then
-						ChatEdit_InsertLink(lootInfo.item)
+						ChatFrameUtil.InsertLink(lootInfo.item)
 					else
 						if app.WeaponLoot[lootInfo.index].recentlyWhispered == 0 then
 							local msg = string.gsub(TransmogLootHelper_Settings["message"], "%%item", lootInfo.item)
@@ -723,7 +723,7 @@ function app:UpdateWindow()
 				if button == "LeftButton" then
 					-- Shift+LMB
 					if IsShiftKeyDown() == true then
-						ChatEdit_InsertLink(lootInfo.item)
+						ChatEditChatFrameUtil.InsertLink_InsertLink(lootInfo.item)
 					else
 						if app.ArmourLoot[lootInfo.index].recentlyWhispered == 0 then
 							local msg = string.gsub(TransmogLootHelper_Settings["message"], "%%item", lootInfo.item)
@@ -920,7 +920,7 @@ function app:UpdateWindow()
 				if button == "LeftButton" then
 					-- Shift+LMB
 					if IsShiftKeyDown() == true then
-						ChatEdit_InsertLink(lootInfo.item)
+						ChatFrameUtil.InsertLink(lootInfo.item)
 					else
 						app:Print("Debugging " .. lootInfo.item .. "  |  Filter reason: " .. lootInfo.playerShort .. "  |  itemType: " .. lootInfo.itemType .. "  |  Looted by: " ..lootInfo.player)
 					end
