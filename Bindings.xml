@@ -1,5 +1,5 @@
 <Bindings>
-  <Binding name="TLH_TOGGLEWINDOW" category="Transmog Loot Helper">
+  <Binding name="TLH_TOGGLEWINDOW" category="|cff3FC7EBTransmog Loot Helper|r">
     TransmogLootHelper:ToggleWindow()
   </Binding>
 </Bindings>
