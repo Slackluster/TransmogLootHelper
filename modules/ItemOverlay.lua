@@ -495,7 +495,7 @@ function app:CreateItemOverlay(overlay, itemLink, itemLocation, containerInfo, b
 						end
 					-- Uncached
 					else
-						overlay.texture:SetTexture(app.Icon["Unknown"])
+						overlay.texture:SetTexture(app.Icon["Recipe"])
 						showOverlay("yellow")
 						overlay.animation:Stop()
 					end
