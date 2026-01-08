@@ -1030,6 +1030,34 @@ function app:HookItemOverlay()
 		WorldMapFrame:HookScript("OnShow", worldQuestOverlay)
 		EventRegistry:RegisterCallback("MapCanvas.MapSet", worldQuestOverlay)
 
+		-- Hook our overlay onto all encounter journal loot items
+		local function encounterJournalOverlay()
+			if EncounterJournal and EncounterJournal:IsShown() and not app.Flag.EncounterJournalHook then
+				EncounterJournalEncounterFrameInfo.LootContainer.ScrollBox:RegisterCallback("OnAcquiredFrame", function(_, v)
+					RunNextFrame(function()
+						if v then
+							if not v.TLHOverlay then
+								v.TLHOverlay = CreateFrame("Frame", nil, v)
+								local inset = 4
+								v.TLHOverlay:SetPoint("TOPLEFT", v.icon, "TOPLEFT", inset, -inset)
+								v.TLHOverlay:SetPoint("BOTTOMRIGHT", v.icon, "BOTTOMRIGHT", -inset, inset)
+							end
+							v.TLHOverlay:Hide()
+
+							if v.link then
+								app:CreateItemOverlay(v.TLHOverlay, v.link)
+								v.TLHOverlay.text:SetText("")
+								v.TLHOverlay.animation:Stop()
+							end
+						end
+					end)
+				end)
+				app.Flag.EncounterJournalHook = true
+			end
+		end
+
+		app.Event:Register("UPDATE_INSTANCE_INFO", encounterJournalOverlay)
+
 		-- Hook our overlay onto all recipe rows
 		local function tradeskillOverlay()
 			if ProfessionsFrame and ProfessionsFrame:IsShown() then
@@ -1068,41 +1096,39 @@ function app:HookItemOverlay()
 
 		app.Event:Register("TRADE_SKILL_SHOW", tradeskillOverlay)
 
-		-- Hook our overlay onto all recipe rows
+		-- Hook our overlay onto all Auction House entries
 		local function auctionHouseOverlay()
-			if AuctionHouseFrame and AuctionHouseFrame:IsShown() then
-				if not app.AuctionHouseHook then
-					-- Thank you AGAIN Plusmouse, for this callback
-					AuctionHouseFrame.BrowseResultsFrame.ItemList.ScrollBox:RegisterCallback("OnAcquiredFrame", function(_, v, data)
-						C_Timer.After(0.1, function()
-							if not v.TLHOverlay then
-								v.TLHOverlay = CreateFrame("Frame", nil, v)
-							end
-							v.TLHOverlay:Hide()
+			if AuctionHouseFrame and AuctionHouseFrame:IsShown() and not app.Flag.AuctionHouseHook then
+				-- Thank you AGAIN Plusmouse, for this callback
+				AuctionHouseFrame.BrowseResultsFrame.ItemList.ScrollBox:RegisterCallback("OnAcquiredFrame", function(_, v)
+					C_Timer.After(0.1, function()
+						if not v.TLHOverlay then
+							v.TLHOverlay = CreateFrame("Frame", nil, v)
+						end
+						v.TLHOverlay:Hide()
 
-							local rowData = v.rowData
-							if rowData then
-								local itemID = rowData.itemKey.itemID
-								if itemID then
-									local _, itemLink = C_Item.GetItemInfo(itemID)
-									if itemLink then
-										if itemID == 82800 and rowData.itemKey.battlePetSpeciesID then	-- Can't extract pet info from this preview cage
-											app:CreateItemOverlay(v.TLHOverlay, itemLink, nil, nil, nil, rowData.itemKey.battlePetSpeciesID)
-										else
-											app:CreateItemOverlay(v.TLHOverlay, itemLink)
-										end
-										v.TLHOverlay.text:SetText("")	-- No bind text for these
-
-										v.TLHOverlay.icon:ClearAllPoints()
-										v.TLHOverlay.icon:SetPoint("LEFT", v, 134, 0)	-- Set the icon to the left of the row
-										v.TLHOverlay.animation:Stop()	-- And don't animate, that's a little obnoxious in these close quarters
+						local rowData = v.rowData
+						if rowData then
+							local itemID = rowData.itemKey.itemID
+							if itemID then
+								local _, itemLink = C_Item.GetItemInfo(itemID)
+								if itemLink then
+									if itemID == 82800 and rowData.itemKey.battlePetSpeciesID then	-- Can't extract pet info from this preview cage
+										app:CreateItemOverlay(v.TLHOverlay, itemLink, nil, nil, nil, rowData.itemKey.battlePetSpeciesID)
+									else
+										app:CreateItemOverlay(v.TLHOverlay, itemLink)
 									end
+									v.TLHOverlay.text:SetText("")	-- No bind text for these
+
+									v.TLHOverlay.icon:ClearAllPoints()
+									v.TLHOverlay.icon:SetPoint("LEFT", v, 134, 0)	-- Set the icon to the left of the row
+									v.TLHOverlay.animation:Stop()	-- And don't animate, that's a little obnoxious in these close quarters
 								end
 							end
-						end)
+						end
 					end)
-					app.AuctionHouseHook = true
-				end
+				end)
+				app.Flag.AuctionHouseHook = true
 			end
 		end
 
