@@ -33,13 +33,13 @@ L.NEW_VERSION_AVAILABLE =				"Une nouvelle version de " .. app.NameLong .. " est
 -- L.WINDOW_BUTTON_UNLOCK =				"Unlock the window"
 L.WINDOW_BUTTON_SETTINGS =				"Ouvrir les paramètres"
 -- L.WINDOW_BUTTON_CLEAR =					"Clear all items\nHold Shift to skip confirmation"
--- L.WINDOW_BUTTON_SORT1 =					"Sort by newest first\nCurrent sorting:|cffFFFFFF alphabetical|R"
--- L.WINDOW_BUTTON_SORT2 =					"Sort alphabetically\nCurrent sorting:|cffFFFFFF newest first|R"
--- L.WINDOW_BUTTON_CORNER =				"Double " .. app.IconLMB .. "|cffFFFFFF: Autosize to fit the window|R"
+-- L.WINDOW_BUTTON_SORT1 =					"Sort by newest first\nCurrent sorting:|cffFFFFFF alphabetical|r"
+-- L.WINDOW_BUTTON_SORT2 =					"Sort alphabetically\nCurrent sorting:|cffFFFFFF newest first|r"
+-- L.WINDOW_BUTTON_CORNER =				"Double " .. app.IconLMB .. "|cffFFFFFF: Autosize to fit the window|r"
 
--- L.WINDOW_HEADER_LOOT_DESC =				"|R" .. app.IconLMB .. "|cffFFFFFF: Whisper and request the item\n|RShift " .. app.IconLMB .. "|cffFFFFFF: Link the item\n|RShift " .. app.IconRMB .. "|cffFFFFFF: Remove the item"
+-- L.WINDOW_HEADER_LOOT_DESC =				"|r" .. app.IconLMB .. "|cffFFFFFF: Whisper and request the item\n|rShift " .. app.IconLMB .. "|cffFFFFFF: Link the item\n|rShift " .. app.IconRMB .. "|cffFFFFFF: Remove the item"
 -- L.WINDOW_HEADER_FILTERED =				"Filtered"
--- L.WINDOW_HEADER_FILTERED_DESC =			"|R" .. app.IconRMB .. "|cffFFFFFF: Debug this item\n|RShift " .. app.IconLMB .. "|cffFFFFFF: Link the item\n|RShift " .. app.IconRMB .. "|cffFFFFFF: Remove the item"
+-- L.WINDOW_HEADER_FILTERED_DESC =			"|r" .. app.IconRMB .. "|cffFFFFFF: Debug this item\n|rShift " .. app.IconLMB .. "|cffFFFFFF: Link the item\n|rShift " .. app.IconRMB .. "|cffFFFFFF: Remove the item"
 
 -- L.PLAYER_COLLECTED_APPEARANCE =			"collected an appearance from this item"	-- Preceded by a character name
 -- L.PLAYER_WHISPERED =					"has been whispered by " .. app.NameShort .. " users"

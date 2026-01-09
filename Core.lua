@@ -41,7 +41,7 @@ end)
 
 -- App colour
 function app:Colour(string)
-	return "|cff3FC7EB" .. string .. "|R"
+	return "|cff3FC7EB" .. string .. "|r"
 end
 
 -- Print with addon prefix

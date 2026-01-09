@@ -475,7 +475,7 @@ function app:UpdateWindow()
 				if app.WeaponLoot[lootInfo.index].icon == app.IconMaybeReady then
 					GameTooltip:AddLine(" ")
 					emptyLine = true
-					GameTooltip:AddLine("|T"..app.IconMaybeReady..":0|t |c" .. lootInfo.color .. lootInfo.playerShort .. "|R " .. L.PLAYER_COLLECTED_APPEARANCE)
+					GameTooltip:AddLine("|T"..app.IconMaybeReady..":0|t |c" .. lootInfo.color .. lootInfo.playerShort .. "|r " .. L.PLAYER_COLLECTED_APPEARANCE)
 				end
 
 				-- Show how many times the player has been whispered by TLH users
@@ -487,9 +487,9 @@ function app:UpdateWindow()
 					GameTooltip:AddLine(" ")
 				end
 				if count == 1 then
-					GameTooltip:AddLine("|c" .. lootInfo.color .. lootInfo.playerShort .. "|R " .. L.PLAYER_WHISPERED .. " " .. count .. " " .. L.WHISPERED_TIME)
+					GameTooltip:AddLine("|c" .. lootInfo.color .. lootInfo.playerShort .. "|r " .. L.PLAYER_WHISPERED .. " " .. count .. " " .. L.WHISPERED_TIME)
 				elseif count > 1 then
-					GameTooltip:AddLine("|c" .. lootInfo.color .. lootInfo.playerShort .. "|R " .. L.PLAYER_WHISPERED .. " " .. count .. " " .. L.WHISPERED_TIMES)
+					GameTooltip:AddLine("|c" .. lootInfo.color .. lootInfo.playerShort .. "|r " .. L.PLAYER_WHISPERED .. " " .. count .. " " .. L.WHISPERED_TIMES)
 				end
 
 				GameTooltip:Show()
@@ -695,7 +695,7 @@ function app:UpdateWindow()
 				if app.ArmourLoot[lootInfo.index].icon == app.IconMaybeReady then
 					GameTooltip:AddLine(" ")
 					emptyLine = true
-					GameTooltip:AddLine("|T"..app.IconMaybeReady..":0|t |c" .. lootInfo.color .. lootInfo.playerShort .. "|R " .. L.PLAYER_COLLECTED_APPEARANCE)
+					GameTooltip:AddLine("|T"..app.IconMaybeReady..":0|t |c" .. lootInfo.color .. lootInfo.playerShort .. "|r " .. L.PLAYER_COLLECTED_APPEARANCE)
 				end
 
 				-- Show how many times the player has been whispered by TLH users
@@ -707,9 +707,9 @@ function app:UpdateWindow()
 					GameTooltip:AddLine(" ")
 				end
 				if count == 1 then
-					GameTooltip:AddLine("|c" .. lootInfo.color .. lootInfo.playerShort .. "|R " .. L.PLAYER_WHISPERED .. " " .. count .. " " .. L.WHISPERED_TIME)
+					GameTooltip:AddLine("|c" .. lootInfo.color .. lootInfo.playerShort .. "|r " .. L.PLAYER_WHISPERED .. " " .. count .. " " .. L.WHISPERED_TIME)
 				elseif count > 1 then
-					GameTooltip:AddLine("|c" .. lootInfo.color .. lootInfo.playerShort .. "|R " .. L.PLAYER_WHISPERED .. " " .. count .. " " .. L.WHISPERED_TIMES)
+					GameTooltip:AddLine("|c" .. lootInfo.color .. lootInfo.playerShort .. "|r " .. L.PLAYER_WHISPERED .. " " .. count .. " " .. L.WHISPERED_TIMES)
 				end
 
 				GameTooltip:Show()

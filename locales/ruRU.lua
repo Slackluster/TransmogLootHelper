@@ -33,13 +33,13 @@ L.WINDOW_BUTTON_LOCK =					"Заблокировать окно"
 L.WINDOW_BUTTON_UNLOCK =				"Разблокировать окно"
 L.WINDOW_BUTTON_SETTINGS =				"Открыть настройки"
 L.WINDOW_BUTTON_CLEAR =					"Очистить все предметы\nУдерживайте Shift, чтобы пропустить подтверждение"
-L.WINDOW_BUTTON_SORT1 =					"Сортировать по новизне\nТекущая сортировка:|cffFFFFFF по алфавиту|R"
-L.WINDOW_BUTTON_SORT2 =					"Сортировать по алфавиту\nТекущая сортировка:|cffFFFFFF по новизне|R"
+L.WINDOW_BUTTON_SORT1 =					"Сортировать по новизне\nТекущая сортировка:|cffFFFFFF по алфавиту|r"
+L.WINDOW_BUTTON_SORT2 =					"Сортировать по алфавиту\nТекущая сортировка:|cffFFFFFF по новизне|r"
 L.WINDOW_BUTTON_CORNER =				"Двойное " .. app.IconLMB .. "|cffFFFFFF: Автоматический размер окна"
 
-L.WINDOW_HEADER_LOOT_DESC =				"|R" .. app.IconLMB .. "|cffFFFFFF: Шепот и запрос предмета\n|RShift " .. app.IconLMB .. "|cffFFFFFF: Ссылка на предмет\n|RShift " .. app.IconRMB .. "|cffFFFFFF: Удалить предмет"
+L.WINDOW_HEADER_LOOT_DESC =				"|r" .. app.IconLMB .. "|cffFFFFFF: Шепот и запрос предмета\n|rShift " .. app.IconLMB .. "|cffFFFFFF: Ссылка на предмет\n|rShift " .. app.IconRMB .. "|cffFFFFFF: Удалить предмет"
 L.WINDOW_HEADER_FILTERED =				"Отфильтровано"
-L.WINDOW_HEADER_FILTERED_DESC =			"|R" .. app.IconRMB .. "|cffFFFFFF: Отладка этого предмета\n|RShift " .. app.IconLMB .. "|cffFFFFFF: Ссылка на предмет\n|RShift " .. app.IconRMB .. "|cffFFFFFF: Удалить предмет"
+L.WINDOW_HEADER_FILTERED_DESC =			"|r" .. app.IconRMB .. "|cffFFFFFF: Отладка этого предмета\n|rShift " .. app.IconLMB .. "|cffFFFFFF: Ссылка на предмет\n|rShift " .. app.IconRMB .. "|cffFFFFFF: Удалить предмет"
 
 L.PLAYER_COLLECTED_APPEARANCE =			"собрал внешний вид этого предмета"	-- Preceded by a character name
 L.PLAYER_WHISPERED =					"получил сообщение от игрока " .. app.NameShort
