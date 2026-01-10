@@ -23,34 +23,6 @@
 		</Layers>
 	</Frame>
 
-	<Button name="TransmogLootHelper_ListButton" virtual="true">
-		<Size x="200" y="16" />
-		<HighlightTexture file="Interface\QuestFrame\UI-QuestTitleHighlight" alphaMode="ADD" setAllPoints="true" />
-		<Layers>
-			<Layer level="OVERLAY">
-				<FontString parentKey="LeftText1" inherits="GameFontNormal" justifyH="LEFT">
-					<Anchors>
-						<Anchor point="LEFT" x="0" />
-					</Anchors>
-					<Size x="400" y="24" />
-				</FontString>
-				<FontString parentKey="LeftText2" inherits="GameFontNormal" justifyH="LEFT" wordwrap="false">
-					<Anchors>
-						<Anchor point="LEFT" x="18" />
-						<Anchor point="RIGHT" x="-18" />
-					</Anchors>
-					<Size x="400" y="24" />
-				</FontString>
-				<FontString parentKey="RightText" inherits="GameFontNormal" justifyH="RIGHT">
-					<Anchors>
-						<Anchor point="RIGHT" x="-5" />
-					</Anchors>
-					<Size x="400" y="24" />
-				</FontString>
-			</Layer>
-		</Layers>
-	</Button>
-
 	<Frame name="TransmogLootHelper_SettingsExpandTemplate" inherits="SettingsExpandableSectionTemplate" mixin="TransmogLootHelper_SettingsExpandMixin" virtual="true">
 		<Size y="24" />
 	</Frame>
