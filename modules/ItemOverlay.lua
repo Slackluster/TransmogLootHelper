@@ -28,8 +28,8 @@ app.Event:Register("ADDON_LOADED", function(addOnName, containsBindings)
 				text = app.NameLong .. "\n\n"
 					.. "Cached recipes have been reset\n"
 					.. "to allow cleanup of specific characters.\n\n"
-					.. "Please open your professions again\n"
-					.. "to cache your recipes!",
+					.. "Please log your profession characters\n"
+					.. "again to cache your recipes!",
 				button1 = OKAY,
 				whileDead = true,
 			}
