@@ -1249,7 +1249,7 @@ end
 function app:CacheRecipe(spellID, learned)
 	app.CharacterName = app.CharacterName or UnitName("player") .. "-" .. GetNormalizedRealmName()
 
-	if not TransmogLootHelper_Cache.Recipes[spellID] then
+	if not TransmogLootHelper_Cache.Recipes[spellID] or type(TransmogLootHelper_Cache.Recipes[spellID]) == "boolean" then
 		TransmogLootHelper_Cache.Recipes[spellID] = { learned = false, knownBy = {} }
 	end
 	if learned then
