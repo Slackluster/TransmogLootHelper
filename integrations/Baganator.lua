@@ -1,4 +1,5 @@
 local appName, app = ...
+local api = app.api
 
 -- Baganator integration
 EventUtil.ContinueOnAddOnLoaded("Baganator", function()
@@ -9,6 +10,7 @@ EventUtil.ContinueOnAddOnLoaded("Baganator", function()
 				return
 			end
 			app:CreateItemOverlay(icon.overlay, itemDetails.itemLink, nil, { hasLoot = itemDetails.hasLoot }, true)
+			api:UpdateOverlay()
 			return icon:IsShown()
 		end,
 		function(itemButton)
@@ -20,6 +22,4 @@ EventUtil.ContinueOnAddOnLoaded("Baganator", function()
 		end,
 		{ corner = "top_right", priority = 1 }
 	)
-
-	app.Event:Register("TRANSMOG_COLLECTION_UPDATED", function() Baganator.API.RequestItemButtonsRefresh() end)
 end)

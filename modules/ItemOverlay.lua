@@ -1165,14 +1165,19 @@ function app:HookItemOverlay()
 		function api:UpdateOverlay()
 			assert(self == api, "Call TransmogLootHelper:UpdateOverlay(), not TransmogLootHelper.UpdateOverlay()")
 
-			C_Timer.After(1, function()
-				-- bagsOverlay()
-				bankOverlay()
-				merchantOverlay()
-				questOverlay()
-				worldQuestOverlay()
-				tradeskillOverlay()
-				auctionHouseOverlay()
+			RunNextFrame(function()
+				app.RefreshTimer = app.RefreshTimer or 0
+				if GetServerTime() > app.RefreshTimer + 1 then
+					bankOverlay()
+					merchantOverlay()
+					questOverlay()
+					worldQuestOverlay()
+					tradeskillOverlay()
+					auctionHouseOverlay()
+					if C_AddOns.IsAddOnLoaded("Baganator") then Baganator.API.RequestItemButtonsRefresh() end
+
+					app.RefreshTimer = GetServerTime()
+				end
 			end)
 		end
 
