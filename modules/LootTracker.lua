@@ -408,7 +408,7 @@ function app:UpdateWindow()
 
 	-- If there is loot to process
 	if #app.WeaponLoot >= 1 then
-		-- Custom comparison function based on the beginning of the string (thanks ChatGPT)
+		-- Custom comparison function based on the beginning of the string (Vibecoded)
 		local customSortList = {
 			"|cnIQ6",	-- Artifact
 			"|cnIQ5",	-- Legendary
@@ -625,7 +625,7 @@ function app:UpdateWindow()
 
 	-- If there is loot to process
 	if #app.ArmourLoot >= 1 then
-		-- Custom comparison function based on the beginning of the string (thanks ChatGPT)
+		-- Custom comparison function based on the beginning of the string (Vibecoded)
 		local customSortList = {
 			"|cnIQ6",	-- Artifact
 			"|cnIQ5",	-- Legendary
@@ -843,7 +843,7 @@ function app:UpdateWindow()
 
 	-- If there is loot to process
 	if #app.FilteredLoot >= 1 then
-		-- Custom comparison function based on the beginning of the string & a key (thanks ChatGPT)
+		-- Custom comparison function based on the beginning of the string & a key (Vibecoded)
 		local customSortList = {
 			"|cnIQ6",	-- Artifact
 			"|cnIQ5",	-- Legendary
