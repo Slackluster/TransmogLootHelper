@@ -10,6 +10,8 @@ app.Name = "Transmog Loot Helper"
 app.NameLong = app:Colour("Transmog Loot Helper")
 app.NameShort = app:Colour("TLH")
 app.NamePrefix = "TransmogLootHelp"
+_G["BINDING_NAME_TRANSMOGLOOTHELPER"] = app.Name
+_G["BINDING_NAME_SLACKWARE"] = "Slackware"
 
 -- Used textures
 app.IconTLH = "|TInterface\\AddOns\\TransmogLootHelper\\assets\\icon.png:0|t"

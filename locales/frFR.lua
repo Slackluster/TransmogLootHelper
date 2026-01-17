@@ -73,7 +73,7 @@ L.SETTINGS_URL_COPY =					"Ctrl + C pour copier :"
 L.SETTINGS_URL_COPIED =					"Lien copié dans le presse-papiers"
 
 L.SETTINGS_KEYSLASH_TITLE =				SETTINGS_KEYBINDINGS_LABEL .. " & Commandes « Slash »"	-- "Keybindings"
--- _G["BINDING_NAME_TLH_TOGGLEWINDOW"] =	"Toggle Window"
+-- _G["BINDING_NAME_TLH_TOGGLEWINDOW"] =	app.NameShort .. ": Toggle Window"
 -- L.SETTINGS_SLASH_TOGGLE =				"Toggle the tracking window"
 -- L.SETTINGS_SLASH_RESETPOS =				"Reset the tracking window position"
 -- L.SETTINGS_SLASH_WHISPER_DEFAULT =		"Set the whisper message to its default"

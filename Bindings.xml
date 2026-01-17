@@ -1,5 +1,5 @@
 <Bindings>
-  <Binding name="TLH_TOGGLEWINDOW" category="|cff3FC7EBTransmog Loot Helper|r">
+  <Binding name="TLH_TOGGLEWINDOW" category="|cff3FC7EBTransmog Loot Helper|r" searchTags="BINDING_NAME_TRANSMOGLOOTHELPER,BINDING_NAME_SLACKWARE">
     TransmogLootHelper:ToggleWindow()
   </Binding>
 </Bindings>

@@ -73,7 +73,7 @@ L.SETTINGS_URL_COPY =					"Ctrl+C — скопировать:"
 L.SETTINGS_URL_COPIED =					"Ссылка скопирована в буфер обмена"
 
 L.SETTINGS_KEYSLASH_TITLE =				SETTINGS_KEYBINDINGS_LABEL .. " и слэш-команды"	-- "Keybindings"
-_G["BINDING_NAME_TLH_TOGGLEWINDOW"] =	"Включить окно"
+_G["BINDING_NAME_TLH_TOGGLEWINDOW"] =	app.NameShort .. ": Включить окно"
 L.SETTINGS_SLASH_TOGGLE =				"Включить окно отслеживания"
 L.SETTINGS_SLASH_RESETPOS =				"Сбросить положение окна слежения"
 L.SETTINGS_SLASH_WHISPER_DEFAULT =		"Установите для личных сообщений значение по умолчанию"
