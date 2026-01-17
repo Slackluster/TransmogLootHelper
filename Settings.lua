@@ -197,7 +197,7 @@ function app:CreateSettings()
 
 	function TransmogLootHelper_SettingsExpandMixin:OnExpandedChanged(expanded)
 		self:EvaluateVisibility(expanded)
-        SettingsInbound.RepairDisplay()
+		SettingsInbound.RepairDisplay()
 	end
 
 	function TransmogLootHelper_SettingsExpandMixin:EvaluateVisibility(expanded)

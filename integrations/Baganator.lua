@@ -4,8 +4,8 @@ local api = app.api
 -- Baganator integration
 EventUtil.ContinueOnAddOnLoaded("Baganator", function()
 	Baganator.API.RegisterCornerWidget("Transmog Loot Helper", "transmogloothelper",
-        function(icon, itemDetails)
-            if not C_Item.IsItemDataCachedByID(itemDetails.itemID) then
+		function(icon, itemDetails)
+			if not C_Item.IsItemDataCachedByID(itemDetails.itemID) then
 				C_Item.RequestLoadItemDataByID(itemDetails.itemID)
 				return
 			end
