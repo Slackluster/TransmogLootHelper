@@ -370,7 +370,7 @@ function app:CreateSettings()
 
 	local variable, name, tooltip = "iconNewDecor", L.SETTINGS_ICON_NEW_DECOR, L.SETTINGS_ICON_NEW_DECOR_DESC
 	local setting = Settings.RegisterAddOnSetting(category, appName.."_"..variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, true)
-	Settings.CreateCheckbox(category, setting, tooltip)
+	local parentSetting = Settings.CreateCheckbox(category, setting, tooltip)
 	setting:SetValueChangedCallback(function()
 		app:SettingsChanged()
 	end)
