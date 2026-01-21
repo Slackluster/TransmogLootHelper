@@ -1112,7 +1112,7 @@ end
 -- When an item is looted
 app.Event:Register("CHAT_MSG_LOOT", function(text, playerName, languageName, channelName, playerName2, specialFlags, zoneChannelID, channelIndex, channelBaseName, languageID, lineID, guid, bnSenderID, isMobile, isSubtitle, hideSenderInLetterbox, supressRaidIcons)
 	if not IsInGroup() then return end
-	if issecretvalue and issecretvalue(text) then return end	-- Without the option to declassify secrets later on, there is no alternative
+	if issecretvalue(text) then return end	-- Without the option to declassify secrets later on, there is no alternative
 
 	local itemString = string.match(text, "(|cnIQ.-|h%[.-%]|h)")
 
