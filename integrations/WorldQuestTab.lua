@@ -3,7 +3,7 @@ local appName, app = ...
 app.Event:Register("ADDON_LOADED", function(addOnName, containsBindings)
 	if addOnName == appName then
 		EventUtil.ContinueOnAddOnLoaded("WorldQuestTab", function()
-			WQT_ListContainer.BorderContainer.QuestScrollBox:RegisterCallback("OnInitializedFrame", function(_, frame, data)
+			WQT_ListContainer:GetQuestScrollBox():RegisterCallback("OnInitializedFrame", function(_, frame, data)
 				local rewardsFrame = frame:GetRewardsFrame()
 
 				if not rewardsFrame.TLHOverlay then
