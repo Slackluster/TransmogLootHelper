@@ -723,13 +723,13 @@ function app:HookItemOverlay()
 		hooksecurefunc(ContainerFrameCombinedBags, "UpdateItems", bagsOverlay)
 
 		-- Hook our overlay onto all (war)bank slots
-		local function bankOverlay()
+		function app:BankOverlay()
 			if not app.BankThrottle then
 				app.BankThrottle = 0
 				C_Timer.After(0.1, function()
 					if app.BankThrottle >= 1 then
 						app.BankThrottle = nil
-						bankOverlay()
+						app:BankOverlay()
 					else
 						app.BankThrottle = nil
 					end
@@ -775,13 +775,13 @@ function app:HookItemOverlay()
 			end
 		end
 
-		hooksecurefunc(BankPanel, "RefreshBankPanel", bankOverlay)
-		hooksecurefunc(BankPanel, "OnUpdate", bankOverlay)
-		app.Event:Register("BANKFRAME_OPENED", bankOverlay)
-		app.Event:Register("BAG_UPDATE_DELAYED", bankOverlay)
+		hooksecurefunc(BankPanel, "RefreshBankPanel", function() app:BankOverlay() end)
+		hooksecurefunc(BankPanel, "OnUpdate", function() app:BankOverlay() end)
+		app.Event:Register("BANKFRAME_OPENED", function() app:BankOverlay() end)
+		app.Event:Register("BAG_UPDATE_DELAYED", function() app:BankOverlay() end)
 		-- Update if we learn a mog or recipe
-		app.Event:Register("TRANSMOG_COLLECTION_UPDATED", function() C_Timer.After(0.1, bankOverlay) end)
-		app.Event:Register("NEW_RECIPE_LEARNED", function() C_Timer.After(0.1, bankOverlay) end)
+		app.Event:Register("TRANSMOG_COLLECTION_UPDATED", function() C_Timer.After(0.1, function() app:BankOverlay() end) end)
+		app.Event:Register("NEW_RECIPE_LEARNED", function() C_Timer.After(0.1, function() app:BankOverlay() end) end)
 
 		-- Hook our overlay onto all guild bank slots
 		local function guildBankOverlay()
@@ -856,12 +856,12 @@ function app:HookItemOverlay()
 		app.Event:Register("BLACK_MARKET_OPEN", function() C_Timer.After(0.1, blackMarketOverlay) end)
 
 		-- Hook our overlay onto all merchant slots
-		local function merchantOverlay()
+		function app:MerchantOverlay()
 			if not app.MerchantHook then
-				MerchantPrevPageButton:HookScript("OnClick", function() merchantOverlay() C_Timer.After(0.1, merchantOverlay) end)	-- Previous page button
-				MerchantNextPageButton:HookScript("OnClick", function() merchantOverlay() C_Timer.After(0.1, merchantOverlay) end)	-- Next page button
-				MerchantFrame:HookScript("OnMouseWheel", function() merchantOverlay() C_Timer.After(0.1, merchantOverlay) end)	-- Scrolling, which also changes the page
-				MerchantFrame.FilterDropdown:RegisterCallback("OnMenuClose", function() merchantOverlay() C_Timer.After(0.1, merchantOverlay) end)	-- For when users change the filtering
+				MerchantPrevPageButton:HookScript("OnClick", function() app:MerchantOverlay() C_Timer.After(0.1, function() app:MerchantOverlay() end) end)	-- Previous page button
+				MerchantNextPageButton:HookScript("OnClick", function() app:MerchantOverlay() C_Timer.After(0.1, function() app:MerchantOverlay() end) end)	-- Next page button
+				MerchantFrame:HookScript("OnMouseWheel", function() app:MerchantOverlay() C_Timer.After(0.1, function() app:MerchantOverlay() end) end)	-- Scrolling, which also changes the page
+				MerchantFrame.FilterDropdown:RegisterCallback("OnMenuClose", function() app:MerchantOverlay() C_Timer.After(0.1, function() app:MerchantOverlay() end) end)	-- For when users change the filtering
 				app.MerchantHook = true
 			end
 
@@ -875,7 +875,7 @@ function app:HookItemOverlay()
 
 					-- These take a little moment to load, so check the first slot and assume the rest is also loaded when this one is
 					if i == 1 and itemButton.hasItem == nil then
-						RunNextFrame(merchantOverlay)
+						RunNextFrame(function() app:MerchantOverlay() end)
 						return
 					end
 
@@ -890,13 +890,13 @@ function app:HookItemOverlay()
 			end
 		end
 
-		app.Event:Register("MERCHANT_SHOW", function() C_Timer.After(0.1, merchantOverlay) end)
+		app.Event:Register("MERCHANT_SHOW", function() C_Timer.After(0.1, function() app:MerchantOverlay() end) end)
 		-- Update if we learn a mog or recipe
-		app.Event:Register("TRANSMOG_COLLECTION_UPDATED", function() C_Timer.After(0.1, merchantOverlay) end)
-		app.Event:Register("NEW_RECIPE_LEARNED", function() C_Timer.After(0.1, merchantOverlay) end)
+		app.Event:Register("TRANSMOG_COLLECTION_UPDATED", function() C_Timer.After(0.1, function() app:MerchantOverlay() end) end)
+		app.Event:Register("NEW_RECIPE_LEARNED", function() C_Timer.After(0.1, function() app:MerchantOverlay() end) end)
 
 		-- Hook our overlay onto all quest rewards
-		local function questOverlay(mode)
+		function app:QuestOverlay(mode)
 			local function rewardOverlay(rewardsFrame)
 				local sellPrice = {}
 
@@ -996,12 +996,12 @@ function app:HookItemOverlay()
 			end
 		end
 
-		app.Event:Register("QUEST_DETAIL", questOverlay)
-		app.Event:Register("QUEST_COMPLETE", function() questOverlay("turnin") end)
-		hooksecurefunc("QuestMapFrame_ShowQuestDetails", function() questOverlay() C_Timer.After(0.1, questOverlay) end)
+		app.Event:Register("QUEST_DETAIL", function() app:QuestOverlay() end)
+		app.Event:Register("QUEST_COMPLETE", function() app:QuestOverlay("turnin") end)
+		hooksecurefunc("QuestMapFrame_ShowQuestDetails", function() app:QuestOverlay() C_Timer.After(0.1, function() app:QuestOverlay() end) end)
 
 		-- Hook our overlay onto all world quest pins
-		local function worldQuestOverlay()
+		function app:WorldQuestOverlay()
 			C_Timer.After(0.1, function()
 				for pin in WorldMapFrame:EnumeratePinsByTemplate("WorldMap_WorldQuestPinTemplate") do
 					if not pin.TLHOverlay then
@@ -1027,8 +1027,8 @@ function app:HookItemOverlay()
 			end)
 		end
 
-		WorldMapFrame:HookScript("OnShow", worldQuestOverlay)
-		EventRegistry:RegisterCallback("MapCanvas.MapSet", worldQuestOverlay)
+		WorldMapFrame:HookScript("OnShow", function() app:WorldQuestOverlay() end)
+		EventRegistry:RegisterCallback("MapCanvas.MapSet", function() app:WorldQuestOverlay() end)
 
 		-- Hook our overlay onto all encounter journal loot items
 		local function encounterJournalOverlay()
@@ -1059,7 +1059,7 @@ function app:HookItemOverlay()
 		app.Event:Register("UPDATE_INSTANCE_INFO", encounterJournalOverlay)
 
 		-- Hook our overlay onto all recipe rows
-		local function tradeskillOverlay()
+		function app:TradeskillOverlay()
 			if ProfessionsFrame and ProfessionsFrame:IsShown() then
 				if not app.TradeskillHook then
 					-- Thank you AGAIN Plusmouse, for this callback
@@ -1094,10 +1094,10 @@ function app:HookItemOverlay()
 			end
 		end
 
-		app.Event:Register("TRADE_SKILL_SHOW", tradeskillOverlay)
+		app.Event:Register("TRADE_SKILL_SHOW", function() app:TradeskillOverlay() end)
 
 		-- Hook our overlay onto all Auction House entries
-		local function auctionHouseOverlay()
+		function app:AuctionHouseOverlay()
 			if AuctionHouseFrame and AuctionHouseFrame:IsShown() and not app.Flag.AuctionHouseHook then
 				-- Thank you AGAIN Plusmouse, for this callback
 				AuctionHouseFrame.BrowseResultsFrame.ItemList.ScrollBox:RegisterCallback("OnAcquiredFrame", function(_, v)
@@ -1132,7 +1132,7 @@ function app:HookItemOverlay()
 			end
 		end
 
-		app.Event:Register("AUCTION_HOUSE_THROTTLED_SYSTEM_READY", auctionHouseOverlay)
+		app.Event:Register("AUCTION_HOUSE_THROTTLED_SYSTEM_READY", function() app:AuctionHouseOverlay() end)
 
 		-- Hook our overlay onto Great Vault rewards
 		local function greatVaultOverlay()
@@ -1161,26 +1161,6 @@ function app:HookItemOverlay()
 
 		app.Event:Register("WEEKLY_REWARDS_UPDATE", greatVaultOverlay)
 
-		-- Update our overlay if a mog, recipe, or spell is learned
-		function api:UpdateOverlay()
-			assert(self == api, "Call TransmogLootHelper:UpdateOverlay(), not TransmogLootHelper.UpdateOverlay()")
-
-			RunNextFrame(function()
-				app.RefreshTimer = app.RefreshTimer or 0
-				if GetServerTime() > app.RefreshTimer + 1 then
-					bankOverlay()
-					merchantOverlay()
-					questOverlay()
-					worldQuestOverlay()
-					tradeskillOverlay()
-					auctionHouseOverlay()
-					if C_AddOns.IsAddOnLoaded("Baganator") then Baganator.API.RequestItemButtonsRefresh() end
-
-					app.RefreshTimer = GetServerTime()
-				end
-			end)
-		end
-
 		app.Event:Register("TRANSMOG_COLLECTION_UPDATED", function()
 			api:UpdateOverlay()
 		end)
@@ -1208,6 +1188,27 @@ function app:HookItemOverlay()
 		app.Event:Register("SPELLS_CHANGED", function()
 			cacheSpells()
 			api:UpdateOverlay()
+		end)
+	end
+end
+
+function api:UpdateOverlay()
+	assert(self == api, "Call TransmogLootHelper:UpdateOverlay(), not TransmogLootHelper.UpdateOverlay()")
+
+	if TransmogLootHelper_Settings["overlay"] then
+		RunNextFrame(function()
+			app.RefreshTimer = app.RefreshTimer or 0
+			if GetServerTime() > app.RefreshTimer + 1 then
+				app:BankOverlay()
+				app:MerchantOverlay()
+				app:QuestOverlay()
+				app:WorldQuestOverlay()
+				app:TradeskillOverlay()
+				app:AuctionHouseOverlay()
+				if C_AddOns.IsAddOnLoaded("Baganator") then Baganator.API.RequestItemButtonsRefresh() end
+
+				app.RefreshTimer = GetServerTime()
+			end
 		end)
 	end
 end
