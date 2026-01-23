@@ -31,6 +31,8 @@ app.Event:Register("ADDON_LOADED", function(addOnName, containsBindings)
 		if TransmogLootHelper_Settings["remixWindowPosition"] ~= nil then TransmogLootHelper_Settings["remixWindowPosition"] = nil end
 		if TransmogLootHelper_Cache and TransmogLootHelper_Cache.Lemix ~= nil then TransmogLootHelper_Cache.Lemix = nil end
 		if TransmogLootHelper_Cache and TransmogLootHelper_Cache.LemixCharacters ~= nil then TransmogLootHelper_Cache.LemixCharacters = nil end
+		if TransmogLootHelper_Settings["simpleIcon"] then TransmogLootHelper_Settings["iconStyle"] = 3 end
+		TransmogLootHelper_Settings["simpleIcon"] = nil
 	end
 end)
 
@@ -253,13 +255,14 @@ function app:CreateSettings()
 
 	layout:AddInitializer(CreateSettingsListSectionHeaderInitializer(L.GENERAL))
 
-	local cbVariable, cbName, cbTooltip = "overlay", L.SETTINGS_ITEM_OVERLAY, L.SETTINGS_ITEM_OVERLAY_DESC
-	local cbSetting = Settings.RegisterAddOnSetting(category, appName.."_"..cbVariable, cbVariable, TransmogLootHelper_Settings, Settings.VarType.Boolean, cbName, true)
-	cbSetting:SetValueChangedCallback(function()
+	local variable, name, tooltip = "overlay", L.SETTINGS_ITEM_OVERLAY, L.SETTINGS_ITEM_OVERLAY_DESC
+	local setting = Settings.RegisterAddOnSetting(category, appName.."_"..variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, true)
+	Settings.CreateCheckbox(category, setting, tooltip)
+	setting:SetValueChangedCallback(function()
 		app:SettingsChanged()
 	end)
 
-	local ddVariable, ddName, ddTooltip = "iconPosition", "", ""	-- Text for this sub-option doesn't show up at all
+	local variable, name, tooltip = "iconPosition", L.SETTINGS_ICON_POSITION, L.SETTINGS_ICON_POSITION_DESC
 	local function GetOptions()
 		local container = Settings.CreateControlTextContainer()
 		if C_AddOns.IsAddOnLoaded("Baganator") then
@@ -272,19 +275,23 @@ function app:CreateSettings()
 		end
 		return container:GetData()
 	end
-	local ddSetting = Settings.RegisterAddOnSetting(category, appName.."_"..ddVariable, ddVariable, TransmogLootHelper_Settings, Settings.VarType.Number, ddName, 1)
-	ddSetting:SetValueChangedCallback(function()
+	local setting = Settings.RegisterAddOnSetting(category, appName.."_"..variable, variable, TransmogLootHelper_Settings, Settings.VarType.Number, name, 1)
+	Settings.CreateDropdown(category, setting, GetOptions, tooltip)
+	setting:SetValueChangedCallback(function()
 		app:SettingsChanged()
 	end)
 
-	local initializer = CreateSettingsCheckboxDropdownInitializer(
-		cbSetting, cbName, cbTooltip,
-		ddSetting, GetOptions, ddName, ddTooltip)
-	layout:AddInitializer(initializer)
-
-	local variable, name, tooltip = "simpleIcon", L.SETTINGS_ICON_SIMPLE, L.SETTINGS_ICON_SIMPLE_DESC
-	local setting = Settings.RegisterAddOnSetting(category, appName .. "_" .. variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, false)
-	local parentSetting = Settings.CreateCheckbox(category, setting, tooltip)
+	local variable, name, tooltip = "iconStyle", "|A:UI-Journeys-GreatVault-Tag-new:33:49|a" .. L.SETTINGS_ICON_STYLE, L.SETTINGS_ICON_STYLE_DESC
+	local function GetOptions()
+		local container = Settings.CreateControlTextContainer()
+		container:Add(1, L.SETTINGS_ICON_STYLE1, L.SETTINGS_ICON_STYLE1_DESC)
+		container:Add(2, L.SETTINGS_ICON_STYLE2, L.SETTINGS_ICON_STYLE2_DESC)
+		container:Add(3, L.SETTINGS_ICON_STYLE3, L.SETTINGS_ICON_STYLE3_DESC)
+		container:Add(4, L.SETTINGS_ICON_STYLE4, L.SETTINGS_ICON_STYLE4_DESC)
+		return container:GetData()
+	end
+	local setting = Settings.RegisterAddOnSetting(category, appName.."_"..variable, variable, TransmogLootHelper_Settings, Settings.VarType.Number, name, 1)
+	Settings.CreateDropdown(category, setting, GetOptions, tooltip)
 	setting:SetValueChangedCallback(function()
 		app:SettingsChanged()
 	end)

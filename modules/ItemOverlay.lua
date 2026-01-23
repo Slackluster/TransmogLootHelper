@@ -65,68 +65,55 @@ function app:CreateItemOverlay(overlay, itemLink, itemLocation, containerInfo, b
 			overlay.texture:SetAllPoints(overlay.icon)
 
 			-- Round mask
-			local mask = overlay.icon:CreateMaskTexture()
-			mask:SetTexture("Interface\\CHARACTERFRAME\\TempPortraitAlphaMask")
-			mask:SetAllPoints(overlay.icon)
-			overlay.texture:AddMaskTexture(mask)
+			overlay.mask= overlay.icon:CreateMaskTexture()
+			overlay.mask:SetTexture("Interface\\CHARACTERFRAME\\TempPortraitAlphaMask")
+			overlay.mask:SetAllPoints(overlay.icon)
 
 			-- Border
 			local frame = CreateFrame("Frame", nil, overlay.icon)
 			frame:SetAllPoints(overlay.icon)
 			overlay.border = frame:CreateTexture(nil, "OVERLAY")
 			overlay.border:SetPoint("CENTER", overlay.icon)
-			overlay.border:SetSize(24, 24)
 
 			-- Animation texture
 			local frame = CreateFrame("Frame", nil, overlay.icon)
-			frame:SetSize(20, 20)
+			frame:SetSize(10, 10)
 			frame:SetPoint("CENTER")
-			local texture = frame:CreateTexture(nil, "ARTWORK")
-			texture:SetAllPoints(frame)
-			texture:SetAtlas("ArtifactsFX-SpinningGlowys-Purple", true)
+			frame:SetFrameLevel(overlay.icon:GetFrameLevel() - 1)
+			overlay.animationTexture = frame:CreateTexture(nil, "ARTWORK")
+			overlay.animationTexture:SetAllPoints(frame)
+			overlay.animationTexture:SetAtlas("ArtifactsFX-SpinningGlowys-Purple", true)
 
 			-- Animation group
-			overlay.animation = texture:CreateAnimationGroup()
+			overlay.animation = overlay.animationTexture:CreateAnimationGroup()
 
 			-- Rotation first half
 			local spin = overlay.animation:CreateAnimation("Rotation")
-			spin:SetDuration(2)
+			spin:SetDuration(2.5)
 			spin:SetDegrees(-360)
 			spin:SetOrder(1)
 
+			local scale = 2.5
 			-- Scale first half
 			local scaleUp = overlay.animation:CreateAnimation("Scale")
 			scaleUp:SetDuration(1)
-			scaleUp:SetScale(1.5, 1.5)
+			scaleUp:SetScale(scale, scale)
 			scaleUp:SetOrder(1)
 
 			-- Rotation second half
 			local spin2 = overlay.animation:CreateAnimation("Rotation")
-			spin2:SetDuration(2)
+			spin2:SetDuration(2.5)
 			spin2:SetDegrees(-360)
 			spin2:SetOrder(2)
 
 			-- Scale second half
 			local scaleDown = overlay.animation:CreateAnimation("Scale")
 			scaleDown:SetDuration(1)
-			scaleDown:SetScale(0.6667, 0.6667)
+			scaleDown:SetScale(1/scale, 1/scale)
 			scaleDown:SetOrder(2)
 
 			-- Repeat the animation
 			overlay.animation:SetLooping("REPEAT")
-		end
-
-		-- Set the icon's position
-		if not (bagAddon and C_AddOns.IsAddOnLoaded("Baganator")) then
-			if TransmogLootHelper_Settings["iconPosition"] == 0 then
-				overlay.icon:SetPoint("CENTER", overlay, "TOPLEFT", 4, -4)
-			elseif TransmogLootHelper_Settings["iconPosition"] == 1 then
-				overlay.icon:SetPoint("CENTER", overlay, "TOPRIGHT", -4, -4)
-			elseif TransmogLootHelper_Settings["iconPosition"] == 2 then
-				overlay.icon:SetPoint("CENTER", overlay, "BOTTOMLEFT", 4, 4)
-			elseif TransmogLootHelper_Settings["iconPosition"] == 3 then
-				overlay.icon:SetPoint("CENTER", overlay, "BOTTOMRIGHT", -4, 4)
-			end
 		end
 	end
 	createOverlay()
@@ -298,47 +285,118 @@ function app:CreateItemOverlay(overlay, itemLink, itemLocation, containerInfo, b
 		overlay:Show()
 
 		local function showOverlay(color)
-			if color == "purple" then
-				overlay.border:SetTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\border_purple.blp")
-				if TransmogLootHelper_Settings["animateIcon"] then
-					overlay.animation:Play()
+			if not (bagAddon and C_AddOns.IsAddOnLoaded("Baganator")) then
+				overlay.icon:ClearAllPoints()
+				if TransmogLootHelper_Settings["iconStyle"] <= 2 then
+					if TransmogLootHelper_Settings["iconPosition"] == 0 then
+						overlay.icon:SetPoint("CENTER", overlay, "TOPLEFT", 4, -4)
+					elseif TransmogLootHelper_Settings["iconPosition"] == 1 then
+						overlay.icon:SetPoint("CENTER", overlay, "TOPRIGHT", -4, -4)
+					elseif TransmogLootHelper_Settings["iconPosition"] == 2 then
+						overlay.icon:SetPoint("CENTER", overlay, "BOTTOMLEFT", 4, 4)
+					elseif TransmogLootHelper_Settings["iconPosition"] == 3 then
+						overlay.icon:SetPoint("CENTER", overlay, "BOTTOMRIGHT", -4, 4)
+					end
 				else
-					overlay.animation:Stop()
+					if TransmogLootHelper_Settings["iconPosition"] == 0 then
+						overlay.icon:SetPoint("TOPLEFT", overlay, -1, 1)
+					elseif TransmogLootHelper_Settings["iconPosition"] == 1 then
+						overlay.icon:SetPoint("TOPRIGHT", overlay, 1, 1)
+					elseif TransmogLootHelper_Settings["iconPosition"] == 2 then
+						overlay.icon:SetPoint("BOTTOMLEFT", overlay, -1, -1)
+					elseif TransmogLootHelper_Settings["iconPosition"] == 3 then
+						overlay.icon:SetPoint("BOTTOMRIGHT", overlay, 1, -1)
+					end
 				end
 
-				-- Simple icon
-				if TransmogLootHelper_Settings["simpleIcon"] then
-					overlay.texture:SetTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\icon_purple.blp")
-				end
-			elseif color == "yellow" then
-				overlay.border:SetTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\border_yellow.blp")
-				if TransmogLootHelper_Settings["animateIcon"] then
-					overlay.animation:Play()
+				if TransmogLootHelper_Settings["iconStyle"] == 4 then
+					if TransmogLootHelper_Settings["iconPosition"] == 0 then
+						overlay.texture:SetRotation(math.pi/2)
+					elseif TransmogLootHelper_Settings["iconPosition"] == 1 then
+						overlay.texture:SetRotation(0)
+					elseif TransmogLootHelper_Settings["iconPosition"] == 2 then
+						overlay.texture:SetRotation(math.pi)
+					elseif TransmogLootHelper_Settings["iconPosition"] == 3 then
+						overlay.texture:SetRotation(-math.pi/2)
+					end
 				else
-					overlay.animation:Stop()
-				end
-
-				-- Simple icon
-				if TransmogLootHelper_Settings["simpleIcon"] then
-					overlay.texture:SetTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\icon_yellow.blp")
-				end
-			elseif color == "green" then
-				overlay.border:SetTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\border_green.blp")
-				overlay.animation:Stop()
-
-				-- Simple icon
-				if TransmogLootHelper_Settings["simpleIcon"] then
-					overlay.texture:SetTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\icon_green.blp")
-				end
-			elseif color == "red" then
-				overlay.border:SetTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\border_red.blp")
-				overlay.animation:Stop()
-
-				-- Simple icon
-				if TransmogLootHelper_Settings["simpleIcon"] then
-					overlay.texture:SetTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\icon_red.blp")
+					overlay.texture:SetRotation(0)
 				end
 			end
+
+			overlay.border:SetTexture(nil)
+			overlay.texture:ClearAllPoints()
+			if TransmogLootHelper_Settings["iconStyle"] == 1 then
+				overlay.texture:SetAllPoints(overlay.icon)
+				overlay.texture:AddMaskTexture(overlay.mask)
+				overlay.border:SetSize(22, 22)
+			elseif TransmogLootHelper_Settings["iconStyle"] == 2 then
+				overlay.texture:SetPoint("TOPLEFT", overlay.icon, -1, 1)
+				overlay.texture:SetPoint("BOTTOMRIGHT", overlay.icon, 1, -1)
+			else
+				overlay.texture:SetAllPoints(overlay.icon)
+				overlay.border:SetSize(18, 18)
+			end
+
+			if color == "purple" then
+				overlay.animation:Stop()
+				if TransmogLootHelper_Settings["animateIcon"] then overlay.animation:Play() end
+
+				if TransmogLootHelper_Settings["iconStyle"] == 1 then
+					overlay.border:SetTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\border-circle-purple.png")
+				elseif TransmogLootHelper_Settings["iconStyle"] == 2 then
+					overlay.texture:SetTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\simple-circle-purple.png")
+				elseif TransmogLootHelper_Settings["iconStyle"] == 3 then
+					overlay.texture:SetTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\simple-icon-purple.png")
+				elseif TransmogLootHelper_Settings["iconStyle"] == 4 then
+					overlay.texture:SetTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\cosmetic-icon-purple.png")
+				end
+			elseif color == "yellow" then
+				overlay.animation:Stop()
+				if TransmogLootHelper_Settings["animateIcon"] then overlay.animation:Play() end
+
+				if TransmogLootHelper_Settings["iconStyle"] == 1 then
+					overlay.border:SetTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\border-circle-yellow.png")
+				elseif TransmogLootHelper_Settings["iconStyle"] == 2 then
+					overlay.texture:SetTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\simple-circle-yellow.png")
+				elseif TransmogLootHelper_Settings["iconStyle"] == 3 then
+					overlay.texture:SetTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\simple-icon-yellow.png")
+				elseif TransmogLootHelper_Settings["iconStyle"] == 4 then
+					overlay.texture:SetTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\cosmetic-icon-yellow.png")
+				end
+			elseif color == "green" then
+				overlay.animation:Stop()
+
+				if TransmogLootHelper_Settings["iconStyle"] == 1 then
+					overlay.border:SetTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\border-circle-green.png")
+				elseif TransmogLootHelper_Settings["iconStyle"] == 2 then
+					overlay.texture:SetTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\simple-circle-green.png")
+				elseif TransmogLootHelper_Settings["iconStyle"] == 3 then
+					overlay.texture:SetTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\simple-icon-green.png")
+				elseif TransmogLootHelper_Settings["iconStyle"] == 4 then
+					overlay.texture:SetTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\cosmetic-icon-green.png")
+				end
+			elseif color == "red" then
+				overlay.animation:Stop()
+
+				if TransmogLootHelper_Settings["iconStyle"] == 1 then
+					overlay.border:SetTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\border-circle-red.png")
+				elseif TransmogLootHelper_Settings["iconStyle"] == 2 then
+					overlay.texture:SetTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\simple-circle-red.png")
+				elseif TransmogLootHelper_Settings["iconStyle"] == 3 then
+					overlay.texture:SetTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\simple-icon-red.png")
+				elseif TransmogLootHelper_Settings["iconStyle"] == 4 then
+					overlay.texture:SetTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\cosmetic-icon-red.png")
+				end
+			end
+
+			if TransmogLootHelper_Settings["iconStyle"] == 4 then
+				overlay.animation:Stop()
+				overlay.animationTexture:SetAlpha(0)
+			else
+				overlay.animationTexture:SetAlpha(1)
+			end
+
 			overlay.icon:Show()
 		end
 
