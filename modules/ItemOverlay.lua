@@ -126,7 +126,12 @@ function app:CreateItemOverlay(overlay, itemLink, itemLocation, containerInfo, b
 		end
 
 		-- Cache our info, if we haven't yet.
-		if not app.OverlayCache[itemLink] or hasItemLocation and app.OverlayCache[itemLink].hasItemLocation == false then
+		if itemID and itemID <= 4 then	-- Fake preview items
+			app.OverlayCache["item:1"] = { itemEquipLoc = "Mount", bindType = 1, itemQuality = 4, hasItemLocation = false, color = "purple" }
+			app.OverlayCache["item:2"] = { itemEquipLoc = "INVTYPE_WEAPON", bindType = 2, itemQuality = 4, hasItemLocation = false, color = "yellow" }
+			app.OverlayCache["item:3"] = { itemEquipLoc = "Recipe", bindType = 8, itemQuality = 4, hasItemLocation = false, color = "green" }
+			app.OverlayCache["item:4"] = { itemEquipLoc = "Container", bindType = 0, itemQuality = 4, hasItemLocation = false, color = "red" }
+		elseif not app.OverlayCache[itemLink] or (hasItemLocation and app.OverlayCache[itemLink].hasItemLocation == false) then
 			-- Grab our item info, which is enough for appearances
 			local _, _, itemQuality, _, _, _, _, _, itemEquipLoc, _, _, classID, subclassID, bindType, _, _, _ = C_Item.GetItemInfo(itemLink)
 
@@ -406,8 +411,16 @@ function app:CreateItemOverlay(overlay, itemLink, itemLocation, containerInfo, b
 		end
 
 		if app.Icon[itemEquipLoc] then
+			-- Fake preview items
+			if itemID and itemID <= 4 then
+				if itemID == 3 then overlay.texture:SetTexture(app.Icon[171]) end
+				if not (not TransmogLootHelper_Settings["iconLearned"] and app.OverlayCache[itemLink].color == "green") then
+					showOverlay(app.OverlayCache[itemLink].color)
+				else
+					hideOverlay()
+				end
 			-- Appearances
-			if TransmogLootHelper_Settings["iconNewMog"] and itemEquipLoc:find("INVTYPE") then
+			elseif TransmogLootHelper_Settings["iconNewMog"] and itemEquipLoc:find("INVTYPE") then
 				local attInfo
 				if C_AddOns.IsAddOnLoaded("AllTheThings") then
 					attInfo = AllTheThings.GetLinkReference(itemLink)
@@ -667,8 +680,11 @@ function app:CreateItemOverlay(overlay, itemLink, itemLocation, containerInfo, b
 
 		-- Set the bind text
 		if TransmogLootHelper_Settings["textBind"] and not C_AddOns.IsAddOnLoaded("Baganator") then
+			-- Fake preview item
+			if itemID == 3 then
+				overlay.text:SetText("|cff00CCFF" .. L.BINDTEXT_BOA .. "|r")
 			-- WuE
-			if itemLocation and C_Item.IsBoundToAccountUntilEquip(itemLocation) then
+			elseif itemLocation and C_Item.IsBoundToAccountUntilEquip(itemLocation) then
 				if C_Item.IsBound(itemLocation) then
 					overlay.text:SetText("")
 				else
@@ -711,6 +727,8 @@ function app:CreateItemOverlay(overlay, itemLink, itemLocation, containerInfo, b
 		elseif itemID == 82800 then
 			app.OverlayCache[itemLink] = { itemEquipLoc = "Unknown" }
 			processOverlay()
+		elseif itemLink == "item:1" or itemLink == "item:2" or itemLink == "item:3" or itemLink == "item:4" then
+			processOverlay(tonumber(itemLink:match(":(%d+)")))
 		else
 			return
 		end

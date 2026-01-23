@@ -25,4 +25,30 @@
 	<Frame name="TransmogLootHelper_SettingsExpandTemplate" inherits="SettingsExpandableSectionTemplate" mixin="TransmogLootHelper_SettingsExpandMixin" virtual="true">
 		<Size y="24" />
 	</Frame>
+
+	<Frame name="TransmogLootHelper_SettingsItemRow" mixin="TransmogLootHelper_SettingsItemRowMixin" virtual="true">
+		<Size y="44"/>
+		<Frames>
+			<Button parentKey="ItemButton1" inherits="LargeItemButtonTemplate">
+				<Anchors>
+					<Anchor point="LEFT" x="10" y="0"/>
+				</Anchors>
+			</Button>
+			<Button parentKey="ItemButton2" inherits="LargeItemButtonTemplate">
+				<Anchors>
+					<Anchor point="LEFT" relativeKey="$parent.ItemButton1" relativePoint="RIGHT" x="4" y="0"/>
+				</Anchors>
+			</Button>
+			<Button parentKey="ItemButton3" inherits="LargeItemButtonTemplate">
+				<Anchors>
+					<Anchor point="LEFT" relativeKey="$parent.ItemButton2" relativePoint="RIGHT" x="4" y="0"/>
+				</Anchors>
+			</Button>
+			<Button parentKey="ItemButton4" inherits="LargeItemButtonTemplate">
+				<Anchors>
+					<Anchor point="LEFT" relativeKey="$parent.ItemButton3" relativePoint="RIGHT" x="4" y="0"/>
+				</Anchors>
+			</Button>
+		</Frames>
+	</Frame>
 </Ui>

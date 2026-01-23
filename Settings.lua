@@ -262,22 +262,21 @@ function app:CreateSettings()
 		app:SettingsChanged()
 	end)
 
-	local variable, name, tooltip = "iconPosition", L.SETTINGS_ICON_POSITION, L.SETTINGS_ICON_POSITION_DESC
+	local variable, name, tooltip = "iconPosition", L.SETTINGS_ICON_POSITION, L.SETTINGS_ICON_POSITION_DESC .. "\n\n" .. L.SETTINGS_BAGANATOR
 	local function GetOptions()
 		local container = Settings.CreateControlTextContainer()
-		if C_AddOns.IsAddOnLoaded("Baganator") then
-			container:Add(0, "Baganator", L.SETTINGS_ICONPOS_BAGANATOR)
-		else
-			container:Add(0, L.SETTINGS_ICONPOS_TL, L.SETTINGS_ICONPOS_OVERLAP1)
-			container:Add(1, L.SETTINGS_ICONPOS_TR, L.SETTINGS_ICONPOS_OVERLAP0)
-			container:Add(2, L.SETTINGS_ICONPOS_BL, L.SETTINGS_ICONPOS_OVERLAP0)
-			container:Add(3, L.SETTINGS_ICONPOS_BR, L.SETTINGS_ICONPOS_OVERLAP0)
-		end
+		container:Add(0, L.SETTINGS_ICONPOS_TL, L.SETTINGS_ICONPOS_OVERLAP1)
+		container:Add(1, L.SETTINGS_ICONPOS_TR, L.SETTINGS_ICONPOS_OVERLAP0)
+		container:Add(2, L.SETTINGS_ICONPOS_BL, L.SETTINGS_ICONPOS_OVERLAP0)
+		container:Add(3, L.SETTINGS_ICONPOS_BR, L.SETTINGS_ICONPOS_OVERLAP0)
 		return container:GetData()
 	end
 	local setting = Settings.RegisterAddOnSetting(category, appName.."_"..variable, variable, TransmogLootHelper_Settings, Settings.VarType.Number, name, 1)
 	Settings.CreateDropdown(category, setting, GetOptions, tooltip)
 	setting:SetValueChangedCallback(function()
+		for i = 1, 4 do
+			app:CreateItemOverlay(app.PreviewItem[i].frame, "item:"..i)
+		end
 		app:SettingsChanged()
 	end)
 
@@ -293,6 +292,9 @@ function app:CreateSettings()
 	local setting = Settings.RegisterAddOnSetting(category, appName.."_"..variable, variable, TransmogLootHelper_Settings, Settings.VarType.Number, name, 1)
 	Settings.CreateDropdown(category, setting, GetOptions, tooltip)
 	setting:SetValueChangedCallback(function()
+		for i = 1, 4 do
+			app:CreateItemOverlay(app.PreviewItem[i].frame, "item:"..i)
+		end
 		app:SettingsChanged()
 	end)
 
@@ -300,10 +302,76 @@ function app:CreateSettings()
 	local setting = Settings.RegisterAddOnSetting(category, appName .. "_" .. variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, true)
 	local parentSetting = Settings.CreateCheckbox(category, setting, tooltip)
 	setting:SetValueChangedCallback(function()
+		for i = 1, 4 do
+			app:CreateItemOverlay(app.PreviewItem[i].frame, "item:"..i)
+		end
 		app:SettingsChanged()
 	end)
 
-	layout:AddInitializer(CreateSettingsListSectionHeaderInitializer("Collection Info"))
+	local variable, name, tooltip = "iconLearned", L.SETTINGS_ICONLEARNED, L.SETTINGS_ICONLEARNED_DESC
+	local setting = Settings.RegisterAddOnSetting(category, appName.."_"..variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, true)
+	Settings.CreateCheckbox(category, setting, tooltip)
+	setting:SetValueChangedCallback(function()
+		for i = 1, 4 do
+			app:CreateItemOverlay(app.PreviewItem[i].frame, "item:"..i)
+		end
+		app:SettingsChanged()
+	end)
+
+	local variable, name, tooltip = "textBind", L.SETTINGS_BINDTEXT, L.SETTINGS_BINDTEXT_DESC
+	local setting = Settings.RegisterAddOnSetting(category, appName.."_"..variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, true)
+	Settings.CreateCheckbox(category, setting, tooltip)
+	setting:SetValueChangedCallback(function()
+		for i = 1, 4 do
+			app:CreateItemOverlay(app.PreviewItem[i].frame, "item:"..i)
+		end
+	end)
+
+	TransmogLootHelper_SettingsItemRowMixin = {}
+
+	function TransmogLootHelper_SettingsItemRowMixin:Init(initializer)
+		local data = initializer:GetData()
+
+		for i = 1, 4 do
+			local item = data[i]
+			if item then
+				local btn = self["ItemButton"..i]
+				btn.Icon:SetTexture(item.icon)
+				btn.Name:SetText(item.name)
+
+				if not btn.TLHOverlay then
+					btn.TLHOverlay = CreateFrame("Frame", nil, btn)
+					btn.TLHOverlay:SetAllPoints(btn.Icon)
+				end
+				app:CreateItemOverlay(btn.TLHOverlay, "item:"..i)
+				app.PreviewItem[i].frame = btn.TLHOverlay
+
+				btn:SetScript("OnEnter", function()
+					GameTooltip:SetOwner(btn, "ANCHOR_BOTTOM")
+					GameTooltip:SetText(L.SETTINGS_PREVIEWTOOLTIP[i], nil, nil, nil, nil, true)
+					--GameTooltip:SetMaximumWidth(200)
+					GameTooltip:Show()
+				end)
+				btn:SetScript("OnLeave", GameTooltip_Hide)
+			end
+		end
+	end
+
+	function TransmogLootHelper_SettingsItemRowMixin:GetExtent()
+		return 44
+	end
+
+	app.PreviewItem = {
+		{ icon = 345787, name = L.SETTINGS_PREVIEW .. "\n" .. L.SETTINGS_NEW },
+		{ icon = 135349, name = L.SETTINGS_PREVIEW .. "\n" .. L.SETTINGS_USABLE },
+		{ icon = 134940, name = L.SETTINGS_PREVIEW .. "\n" .. L.SETTINGS_LEARNED },
+		{ icon = 134344, name = L.SETTINGS_PREVIEW .. "\n" .. L.SETTINGS_UNUSABLE },
+	}
+
+	local initializer = Settings.CreateElementInitializer("TransmogLootHelper_SettingsItemRow", app.PreviewItem)
+	layout:AddInitializer(initializer)
+
+	layout:AddInitializer(CreateSettingsListSectionHeaderInitializer(L.SETTINGS_HEADER_COLLECTION))
 
 	local variable, name, tooltip = "iconNewMog", L.SETTINGS_ICON_NEW_MOG, L.SETTINGS_ICON_NEW_MOG_DESC
 	local setting = Settings.RegisterAddOnSetting(category, appName .. "_" .. variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, true)
@@ -394,13 +462,6 @@ function app:CreateSettings()
 		app:SettingsChanged()
 	end)
 
-	local variable, name, tooltip = "iconLearned", "Learned", "Show an icon to indicate the above tracked collectibles are learned."
-	local setting = Settings.RegisterAddOnSetting(category, appName.."_"..variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, true)
-	Settings.CreateCheckbox(category, setting, tooltip)
-	setting:SetValueChangedCallback(function()
-		app:SettingsChanged()
-	end)
-
 	layout:AddInitializer(CreateSettingsListSectionHeaderInitializer(L.SETTINGS_HEADER_OTHER_INFO))
 
 	local variable, name, tooltip = "iconQuestGold", L.SETTINGS_ICON_QUEST_GOLD, L.SETTINGS_ICON_QUEST_GOLD_DESC
@@ -415,12 +476,8 @@ function app:CreateSettings()
 	local setting = Settings.RegisterAddOnSetting(category, appName.."_"..variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, true)
 	Settings.CreateCheckbox(category, setting, tooltip)
 
-	local variable, name, tooltip = "textBind", L.SETTINGS_BINDTEXT, L.SETTINGS_BINDTEXT_DESC
-	local setting = Settings.RegisterAddOnSetting(category, appName.."_"..variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, true)
-	Settings.CreateCheckbox(category, setting, tooltip)
-
 	-- Subcategory: Loot Tracker
-	local category, layout = Settings.RegisterVerticalLayoutSubcategory(app.Settings, "Loot Tracker")
+	local category, layout = Settings.RegisterVerticalLayoutSubcategory(app.Settings, L.SETTINGS_HEADER_LOOT_TRACKER)
 	Settings.RegisterAddOnCategory(category)
 
 	local variable, name, tooltip = "minimapIcon", L.SETTINGS_MINIMAP, L.SETTINGS_MINIMAP_DESC
