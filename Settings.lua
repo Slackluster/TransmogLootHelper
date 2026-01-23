@@ -287,7 +287,7 @@ function app:CreateSettings()
 		container:Add(1, L.SETTINGS_ICON_STYLE1, L.SETTINGS_ICON_STYLE1_DESC)
 		container:Add(2, L.SETTINGS_ICON_STYLE2, L.SETTINGS_ICON_STYLE2_DESC)
 		container:Add(3, L.SETTINGS_ICON_STYLE3, L.SETTINGS_ICON_STYLE3_DESC)
-		container:Add(4, L.SETTINGS_ICON_STYLE4, L.SETTINGS_ICON_STYLE4_DESC)
+		-- container:Add(4, L.SETTINGS_ICON_STYLE4, L.SETTINGS_ICON_STYLE4_DESC)
 		return container:GetData()
 	end
 	local setting = Settings.RegisterAddOnSetting(category, appName.."_"..variable, variable, TransmogLootHelper_Settings, Settings.VarType.Number, name, 1)
