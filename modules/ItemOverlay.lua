@@ -290,57 +290,64 @@ function app:CreateItemOverlay(overlay, itemLink, itemLocation, containerInfo, b
 		overlay:Show()
 
 		local function showOverlay(color)
-			if not (bagAddon and C_AddOns.IsAddOnLoaded("Baganator")) then
-				overlay.icon:ClearAllPoints()
-				if TransmogLootHelper_Settings["iconStyle"] <= 2 then
-					if TransmogLootHelper_Settings["iconPosition"] == 0 then
-						overlay.icon:SetPoint("CENTER", overlay, "TOPLEFT", 4, -4)
-					elseif TransmogLootHelper_Settings["iconPosition"] == 1 then
-						overlay.icon:SetPoint("CENTER", overlay, "TOPRIGHT", -4, -4)
-					elseif TransmogLootHelper_Settings["iconPosition"] == 2 then
-						overlay.icon:SetPoint("CENTER", overlay, "BOTTOMLEFT", 4, 4)
-					elseif TransmogLootHelper_Settings["iconPosition"] == 3 then
-						overlay.icon:SetPoint("CENTER", overlay, "BOTTOMRIGHT", -4, 4)
+			local function setCorner(style)
+				if not (bagAddon and C_AddOns.IsAddOnLoaded("Baganator")) then
+					overlay.icon:ClearAllPoints()
+					if style <= 2 then
+						if TransmogLootHelper_Settings["iconPosition"] == 0 then
+							overlay.icon:SetPoint("CENTER", overlay, "TOPLEFT", 4, -4)
+						elseif TransmogLootHelper_Settings["iconPosition"] == 1 then
+							overlay.icon:SetPoint("CENTER", overlay, "TOPRIGHT", -4, -4)
+						elseif TransmogLootHelper_Settings["iconPosition"] == 2 then
+							overlay.icon:SetPoint("CENTER", overlay, "BOTTOMLEFT", 4, 4)
+						elseif TransmogLootHelper_Settings["iconPosition"] == 3 then
+							overlay.icon:SetPoint("CENTER", overlay, "BOTTOMRIGHT", -4, 4)
+						end
+					else
+						if TransmogLootHelper_Settings["iconPosition"] == 0 then
+							overlay.icon:SetPoint("TOPLEFT", overlay, -1, 1)
+						elseif TransmogLootHelper_Settings["iconPosition"] == 1 then
+							overlay.icon:SetPoint("TOPRIGHT", overlay, 1, 1)
+						elseif TransmogLootHelper_Settings["iconPosition"] == 2 then
+							overlay.icon:SetPoint("BOTTOMLEFT", overlay, -1, -1)
+						elseif TransmogLootHelper_Settings["iconPosition"] == 3 then
+							overlay.icon:SetPoint("BOTTOMRIGHT", overlay, 1, -1)
+						end
 					end
-				else
-					if TransmogLootHelper_Settings["iconPosition"] == 0 then
-						overlay.icon:SetPoint("TOPLEFT", overlay, -1, 1)
-					elseif TransmogLootHelper_Settings["iconPosition"] == 1 then
-						overlay.icon:SetPoint("TOPRIGHT", overlay, 1, 1)
-					elseif TransmogLootHelper_Settings["iconPosition"] == 2 then
-						overlay.icon:SetPoint("BOTTOMLEFT", overlay, -1, -1)
-					elseif TransmogLootHelper_Settings["iconPosition"] == 3 then
-						overlay.icon:SetPoint("BOTTOMRIGHT", overlay, 1, -1)
-					end
-				end
 
-				if TransmogLootHelper_Settings["iconStyle"] == 4 then
-					if TransmogLootHelper_Settings["iconPosition"] == 0 then
-						overlay.texture:SetRotation(math.pi/2)
-					elseif TransmogLootHelper_Settings["iconPosition"] == 1 then
+					if style == 4 then
+						if TransmogLootHelper_Settings["iconPosition"] == 0 then
+							overlay.texture:SetRotation(math.pi/2)
+						elseif TransmogLootHelper_Settings["iconPosition"] == 1 then
+							overlay.texture:SetRotation(0)
+						elseif TransmogLootHelper_Settings["iconPosition"] == 2 then
+							overlay.texture:SetRotation(math.pi)
+						elseif TransmogLootHelper_Settings["iconPosition"] == 3 then
+							overlay.texture:SetRotation(-math.pi/2)
+						end
+					else
 						overlay.texture:SetRotation(0)
-					elseif TransmogLootHelper_Settings["iconPosition"] == 2 then
-						overlay.texture:SetRotation(math.pi)
-					elseif TransmogLootHelper_Settings["iconPosition"] == 3 then
-						overlay.texture:SetRotation(-math.pi/2)
 					end
-				else
-					overlay.texture:SetRotation(0)
-				end
-			elseif bagAddon and C_AddOns.IsAddOnLoaded("Baganator") and Baganator.API.GetCurrentCornerForWidget then
-				if TransmogLootHelper_Settings["iconStyle"] == 4 then
-					if Baganator.API.GetCurrentCornerForWidget("transmogloothelper") == "top_left" then
-						overlay.texture:SetRotation(math.pi/2)
-					elseif Baganator.API.GetCurrentCornerForWidget("transmogloothelper") == "top_right" then
+				elseif bagAddon and C_AddOns.IsAddOnLoaded("Baganator") and Baganator.API.GetCurrentCornerForWidget then
+					if style == 4 then
+						if Baganator.API.GetCurrentCornerForWidget("transmogloothelper") == "top_left" then
+							overlay.texture:SetRotation(math.pi/2)
+						elseif Baganator.API.GetCurrentCornerForWidget("transmogloothelper") == "top_right" then
+							overlay.texture:SetRotation(0)
+						elseif Baganator.API.GetCurrentCornerForWidget("transmogloothelper") == "bottom_left" then
+							overlay.texture:SetRotation(math.pi)
+						elseif Baganator.API.GetCurrentCornerForWidget("transmogloothelper") == "bottom_right" then
+							overlay.texture:SetRotation(-math.pi/2)
+						end
+					else
 						overlay.texture:SetRotation(0)
-					elseif Baganator.API.GetCurrentCornerForWidget("transmogloothelper") == "bottom_left" then
-						overlay.texture:SetRotation(math.pi)
-					elseif Baganator.API.GetCurrentCornerForWidget("transmogloothelper") == "bottom_right" then
-						overlay.texture:SetRotation(-math.pi/2)
 					end
-				else
-					overlay.texture:SetRotation(0)
 				end
+			end
+			if color == "green" and TransmogLootHelper_Settings["learnedStyle"] > 0 then
+				setCorner(TransmogLootHelper_Settings["learnedStyle"])
+			else
+				setCorner(TransmogLootHelper_Settings["iconStyle"])
 			end
 
 			overlay.border:SetTexture(nil)
@@ -386,14 +393,21 @@ function app:CreateItemOverlay(overlay, itemLink, itemLocation, containerInfo, b
 			elseif color == "green" then
 				overlay.animation:Stop()
 
-				if TransmogLootHelper_Settings["iconStyle"] == 1 then
-					overlay.border:SetTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\border-circle-green.png")
-				elseif TransmogLootHelper_Settings["iconStyle"] == 2 then
-					overlay.texture:SetTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\simple-circle-green.png")
-				elseif TransmogLootHelper_Settings["iconStyle"] == 3 then
-					overlay.texture:SetTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\simple-icon-green.png")
-				elseif TransmogLootHelper_Settings["iconStyle"] == 4 then
-					overlay.texture:SetTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\cosmetic-icon-green.png")
+				local function setStyle(style)
+					if style == 1 then
+						overlay.border:SetTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\border-circle-green.png")
+					elseif style == 2 then
+						overlay.texture:SetTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\simple-circle-green.png")
+					elseif style == 3 then
+						overlay.texture:SetTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\simple-icon-green.png")
+					elseif style == 4 then
+						overlay.texture:SetTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\cosmetic-icon-green.png")
+					end
+				end
+				if TransmogLootHelper_Settings["learnedStyle"] > 0 then
+					setStyle(TransmogLootHelper_Settings["learnedStyle"])
+				else
+					setStyle(TransmogLootHelper_Settings["iconStyle"])
 				end
 			elseif color == "red" then
 				overlay.animation:Stop()

@@ -308,15 +308,35 @@ function app:CreateSettings()
 		app:SettingsChanged()
 	end)
 
-	local variable, name, tooltip = "iconLearned", L.SETTINGS_ICONLEARNED, L.SETTINGS_ICONLEARNED_DESC
-	local setting = Settings.RegisterAddOnSetting(category, appName.."_"..variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, true)
-	Settings.CreateCheckbox(category, setting, tooltip)
-	setting:SetValueChangedCallback(function()
+	local cbVariable, cbName, cbTooltip = "iconLearned", L.SETTINGS_ICONLEARNED, L.SETTINGS_ICONLEARNED_DESC
+	local cbSetting = Settings.RegisterAddOnSetting(category, appName.."_"..cbVariable, cbVariable, TransmogLootHelper_Settings, Settings.VarType.Boolean, cbName, true)
+	cbSetting:SetValueChangedCallback(function()
 		for i = 1, 4 do
 			app:CreateItemOverlay(app.PreviewItem[i].frame, "item:"..i)
 		end
 		app:SettingsChanged()
 	end)
+
+	local ddVariable, ddName, ddTooltip = "learnedStyle", "", ""
+	local function GetOptions()
+		local container = Settings.CreateControlTextContainer()
+		container:Add(0, "Default", "You can set a separate style for learned icons. Otherwise, the default style you have selected is used.")
+		container:Add(1, L.SETTINGS_ICON_STYLE1, L.SETTINGS_ICON_STYLE1_DESC)
+		container:Add(2, L.SETTINGS_ICON_STYLE2, L.SETTINGS_ICON_STYLE2_DESC)
+		container:Add(3, L.SETTINGS_ICON_STYLE3, L.SETTINGS_ICON_STYLE3_DESC)
+		container:Add(4, L.SETTINGS_ICON_STYLE4, L.SETTINGS_ICON_STYLE4_DESC)
+		return container:GetData()
+	end
+	local ddSetting = Settings.RegisterAddOnSetting(category, appName.."_"..ddVariable, ddVariable, TransmogLootHelper_Settings, Settings.VarType.Number, ddName, 0)
+	ddSetting:SetValueChangedCallback(function()
+		for i = 1, 4 do
+			app:CreateItemOverlay(app.PreviewItem[i].frame, "item:"..i)
+		end
+		app:SettingsChanged()
+	end)
+
+	local initializer = CreateSettingsCheckboxDropdownInitializer(cbSetting, cbName, cbTooltip, ddSetting, GetOptions, ddName, ddTooltip)
+	layout:AddInitializer(initializer)
 
 	local variable, name, tooltip = "textBind", L.SETTINGS_BINDTEXT, L.SETTINGS_BINDTEXT_DESC
 	local setting = Settings.RegisterAddOnSetting(category, appName.."_"..variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, true)
@@ -361,7 +381,7 @@ function app:CreateSettings()
 	end
 
 	app.PreviewItem = {
-		{ icon = 345787, name = L.SETTINGS_PREVIEW .. "\n" .. L.SETTINGS_NEW },
+		{ icon = 345787, name = L.SETTINGS_PREVIEW .. "\n" .. L.SETTINGS_UNLEARNED },
 		{ icon = 135349, name = L.SETTINGS_PREVIEW .. "\n" .. L.SETTINGS_USABLE },
 		{ icon = 134940, name = L.SETTINGS_PREVIEW .. "\n" .. L.SETTINGS_LEARNED },
 		{ icon = 134344, name = L.SETTINGS_PREVIEW .. "\n" .. L.SETTINGS_UNUSABLE },
