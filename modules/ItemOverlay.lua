@@ -327,6 +327,20 @@ function app:CreateItemOverlay(overlay, itemLink, itemLocation, containerInfo, b
 				else
 					overlay.texture:SetRotation(0)
 				end
+			elseif bagAddon and C_AddOns.IsAddOnLoaded("Baganator") and Baganator.API.GetCurrentCornerForWidget then
+				if TransmogLootHelper_Settings["iconStyle"] == 4 then
+					if Baganator.API.GetCurrentCornerForWidget("transmogloothelper") == "top_left" then
+						overlay.texture:SetRotation(math.pi/2)
+					elseif Baganator.API.GetCurrentCornerForWidget("transmogloothelper") == "top_right" then
+						overlay.texture:SetRotation(0)
+					elseif Baganator.API.GetCurrentCornerForWidget("transmogloothelper") == "bottom_left" then
+						overlay.texture:SetRotation(math.pi)
+					elseif Baganator.API.GetCurrentCornerForWidget("transmogloothelper") == "bottom_right" then
+						overlay.texture:SetRotation(-math.pi/2)
+					end
+				else
+					overlay.texture:SetRotation(0)
+				end
 			end
 
 			overlay.border:SetTexture(nil)
