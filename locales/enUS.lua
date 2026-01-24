@@ -37,7 +37,7 @@ L.WINDOW_BUTTON_SORT1 =					"Sort by newest first\nCurrent sorting:|cffFFFFFF al
 L.WINDOW_BUTTON_SORT2 =					"Sort alphabetically\nCurrent sorting:|cffFFFFFF newest first|r"
 L.WINDOW_BUTTON_CORNER =				"Double " .. app.IconLMB .. "|cffFFFFFF: Autosize to fit the window|r"
 
-L.WINDOW_HEADER_LOOT_DESC =				"|r" .. app.IconLMB .. "|cffFFFFFF: Whisper and request the item\n|rShift " .. app.IconLMB .. "|cffFFFFFF: Link the item\n|rShift " .. app.IconRMB .. "|cffFFFFFF: Remove the item"
+L.WINDOW_HEADER_LOOT_DESC =				"|rAlt " .. app.IconLMB .. "|cffFFFFFF: Whisper and request the item\n|rShift " .. app.IconLMB .. "|cffFFFFFF: Link the item\n|rShift " .. app.IconRMB .. "|cffFFFFFF: Remove the item"
 L.WINDOW_HEADER_FILTERED =				"Filtered"
 L.WINDOW_HEADER_FILTERED_DESC =			"|r" .. app.IconRMB .. "|cffFFFFFF: Debug this item\n|rShift " .. app.IconLMB .. "|cffFFFFFF: Link the item\n|rShift " .. app.IconRMB .. "|cffFFFFFF: Remove the item"
 

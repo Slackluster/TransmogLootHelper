@@ -233,7 +233,7 @@ function app:CreateWindow()
 	app.ClearButton:SetPushedTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\buttons.blp")
 	app.ClearButton:GetPushedTexture():SetTexCoord(1/256, 37/256, 81/128, 119/128)
 	app.ClearButton:SetScript("OnClick", function()
-		if IsShiftKeyDown() == true then
+		if IsShiftKeyDown() then
 			app:Clear()
 		else
 			StaticPopupDialogs["TLH_CLEAR_LOOT"] = {
@@ -502,9 +502,9 @@ function app:UpdateWindow()
 				-- LMB
 				if button == "LeftButton" then
 					-- Shift+LMB
-					if IsShiftKeyDown() == true then
+					if IsShiftKeyDown() then
 						ChatFrameUtil.InsertLink(lootInfo.item)
-					else
+					elseif IsAltKeyDown() then
 						if app.WeaponLoot[lootInfo.index].recentlyWhispered == 0 then
 							local msg = string.gsub(TransmogLootHelper_Settings["message"], "%%item", lootInfo.item)
 							C_ChatInfo.SendChatMessage(msg, "WHISPER", nil, lootInfo.player)
@@ -722,9 +722,9 @@ function app:UpdateWindow()
 				-- LMB
 				if button == "LeftButton" then
 					-- Shift+LMB
-					if IsShiftKeyDown() == true then
+					if IsShiftKeyDown() then
 						ChatEditChatFrameUtil.InsertLink_InsertLink(lootInfo.item)
-					else
+					elseif IsAltKeyDown() then
 						if app.ArmourLoot[lootInfo.index].recentlyWhispered == 0 then
 							local msg = string.gsub(TransmogLootHelper_Settings["message"], "%%item", lootInfo.item)
 							C_ChatInfo.SendChatMessage(msg, "WHISPER", nil, lootInfo.player)
@@ -919,7 +919,7 @@ function app:UpdateWindow()
 				-- LMB
 				if button == "LeftButton" then
 					-- Shift+LMB
-					if IsShiftKeyDown() == true then
+					if IsShiftKeyDown() then
 						ChatFrameUtil.InsertLink(lootInfo.item)
 					else
 						app:Print("Debugging " .. lootInfo.item .. "  |  Filter reason: " .. lootInfo.playerShort .. "  |  itemType: " .. lootInfo.itemType .. "  |  Looted by: " ..lootInfo.player)

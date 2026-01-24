@@ -37,7 +37,7 @@ L.WINDOW_BUTTON_SORT1 =					"Сортировать по новизне\nТек�
 L.WINDOW_BUTTON_SORT2 =					"Сортировать по алфавиту\nТекущая сортировка:|cffFFFFFF по новизне|r"
 L.WINDOW_BUTTON_CORNER =				"Двойное " .. app.IconLMB .. "|cffFFFFFF: Автоматический размер окна"
 
-L.WINDOW_HEADER_LOOT_DESC =				"|r" .. app.IconLMB .. "|cffFFFFFF: Шепот и запрос предмета\n|rShift " .. app.IconLMB .. "|cffFFFFFF: Ссылка на предмет\n|rShift " .. app.IconRMB .. "|cffFFFFFF: Удалить предмет"
+L.WINDOW_HEADER_LOOT_DESC =				"|rAlt " .. app.IconLMB .. "|cffFFFFFF: Шепот и запрос предмета\n|rShift " .. app.IconLMB .. "|cffFFFFFF: Ссылка на предмет\n|rShift " .. app.IconRMB .. "|cffFFFFFF: Удалить предмет"
 L.WINDOW_HEADER_FILTERED =				"Отфильтровано"
 L.WINDOW_HEADER_FILTERED_DESC =			"|r" .. app.IconRMB .. "|cffFFFFFF: Отладка этого предмета\n|rShift " .. app.IconLMB .. "|cffFFFFFF: Ссылка на предмет\n|rShift " .. app.IconRMB .. "|cffFFFFFF: Удалить предмет"
 
