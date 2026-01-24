@@ -527,7 +527,7 @@ function app:UpdateWindow()
 				-- Shift+RMB
 				elseif button == "RightButton" and IsShiftKeyDown() then
 					table.remove(app.WeaponLoot, lootInfo.index)
-					RunNextFrame(app.Update)
+					RunNextFrame(function() app:UpdateWindow() end)
 					do return end
 				end
 			end)
@@ -747,7 +747,7 @@ function app:UpdateWindow()
 				-- Shift+RMB
 				elseif button == "RightButton" and IsShiftKeyDown() then
 					table.remove(app.ArmourLoot, lootInfo.index)
-					RunNextFrame(app.Update)
+					RunNextFrame(function() app:UpdateWindow() end)
 					do return end
 				end
 			end)
@@ -927,7 +927,7 @@ function app:UpdateWindow()
 				-- Shift+RMB
 				elseif button == "RightButton" and IsShiftKeyDown() then
 					table.remove(app.FilteredLoot, lootInfo.index)
-					RunNextFrame(app.Update)
+					RunNextFrame(function() app:UpdateWindow() end)
 					do return end
 				end
 			end)
