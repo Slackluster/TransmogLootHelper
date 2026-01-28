@@ -959,6 +959,71 @@ function app:HookItemOverlay()
 
 		app.Event:Register("BLACK_MARKET_OPEN", function() C_Timer.After(0.1, blackMarketOverlay) end)
 
+		-- Hook our overlay onto the mailbox
+		local function mailboxOverlay()
+			if not app.MailboxHook then
+				InboxPrevPageButton:HookScript("OnClick", function() mailboxOverlay() C_Timer.After(0.1, mailboxOverlay) end)
+				InboxNextPageButton:HookScript("OnClick", function() mailboxOverlay() C_Timer.After(0.1, mailboxOverlay) end)
+
+				for i = 1, 7 do
+					local itemButton = _G["MailItem"..i.."Button"]
+					if itemButton then
+						itemButton:HookScript("OnClick", function()
+							app.SelectedMail = itemButton.index
+							mailboxOverlay()
+						end)
+					end
+				end
+
+				app.MailboxHook = true
+			end
+
+			-- Received mail buttons
+			for i = 1, 7 do
+				local itemButton = _G["MailItem"..i.."Button"]
+				if itemButton then
+					if not itemButton.TLHOverlay then
+						itemButton.TLHOverlay = CreateFrame("Frame", nil, itemButton)
+						itemButton.TLHOverlay:SetAllPoints(itemButton)
+					end
+
+					if itemButton.hasItem == 1 then
+						local _, itemID = GetInboxItem(i, 1)
+						local _, itemLink = C_Item.GetItemInfo(itemID)
+
+						if itemLink then
+							app:CreateItemOverlay(itemButton.TLHOverlay, itemLink)
+						else
+							itemButton.TLHOverlay:Hide()
+						end
+					else
+						itemButton.TLHOverlay:Hide()
+					end
+				end
+			end
+
+			-- Attachments
+			for i = 1, ATTACHMENTS_MAX_RECEIVE do
+				local itemButton = _G["OpenMailAttachmentButton"..i]
+				if itemButton and app.SelectedMail then
+					if not itemButton.TLHOverlay then
+						itemButton.TLHOverlay = CreateFrame("Frame", nil, itemButton)
+						itemButton.TLHOverlay:SetAllPoints(itemButton)
+					end
+
+					local itemLink = GetInboxItemLink(app.SelectedMail, i)
+					if itemLink then
+						app:CreateItemOverlay(itemButton.TLHOverlay, itemLink)
+					else
+						itemButton.TLHOverlay:Hide()
+					end
+				end
+			end
+		end
+
+		app.Event:Register("MAIL_SHOW", function() C_Timer.After(0.1, mailboxOverlay) end)
+		app.Event:Register("MAIL_INBOX_UPDATE", function() C_Timer.After(0.1, mailboxOverlay) end)
+
 		-- Hook our overlay onto all merchant slots
 		function app:MerchantOverlay()
 			if not app.MerchantHook then
@@ -983,7 +1048,6 @@ function app:HookItemOverlay()
 						return
 					end
 
-					local t = itemButton.TLHOverlay
 					local itemLink = itemButton.link
 					if itemLink then
 						app:CreateItemOverlay(itemButton.TLHOverlay, itemLink)
