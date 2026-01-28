@@ -707,7 +707,7 @@ function app:CreateItemOverlay(overlay, itemLink, itemLocation, containerInfo, b
 		end
 
 		-- Set the bind text
-		if TransmogLootHelper_Settings["textBind"] and not C_AddOns.IsAddOnLoaded("Baganator") then
+		if TransmogLootHelper_Settings["textBind"] then
 			-- Fake preview item
 			if itemID == 3 then
 				overlay.text:SetText("|cff00CCFF" .. L.BINDTEXT_BOA .. "|r")
