@@ -989,10 +989,14 @@ function app:HookItemOverlay()
 
 					if itemButton.hasItem == 1 then
 						local _, itemID = GetInboxItem(i, 1)
-						local _, itemLink = C_Item.GetItemInfo(itemID)
+						if itemID then
+							local _, itemLink = C_Item.GetItemInfo(itemID)
 
-						if itemLink then
-							app:CreateItemOverlay(itemButton.TLHOverlay, itemLink)
+							if itemLink then
+								app:CreateItemOverlay(itemButton.TLHOverlay, itemLink)
+							else
+								itemButton.TLHOverlay:Hide()
+							end
 						else
 							itemButton.TLHOverlay:Hide()
 						end
