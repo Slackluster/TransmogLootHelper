@@ -20,7 +20,7 @@ app.IconNotReady = "|TInterface\\RaidFrame\\ReadyCheck-NotReady:0|t"
 app.IconMaybeReady = "Interface\\AddOns\\TransmogLootHelper\\assets\\readycheck-ready-orange.blp"
 app.IconLMB = "|TInterface\\TutorialFrame\\UI-Tutorial-Frame:12:12:0:0:512:512:10:65:228:283|t"
 app.IconRMB = "|TInterface\\TutorialFrame\\UI-Tutorial-Frame:12:12:0:0:512:512:10:65:330:385|t"
-app.IconNew = "|TInterface\\AddOns\\TransmogLootHelper\\assets\\new.png:20:28|t"
+app.IconNew = "|A:UI-Journeys-GreatVault-Tag-new:33:49|a"
 
 -- Type.Subtype -> item type
 app.Type = {

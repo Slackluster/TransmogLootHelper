@@ -219,7 +219,7 @@ function app:CreateSettings()
 		end
 	end
 
-	local expandInitializer, isExpanded = createExpandableSection(layout, app.IconNew .. L.SETTINGS_KEYSLASH_TITLE)
+	local expandInitializer, isExpanded = createExpandableSection(layout, L.SETTINGS_KEYSLASH_TITLE .. app.IconNew)
 
 		local action = "TLH_TOGGLEWINDOW"
 		local bindingIndex = C_KeyBindings.GetBindingIndex(action)
@@ -275,7 +275,7 @@ function app:CreateSettings()
 		app:SettingsChanged()
 	end)
 
-	local variable, name, tooltip = "iconStyle", app.IconNew .. L.SETTINGS_ICON_STYLE, L.SETTINGS_ICON_STYLE_DESC
+	local variable, name, tooltip = "iconStyle", L.SETTINGS_ICON_STYLE .. app.IconNew, L.SETTINGS_ICON_STYLE_DESC
 	local function GetOptions()
 		local container = Settings.CreateControlTextContainer()
 		container:Add(1, L.SETTINGS_ICON_STYLE1, L.SETTINGS_ICON_STYLE1_DESC)
