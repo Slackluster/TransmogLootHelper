@@ -1028,6 +1028,32 @@ function app:HookItemOverlay()
 		app.Event:Register("MAIL_SHOW", function() C_Timer.After(0.1, mailboxOverlay) end)
 		app.Event:Register("MAIL_INBOX_UPDATE", function() C_Timer.After(0.1, mailboxOverlay) end)
 
+		-- Hook our overlay onto all group loot frames
+		local function lootOverlay()
+			local function applyToLootFrame(frame)
+				if not frame.TLHOverlay then
+					frame.TLHOverlay = CreateFrame("Frame", nil, frame)
+					frame.TLHOverlay:SetAllPoints(frame.IconFrame)
+				end
+
+				if not frame.rollID then return end
+				local itemLink = GetLootRollItemLink(frame.rollID)
+				if itemLink then
+					app:CreateItemOverlay(frame.TLHOverlay, itemLink)
+				end
+			end
+
+			if GroupLootFrame1 then applyToLootFrame(GroupLootFrame1) end
+			if GroupLootFrame2 then applyToLootFrame(GroupLootFrame2) end
+			if GroupLootFrame3 then applyToLootFrame(GroupLootFrame3) end
+			if GroupLootFrame4 then applyToLootFrame(GroupLootFrame4) end
+		end
+
+		app.Event:Register("START_LOOT_ROLL", function() RunNextFrame(lootOverlay) end)
+		app.Event:Register("MAIN_SPEC_NEED_ROLL", function() RunNextFrame(lootOverlay) end)
+		app.Event:Register("CANCEL_LOOT_ROLL", function() RunNextFrame(lootOverlay) end)
+		app.Event:Register("CONFIRM_LOOT_ROLL", function() RunNextFrame(lootOverlay) end)
+
 		-- Hook our overlay onto all merchant slots
 		function app:MerchantOverlay()
 			if not app.MerchantHook then
