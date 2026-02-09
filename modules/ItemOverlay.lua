@@ -1028,6 +1028,23 @@ function app:HookItemOverlay()
 		app.Event:Register("MAIL_SHOW", function() C_Timer.After(0.1, mailboxOverlay) end)
 		app.Event:Register("MAIL_INBOX_UPDATE", function() C_Timer.After(0.1, mailboxOverlay) end)
 
+		-- Hook our overlay onto the regular lootframe (thanks for the framework, LS!)
+		LootFrame:HookScript("OnShow", function()
+			for i, frame in next, LootFrame.ScrollBox.view.frames do
+				if frame.Item then
+					if not frame.TLHOverlay then
+						frame.TLHOverlay = CreateFrame("Frame", nil, frame.Item)
+						frame.TLHOverlay:SetAllPoints(frame.Item)
+					end
+
+					local itemLink = GetLootSlotLink(i)
+					if itemLink then
+						app:CreateItemOverlay(frame.TLHOverlay, itemLink)
+					end
+				end
+			end
+		end)
+
 		-- Hook our overlay onto all group loot frames
 		local function lootOverlay()
 			local function applyToLootFrame(frame)
