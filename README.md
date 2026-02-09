@@ -25,6 +25,7 @@ Currently supported addons:
 - BetterBags
 - World Quest Tab
 - World Quests List
+- WoWNotes Bags
 
 ## If you are experiencing issues
 - Check if the issue occurs with only this addon enabled, or if the issue is a feature you can disable from the addon's settings menu.
