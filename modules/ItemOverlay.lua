@@ -569,22 +569,16 @@ function app:ApplyItemOverlay(overlay, itemLink, itemLocation, containerInfo, ba
 			elseif TransmogLootHelper_Settings["iconNewRecipe"] and itemEquipLoc == "Recipe" then
 				if app.SpellItem[itemID] then
 					local recipeID = app.SpellItem[itemID]
+					local _, _, tradeskill = C_TradeSkillUI.GetTradeSkillLineForRecipe(recipeID)
+					if app.Icon[tradeskill] then overlay.texture:SetTexture(app.Icon[tradeskill]) end
 
 					if TransmogLootHelper_Cache.Recipes[recipeID] then
-						-- Set profession icon
-						local _, _, tradeskill = C_TradeSkillUI.GetTradeSkillLineForRecipe(recipeID)
-						if app.Icon[tradeskill] then
-							overlay.texture:SetTexture(app.Icon[tradeskill])
-						end
-
-						-- Learned
 						if TransmogLootHelper_Cache.Recipes[recipeID].learned then
 							if TransmogLootHelper_Settings["iconLearned"] then
 								showOverlay("green")
 							else
 								hideOverlay()
 							end
-						-- Unlearned
 						else
 							if C_TradeSkillUI.IsRecipeProfessionLearned(recipeID) then
 								showOverlay("purple")
@@ -592,11 +586,13 @@ function app:ApplyItemOverlay(overlay, itemLink, itemLocation, containerInfo, ba
 								showOverlay("red")
 							end
 						end
-					-- Uncached
 					else
-						overlay.texture:SetTexture(app.Icon["Recipe"])
-						showOverlay("yellow")
-						overlay.animation:Stop()
+						if C_TradeSkillUI.IsRecipeProfessionLearned(recipeID) then
+							showOverlay("yellow")
+							overlay.animation:Stop()
+						else
+							showOverlay("red")
+						end
 					end
 				else
 					hideOverlay()
