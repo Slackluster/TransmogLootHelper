@@ -270,7 +270,7 @@ function app:CreateSettings()
 	Settings.CreateDropdown(category, setting, GetOptions, tooltip)
 	setting:SetValueChangedCallback(function()
 		for i = 1, 4 do
-			app:CreateItemOverlay(app.PreviewItem[i].frame, "item:"..i)
+			app:ApplyItemOverlay(app.PreviewItem[i].frame, "item:"..i)
 		end
 		app:SettingsChanged()
 	end)
@@ -288,7 +288,7 @@ function app:CreateSettings()
 	Settings.CreateDropdown(category, setting, GetOptions, tooltip)
 	setting:SetValueChangedCallback(function()
 		for i = 1, 4 do
-			app:CreateItemOverlay(app.PreviewItem[i].frame, "item:"..i)
+			app:ApplyItemOverlay(app.PreviewItem[i].frame, "item:"..i)
 		end
 		app:SettingsChanged()
 	end)
@@ -298,7 +298,7 @@ function app:CreateSettings()
 	local parentSetting = Settings.CreateCheckbox(category, setting, tooltip)
 	setting:SetValueChangedCallback(function()
 		for i = 1, 4 do
-			app:CreateItemOverlay(app.PreviewItem[i].frame, "item:"..i)
+			app:ApplyItemOverlay(app.PreviewItem[i].frame, "item:"..i)
 		end
 		app:SettingsChanged()
 	end)
@@ -307,7 +307,7 @@ function app:CreateSettings()
 	local cbSetting = Settings.RegisterAddOnSetting(category, appName.."_"..cbVariable, cbVariable, TransmogLootHelper_Settings, Settings.VarType.Boolean, cbName, true)
 	cbSetting:SetValueChangedCallback(function()
 		for i = 1, 4 do
-			app:CreateItemOverlay(app.PreviewItem[i].frame, "item:"..i)
+			app:ApplyItemOverlay(app.PreviewItem[i].frame, "item:"..i)
 		end
 		app:SettingsChanged()
 	end)
@@ -325,7 +325,7 @@ function app:CreateSettings()
 	local ddSetting = Settings.RegisterAddOnSetting(category, appName.."_"..ddVariable, ddVariable, TransmogLootHelper_Settings, Settings.VarType.Number, ddName, 0)
 	ddSetting:SetValueChangedCallback(function()
 		for i = 1, 4 do
-			app:CreateItemOverlay(app.PreviewItem[i].frame, "item:"..i)
+			app:ApplyItemOverlay(app.PreviewItem[i].frame, "item:"..i)
 		end
 		app:SettingsChanged()
 	end)
@@ -338,7 +338,7 @@ function app:CreateSettings()
 	Settings.CreateCheckbox(category, setting, tooltip)
 	setting:SetValueChangedCallback(function()
 		for i = 1, 4 do
-			app:CreateItemOverlay(app.PreviewItem[i].frame, "item:"..i)
+			app:ApplyItemOverlay(app.PreviewItem[i].frame, "item:"..i)
 		end
 	end)
 
@@ -358,7 +358,7 @@ function app:CreateSettings()
 					btn.TLHOverlay = CreateFrame("Frame", nil, btn)
 					btn.TLHOverlay:SetAllPoints(btn.Icon)
 				end
-				app:CreateItemOverlay(btn.TLHOverlay, "item:"..i)
+				app:ApplyItemOverlay(btn.TLHOverlay, "item:"..i)
 				app.PreviewItem[i].frame = btn.TLHOverlay
 
 				btn:SetScript("OnEnter", function()

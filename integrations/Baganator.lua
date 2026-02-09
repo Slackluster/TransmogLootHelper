@@ -10,13 +10,13 @@ app.Event:Register("ADDON_LOADED", function(addOnName, containsBindings)
 						C_Item.RequestLoadItemDataByID(itemDetails.itemID)
 						return
 					end
-					app:CreateItemOverlay(icon.overlay, itemDetails.itemLink, nil, { hasLoot = itemDetails.hasLoot }, true)
+					app:ApplyItemOverlay(icon.overlay, itemDetails.itemLink, nil, { hasLoot = itemDetails.hasLoot }, true)
 					api:UpdateOverlay()
 					return icon:IsShown()
 				end,
 				function(itemButton)
 					local overlay = CreateFrame("Frame", nil, itemButton)
-					app:CreateItemOverlay(overlay, "item:65500")
+					app:ApplyItemOverlay(overlay, "item:65500")
 					if TransmogLootHelper_Settings["iconStyle"] <= 2 then
 						overlay.icon.padding = -2
 					else

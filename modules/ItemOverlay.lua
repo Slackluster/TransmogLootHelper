@@ -45,7 +45,7 @@ end)
 ------------------
 
 -- Create and set our icon and text overlay
-function app:CreateItemOverlay(overlay, itemLink, itemLocation, containerInfo, bagAddon, additionalInfo)
+function app:ApplyItemOverlay(overlay, itemLink, itemLocation, containerInfo, bagAddon, additionalInfo)
 	-- Create our overlay
 	local function createOverlay()
 		-- Text
@@ -812,7 +812,7 @@ function app:HookItemOverlay()
 				if exists then
 					local itemLink = C_Item.GetItemLink(itemLocation)
 					local containerInfo = C_Container.GetContainerItemInfo(itemButton:GetBagID(), itemButton:GetID())
-					app:CreateItemOverlay(itemButton.TLHOverlay, itemLink, itemLocation, containerInfo)
+					app:ApplyItemOverlay(itemButton.TLHOverlay, itemLink, itemLocation, containerInfo)
 				else
 					itemButton.TLHOverlay:Hide()
 				end
@@ -861,7 +861,7 @@ function app:HookItemOverlay()
 							if exists then
 								local itemLink = C_Item.GetItemLink(itemLocation)
 								local containerInfo = C_Container.GetContainerItemInfo(BankPanel.selectedTabID, i)
-								app:CreateItemOverlay(itemButton.TLHOverlay, itemLink, itemLocation, containerInfo)
+								app:ApplyItemOverlay(itemButton.TLHOverlay, itemLink, itemLocation, containerInfo)
 							else
 								itemButton.TLHOverlay:Hide()
 							end
@@ -917,7 +917,7 @@ function app:HookItemOverlay()
 						local slot = itemButton:GetID()
 						local itemLink = GetGuildBankItemLink(tab, slot)
 						if itemLink then
-							app:CreateItemOverlay(itemButton.TLHOverlay, itemLink)
+							app:ApplyItemOverlay(itemButton.TLHOverlay, itemLink)
 						else
 							itemButton.TLHOverlay:Hide()
 						end
@@ -947,7 +947,7 @@ function app:HookItemOverlay()
 
 							local itemLink = v.itemLink
 							if itemLink then
-								app:CreateItemOverlay(v.TLHOverlay, itemLink)
+								app:ApplyItemOverlay(v.TLHOverlay, itemLink)
 								v.TLHOverlay.text:SetText("")	-- No bind text for these
 							end
 						end)
@@ -993,7 +993,7 @@ function app:HookItemOverlay()
 							local _, itemLink = C_Item.GetItemInfo(itemID)
 
 							if itemLink then
-								app:CreateItemOverlay(itemButton.TLHOverlay, itemLink)
+								app:ApplyItemOverlay(itemButton.TLHOverlay, itemLink)
 							else
 								itemButton.TLHOverlay:Hide()
 							end
@@ -1017,7 +1017,7 @@ function app:HookItemOverlay()
 
 					local itemLink = GetInboxItemLink(app.SelectedMail, i)
 					if itemLink then
-						app:CreateItemOverlay(itemButton.TLHOverlay, itemLink)
+						app:ApplyItemOverlay(itemButton.TLHOverlay, itemLink)
 					else
 						itemButton.TLHOverlay:Hide()
 					end
@@ -1039,7 +1039,7 @@ function app:HookItemOverlay()
 
 					local itemLink = GetLootSlotLink(frame:GetSlotIndex())
 					if itemLink then
-						app:CreateItemOverlay(frame.TLHOverlay, itemLink)
+						app:ApplyItemOverlay(frame.TLHOverlay, itemLink)
 					end
 				end
 			end
@@ -1056,7 +1056,7 @@ function app:HookItemOverlay()
 				if not frame.rollID then return end
 				local itemLink = GetLootRollItemLink(frame.rollID)
 				if itemLink then
-					app:CreateItemOverlay(frame.TLHOverlay, itemLink)
+					app:ApplyItemOverlay(frame.TLHOverlay, itemLink)
 				end
 			end
 
@@ -1097,7 +1097,7 @@ function app:HookItemOverlay()
 
 					local itemLink = itemButton.link
 					if itemLink then
-						app:CreateItemOverlay(itemButton.TLHOverlay, itemLink)
+						app:ApplyItemOverlay(itemButton.TLHOverlay, itemLink)
 					else
 						itemButton.TLHOverlay:Hide()
 					end
@@ -1145,7 +1145,7 @@ function app:HookItemOverlay()
 							itemButton.TLHOverlay:Hide()
 						elseif itemLink then
 							table.insert(sellPrice, { price = select(11, C_Item.GetItemInfo(itemLink)), itemButton = itemButton})
-							app:CreateItemOverlay(itemButton.TLHOverlay, itemLink)
+							app:ApplyItemOverlay(itemButton.TLHOverlay, itemLink)
 							itemButton.TLHOverlay:SetAllPoints(itemButton.IconBorder)
 						else
 							itemButton.TLHOverlay:Hide()
@@ -1230,7 +1230,7 @@ function app:HookItemOverlay()
 					if bestIndex and bestType then
 						local itemLink = GetQuestLogItemLink(bestType, bestIndex, pin.questID)
 						if itemLink then
-							app:CreateItemOverlay(pin.TLHOverlay, itemLink)
+							app:ApplyItemOverlay(pin.TLHOverlay, itemLink)
 							pin.TLHOverlay.text:SetText("")	-- No bind text for these
 						else
 							pin.TLHOverlay:Hide()
@@ -1260,7 +1260,7 @@ function app:HookItemOverlay()
 							v.TLHOverlay:Hide()
 
 							if v.link then
-								app:CreateItemOverlay(v.TLHOverlay, v.link)
+								app:ApplyItemOverlay(v.TLHOverlay, v.link)
 								v.TLHOverlay.text:SetText("")
 								v.TLHOverlay.animation:Stop()
 							end
@@ -1290,7 +1290,7 @@ function app:HookItemOverlay()
 							if recipeID then
 								local itemLink = C_TradeSkillUI.GetRecipeItemLink(recipeID)
 								if itemLink then
-									app:CreateItemOverlay(v.TLHOverlay, itemLink)
+									app:ApplyItemOverlay(v.TLHOverlay, itemLink)
 									v.TLHOverlay.text:SetText("")	-- No bind text for these
 
 									v.TLHOverlay.icon:ClearAllPoints()
@@ -1329,9 +1329,9 @@ function app:HookItemOverlay()
 								local _, itemLink = C_Item.GetItemInfo(itemID)
 								if itemLink then
 									if itemID == 82800 and rowData.itemKey.battlePetSpeciesID then	-- Can't extract pet info from this preview cage
-										app:CreateItemOverlay(v.TLHOverlay, itemLink, nil, nil, nil, rowData.itemKey.battlePetSpeciesID)
+										app:ApplyItemOverlay(v.TLHOverlay, itemLink, nil, nil, nil, rowData.itemKey.battlePetSpeciesID)
 									else
-										app:CreateItemOverlay(v.TLHOverlay, itemLink)
+										app:ApplyItemOverlay(v.TLHOverlay, itemLink)
 									end
 									v.TLHOverlay.text:SetText("")	-- No bind text for these
 
@@ -1363,7 +1363,7 @@ function app:HookItemOverlay()
 								end
 
 								local itemLink = C_WeeklyRewards.GetItemHyperlink(v.info.rewards[1].itemDBID)
-								app:CreateItemOverlay(v.TLHOverlay, itemLink)
+								app:ApplyItemOverlay(v.TLHOverlay, itemLink)
 							end
 						end
 					end

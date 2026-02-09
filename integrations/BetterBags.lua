@@ -38,7 +38,7 @@ app.Event:Register("ADDON_LOADED", function(addOnName, containsBindings)
 				end
 
 				if itemLink then
-					app:CreateItemOverlay(item.TLHOverlay, itemLink, itemLocation, containerInfo, true)
+					app:ApplyItemOverlay(item.TLHOverlay, itemLink, itemLocation, containerInfo, true)
 				elseif item.isFreeSlot or not itemLink then
 					item.TLHOverlay:Hide()
 				end
