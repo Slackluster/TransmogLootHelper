@@ -1030,14 +1030,14 @@ function app:HookItemOverlay()
 
 		-- Hook our overlay onto the regular lootframe (thanks for the framework, LS!)
 		LootFrame:HookScript("OnShow", function()
-			for i, frame in next, LootFrame.ScrollBox.view.frames do
+			for _, frame in next, LootFrame.ScrollBox.view.frames do
 				if frame.Item then
 					if not frame.TLHOverlay then
 						frame.TLHOverlay = CreateFrame("Frame", nil, frame.Item)
 						frame.TLHOverlay:SetAllPoints(frame.Item)
 					end
 
-					local itemLink = GetLootSlotLink(i)
+					local itemLink = GetLootSlotLink(frame:GetSlotIndex())
 					if itemLink then
 						app:CreateItemOverlay(frame.TLHOverlay, itemLink)
 					end
