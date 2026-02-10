@@ -510,8 +510,27 @@ function app:ApplyItemOverlay(overlay, itemLink, itemLocation, containerInfo, ba
 				end
 			-- Ensembles & Arsenals
 			elseif TransmogLootHelper_Settings["iconNewMog"] and (itemEquipLoc == "Ensemble" or itemEquipLoc == "Arsenal") then
+				local setID = C_Item.GetItemLearnTransmogSet(itemLink)
+				local appearances = C_Transmog.GetAllSetAppearancesByID(setID)
+
+				local sourceMissing = false
+				local appearanceMissing = false
+				for k, v in pairs(appearances) do
+					if not sourceMissing and not api:IsSourceCollected(v.itemID, v.itemModifiedAppearanceID) then
+						sourceMissing = true
+					end
+
+					if not appearanceMissing and not api:IsAppearanceCollected(v.itemID, v.itemModifiedAppearanceID) then
+						appearanceMissing = true
+					end
+
+					if sourceMissing and appearanceMissing then
+						break
+					end
+				end
+
 				-- Learned
-				if app:IsLearned(itemLink) then
+				if (TransmogLootHelper_Settings["iconNewSource"] and not sourceMissing) or not appearanceMissing then
 					if TransmogLootHelper_Settings["iconLearned"] then
 						showOverlay("green")
 					else
@@ -521,6 +540,8 @@ function app:ApplyItemOverlay(overlay, itemLink, itemLocation, containerInfo, ba
 				elseif app:HasRedTooltipText(itemLink) then
 					showOverlay("red")
 				-- Unlearned
+				elseif TransmogLootHelper_Settings["iconNewSource"] and sourceMissing and not appearanceMissing then
+					showOverlay("yellow")
 				else
 					showOverlay("purple")
 				end

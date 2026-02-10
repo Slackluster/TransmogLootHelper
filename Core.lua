@@ -165,10 +165,10 @@ function app:GetSourceID(itemLink)
 end
 
 -- Check if an item's appearance is collected (thank you Plusmouse!)
-function api:IsAppearanceCollected(itemLink)
+function api:IsAppearanceCollected(itemLink, sourceID)
 	assert(self == api, "Call TransmogLootHelper:IsAppearanceCollected(), not TransmogLootHelper.IsAppearanceCollected()")
 
-	local sourceID = app:GetSourceID(itemLink)
+	local sourceID = sourceID or app:GetSourceID(itemLink)
 	if not sourceID then
 		if app:GetTransmogText(itemLink, TRANSMOGRIFY_TOOLTIP_APPEARANCE_UNKNOWN) then
 			return false
@@ -197,10 +197,10 @@ function api:IsAppearanceCollected(itemLink)
 end
 
 -- Check if an item's source is collected (thank you Plusmouse!)
-function api:IsSourceCollected(itemLink)
+function api:IsSourceCollected(itemLink, sourceID)
 	assert(self == api, "Call TransmogLootHelper:IsSourceCollected(), not TransmogLootHelper.IsSourceCollected()")
 
-	local sourceID = app:GetSourceID(itemLink)
+	local sourceID = sourceID or app:GetSourceID(itemLink)
 	if not sourceID then
 		if app:GetTransmogText(itemLink, TRANSMOGRIFY_TOOLTIP_APPEARANCE_UNKNOWN) or app:GetTransmogText(itemLink, TRANSMOGRIFY_TOOLTIP_ITEM_UNKNOWN_APPEARANCE_KNOWN) then
 			return false
