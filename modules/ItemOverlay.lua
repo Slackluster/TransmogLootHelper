@@ -65,7 +65,7 @@ function app:ApplyItemOverlay(overlay, itemLink, itemLocation, containerInfo, ba
 			overlay.texture:SetAllPoints(overlay.icon)
 
 			-- Round mask
-			overlay.mask= overlay.icon:CreateMaskTexture()
+			overlay.mask = overlay.icon:CreateMaskTexture()
 			overlay.mask:SetTexture("Interface\\CHARACTERFRAME\\TempPortraitAlphaMask")
 			overlay.mask:SetAllPoints(overlay.icon)
 
@@ -291,6 +291,25 @@ function app:ApplyItemOverlay(overlay, itemLink, itemLocation, containerInfo, ba
 
 		local function showOverlay(color)
 			local function setCorner(style)
+				overlay.texture:ClearAllPoints()
+				if style == 1 then
+					overlay.texture:SetAllPoints(overlay.icon)
+					overlay.texture:AddMaskTexture(overlay.mask)
+					overlay.border:SetSize(22, 22)
+				elseif style == 2 then
+					overlay.texture:SetPoint("TOPLEFT", overlay.icon, -1, 1)
+					overlay.texture:SetPoint("BOTTOMRIGHT", overlay.icon, 1, -1)
+				else
+					overlay.texture:SetAllPoints(overlay.icon)
+					overlay.border:SetSize(18, 18)
+				end
+
+				if style == 1 then
+					overlay.mask:Show()
+				else
+					overlay.mask:Hide()
+				end
+
 				if not (bagAddon and C_AddOns.IsAddOnLoaded("Baganator")) then
 					overlay.icon:ClearAllPoints()
 					if style <= 2 then
@@ -351,22 +370,14 @@ function app:ApplyItemOverlay(overlay, itemLink, itemLocation, containerInfo, ba
 			end
 
 			overlay.border:SetTexture(nil)
-			overlay.texture:ClearAllPoints()
-			if TransmogLootHelper_Settings["iconStyle"] == 1 then
-				overlay.texture:SetAllPoints(overlay.icon)
-				overlay.texture:AddMaskTexture(overlay.mask)
-				overlay.border:SetSize(22, 22)
-			elseif TransmogLootHelper_Settings["iconStyle"] == 2 then
-				overlay.texture:SetPoint("TOPLEFT", overlay.icon, -1, 1)
-				overlay.texture:SetPoint("BOTTOMRIGHT", overlay.icon, 1, -1)
-			else
-				overlay.texture:SetAllPoints(overlay.icon)
-				overlay.border:SetSize(18, 18)
-			end
-
+			overlay.animationTexture:Show()
 			if color == "purple" then
 				overlay.animation:Stop()
-				if TransmogLootHelper_Settings["animateIcon"] then overlay.animation:Play() end
+				overlay.animationTexture:Hide()
+				if TransmogLootHelper_Settings["animateIcon"] then
+					overlay.animation:Play()
+					overlay.animationTexture:Show()
+				end
 
 				if TransmogLootHelper_Settings["iconStyle"] == 1 then
 					overlay.border:SetTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\border-circle-purple.png")
@@ -379,7 +390,11 @@ function app:ApplyItemOverlay(overlay, itemLink, itemLocation, containerInfo, ba
 				end
 			elseif color == "yellow" then
 				overlay.animation:Stop()
-				if TransmogLootHelper_Settings["animateIcon"] then overlay.animation:Play() end
+				overlay.animationTexture:Hide()
+				if TransmogLootHelper_Settings["animateIcon"] then
+					overlay.animation:Play()
+					overlay.animationTexture:Show()
+				end
 
 				if TransmogLootHelper_Settings["iconStyle"] == 1 then
 					overlay.border:SetTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\border-circle-yellow.png")
@@ -392,6 +407,7 @@ function app:ApplyItemOverlay(overlay, itemLink, itemLocation, containerInfo, ba
 				end
 			elseif color == "green" then
 				overlay.animation:Stop()
+				overlay.animationTexture:Hide()
 
 				local function setStyle(style)
 					if style == 1 then
@@ -411,6 +427,7 @@ function app:ApplyItemOverlay(overlay, itemLink, itemLocation, containerInfo, ba
 				end
 			elseif color == "red" then
 				overlay.animation:Stop()
+				overlay.animationTexture:Hide()
 
 				if TransmogLootHelper_Settings["iconStyle"] == 1 then
 					overlay.border:SetTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\border-circle-red.png")
@@ -425,9 +442,7 @@ function app:ApplyItemOverlay(overlay, itemLink, itemLocation, containerInfo, ba
 
 			if TransmogLootHelper_Settings["iconStyle"] == 4 then
 				overlay.animation:Stop()
-				overlay.animationTexture:SetAlpha(0)
-			else
-				overlay.animationTexture:SetAlpha(1)
+				overlay.animationTexture:Hide()
 			end
 
 			overlay.icon:Show()
@@ -436,6 +451,7 @@ function app:ApplyItemOverlay(overlay, itemLink, itemLocation, containerInfo, ba
 		local function hideOverlay()
 			overlay.icon:Hide()
 			overlay.animation:Stop()
+			overlay.animationTexture:Hide()
 		end
 
 		if app.Icon[itemEquipLoc] then
@@ -554,6 +570,7 @@ function app:ApplyItemOverlay(overlay, itemLink, itemLocation, containerInfo, ba
 			elseif TransmogLootHelper_Settings["iconNewPet"] and itemEquipLoc == "Unknown" then
 				showOverlay("yellow")
 				overlay.animation:Stop()
+				overlay.animationTexture:Hide()
 			-- Toys
 			elseif TransmogLootHelper_Settings["iconNewToy"] and itemEquipLoc == "Toy" then
 				if PlayerHasToy(itemID) then
@@ -590,6 +607,7 @@ function app:ApplyItemOverlay(overlay, itemLink, itemLocation, containerInfo, ba
 						if C_TradeSkillUI.IsRecipeProfessionLearned(recipeID) then
 							showOverlay("yellow")
 							overlay.animation:Stop()
+							overlay.animationTexture:Hide()
 						else
 							showOverlay("red")
 						end
@@ -1227,7 +1245,7 @@ function app:HookItemOverlay()
 						local itemLink = GetQuestLogItemLink(bestType, bestIndex, pin.questID)
 						if itemLink then
 							app:ApplyItemOverlay(pin.TLHOverlay, itemLink)
-							pin.TLHOverlay.text:SetText("")	-- No bind text for these
+							pin.TLHOverlay.text:SetText("")
 						else
 							pin.TLHOverlay:Hide()
 						end
@@ -1259,6 +1277,7 @@ function app:HookItemOverlay()
 								app:ApplyItemOverlay(v.TLHOverlay, v.link)
 								v.TLHOverlay.text:SetText("")
 								v.TLHOverlay.animation:Stop()
+								v.TLHoverlay.animationTexture:Hide()
 							end
 						end
 					end)
@@ -1287,14 +1306,15 @@ function app:HookItemOverlay()
 								local itemLink = C_TradeSkillUI.GetRecipeItemLink(recipeID)
 								if itemLink then
 									app:ApplyItemOverlay(v.TLHOverlay, itemLink)
-									v.TLHOverlay.text:SetText("")	-- No bind text for these
+									v.TLHOverlay.text:SetText("")
 
 									v.TLHOverlay.icon:ClearAllPoints()
-									v.TLHOverlay.icon:SetPoint("RIGHT", v)	-- Set the icon to the right of the row
+									v.TLHOverlay.icon:SetPoint("RIGHT", v)
 
 									-- Delay this bit, sometimes it doesn't quite trigger right
 									C_Timer.After(0.2, function()
-										v.TLHOverlay.animation:Stop()	-- Don't animate, that's a little obnoxious in these close quarters
+										v.TLHOverlay.animation:Stop()
+										v.TLHoverlay.animationTexture:Hide()
 									end)
 								end
 							end
@@ -1329,11 +1349,12 @@ function app:HookItemOverlay()
 									else
 										app:ApplyItemOverlay(v.TLHOverlay, itemLink)
 									end
-									v.TLHOverlay.text:SetText("")	-- No bind text for these
+									v.TLHOverlay.text:SetText("")
 
 									v.TLHOverlay.icon:ClearAllPoints()
-									v.TLHOverlay.icon:SetPoint("LEFT", v, 134, 0)	-- Set the icon to the left of the row
-									v.TLHOverlay.animation:Stop()	-- And don't animate, that's a little obnoxious in these close quarters
+									v.TLHOverlay.icon:SetPoint("LEFT", v, 134, 0)
+									v.TLHOverlay.animation:Stop()
+									v.TLHoverlay.animationTexture:Hide()
 								end
 							end
 						end
