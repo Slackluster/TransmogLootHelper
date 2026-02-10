@@ -1312,7 +1312,7 @@ function app:HookItemOverlay()
 								app:ApplyItemOverlay(v.TLHOverlay, v.link)
 								v.TLHOverlay.text:SetText("")
 								v.TLHOverlay.animation:Stop()
-								v.TLHoverlay.animationTexture:Hide()
+								v.TLHOverlay.animationTexture:Hide()
 							end
 						end
 					end)
@@ -1349,7 +1349,7 @@ function app:HookItemOverlay()
 									-- Delay this bit, sometimes it doesn't quite trigger right
 									C_Timer.After(0.2, function()
 										v.TLHOverlay.animation:Stop()
-										v.TLHoverlay.animationTexture:Hide()
+										v.TLHOverlay.animationTexture:Hide()
 									end)
 								end
 							end
@@ -1389,7 +1389,7 @@ function app:HookItemOverlay()
 									v.TLHOverlay.icon:ClearAllPoints()
 									v.TLHOverlay.icon:SetPoint("LEFT", v, 134, 0)
 									v.TLHOverlay.animation:Stop()
-									v.TLHoverlay.animationTexture:Hide()
+									v.TLHOverlay.animationTexture:Hide()
 								end
 							end
 						end
