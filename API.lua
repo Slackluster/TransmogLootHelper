@@ -15,5 +15,5 @@ TransmogLootHelper:IsAppearanceCollected(itemLink)
 TransmogLootHelper:IsSourceCollected(itemLink)
 
 -- Remove this character from the addon cache, marking things (namely recipes) only known by this character as unlearned
--- @param characterName Character-Realm
+-- characterName: string, "Character-Realm"
 TransmogLootHelper:DeleteCharacter(characterName)
