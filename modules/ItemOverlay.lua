@@ -67,18 +67,18 @@ function app:ApplyItemOverlay(overlay, itemLink, itemLocation, containerInfo, ba
 			-- Round mask
 			overlay.mask = overlay.icon:CreateMaskTexture()
 			overlay.mask:SetTexture("Interface\\CHARACTERFRAME\\TempPortraitAlphaMask")
-			overlay.mask:SetAllPoints(overlay.icon)
+			overlay.mask:SetAllPoints(overlay.texture)
 
 			-- Border
 			local frame = CreateFrame("Frame", nil, overlay.icon)
-			frame:SetAllPoints(overlay.icon)
+			frame:SetAllPoints(overlay.texture)
 			overlay.border = frame:CreateTexture(nil, "OVERLAY")
-			overlay.border:SetPoint("CENTER", overlay.icon)
+			overlay.border:SetPoint("CENTER", overlay.texture)
 
 			-- Animation texture
 			local frame = CreateFrame("Frame", nil, overlay.icon)
 			frame:SetSize(10, 10)
-			frame:SetPoint("CENTER")
+			frame:SetPoint("CENTER", overlay.texture)
 			frame:SetFrameLevel(overlay.icon:GetFrameLevel() - 1)
 			overlay.animationTexture = frame:CreateTexture(nil, "ARTWORK")
 			overlay.animationTexture:SetAllPoints(frame)
@@ -348,6 +348,20 @@ function app:ApplyItemOverlay(overlay, itemLink, itemLocation, containerInfo, ba
 						overlay.texture:SetRotation(0)
 					end
 				elseif bagAddon and C_AddOns.IsAddOnLoaded("Baganator") and Baganator.API.GetCurrentCornerForWidget then
+					if style > 2 then
+						overlay.texture:ClearAllPoints()
+						overlay.texture:SetSize(14, 14)
+						if Baganator.API.GetCurrentCornerForWidget("transmogloothelper") == "top_left" then
+							overlay.texture:SetPoint("CENTER", overlay.icon, 3, -3)
+						elseif Baganator.API.GetCurrentCornerForWidget("transmogloothelper") == "top_right" then
+							overlay.texture:SetPoint("CENTER", overlay.icon, -3, -3)
+						elseif Baganator.API.GetCurrentCornerForWidget("transmogloothelper") == "bottom_left" then
+							overlay.texture:SetPoint("CENTER", overlay.icon, 3, 3)
+						elseif Baganator.API.GetCurrentCornerForWidget("transmogloothelper") == "bottom_right" then
+							overlay.texture:SetPoint("CENTER", overlay.icon, -3, 3)
+						end
+					end
+
 					if style == 4 then
 						if Baganator.API.GetCurrentCornerForWidget("transmogloothelper") == "top_left" then
 							overlay.texture:SetRotation(math.pi/2)
