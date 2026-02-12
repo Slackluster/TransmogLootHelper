@@ -90,14 +90,14 @@ function app:CreateSettings()
 	})
 
 	local icon = LibStub("LibDBIcon-1.0", true)
-	icon:Register("TransmogLootHelper", miniButton, TransmogLootHelper_Settings)
+	icon:Register(appName, miniButton, TransmogLootHelper_Settings)
 
 	if TransmogLootHelper_Settings["minimapIcon"] == true then
 		TransmogLootHelper_Settings["hide"] = false
-		icon:Show("TransmogLootHelper")
+		icon:Show(appName)
 	else
 		TransmogLootHelper_Settings["hide"] = true
-		icon:Hide("TransmogLootHelper")
+		icon:Hide(appName)
 	end
 
 	-- Settings page
@@ -500,10 +500,10 @@ function app:CreateSettings()
 	setting:SetValueChangedCallback(function()
 		if TransmogLootHelper_Settings["minimapIcon"] == true then
 			TransmogLootHelper_Settings["hide"] = false
-			icon:Show("TransmogLootHelper")
+			icon:Show(appName)
 		else
 			TransmogLootHelper_Settings["hide"] = true
-			icon:Hide("TransmogLootHelper")
+			icon:Hide(appName)
 		end
 	end)
 
