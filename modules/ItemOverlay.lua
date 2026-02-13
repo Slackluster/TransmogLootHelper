@@ -563,8 +563,10 @@ function app:ApplyItemOverlay(overlay, itemLink, itemLocation, containerInfo, ba
 				end
 			-- Mounts
 			elseif TransmogLootHelper_Settings["iconNewMount"] and itemEquipLoc == "Mount" then
+				local mountID = C_MountJournal.GetMountFromItem(itemID)
+				local _, _, _, _, _, _, _, _, _, _, isCollected = C_MountJournal.GetMountInfoByID(mountID)
 				-- Learned
-				if app:IsLearned(itemLink) then
+				if isCollected then
 					if TransmogLootHelper_Settings["iconLearned"] then
 						showOverlay("green")
 					else
