@@ -1118,6 +1118,11 @@ app.QuestItem = {
 	-- PATCH 11.2.5 --
 	------------------
 	[249242] = 91961,	-- Bronze Celebration Titles: Khaz Algar Enthusiast
+
+	------------------
+	-- PATCH 12.0.1 --
+	------------------
+	[265071] = 94482,	-- Gleaming Sunmote
 }
 
 -- ItemID -> DecorID / RecordID
