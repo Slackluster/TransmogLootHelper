@@ -154,16 +154,13 @@ function app:ApplyItemOverlay(overlay, itemLink, itemLocation, containerInfo, ba
 			elseif C_PetJournal.GetPetInfoByItemID(itemID) then
 				itemEquipLoc = "Pet"
 			-- Customisations and spellbooks
-			elseif app.QuestItem[itemID] or app.SpellItem[itemID] then
+			elseif app.QuestItem[itemID] or app:GetLearnedSpell(itemLink) then
 				itemEquipLoc = "Customisation"
 
-				-- Check for profession books
-				if app.SpellItem[itemID] then
-					local _, _, tradeskill = C_TradeSkillUI.GetTradeSkillLineForRecipe(app.SpellItem[itemID])
-
-					if app.Icon[tradeskill] then
-						itemEquipLoc = "Recipe"
-					end
+				local spellID = app:GetLearnedSpell(itemLink)
+				if spellID then
+					local _, _, tradeskill = C_TradeSkillUI.GetTradeSkillLineForRecipe(spellID)
+					if app.Icon[tradeskill] then itemEquipLoc = "Recipe" end
 				end
 			-- Illusions, Ensembles, and Arsenals
 			elseif classID == Enum.ItemClass.Consumable and subclassID == Enum.ItemConsumableSubclass.Other then
@@ -621,8 +618,9 @@ function app:ApplyItemOverlay(overlay, itemLink, itemLocation, containerInfo, ba
 				end
 			-- Recipes
 			elseif TransmogLootHelper_Settings["iconNewRecipe"] and itemEquipLoc == "Recipe" then
-				if app.SpellItem[itemID] then
-					local recipeID = app.SpellItem[itemID]
+				local recipeID = app:GetLearnedSpell(itemLink)
+
+				if recipeID then
 					local _, _, tradeskill = C_TradeSkillUI.GetTradeSkillLineForRecipe(recipeID)
 					if app.Icon[tradeskill] then overlay.texture:SetTexture(app.Icon[tradeskill]) end
 
@@ -725,8 +723,9 @@ function app:ApplyItemOverlay(overlay, itemLink, itemLocation, containerInfo, ba
 				end
 			-- Customisations (includes spellbooks)
 			elseif TransmogLootHelper_Settings["iconUsable"] and itemEquipLoc == "Customisation" then
+				local spellID = app:GetLearnedSpell(itemLink)
 				-- Learned
-				if (TransmogLootHelper_Cache.Recipes[app.SpellItem[itemID]] and TransmogLootHelper_Cache.Recipes[app.SpellItem[itemID]].learned) or (app.QuestItem[itemID] and C_QuestLog.IsQuestFlaggedCompletedOnAccount(app.QuestItem[itemID])) or app:IsLearned(itemLink) then
+				if (TransmogLootHelper_Cache.Recipes[spellID] and TransmogLootHelper_Cache.Recipes[spellID].learned) or (app.QuestItem[itemID] and C_QuestLog.IsQuestFlaggedCompletedOnAccount(app.QuestItem[itemID])) or app:IsLearned(itemLink) then
 					if TransmogLootHelper_Settings["iconLearned"] then
 						showOverlay("green")
 					else
@@ -1439,23 +1438,8 @@ function app:HookItemOverlay()
 			api:UpdateOverlay()
 		end)
 
-		-- Cache player spells, for books that teach these
-		local function cacheSpells()
-			C_Timer.After(1, function()
-				for itemID, spellID in pairs(app.SpellItem) do
-					if C_SpellBook.IsSpellKnown(spellID) or C_SpellBook.IsSpellInSpellBook(spellID) then
-						app:CacheRecipe(spellID, true)
-					end
-				end
-			end)
-		end
-
-		app.Event:Register("PLAYER_ENTERING_WORLD", function(isInitialLogin, isReloadingUi)
-			if isInitialLogin or isReloadingUi then cacheSpells() end
-		end)
-
-		app.Event:Register("SPELLS_CHANGED", function()
-			cacheSpells()
+		app.Event:Register("LEARNED_SPELL_IN_SKILL_LINE", function(spellID, skillLineIndex, isGuildPerkSpell)
+			app:CacheRecipe(spellID, true)
 			api:UpdateOverlay()
 		end)
 	end
@@ -1498,13 +1482,11 @@ function app:AddTooltipInfo()
 			-- Get our most accurate itemLink and itemID
 			itemID = primaryItemID or secondaryItemID
 			if itemID then
-				local _, _, _, _, _, _, _, _, _, _, _, classID, subclassID = C_Item.GetItemInfo(itemID)
-				if classID == 9 and subclassID ~= 0 and app.SpellItem[itemID] then
-					local recipeID = app.SpellItem[itemID]
-					if TransmogLootHelper_Cache.Recipes[recipeID] == nil then
-						tooltip:AddLine(" ")
-						tooltip:AddLine(app.IconTLH .. " " .. L.RECIPE_UNCACHED)
-					end
+				local _, itemLink, _, _, _, _, _, _, _, _, _, classID, subclassID = C_Item.GetItemInfo(itemID)
+				local recipeID = app:GetLearnedSpell(itemLink)
+				if classID == 9 and subclassID ~= 0 and recipeID and TransmogLootHelper_Cache.Recipes[recipeID] == nil then
+					tooltip:AddLine(" ")
+					tooltip:AddLine(app.IconTLH .. " " .. L.RECIPE_UNCACHED)
 				end
 			end
 		end
