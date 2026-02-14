@@ -120,7 +120,8 @@ function app:IsLearned(itemLinkie)
 end
 
 function app:GetLearnedSpell(itemLinkie)
-	local tooltip = C_TooltipInfo.GetHyperlink(itemLinkie)
+	local tooltip = app.Tooltip[itemLinkie] or C_TooltipInfo.GetHyperlink(itemLinkie)
+	app.Tooltip[itemLinkie] = tooltip
 
 	if tooltip and tooltip.lines then
 		for _, line in ipairs(tooltip.lines) do
