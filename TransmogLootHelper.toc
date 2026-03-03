@@ -39,7 +39,7 @@ integrations\ArkInventory.lua
 integrations\Baganator.lua
 integrations\BetterBags.lua
 integrations\OneWoW_Bags.lua
-integrations\WoWNotesBags.lua
+integrations\WorldQuestTab.lua
 locales\enUS.lua
 locales\deDE.lua
 locales\esES.lua
