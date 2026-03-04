@@ -655,10 +655,12 @@ function app:ApplyItemOverlay(overlay, itemLink, itemLocation, containerInfo, ba
 				local decorInfo, recordID
 				if app.Decor[itemID] then
 					decorInfo = C_HousingCatalog.GetCatalogEntryInfoByRecordID(Enum.HousingCatalogEntryType.Decor, app.Decor[itemID], true)
-					recordID = decorInfo.entryID.recordID or app.Decor[itemID]
 				else
 					decorInfo = C_HousingCatalog.GetCatalogEntryInfoByItem(itemID, true)
-					recordID = decorInfo.entryID.recordID
+				end
+
+				if decorInfo then
+					recordID = decorInfo.entryID.recordID or app.Decor[itemID]
 				end
 
 				if recordID then
