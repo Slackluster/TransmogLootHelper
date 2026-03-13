@@ -1474,22 +1474,24 @@ end
 
 -- Tooltip information (to tell the user a recipe is not cached)
 function app:AddTooltipInfo()
-	local function OnTooltipSetItem(tooltip)
-		-- Only run any of this is the relevant setting is enabled
+	local function OnTooltipSetItem(tooltip, itemData)
 		if TransmogLootHelper_Settings["iconNewRecipe"] then
-			local itemLink, itemID, secondaryItemLink, secondaryItemID
-			local _, primaryItemLink, primaryItemID = TooltipUtil.GetDisplayedItem(GameTooltip)
-			if tooltip.GetItem then _, secondaryItemLink, secondaryItemID = tooltip:GetItem() end
+			local _, itemLink, itemID
+			if itemData and itemData.id then
+				itemID = itemData.id
+				itemLink = C_Item.GetItemInfo(itemID)
+			elseif tooltip.GetItem then
+				_, itemLink, itemID = tooltip:GetItem()
+			else
+				_, itemLink, itemID = TooltipUtil.GetDisplayedItem(GameTooltip)
+			end
 
-			-- Get our most accurate itemLink and itemID
-			itemID = primaryItemID or secondaryItemID
-			if itemID then
-				local _, itemLink, _, _, _, _, _, _, _, _, _, classID, subclassID = C_Item.GetItemInfo(itemID)
-				local recipeID = app:GetLearnedSpell(itemLink)
-				if classID == 9 and subclassID ~= 0 and recipeID and TransmogLootHelper_Cache.Recipes[recipeID] == nil then
-					tooltip:AddLine(" ")
-					tooltip:AddLine(app.IconTLH .. " " .. L.RECIPE_UNCACHED)
-				end
+			if not itemLink and itemID then return end
+
+			local recipeID = app:GetLearnedSpell(itemLink)
+			if recipeID and TransmogLootHelper_Cache.Recipes[recipeID] == nil then
+				tooltip:AddLine(" ")
+				tooltip:AddLine(app.IconTLH .. " " .. L.RECIPE_UNCACHED)
 			end
 		end
 	end
