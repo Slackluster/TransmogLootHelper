@@ -39,6 +39,7 @@ app.Event:Register("ADDON_LOADED", function(addOnName, containsBindings)
 						local itemLink = GetQuestLogItemLink(bestType, bestIndex, pin.questID)
 						if itemLink then
 							app:ApplyItemOverlay(pin.TLHOverlay, itemLink)
+							pin.TLHOverlay.icon:SetScale(1.2)
 							pin.TLHOverlay.text:SetText("")
 						end
 					end
