@@ -16,7 +16,6 @@ app.Event:Register("ADDON_LOADED", function(addOnName, containsBindings)
 						if debugCount <= 3 then
 							local bw, bh = button:GetSize()
 							local ow, oh = button.TLHOverlay:GetSize()
-							print(string.format("TLH: Button=%fx%f, Overlay=%fx%f", bw, bh, ow, oh))
 						end
 					end
 
