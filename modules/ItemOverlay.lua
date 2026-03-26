@@ -1417,7 +1417,12 @@ function app:HookItemOverlay()
 									v.TLHOverlay:SetAllPoints(v.ItemFrame.Icon)
 								end
 
-								local itemLink = C_WeeklyRewards.GetItemHyperlink(v.info.rewards[1].itemDBID)
+								local itemLink
+								if v.info.rewards[2] and v.info.rewards[2].itemDBID then
+									itemLink = C_WeeklyRewards.GetItemHyperlink(v.info.rewards[2].itemDBID)
+								elseif v.info.rewards[1].itemDBID then
+									itemLink = C_WeeklyRewards.GetItemHyperlink(v.info.rewards[1].itemDBID)
+								end
 								app:ApplyItemOverlay(v.TLHOverlay, itemLink)
 							end
 						end
@@ -1426,7 +1431,7 @@ function app:HookItemOverlay()
 			end
 			-- Do the thing, then do it again 1 second later because it doesn't show immediately when generating rewards
 			doTheThing()
-			C_Timer.After(1, doTheThing)
+			C_Timer.After(2, doTheThing)
 		end
 
 		app.Event:Register("WEEKLY_REWARDS_UPDATE", greatVaultOverlay)
