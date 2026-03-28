@@ -3,10 +3,10 @@
 ------------------------------------
 
 -- Initialisation
-local appName, app = ...	-- Returns the addon name and a unique table
-app.locales = {}	-- Localisation table
-app.api = {}	-- Our "API" prefix
-TransmogLootHelper = app.api	-- Create a namespace for our "API"
+local appName, app = ... -- Returns the addon name and a unique table
+app.locales = {} -- Localisation table
+app.api = {} -- Our "API" prefix
+TransmogLootHelper = app.api -- Create a namespace for our "API"
 local api = app.api
 local L = app.locales
 
@@ -186,7 +186,7 @@ function api:IsAppearanceCollected(itemLink, sourceID)
 		if app:GetTransmogText(itemLink, TRANSMOGRIFY_TOOLTIP_APPEARANCE_UNKNOWN) then
 			return false
 		else
-			return true	-- Should be nil if the item does not have an appearance, but for our purposes this is fine
+			return true -- Should be nil if the item does not have an appearance, but for our purposes this is fine
 		end
 	else
 		local subClass = select(7, C_Item.GetItemInfoInstant(itemLink))
@@ -218,7 +218,7 @@ function api:IsSourceCollected(itemLink, sourceID)
 		if app:GetTransmogText(itemLink, TRANSMOGRIFY_TOOLTIP_APPEARANCE_UNKNOWN) or app:GetTransmogText(itemLink, TRANSMOGRIFY_TOOLTIP_ITEM_UNKNOWN_APPEARANCE_KNOWN) then
 			return false
 		else
-			return true	-- Should be nil if the item does not have an appearance, but for our purposes this is fine
+			return true -- Should be nil if the item does not have an appearance, but for our purposes this is fine
 		end
 	else
 		return C_TransmogCollection.PlayerHasTransmogItemModifiedAppearance(sourceID)

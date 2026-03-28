@@ -307,8 +307,8 @@ function app:CreateWindow()
 	-- ScrollChild inside the ScrollFrame
 	local scrollChild = CreateFrame("Frame", nil, scrollFrame)
 	scrollFrame:SetScrollChild(scrollChild)
-	scrollChild:SetWidth(1)	-- This is automatically defined, so long as the attribute exists at all
-	scrollChild:SetHeight(1)	-- This is automatically defined, so long as the attribute exists at all
+	scrollChild:SetWidth(1) -- This is automatically defined, so long as the attribute exists at all
+	scrollChild:SetHeight(1) -- This is automatically defined, so long as the attribute exists at all
 	scrollChild:SetAllPoints(scrollFrame)
 	scrollChild:Show()
 	scrollFrame:SetScript("OnVerticalScroll", function() scrollChild:SetPoint("BOTTOMRIGHT", scrollFrame) end)
@@ -410,13 +410,13 @@ function app:UpdateWindow()
 	if #app.WeaponLoot >= 1 then
 		-- Custom comparison function based on the beginning of the string
 		local customSortList = {
-			"|cnIQ6",	-- Artifact
-			"|cnIQ5",	-- Legendary
-			"|cnIQ4",	-- Epic
-			"|cnIQ3",	-- Rare
-			"|cnIQ2",	-- Uncommon
-			"|cnIQ1",	-- Common
-			"|cnIQ0",	-- Poor (quantity 0)
+			"|cnIQ6", -- Artifact
+			"|cnIQ5", -- Legendary
+			"|cnIQ4", -- Epic
+			"|cnIQ3", -- Rare
+			"|cnIQ2", -- Uncommon
+			"|cnIQ1", -- Common
+			"|cnIQ0", -- Poor (quantity 0)
 		}
 		local function customSort(a, b)
 			for _, v in ipairs(customSortList) do
@@ -627,13 +627,13 @@ function app:UpdateWindow()
 	if #app.ArmourLoot >= 1 then
 		-- Custom comparison function based on the beginning of the string
 		local customSortList = {
-			"|cnIQ6",	-- Artifact
-			"|cnIQ5",	-- Legendary
-			"|cnIQ4",	-- Epic
-			"|cnIQ3",	-- Rare
-			"|cnIQ2",	-- Uncommon
-			"|cnIQ1",	-- Common
-			"|cnIQ0",	-- Poor (quantity 0)
+			"|cnIQ6", -- Artifact
+			"|cnIQ5", -- Legendary
+			"|cnIQ4", -- Epic
+			"|cnIQ3", -- Rare
+			"|cnIQ2", -- Uncommon
+			"|cnIQ1", -- Common
+			"|cnIQ0", -- Poor (quantity 0)
 		}
 		local function customSort(a, b)
 			for _, v in ipairs(customSortList) do
@@ -845,13 +845,13 @@ function app:UpdateWindow()
 	if #app.FilteredLoot >= 1 then
 		-- Custom comparison function based on the beginning of the string & a key
 		local customSortList = {
-			"|cnIQ6",	-- Artifact
-			"|cnIQ5",	-- Legendary
-			"|cnIQ4",	-- Epic
-			"|cnIQ3",	-- Rare
-			"|cnIQ2",	-- Uncommon
-			"|cnIQ1",	-- Common
-			"|cnIQ0",	-- Poor (quantity 0)
+			"|cnIQ6", -- Artifact
+			"|cnIQ5", -- Legendary
+			"|cnIQ4", -- Epic
+			"|cnIQ3", -- Rare
+			"|cnIQ2", -- Uncommon
+			"|cnIQ1", -- Common
+			"|cnIQ0", -- Poor (quantity 0)
 		}
 		local function customSort(a, b)
 			-- Primary sort by playerShort
@@ -1112,7 +1112,7 @@ end
 -- When an item is looted
 app.Event:Register("CHAT_MSG_LOOT", function(text, playerName, languageName, channelName, playerName2, specialFlags, zoneChannelID, channelIndex, channelBaseName, languageID, lineID, guid, bnSenderID, isMobile, isSubtitle, hideSenderInLetterbox, supressRaidIcons)
 	if not IsInGroup() then return end
-	if issecretvalue(text) then return end	-- Without the option to declassify secrets later on, there is no alternative
+	if issecretvalue(text) then return end -- Without the option to declassify secrets later on, there is no alternative
 
 	local itemString = string.match(text, "(|cnIQ.-|h%[.-%]|h)")
 

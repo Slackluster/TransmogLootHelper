@@ -10,7 +10,7 @@ app.Event:Register("ADDON_LOADED", function(addOnName, containsBindings)
 					rewardsFrame.TLHOverlay = CreateFrame("Frame", nil, rewardsFrame)
 					rewardsFrame.TLHOverlay:SetAllPoints(rewardsFrame)
 				end
-				rewardsFrame.TLHOverlay:Hide()	-- Hide our overlay initially, updating doesn't work like for regular itemButtons
+				rewardsFrame.TLHOverlay:Hide() -- Hide our overlay initially, updating doesn't work like for regular itemButtons
 
 				if data.questInfo.questID then
 					local bestIndex, bestType = QuestUtils_GetBestQualityItemRewardIndex(data.questInfo.questID)
@@ -31,7 +31,7 @@ app.Event:Register("ADDON_LOADED", function(addOnName, containsBindings)
 					pin.TLHOverlay:SetAllPoints(pin:GetButton())
 					pin.TLHOverlay:SetScale(0.8)
 				end
-				pin.TLHOverlay:Hide()	-- Hide our overlay initially, updating doesn't work like for regular itemButtons
+				pin.TLHOverlay:Hide() -- Hide our overlay initially, updating doesn't work like for regular itemButtons
 
 				if pin.questID then
 					local bestIndex, bestType = QuestUtils_GetBestQualityItemRewardIndex(pin.questID)

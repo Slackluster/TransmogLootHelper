@@ -126,7 +126,7 @@ function app:ApplyItemOverlay(overlay, itemLink, itemLocation, containerInfo, ba
 		end
 
 		-- Cache our info, if we haven't yet.
-		if itemID and itemID <= 4 then	-- Fake preview items
+		if itemID and itemID <= 4 then -- Fake preview items
 			app.OverlayCache["item:1"] = { itemEquipLoc = "Mount", bindType = 1, itemQuality = 4, hasItemLocation = false, color = "purple" }
 			app.OverlayCache["item:2"] = { itemEquipLoc = "INVTYPE_WEAPON", bindType = 2, itemQuality = 4, hasItemLocation = false, color = "yellow" }
 			app.OverlayCache["item:3"] = { itemEquipLoc = "Recipe", bindType = 8, itemQuality = 4, hasItemLocation = false, color = "green" }
@@ -241,7 +241,7 @@ function app:ApplyItemOverlay(overlay, itemLink, itemLocation, containerInfo, ba
 
 				-- Other containers
 				local localeOtherContainers = {
-					ITEM_OPENABLE,	-- <Right Click to Open>
+					ITEM_OPENABLE, -- <Right Click to Open>
 					"Use: Collect",
 					"Use: Open the container",
 					"Benutzen: Sammelt",
@@ -793,7 +793,7 @@ function app:ApplyItemOverlay(overlay, itemLink, itemLocation, containerInfo, ba
 	end
 
 	local ignore = {
-		[37011] = true,	-- Magic Broom
+		[37011] = true, -- Magic Broom
 	}
 	local itemID = C_Item.GetItemInfoInstant(itemLink)
 	-- Caged pets don't return this info, except this one magical pet cage
@@ -1000,7 +1000,7 @@ function app:HookItemOverlay()
 							local itemLink = v.itemLink
 							if itemLink then
 								app:ApplyItemOverlay(v.TLHOverlay, itemLink)
-								v.TLHOverlay.text:SetText("")	-- No bind text for these
+								v.TLHOverlay.text:SetText("") -- No bind text for these
 							end
 						end)
 					end)
@@ -1126,14 +1126,14 @@ function app:HookItemOverlay()
 		-- Hook our overlay onto all merchant slots
 		function app:MerchantOverlay()
 			if not app.MerchantHook then
-				MerchantPrevPageButton:HookScript("OnClick", function() app:MerchantOverlay() C_Timer.After(0.1, function() app:MerchantOverlay() end) end)	-- Previous page button
-				MerchantNextPageButton:HookScript("OnClick", function() app:MerchantOverlay() C_Timer.After(0.1, function() app:MerchantOverlay() end) end)	-- Next page button
-				MerchantFrame:HookScript("OnMouseWheel", function() app:MerchantOverlay() C_Timer.After(0.1, function() app:MerchantOverlay() end) end)	-- Scrolling, which also changes the page
-				MerchantFrame.FilterDropdown:RegisterCallback("OnMenuClose", function() app:MerchantOverlay() C_Timer.After(0.1, function() app:MerchantOverlay() end) end)	-- For when users change the filtering
+				MerchantPrevPageButton:HookScript("OnClick", function() app:MerchantOverlay() C_Timer.After(0.1, function() app:MerchantOverlay() end) end) -- Previous page button
+				MerchantNextPageButton:HookScript("OnClick", function() app:MerchantOverlay() C_Timer.After(0.1, function() app:MerchantOverlay() end) end) -- Next page button
+				MerchantFrame:HookScript("OnMouseWheel", function() app:MerchantOverlay() C_Timer.After(0.1, function() app:MerchantOverlay() end) end) -- Scrolling, which also changes the page
+				MerchantFrame.FilterDropdown:RegisterCallback("OnMenuClose", function() app:MerchantOverlay() C_Timer.After(0.1, function() app:MerchantOverlay() end) end) -- For when users change the filtering
 				app.MerchantHook = true
 			end
 
-			for i = 1, 99 do	-- Works for addons that expand the vendor frame up to 99 slots
+			for i = 1, 99 do -- Works for addons that expand the vendor frame up to 99 slots
 				local itemButton = _G["MerchantItem" .. i .. "ItemButton"]
 				if itemButton then
 					if not itemButton.TLHOverlay then
@@ -1173,7 +1173,7 @@ function app:HookItemOverlay()
 						itemButton.TLHOverlay = CreateFrame("Frame", nil, itemButton)
 						itemButton.TLHOverlay:SetAllPoints(itemButton)
 					end
-					itemButton.TLHOverlay:Hide()	-- Hide our overlay initially, updating doesn't work like for regular itemButtons
+					itemButton.TLHOverlay:Hide() -- Hide our overlay initially, updating doesn't work like for regular itemButtons
 					if itemButton.TLHOverlay.gold then itemButton.TLHOverlay.gold:Hide() end
 
 					-- Get our quest rewards
@@ -1274,9 +1274,9 @@ function app:HookItemOverlay()
 					if not pin.TLHOverlay then
 						pin.TLHOverlay = CreateFrame("Frame", nil, pin)
 						pin.TLHOverlay:SetAllPoints(pin)
-						pin.TLHOverlay:SetScale(0.8)	-- Make it a little smaller
+						pin.TLHOverlay:SetScale(0.8) -- Make it a little smaller
 					end
-					pin.TLHOverlay:Hide()	-- Hide our overlay initially, updating doesn't work like for regular itemButtons
+					pin.TLHOverlay:Hide() -- Hide our overlay initially, updating doesn't work like for regular itemButtons
 
 					local bestIndex, bestType = QuestUtils_GetBestQualityItemRewardIndex(pin.questID)
 					if bestIndex and bestType then
@@ -1382,7 +1382,7 @@ function app:HookItemOverlay()
 							if itemID then
 								local _, itemLink = C_Item.GetItemInfo(itemID)
 								if itemLink then
-									if itemID == 82800 and rowData.itemKey.battlePetSpeciesID then	-- Can't extract pet info from this preview cage
+									if itemID == 82800 and rowData.itemKey.battlePetSpeciesID then -- Can't extract pet info from this preview cage
 										app:ApplyItemOverlay(v.TLHOverlay, itemLink, nil, nil, nil, rowData.itemKey.battlePetSpeciesID)
 									else
 										app:ApplyItemOverlay(v.TLHOverlay, itemLink)
@@ -1532,7 +1532,7 @@ end
 
 app.Event:Register("TRADE_SKILL_SHOW", function()
 	if not InCombatLockdown() then
-		C_Timer.After(2, function()	-- Delay to ensure data is available
+		C_Timer.After(2, function() -- Delay to ensure data is available
 			if not C_TradeSkillUI.IsTradeSkillLinked() and not C_TradeSkillUI.IsTradeSkillGuild() then
 				for _, recipeID in pairs(C_TradeSkillUI.GetAllRecipeIDs()) do
 					if C_TradeSkillUI.GetRecipeInfo(recipeID).learned then
@@ -1574,7 +1574,7 @@ end
 --------------------
 
 app.Event:Register("PLAYER_ENTERING_WORLD", function(isInitialLogin, isReloadingUi)
-	C_HousingCatalog.CreateCatalogSearcher()	-- Cache Decor
+	C_HousingCatalog.CreateCatalogSearcher() -- Cache Decor
 end)
 
 app.Event:Register("HOUSE_DECOR_ADDED_TO_CHEST", function(decorGUID, recordID)
