@@ -763,29 +763,31 @@ function app:ApplyItemOverlay(overlay, itemLink, itemLocation, containerInfo, ba
 			-- Fake preview item
 			if itemID == 3 then
 				overlay.text:SetText("|cff00CCFF" .. L.BINDTEXT_BOA .. "|r")
-			-- WuE
-			elseif itemLocation and C_Item.IsBoundToAccountUntilEquip(itemLocation) then
-				if C_Item.IsBound(itemLocation) then
-					overlay.text:SetText("")
-				else
+			elseif not (bagAddon and C_AddOns.IsAddOnLoaded("Baganator")) then
+				-- WuE
+				if itemLocation and C_Item.IsBoundToAccountUntilEquip(itemLocation) then
+					if C_Item.IsBound(itemLocation) then
+						overlay.text:SetText("")
+					else
+						overlay.text:SetText("|cff00CCFF" .. L.BINDTEXT_WUE .. "|r")
+					end
+				-- WuE on vendor
+				elseif not itemLocation and app:GetBonding(itemLink) == "WuE" then
 					overlay.text:SetText("|cff00CCFF" .. L.BINDTEXT_WUE .. "|r")
-				end
-			-- WuE on vendor
-			elseif not itemLocation and app:GetBonding(itemLink) == "WuE" then
-				overlay.text:SetText("|cff00CCFF" .. L.BINDTEXT_WUE .. "|r")
-			-- Soulbound + BoA
-			elseif itemLocation and C_Item.IsBound(itemLocation) then
-				if app:GetBonding(itemLink) == "BoA" then
-					overlay.text:SetText("|cff00CCFF" .. L.BINDTEXT_BOA .. "|r")
-				-- Soulbound
+				-- Soulbound + BoA
+				elseif itemLocation and C_Item.IsBound(itemLocation) then
+					if app:GetBonding(itemLink) == "BoA" then
+						overlay.text:SetText("|cff00CCFF" .. L.BINDTEXT_BOA .. "|r")
+					-- Soulbound
+					else
+						overlay.text:SetText("")
+					end
+				-- BoE
+				elseif bindType == 2 or bindType == 3 then
+					overlay.text:SetText(L.BINDTEXT_BOE)
 				else
 					overlay.text:SetText("")
 				end
-			-- BoE
-			elseif bindType == 2 or bindType == 3 then
-				overlay.text:SetText(L.BINDTEXT_BOE)
-			else
-				overlay.text:SetText("")
 			end
 		else
 			overlay.text:SetText("")
