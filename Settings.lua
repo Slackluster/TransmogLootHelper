@@ -315,7 +315,7 @@ function app:CreateSettings()
 	local ddVariable, ddName, ddTooltip = "learnedStyle", "", ""
 	local function GetOptions()
 		local container = Settings.CreateControlTextContainer()
-		container:Add(0, "Default", "You can set a separate style for learned icons. Otherwise, the default style you have selected is used.")
+		container:Add(0, L.DEFAULT, L.SETTINGS_ICONLEARNED_DESC2)
 		container:Add(1, L.SETTINGS_ICON_STYLE1, L.SETTINGS_ICON_STYLE1_DESC)
 		container:Add(2, L.SETTINGS_ICON_STYLE2, L.SETTINGS_ICON_STYLE2_DESC)
 		container:Add(3, L.SETTINGS_ICON_STYLE3, L.SETTINGS_ICON_STYLE3_DESC)
