@@ -18,15 +18,15 @@ L.DELETED_REMOVED =                     "Objets uniques supprimés :"
 L.NEW_VERSION_AVAILABLE =               "Une nouvelle version de " .. app.NameLong .. " est disponible :"
 
 -- Item overlay
-L.BINDTEXT_WUE =                        "Lié au Bataillon (LaB)"
-L.BINDTEXT_BOP =                        "Lié quand Ramassé (LqR)"
-L.BINDTEXT_BOE =                        "Lié quand équipé (LqÉ)"
-L.BINDTEXT_BOA =                        "Lié au Compte (LaA)"
+L.BINDTEXT_WUE =                        "LaB" -- Lié au Bataillon
+L.BINDTEXT_BOP =                        "LqR" -- Lié quand Ramassé
+L.BINDTEXT_BOE =                        "LqÉ" -- Lié quand équipé
+L.BINDTEXT_BOA =                        "LaC" -- Lié au Compte
 L.RECIPE_UNCACHED =                     "Veuillez ouvrir ce métier pour mettre à jour le statut de la recette."
 
 -- Loot tracker
 L.DEFAULT_MESSAGE =                     "As-tu besoin de %item que tu as récupéré ? Sinon, je le veux bien pour transmogrification. :)"
-L.CLEAR_CONFIRM =                       "Voulez-vous effacer tout le butin ?"
+L.CLEAR_CONFIRM =                       "Souhaitez-vous effacer tout le butin ?"
 
 L.WINDOW_BUTTON_CLOSE =                 "Fermer la fenêtre"
 L.WINDOW_BUTTON_LOCK =                  "Verrouiller la fenêtre"
@@ -78,7 +78,7 @@ L.SETTINGS_SLASH_DELETE_DESC =          "Marquer les recettes uniques d'un perso
 L.SETTINGS_SLASH_CHARREALM =            "Personnage-Royaume"
 
 L.GENERAL =                             GENERAL	-- "General"
-L.SETTINGS_ITEM_OVERLAY =               "Overlay des objets"
+L.SETTINGS_ITEM_OVERLAY =               "Overlay sur les objets"
 L.SETTINGS_BAGANATOR =                  "Pour les utilisateurs de Baganator, ceci est géré dans ses paramètres."
 L.SETTINGS_ITEM_OVERLAY_DESC =          "Afficher une icône et du texte sur les objets pour indiquer leur statut.\n\n|cffFF0000" .. REQUIRES_RELOAD .. ".|r\n\nUtilisez |cffFFFFFF/reload|r ou reconnectez-vous."
 L.SETTINGS_ICON_POSITION =              "Position de l'icône"
@@ -120,9 +120,9 @@ L.SETTINGS_PREVIEWTOOLTIP[4] =          "Les objets non utilisables incluent, pa
 
 L.SETTINGS_HEADER_COLLECTION =          "Informations de collection"
 L.SETTINGS_ICON_NEW_MOG =               "Apparences"
-L.SETTINGS_ICON_NEW_MOG_DESC =          "Indique si une apparence est non apprise."
+L.SETTINGS_ICON_NEW_MOG_DESC =          "Afficher une icône pour indiquer qu'une apparence n'est pas encore apprise."
 L.SETTINGS_ICON_NEW_SOURCE =			"Sources"
-L.SETTINGS_ICON_NEW_SOURCE_DESC =		"Afficher une icône pour indiquer que la source d'un objet n'est pas apprise."
+L.SETTINGS_ICON_NEW_SOURCE_DESC =		"Afficher une icône pour indiquer que la source d'un objet n'est pas encore apprise."
 L.SETTINGS_ICON_NEW_CATALYST =          "Catalyseur"
 L.SETTINGS_ICON_NEW_CATALYST_DESC =     "Afficher une icône lorsqu'un objet catalysé confère une nouvelle apparence."
 L.SETTINGS_ICON_NEW_UPGRADE =           "Amélioration"
@@ -131,18 +131,18 @@ L.SETTINGS_ICON_NEW_ILLUSION =          "Illusions"
 L.SETTINGS_ICON_NEW_ILLUSION_DESC =     "Afficher une icône pour indiquer qu'une illusion n'est pas encore apprise."
 L.SETTINGS_ICON_NEW_MOUNT =             "Montures"
 L.SETTINGS_ICON_NEW_MOUNT_DESC =        "Afficher une icône pour indiquer qu'une monture n'est pas encore apprise."
-L.SETTINGS_ICON_NEW_PET =               "Mascotte"
+L.SETTINGS_ICON_NEW_PET =               "Mascottes"
 L.SETTINGS_ICON_NEW_PET_DESC =          "Afficher une icône pour indiquer qu'une mascotte n'est pas encore apprise."
 L.SETTINGS_ICON_NEW_PET_MAX =			"Collecter 3/3"
-L.SETTINGS_ICON_NEW_PET_MAX_DESC =		"Tenir également compte du nombre maximum dde mascotte que vous pouvez posséder (généralement 3)."
+L.SETTINGS_ICON_NEW_PET_MAX_DESC =		"Tenir également compte du nombre maximum de mascotte que vous pouvez posséder (généralement 3)."
 L.SETTINGS_ICON_NEW_TOY =               "Jouets"
 L.SETTINGS_ICON_NEW_TOY_DESC =          "Afficher une icône pour indiquer qu'un jouet n'est pas encore appris."
 L.SETTINGS_ICON_NEW_RECIPE =			"Recettes"
 L.SETTINGS_ICON_NEW_RECIPE_DESC =		"Afficher une icône pour indiquer qu'une recette n'est pas encore apprise."
 L.SETTINGS_ICON_NEW_DECOR =				"Decor"
 L.SETTINGS_ICON_NEW_DECOR_DESC =		"Afficher une icône pour indiquer que vous ne possédez pas l'objet de décoration pour votre logement."
-L.SETTINGS_ICON_NEW_DECORXP =           "Uniquement avec XP de maison"
-L.SETTINGS_ICON_NEW_DECORXP_DESC =      "Afficher l'icône uniquement pour les décorations de logement qui confèrent de l'XP de maison."
+L.SETTINGS_ICON_NEW_DECORXP =           "Uniquement avec XP de logis"
+L.SETTINGS_ICON_NEW_DECORXP_DESC =      "Afficher une icône pour les décorations de logement qui confèrent de l'XP de logis."
 
 L.SETTINGS_HEADER_OTHER_INFO =          "Autres informations"
 L.SETTINGS_ICON_QUEST_GOLD =            "Valeur de revente des récompenses de quête"
