@@ -541,7 +541,7 @@ function app:CreateSettings()
 	layout:AddInitializer(CreateSettingsButtonInitializer(L.SETTINGS_WHISPER, L.SETTINGS_WHISPER_CUSTOMIZE, onRenameButtonClick, L.SETTINGS_WHISPER_CUSTOMIZE_DESC .. ".", true))
 
 	-- Subcategory: Tweaks
-	local category, layout = Settings.RegisterVerticalLayoutSubcategory(app.Settings, "Tweaks")
+	local category, layout = Settings.RegisterVerticalLayoutSubcategory(app.Settings, L.SETTINGS_HEADER_TWEAKS)
 	Settings.RegisterAddOnCategory(category)
 
 	local variable, name, tooltip = "instantCatalyst", L.SETTINGS_CATALYST, L.SETTINGS_CATALYST_DESC
