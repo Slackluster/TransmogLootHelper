@@ -165,7 +165,6 @@ function app:ApplyItemOverlay(overlay, itemLink, itemLocation, containerInfo, ba
 			-- Illusions, Ensembles, and Arsenals
 			elseif classID == Enum.ItemClass.Consumable and subclassID == Enum.ItemConsumableSubclass.Other then
 				local itemName = C_Item.GetItemInfo(itemLink)
-				print(itemName)
 
 				-- Check if it's an illusion
 				local localeIllusion = {
