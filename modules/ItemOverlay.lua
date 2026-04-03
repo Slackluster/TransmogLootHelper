@@ -171,6 +171,7 @@ function app:ApplyItemOverlay(overlay, itemLink, itemLocation, containerInfo, ba
 				local localeIllusion = {
 					"Illusion:",
 					"Illusion :",
+					"Illusion :",
 					"Ilusión:",
 					"Illusione:",
 					"Ilusão:",
@@ -189,6 +190,7 @@ function app:ApplyItemOverlay(overlay, itemLink, itemLocation, containerInfo, ba
 				local localeEnsemble = {
 					"Ensemble:",
 					"Ensemble :",
+					"Ensemble :",
 					"Indumentaria:",
 					"Set:",
 					"Indumentária:",
@@ -207,6 +209,7 @@ function app:ApplyItemOverlay(overlay, itemLink, itemLocation, containerInfo, ba
 				local localeArsenal = {
 					"Arsenal:",
 					"Arsenal :",
+					"Arsenal :",
 					"Arsenale:",
 					"Арсенал:",
 					"병기:",
