@@ -165,11 +165,12 @@ function app:ApplyItemOverlay(overlay, itemLink, itemLocation, containerInfo, ba
 			-- Illusions, Ensembles, and Arsenals
 			elseif classID == Enum.ItemClass.Consumable and subclassID == Enum.ItemConsumableSubclass.Other then
 				local itemName = C_Item.GetItemInfo(itemLink)
+				print(itemName)
 
 				-- Check if it's an illusion
 				local localeIllusion = {
 					"Illusion:",
-					"Illusion :",
+					"Illusion :",
 					"Ilusión:",
 					"Illusione:",
 					"Ilusão:",
@@ -187,7 +188,7 @@ function app:ApplyItemOverlay(overlay, itemLink, itemLocation, containerInfo, ba
 				-- Check if it's an ensemble
 				local localeEnsemble = {
 					"Ensemble:",
-					"Ensemble :",
+					"Ensemble :",
 					"Indumentaria:",
 					"Set:",
 					"Indumentária:",
@@ -205,7 +206,7 @@ function app:ApplyItemOverlay(overlay, itemLink, itemLocation, containerInfo, ba
 				-- Check if it's an arsenal
 				local localeArsenal = {
 					"Arsenal:",
-					"Arsenal :",
+					"Arsenal :",
 					"Arsenale:",
 					"Арсенал:",
 					"병기:",
