@@ -64,13 +64,13 @@ L.SETTINGS_TOOLTIP =                     app.NameLong .. "\n|cffFFFFFF" ..
                                          app.IconLMB .. " : afficher / masquer la fenêtre\n" ..
                                          app.IconRMB .. " : " .. L.WINDOW_BUTTON_SETTINGS
 
-L.SETTINGS_VERSION =                     GAME_VERSION_LABEL .. ":"    -- "Version"
+L.SETTINGS_VERSION =                     GAME_VERSION_LABEL .. ":" -- "Version"
 L.SETTINGS_SUPPORT_TEXTLONG =            "Le développement de cette extension demande beaucoup de temps et d'efforts.\nVeuillez envisager de soutenir financièrement le développeur."
 L.SETTINGS_SUPPORT_TEXT =                "Soutien"
-L.SETTINGS_SUPPORT_BUTTON =              "Buy Me a Coffee"    -- Brand name, if there isn't a localised version, keep it the way it is
+L.SETTINGS_SUPPORT_BUTTON =              "Buy Me a Coffee" -- Brand name, if there isn't a localised version, keep it the way it is
 L.SETTINGS_SUPPORT_DESC =                "Merci !"
 L.SETTINGS_HELP_TEXT =                   "Commentaires et aide"
-L.SETTINGS_HELP_BUTTON =                 "Discord"    -- Brand name, if there isn't a localised version, keep it the way it is
+L.SETTINGS_HELP_BUTTON =                 "Discord" -- Brand name, if there isn't a localised version, keep it the way it is
 L.SETTINGS_HELP_DESC =                   "Rejoignez le serveur Discord."
 L.SETTINGS_URL_COPY =                    "Ctrl + C pour copier :"
 L.SETTINGS_URL_COPIED =                  "Lien copié dans le presse-papiers"
