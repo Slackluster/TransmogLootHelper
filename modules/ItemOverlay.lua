@@ -160,7 +160,7 @@ function app:ApplyItemOverlay(overlay, itemLink, itemLocation, containerInfo, ba
 				local spellID = app:GetLearnedSpell(itemLink)
 				if spellID then
 					local _, _, tradeskill = C_TradeSkillUI.GetTradeSkillLineForRecipe(spellID)
-					if app.Icon[tradeskill] then itemEquipLoc = "Recipe" end
+					if app.Texture[tradeskill] then itemEquipLoc = "Recipe" end
 				end
 			-- Illusions, Ensembles, and Arsenals
 			elseif classID == Enum.ItemClass.Consumable and subclassID == Enum.ItemConsumableSubclass.Other then
@@ -281,7 +281,7 @@ function app:ApplyItemOverlay(overlay, itemLink, itemLocation, containerInfo, ba
 		end
 
 		local itemEquipLoc = app.OverlayCache[itemLink].itemEquipLoc
-		local icon = app.Icon[itemEquipLoc]
+		local icon = app.Texture[itemEquipLoc]
 		local bindType = app.OverlayCache[itemLink].bindType
 
 		-- Set the icon's texture
@@ -313,35 +313,35 @@ function app:ApplyItemOverlay(overlay, itemLink, itemLocation, containerInfo, ba
 				if not (bagAddon and C_AddOns.IsAddOnLoaded("Baganator")) then
 					overlay.icon:ClearAllPoints()
 					if style <= 2 then
-						if TransmogLootHelper_Settings["iconPosition"] == 0 then
+						if app.Settings["iconPosition"] == 0 then
 							overlay.icon:SetPoint("CENTER", overlay, "TOPLEFT", 4, -4)
-						elseif TransmogLootHelper_Settings["iconPosition"] == 1 then
+						elseif app.Settings["iconPosition"] == 1 then
 							overlay.icon:SetPoint("CENTER", overlay, "TOPRIGHT", -4, -4)
-						elseif TransmogLootHelper_Settings["iconPosition"] == 2 then
+						elseif app.Settings["iconPosition"] == 2 then
 							overlay.icon:SetPoint("CENTER", overlay, "BOTTOMLEFT", 4, 4)
-						elseif TransmogLootHelper_Settings["iconPosition"] == 3 then
+						elseif app.Settings["iconPosition"] == 3 then
 							overlay.icon:SetPoint("CENTER", overlay, "BOTTOMRIGHT", -4, 4)
 						end
 					else
-						if TransmogLootHelper_Settings["iconPosition"] == 0 then
+						if app.Settings["iconPosition"] == 0 then
 							overlay.icon:SetPoint("TOPLEFT", overlay, -1, 1)
-						elseif TransmogLootHelper_Settings["iconPosition"] == 1 then
+						elseif app.Settings["iconPosition"] == 1 then
 							overlay.icon:SetPoint("TOPRIGHT", overlay, 1, 1)
-						elseif TransmogLootHelper_Settings["iconPosition"] == 2 then
+						elseif app.Settings["iconPosition"] == 2 then
 							overlay.icon:SetPoint("BOTTOMLEFT", overlay, -1, -1)
-						elseif TransmogLootHelper_Settings["iconPosition"] == 3 then
+						elseif app.Settings["iconPosition"] == 3 then
 							overlay.icon:SetPoint("BOTTOMRIGHT", overlay, 1, -1)
 						end
 					end
 
 					if style == 4 then
-						if TransmogLootHelper_Settings["iconPosition"] == 0 then
+						if app.Settings["iconPosition"] == 0 then
 							overlay.texture:SetRotation(math.pi/2)
-						elseif TransmogLootHelper_Settings["iconPosition"] == 1 then
+						elseif app.Settings["iconPosition"] == 1 then
 							overlay.texture:SetRotation(0)
-						elseif TransmogLootHelper_Settings["iconPosition"] == 2 then
+						elseif app.Settings["iconPosition"] == 2 then
 							overlay.texture:SetRotation(math.pi)
-						elseif TransmogLootHelper_Settings["iconPosition"] == 3 then
+						elseif app.Settings["iconPosition"] == 3 then
 							overlay.texture:SetRotation(-math.pi/2)
 						end
 					else
@@ -377,10 +377,10 @@ function app:ApplyItemOverlay(overlay, itemLink, itemLocation, containerInfo, ba
 					end
 				end
 			end
-			if color == "green" and TransmogLootHelper_Settings["learnedStyle"] > 0 then
-				setCorner(TransmogLootHelper_Settings["learnedStyle"])
+			if color == "green" and app.Settings["learnedStyle"] > 0 then
+				setCorner(app.Settings["learnedStyle"])
 			else
-				setCorner(TransmogLootHelper_Settings["iconStyle"])
+				setCorner(app.Settings["iconStyle"])
 			end
 
 			overlay.border:SetTexture(nil)
@@ -388,35 +388,35 @@ function app:ApplyItemOverlay(overlay, itemLink, itemLocation, containerInfo, ba
 			if color == "purple" then
 				overlay.animation:Stop()
 				overlay.animationTexture:Hide()
-				if TransmogLootHelper_Settings["animateIcon"] then
+				if app.Settings["animateIcon"] then
 					overlay.animation:Play()
 					overlay.animationTexture:Show()
 				end
 
-				if TransmogLootHelper_Settings["iconStyle"] == 1 then
+				if app.Settings["iconStyle"] == 1 then
 					overlay.border:SetTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\border-circle-purple.png")
-				elseif TransmogLootHelper_Settings["iconStyle"] == 2 then
+				elseif app.Settings["iconStyle"] == 2 then
 					overlay.texture:SetTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\simple-circle-purple.png")
-				elseif TransmogLootHelper_Settings["iconStyle"] == 3 then
+				elseif app.Settings["iconStyle"] == 3 then
 					overlay.texture:SetTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\simple-icon-purple.png")
-				elseif TransmogLootHelper_Settings["iconStyle"] == 4 then
+				elseif app.Settings["iconStyle"] == 4 then
 					overlay.texture:SetTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\cosmetic-icon-purple.png")
 				end
 			elseif color == "yellow" then
 				overlay.animation:Stop()
 				overlay.animationTexture:Hide()
-				if TransmogLootHelper_Settings["animateIcon"] then
+				if app.Settings["animateIcon"] then
 					overlay.animation:Play()
 					overlay.animationTexture:Show()
 				end
 
-				if TransmogLootHelper_Settings["iconStyle"] == 1 then
+				if app.Settings["iconStyle"] == 1 then
 					overlay.border:SetTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\border-circle-yellow.png")
-				elseif TransmogLootHelper_Settings["iconStyle"] == 2 then
+				elseif app.Settings["iconStyle"] == 2 then
 					overlay.texture:SetTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\simple-circle-yellow.png")
-				elseif TransmogLootHelper_Settings["iconStyle"] == 3 then
+				elseif app.Settings["iconStyle"] == 3 then
 					overlay.texture:SetTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\simple-icon-yellow.png")
-				elseif TransmogLootHelper_Settings["iconStyle"] == 4 then
+				elseif app.Settings["iconStyle"] == 4 then
 					overlay.texture:SetTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\cosmetic-icon-yellow.png")
 				end
 			elseif color == "green" then
@@ -434,27 +434,27 @@ function app:ApplyItemOverlay(overlay, itemLink, itemLocation, containerInfo, ba
 						overlay.texture:SetTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\cosmetic-icon-green.png")
 					end
 				end
-				if TransmogLootHelper_Settings["learnedStyle"] > 0 then
-					setStyle(TransmogLootHelper_Settings["learnedStyle"])
+				if app.Settings["learnedStyle"] > 0 then
+					setStyle(app.Settings["learnedStyle"])
 				else
-					setStyle(TransmogLootHelper_Settings["iconStyle"])
+					setStyle(app.Settings["iconStyle"])
 				end
 			elseif color == "red" then
 				overlay.animation:Stop()
 				overlay.animationTexture:Hide()
 
-				if TransmogLootHelper_Settings["iconStyle"] == 1 then
+				if app.Settings["iconStyle"] == 1 then
 					overlay.border:SetTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\border-circle-red.png")
-				elseif TransmogLootHelper_Settings["iconStyle"] == 2 then
+				elseif app.Settings["iconStyle"] == 2 then
 					overlay.texture:SetTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\simple-circle-red.png")
-				elseif TransmogLootHelper_Settings["iconStyle"] == 3 then
+				elseif app.Settings["iconStyle"] == 3 then
 					overlay.texture:SetTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\simple-icon-red.png")
-				elseif TransmogLootHelper_Settings["iconStyle"] == 4 then
+				elseif app.Settings["iconStyle"] == 4 then
 					overlay.texture:SetTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\cosmetic-icon-red.png")
 				end
 			end
 
-			if TransmogLootHelper_Settings["iconStyle"] == 4 then
+			if app.Settings["iconStyle"] == 4 then
 				overlay.animation:Stop()
 				overlay.animationTexture:Hide()
 			end
@@ -468,17 +468,17 @@ function app:ApplyItemOverlay(overlay, itemLink, itemLocation, containerInfo, ba
 			overlay.animationTexture:Hide()
 		end
 
-		if app.Icon[itemEquipLoc] then
+		if app.Texture[itemEquipLoc] then
 			-- Fake preview items
 			if itemID and itemID <= 4 then
-				if itemID == 3 then overlay.texture:SetTexture(app.Icon[171]) end
-				if not (not TransmogLootHelper_Settings["iconLearned"] and app.OverlayCache[itemLink].color == "green") then
+				if itemID == 3 then overlay.texture:SetTexture(app.Texture[171]) end
+				if not (not app.Settings["iconLearned"] and app.OverlayCache[itemLink].color == "green") then
 					showOverlay(app.OverlayCache[itemLink].color)
 				else
 					hideOverlay()
 				end
 			-- Appearances
-			elseif TransmogLootHelper_Settings["iconNewMog"] and itemEquipLoc:find("INVTYPE") then
+			elseif app.Settings["iconNewMog"] and itemEquipLoc:find("INVTYPE") then
 				local attInfo
 				if C_AddOns.IsAddOnLoaded("AllTheThings") then
 					attInfo = AllTheThings.GetLinkReference(itemLink)
@@ -492,24 +492,24 @@ function app:ApplyItemOverlay(overlay, itemLink, itemLocation, containerInfo, ba
 				if not api:IsAppearanceCollected(itemLink) then
 					showOverlay("purple")
 				-- New source
-				elseif TransmogLootHelper_Settings["iconNewSource"] and not api:IsSourceCollected(itemLink) then
+				elseif app.Settings["iconNewSource"] and not api:IsSourceCollected(itemLink) then
 					showOverlay("yellow")
 				-- Catalyst mog
-				elseif TransmogLootHelper_Settings["iconNewCatalyst"] and ((tumInfo and tumInfo.catalystAppearanceMissing) or (attInfo and attInfo.filledCatalyst)) then
+				elseif app.Settings["iconNewCatalyst"] and ((tumInfo and tumInfo.catalystAppearanceMissing) or (attInfo and attInfo.filledCatalyst)) then
 					overlay.texture:SetAtlas("CreationCatalyst-32x32")
 					showOverlay("yellow")
 				-- Upgrade mog
-				elseif TransmogLootHelper_Settings["iconNewUpgrade"] and ((tumInfo and tumInfo.upgradeAppearanceMissing) or (attInfo and attInfo.filledUpgrade)) then
+				elseif app.Settings["iconNewUpgrade"] and ((tumInfo and tumInfo.upgradeAppearanceMissing) or (attInfo and attInfo.filledUpgrade)) then
 					overlay.texture:SetAtlas("CovenantSanctum-Upgrade-Icon-Available")
 					showOverlay("yellow")
 				-- Learned
-				elseif TransmogLootHelper_Settings["iconLearned"] and not (classID == 15 and subclassID == 0) then
+				elseif app.Settings["iconLearned"] and not (classID == 15 and subclassID == 0) then
 					showOverlay("green")
 				else
 					hideOverlay()
 				end
 			-- Ensembles & Arsenals
-			elseif TransmogLootHelper_Settings["iconNewMog"] and (itemEquipLoc == "Ensemble" or itemEquipLoc == "Arsenal") then
+			elseif app.Settings["iconNewMog"] and (itemEquipLoc == "Ensemble" or itemEquipLoc == "Arsenal") then
 				local setID = C_Item.GetItemLearnTransmogSet(itemLink)
 				local appearances = C_Transmog.GetAllSetAppearancesByID(setID)
 
@@ -530,8 +530,8 @@ function app:ApplyItemOverlay(overlay, itemLink, itemLocation, containerInfo, ba
 				end
 
 				-- Learned
-				if (TransmogLootHelper_Settings["iconNewSource"] and not sourceMissing) or not appearanceMissing then
-					if TransmogLootHelper_Settings["iconLearned"] then
+				if (app.Settings["iconNewSource"] and not sourceMissing) or not appearanceMissing then
+					if app.Settings["iconLearned"] then
 						showOverlay("green")
 					else
 						hideOverlay()
@@ -540,16 +540,16 @@ function app:ApplyItemOverlay(overlay, itemLink, itemLocation, containerInfo, ba
 				elseif app:HasRedTooltipText(itemLink) then
 					showOverlay("red")
 				-- Unlearned
-				elseif TransmogLootHelper_Settings["iconNewSource"] and sourceMissing and not appearanceMissing then
+				elseif app.Settings["iconNewSource"] and sourceMissing and not appearanceMissing then
 					showOverlay("yellow")
 				else
 					showOverlay("purple")
 				end
 			-- Illusions
-			elseif TransmogLootHelper_Settings["iconNewIllusion"] and itemEquipLoc == "Illusion" then
+			elseif app.Settings["iconNewIllusion"] and itemEquipLoc == "Illusion" then
 				-- Learned
 				if app:IsLearned(itemLink) then
-					if TransmogLootHelper_Settings["iconLearned"] then
+					if app.Settings["iconLearned"] then
 						showOverlay("green")
 					else
 						hideOverlay()
@@ -562,12 +562,12 @@ function app:ApplyItemOverlay(overlay, itemLink, itemLocation, containerInfo, ba
 					showOverlay("purple")
 				end
 			-- Mounts
-			elseif TransmogLootHelper_Settings["iconNewMount"] and itemEquipLoc == "Mount" then
+			elseif app.Settings["iconNewMount"] and itemEquipLoc == "Mount" then
 				local mountID = C_MountJournal.GetMountFromItem(itemID)
 				local _, _, _, _, _, _, _, _, _, _, isCollected = C_MountJournal.GetMountInfoByID(mountID)
 				-- Learned
 				if isCollected then
-					if TransmogLootHelper_Settings["iconLearned"] then
+					if app.Settings["iconLearned"] then
 						showOverlay("green")
 					else
 						hideOverlay()
@@ -580,7 +580,7 @@ function app:ApplyItemOverlay(overlay, itemLink, itemLocation, containerInfo, ba
 					showOverlay("purple")
 				end
 			-- Pets
-			elseif TransmogLootHelper_Settings["iconNewPet"] and itemEquipLoc == "Pet" then
+			elseif app.Settings["iconNewPet"] and itemEquipLoc == "Pet" then
 				-- If we haven't grabbed this info from a pet cage, grab it now
 				if not app.OverlayCache[itemLink].speciesID then
 					app.OverlayCache[itemLink].speciesID = select(13, C_PetJournal.GetPetInfoByItemID(itemID))
@@ -592,26 +592,26 @@ function app:ApplyItemOverlay(overlay, itemLink, itemLocation, containerInfo, ba
 					numPets, maxAllowed = C_PetJournal.GetNumCollectedInfo(app.OverlayCache[itemLink].speciesID)
 				end
 
-				if (maxAllowed == numPets and numPets ~= 0) or (not TransmogLootHelper_Settings["iconNewPetMax"] and numPets >= 1) then
-					if TransmogLootHelper_Settings["iconLearned"] then
+				if (maxAllowed == numPets and numPets ~= 0) or (not app.Settings["iconNewPetMax"] and numPets >= 1) then
+					if app.Settings["iconLearned"] then
 						showOverlay("green")
 					else
 						hideOverlay()
 					end
-				elseif TransmogLootHelper_Settings["iconNewPetMax"] and maxAllowed > numPets and numPets >= 1 then
+				elseif app.Settings["iconNewPetMax"] and maxAllowed > numPets and numPets >= 1 then
 					showOverlay("yellow")
 				else
 					showOverlay("purple")
 				end
 			-- Unknown Pet Cages
-			elseif TransmogLootHelper_Settings["iconNewPet"] and itemEquipLoc == "Unknown" then
+			elseif app.Settings["iconNewPet"] and itemEquipLoc == "Unknown" then
 				showOverlay("yellow")
 				overlay.animation:Stop()
 				overlay.animationTexture:Hide()
 			-- Toys
-			elseif TransmogLootHelper_Settings["iconNewToy"] and itemEquipLoc == "Toy" then
+			elseif app.Settings["iconNewToy"] and itemEquipLoc == "Toy" then
 				if PlayerHasToy(itemID) then
-					if TransmogLootHelper_Settings["iconLearned"] then
+					if app.Settings["iconLearned"] then
 						showOverlay("green")
 					else
 						hideOverlay()
@@ -620,16 +620,16 @@ function app:ApplyItemOverlay(overlay, itemLink, itemLocation, containerInfo, ba
 					showOverlay("purple")
 				end
 			-- Recipes
-			elseif TransmogLootHelper_Settings["iconNewRecipe"] and itemEquipLoc == "Recipe" then
+			elseif app.Settings["iconNewRecipe"] and itemEquipLoc == "Recipe" then
 				local recipeID = app:GetLearnedSpell(itemLink)
 
 				if recipeID then
 					local _, _, tradeskill = C_TradeSkillUI.GetTradeSkillLineForRecipe(recipeID)
-					if app.Icon[tradeskill] then overlay.texture:SetTexture(app.Icon[tradeskill]) end
+					if app.Texture[tradeskill] then overlay.texture:SetTexture(app.Texture[tradeskill]) end
 
 					if TransmogLootHelper_Cache.Recipes[recipeID] then
 						if TransmogLootHelper_Cache.Recipes[recipeID].learned then
-							if TransmogLootHelper_Settings["iconLearned"] then
+							if app.Settings["iconLearned"] then
 								showOverlay("green")
 							else
 								hideOverlay()
@@ -654,7 +654,7 @@ function app:ApplyItemOverlay(overlay, itemLink, itemLocation, containerInfo, ba
 					hideOverlay()
 				end
 			-- Decor
-			elseif TransmogLootHelper_Settings["iconNewDecor"] and itemEquipLoc == "Decor" then
+			elseif app.Settings["iconNewDecor"] and itemEquipLoc == "Decor" then
 				local decorInfo, recordID
 				if app.Decor[itemID] then
 					decorInfo = C_HousingCatalog.GetCatalogEntryInfoByRecordID(Enum.HousingCatalogEntryType.Decor, app.Decor[itemID], true)
@@ -696,16 +696,16 @@ function app:ApplyItemOverlay(overlay, itemLink, itemLocation, containerInfo, ba
 						end
 					end
 
-					if TransmogLootHelper_Settings["iconNewDecorXP"] then
+					if app.Settings["iconNewDecorXP"] then
 						if TransmogLootHelper_Cache.Decor[recordID].grantsXP then
 							showOverlay("purple")
-						elseif TransmogLootHelper_Settings["iconLearned"] and TransmogLootHelper_Cache.Decor[recordID].xp > 0 then
+						elseif app.Settings["iconLearned"] and TransmogLootHelper_Cache.Decor[recordID].xp > 0 then
 							showOverlay("green")
 						else
 							hideOverlay()
 						end
 					elseif TransmogLootHelper_Cache.Decor[recordID].owned > 0 then
-						if TransmogLootHelper_Settings["iconLearned"] then
+						if app.Settings["iconLearned"] then
 							showOverlay("green")
 						else
 							hideOverlay()
@@ -718,7 +718,7 @@ function app:ApplyItemOverlay(overlay, itemLink, itemLocation, containerInfo, ba
 					overlay.animation:Stop()
 				end
 			-- Profession Knowledge
-			elseif TransmogLootHelper_Settings["iconUsable"] and itemEquipLoc == "ProfessionKnowledge" then
+			elseif app.Settings["iconUsable"] and itemEquipLoc == "ProfessionKnowledge" then
 				-- Unusable
 				if app:HasRedTooltipText(itemLink) then
 					hideOverlay()
@@ -727,11 +727,11 @@ function app:ApplyItemOverlay(overlay, itemLink, itemLocation, containerInfo, ba
 					showOverlay("yellow")
 				end
 			-- Customisations (includes spellbooks)
-			elseif TransmogLootHelper_Settings["iconUsable"] and itemEquipLoc == "Customisation" then
+			elseif app.Settings["iconUsable"] and itemEquipLoc == "Customisation" then
 				local spellID = app:GetLearnedSpell(itemLink)
 				-- Learned
 				if (TransmogLootHelper_Cache.Recipes[spellID] and TransmogLootHelper_Cache.Recipes[spellID].learned) or (app.QuestItem[itemID] and C_QuestLog.IsQuestFlaggedCompletedOnAccount(app.QuestItem[itemID])) or app:IsLearned(itemLink) then
-					if TransmogLootHelper_Settings["iconLearned"] then
+					if app.Settings["iconLearned"] then
 						showOverlay("green")
 					else
 						hideOverlay()
@@ -744,7 +744,7 @@ function app:ApplyItemOverlay(overlay, itemLink, itemLocation, containerInfo, ba
 					showOverlay("purple")
 				end
 			-- Containers
-			elseif TransmogLootHelper_Settings["iconContainer"] and itemEquipLoc == "Container" then
+			elseif app.Settings["iconContainer"] and itemEquipLoc == "Container" then
 				if not containerInfo then
 					hideOverlay()
 				else
@@ -762,7 +762,7 @@ function app:ApplyItemOverlay(overlay, itemLink, itemLocation, containerInfo, ba
 		end
 
 		-- Set the bind text
-		if TransmogLootHelper_Settings["textBind"] then
+		if app.Settings["textBind"] then
 			-- Fake preview item
 			if itemID == 3 then
 				overlay.text:SetText("|cff00CCFF" .. L.BINDTEXT_BOA .. "|r")
@@ -839,7 +839,7 @@ end
 
 -- Hook our overlay onto items in various places
 function app:HookItemOverlay()
-	if TransmogLootHelper_Settings["overlay"] then
+	if app.Settings["overlay"] then
 		-- Hook our overlay onto all bag slots (thank you Plusmouse!)
 		local function bagsOverlay(container)
 			if not app.BagThrottle then app.BagThrottle = {} end
@@ -1212,7 +1212,7 @@ function app:HookItemOverlay()
 					end
 				end
 
-				if TransmogLootHelper_Settings["iconQuestGold"] and #sellPrice > 1 then
+				if app.Settings["iconQuestGold"] and #sellPrice > 1 then
 					local highestPrice = 0
 					local highestItem = nil
 					local diff = -1
@@ -1243,13 +1243,13 @@ function app:HookItemOverlay()
 
 						overlay.gold:Show()
 						-- Set the icon's position
-						if TransmogLootHelper_Settings["iconPosition"] == 0 then
+						if app.Settings["iconPosition"] == 0 then
 							overlay.gold:SetPoint("CENTER", overlay, "TOPRIGHT", -4, -4)
-						elseif TransmogLootHelper_Settings["iconPosition"] == 1 then
+						elseif app.Settings["iconPosition"] == 1 then
 							overlay.gold:SetPoint("CENTER", overlay, "TOPLEFT", 4, -4)
-						elseif TransmogLootHelper_Settings["iconPosition"] == 2 then
+						elseif app.Settings["iconPosition"] == 2 then
 							overlay.gold:SetPoint("CENTER", overlay, "BOTTOMLEFT", 4, 4)
-						elseif TransmogLootHelper_Settings["iconPosition"] == 3 then
+						elseif app.Settings["iconPosition"] == 3 then
 							overlay.gold:SetPoint("CENTER", overlay, "BOTTOMRIGHT", -4, 4)
 						end
 					end
@@ -1460,7 +1460,7 @@ end
 function api:UpdateOverlay()
 	assert(self == api, "Call TransmogLootHelper:UpdateOverlay(), not TransmogLootHelper.UpdateOverlay()")
 
-	if TransmogLootHelper_Settings["overlay"] then
+	if app.Settings["overlay"] then
 		RunNextFrame(function()
 			app.RefreshTimer = app.RefreshTimer or 0
 			if GetServerTime() > app.RefreshTimer + 1 then
@@ -1485,7 +1485,7 @@ end
 -- Tooltip information (to tell the user a recipe is not cached)
 function app:AddTooltipInfo()
 	local function OnTooltipSetItem(tooltip, itemData)
-		if TransmogLootHelper_Settings["iconNewRecipe"] then
+		if app.Settings["iconNewRecipe"] then
 			local _, itemLink, itemID
 			if itemData and itemData.id then
 				itemID = itemData.id

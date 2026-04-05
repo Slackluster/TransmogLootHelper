@@ -161,7 +161,7 @@ L.SETTINGS_ICON_OPENABLE =               "Openable Items"
 L.SETTINGS_ICON_OPENABLE_DESC =          "Show an icon to indicate an item can be opened, such as lockboxes and holiday boss bags."
 
 L.SETTINGS_HEADER_LOOT_TRACKER =         "Loot Tracker"
-L.SETTINGS_MINIMAP =                     "Show Minimap Icon"
+L.SETTINGS_MINIMAP_TITLE =               "Show Minimap Icon"
 L.SETTINGS_MINIMAP_DESC =                "Show the minimap icon. If you disable this, " .. app.NameShort .. " is still available from the Addon Compartment."
 L.SETTINGS_AUTO_OPEN =                   "Auto Open Window"
 L.SETTINGS_AUTO_OPEN_DESC =              "Automatically show the " .. app.NameShort .. " window when an eligible item is looted."

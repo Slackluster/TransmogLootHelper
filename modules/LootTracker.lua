@@ -64,7 +64,7 @@ end
 
 -- Window tooltip show/hide
 function app:ShowWindowTooltip(frame)
-	if GetScreenWidth()/2-TransmogLootHelper_Settings["windowPosition"].width/2-app.Window:GetLeft() >= 0 then
+	if GetScreenWidth()/2-app.Settings["windowPosition"].width/2-app.Window:GetLeft() >= 0 then
 		frame:ClearAllPoints()
 		frame:SetPoint("LEFT", app.Window, "RIGHT", 0, 0)
 	else
@@ -76,7 +76,7 @@ end
 
 -- Move the window
 function app:MoveWindow()
-	if TransmogLootHelper_Settings["windowLocked"] then
+	if app.Settings["windowLocked"] then
 		app.UnlockButton:LockHighlight()
 	else
 		app.Window:StartMoving()
@@ -93,7 +93,7 @@ function app:SaveWindow()
 	local left = app.Window:GetLeft()
 	local bottom = app.Window:GetBottom()
 	local width, height = app.Window:GetSize()
-	TransmogLootHelper_Settings["windowPosition"] = { ["left"] = left, ["bottom"] = bottom, ["width"] = width, ["height"] = height, }
+	app.Settings["windowPosition"] = { ["left"] = left, ["bottom"] = bottom, ["width"] = width, ["height"] = height, }
 end
 
 -- Create the main window
@@ -160,7 +160,7 @@ function app:CreateWindow()
 	app.LockButton:SetPushedTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\buttons.blp")
 	app.LockButton:GetPushedTexture():SetTexCoord(183/256, 219/256, 81/128, 119/128)
 	app.LockButton:SetScript("OnClick", function()
-		TransmogLootHelper_Settings["windowLocked"] = true
+		app.Settings["windowLocked"] = true
 		app.Window.Corner:Hide()
 		app.LockButton:Hide()
 		app.UnlockButton:Show()
@@ -182,7 +182,7 @@ function app:CreateWindow()
 	app.UnlockButton:SetPushedTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\buttons.blp")
 	app.UnlockButton:GetPushedTexture():SetTexCoord(148/256, 184/256, 81/128, 119/128)
 	app.UnlockButton:SetScript("OnClick", function()
-		TransmogLootHelper_Settings["windowLocked"] = false
+		app.Settings["windowLocked"] = false
 		app.Window.Corner:Show()
 		app.LockButton:Show()
 		app.UnlockButton:Hide()
@@ -194,7 +194,7 @@ function app:CreateWindow()
 		app.UnlockButtonTooltip:Hide()
 	end)
 
-	if TransmogLootHelper_Settings["windowLocked"] then
+	if app.Settings["windowLocked"] then
 		app.Window.Corner:Hide()
 		app.LockButton:Hide()
 		app.UnlockButton:Show()
@@ -268,21 +268,21 @@ function app:CreateWindow()
 	app.SortButton:SetPushedTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\buttons.blp")
 	app.SortButton:GetPushedTexture():SetTexCoord(76/256, 112/256, 81/128, 119/128)
 	app.SortButton:SetScript("OnClick", function()
-		if TransmogLootHelper_Settings["windowSort"] == 1 then
-			TransmogLootHelper_Settings["windowSort"] = 2
+		if app.Settings["windowSort"] == 1 then
+			app.Settings["windowSort"] = 2
 			app.SortButtonTooltip1:Hide()
 			app:ShowWindowTooltip(app.SortButtonTooltip2)
-		elseif TransmogLootHelper_Settings["windowSort"] == 2 then
-			TransmogLootHelper_Settings["windowSort"] = 1
+		elseif app.Settings["windowSort"] == 2 then
+			app.Settings["windowSort"] = 1
 			app.SortButtonTooltip2:Hide()
 			app:ShowWindowTooltip(app.SortButtonTooltip1)
 		end
 		app:UpdateWindow()
 	end)
 	app.SortButton:SetScript("OnEnter", function()
-		if TransmogLootHelper_Settings["windowSort"] == 1 then
+		if app.Settings["windowSort"] == 1 then
 			app:ShowWindowTooltip(app.SortButtonTooltip1)
-		elseif TransmogLootHelper_Settings["windowSort"] == 2 then
+		elseif app.Settings["windowSort"] == 2 then
 			app:ShowWindowTooltip(app.SortButtonTooltip2)
 		end
 	end)
@@ -440,9 +440,9 @@ function app:UpdateWindow()
 			weaponsSorted[#weaponsSorted+1] = { item = v.item, icon = v.icon, player = v.player, playerShort = v.playerShort, color = v.color, index = k}
 		end
 
-		if TransmogLootHelper_Settings["windowSort"] == 1 then
+		if app.Settings["windowSort"] == 1 then
 			table.sort(weaponsSorted, customSort)
-		elseif TransmogLootHelper_Settings["windowSort"] == 2 then
+		elseif app.Settings["windowSort"] == 2 then
 			table.sort(weaponsSorted, function(a, b) return a.index > b.index end)
 		end
 
@@ -460,7 +460,7 @@ function app:UpdateWindow()
 			row:SetScript("OnEnter", function()
 				GameTooltip:ClearLines()
 
-				if GetScreenWidth()/2-TransmogLootHelper_Settings["windowPosition"].width/2-app.Window:GetLeft() >= 0 then
+				if GetScreenWidth()/2-app.Settings["windowPosition"].width/2-app.Window:GetLeft() >= 0 then
 					GameTooltip:SetOwner(app.Window, "ANCHOR_NONE")
 					GameTooltip:SetPoint("LEFT", app.Window, "RIGHT")
 				else
@@ -506,7 +506,7 @@ function app:UpdateWindow()
 						ChatFrameUtil.InsertLink(lootInfo.item)
 					elseif IsAltKeyDown() then
 						if app.WeaponLoot[lootInfo.index].recentlyWhispered == 0 then
-							local msg = string.gsub(TransmogLootHelper_Settings["message"], "%%item", lootInfo.item)
+							local msg = string.gsub(app.Settings["message"], "%%item", lootInfo.item)
 							C_ChatInfo.SendChatMessage(msg, "WHISPER", nil, lootInfo.player)
 							local message = "player:" .. lootInfo.player
 							app:SendAddonMessage(message)
@@ -657,9 +657,9 @@ function app:UpdateWindow()
 			armourSorted[#armourSorted+1] = { item = v.item, icon = v.icon, player = v.player, playerShort = v.playerShort, color = v.color, index = k}
 		end
 
-		if TransmogLootHelper_Settings["windowSort"] == 1 then
+		if app.Settings["windowSort"] == 1 then
 			table.sort(armourSorted, customSort)
-		elseif TransmogLootHelper_Settings["windowSort"] == 2 then
+		elseif app.Settings["windowSort"] == 2 then
 			table.sort(armourSorted, function(a, b) return a.index > b.index end)
 		end
 
@@ -679,7 +679,7 @@ function app:UpdateWindow()
 				GameTooltip:ClearLines()
 
 				-- Set the tooltip to either the left or right, depending on where the window is placed
-				if GetScreenWidth()/2-TransmogLootHelper_Settings["windowPosition"].width/2-app.Window:GetLeft() >= 0 then
+				if GetScreenWidth()/2-app.Settings["windowPosition"].width/2-app.Window:GetLeft() >= 0 then
 					GameTooltip:SetOwner(app.Window, "ANCHOR_NONE")
 					GameTooltip:SetPoint("LEFT", app.Window, "RIGHT")
 				else
@@ -726,7 +726,7 @@ function app:UpdateWindow()
 						ChatEditChatFrameUtil.InsertLink_InsertLink(lootInfo.item)
 					elseif IsAltKeyDown() then
 						if app.ArmourLoot[lootInfo.index].recentlyWhispered == 0 then
-							local msg = string.gsub(TransmogLootHelper_Settings["message"], "%%item", lootInfo.item)
+							local msg = string.gsub(app.Settings["message"], "%%item", lootInfo.item)
 							C_ChatInfo.SendChatMessage(msg, "WHISPER", nil, lootInfo.player)
 							local message = "player:" .. lootInfo.player
 							app:SendAddonMessage(message)
@@ -881,9 +881,9 @@ function app:UpdateWindow()
 			filteredSorted[#filteredSorted+1] = { item = v.item, icon = v.icon, player = v.player, playerShort = v.playerShort, color = v.color, itemType = v.itemType, index = k}
 		end
 
-		if TransmogLootHelper_Settings["windowSort"] == 1 then
+		if app.Settings["windowSort"] == 1 then
 			table.sort(filteredSorted, customSort)
-		elseif TransmogLootHelper_Settings["windowSort"] == 2 then
+		elseif app.Settings["windowSort"] == 2 then
 			table.sort(filteredSorted, function(a, b) return a.index > b.index end)
 		end
 
@@ -901,7 +901,7 @@ function app:UpdateWindow()
 			row:SetScript("OnEnter", function()
 				GameTooltip:ClearLines()
 
-				if GetScreenWidth()/2-TransmogLootHelper_Settings["windowPosition"].width/2-app.Window:GetLeft() >= 0 then
+				if GetScreenWidth()/2-app.Settings["windowPosition"].width/2-app.Window:GetLeft() >= 0 then
 					GameTooltip:SetOwner(app.Window, "ANCHOR_NONE")
 					GameTooltip:SetPoint("LEFT", app.Window, "RIGHT")
 				else
@@ -1026,8 +1026,8 @@ end
 -- Show window
 function app:ShowWindow()
 	app.Window:ClearAllPoints()
-	app.Window:SetSize(TransmogLootHelper_Settings["windowPosition"].width, TransmogLootHelper_Settings["windowPosition"].height)
-	app.Window:SetPoint("BOTTOMLEFT", UIParent, "BOTTOMLEFT", TransmogLootHelper_Settings["windowPosition"].left, TransmogLootHelper_Settings["windowPosition"].bottom)
+	app.Window:SetSize(app.Settings["windowPosition"].width, app.Settings["windowPosition"].height)
+	app.Window:SetPoint("BOTTOMLEFT", UIParent, "BOTTOMLEFT", app.Settings["windowPosition"].left, app.Settings["windowPosition"].bottom)
 
 	app.Window:Show()
 	app:UpdateWindow()
@@ -1060,7 +1060,7 @@ end
 function app:Stagger(t, show)
 	C_Timer.After(t, function()
 		if GetServerTime() - app.Flag.LastUpdate >= t then
-			if show and TransmogLootHelper_Settings["autoOpen"] then
+			if show and app.Settings["autoOpen"] then
 				app:ShowWindow()
 			else
 				app:UpdateWindow()
@@ -1068,7 +1068,7 @@ function app:Stagger(t, show)
 		else
 			C_Timer.After(t, function()
 				if GetServerTime() - app.Flag.LastUpdate >= t then
-					if show and TransmogLootHelper_Settings["autoOpen"] then
+					if show and app.Settings["autoOpen"] then
 						app:ShowWindow()
 					else
 						app:UpdateWindow()
@@ -1136,13 +1136,13 @@ app.Event:Register("CHAT_MSG_LOOT", function(text, playerName, languageName, cha
 		-- Continue only if it's not an item we looted ourselves
 		if unitName ~= selfName then
 			-- Do stuff depending on if the appearance or source is new
-			if not api:IsAppearanceCollected(itemLink) or (not api:IsSourceCollected(itemLink) and TransmogLootHelper_Settings["collectMode"] == 2) then
+			if not api:IsAppearanceCollected(itemLink) or (not api:IsSourceCollected(itemLink) and app.Settings["collectMode"] == 2) then
 				-- If the item is Account/Warbound
 				if app:GetBonding(itemLink) == "BoA" then
 					-- Add to filtered loot and update the window
 					app:AddFilteredLoot(itemLink, itemID, itemTexture, playerName, itemType, L.FILTER_REASON_UNTRADEABLE)
 				-- Rarity filter
-				elseif itemQuality >= TransmogLootHelper_Settings["rarity"] then
+				elseif itemQuality >= app.Settings["rarity"] then
 					-- Get the player's armor class
 					local armorClass
 					for k, v in pairs(app.Armor) do

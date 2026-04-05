@@ -14,7 +14,8 @@ _G["BINDING_NAME_TRANSMOGLOOTHELPER"] = app.Name
 _G["BINDING_NAME_SLACKWARE"] = "Slackware"
 
 -- Used textures
-app.IconTLH = "|TInterface\\AddOns\\TransmogLootHelper\\assets\\icon.png:0|t"
+app.Icon = "Interface\\AddOns\\TransmogLootHelper\\assets\\icon.png"
+app.IconTLH = "|T" .. app.Icon .. ":0|t"
 app.IconReady = "|TInterface\\RaidFrame\\ReadyCheck-Ready:0|t"
 app.IconNotReady = "|TInterface\\RaidFrame\\ReadyCheck-NotReady:0|t"
 app.IconMaybeReady = "Interface\\AddOns\\TransmogLootHelper\\assets\\readycheck-ready-orange.blp"
@@ -77,7 +78,7 @@ app.Weapon = {
 }
 
 -- Item type -> Icon
-app.Icon = {
+app.Texture = {
 	["INVTYPE_HEAD"] = "Interface\\Icons\\inv_helmet_03",
 	["INVTYPE_SHOULDER"] = "Interface\\Icons\\inv_shoulder_09",
 	["INVTYPE_CLOAK"] = "Interface\\Icons\\inv_misc_cape_11",

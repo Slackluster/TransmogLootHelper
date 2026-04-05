@@ -2,11 +2,10 @@
 -- Transmog Loot Helper: Core.lua --
 ------------------------------------
 
--- Initialisation
-local appName, app = ... -- Returns the addon name and a unique table
-app.locales = {} -- Localisation table
-app.api = {} -- Our "API" prefix
-TransmogLootHelper = app.api -- Create a namespace for our "API"
+local appName, app = ...
+app.locales = {}
+app.api = {}
+TransmogLootHelper = app.api
 local api = app.api
 local L = app.locales
 
@@ -17,7 +16,6 @@ local L = app.locales
 app.Event = CreateFrame("Frame")
 app.Event.handlers = {}
 
--- Register the event and add it to the handlers table
 function app.Event:Register(eventName, func)
 	if not self.handlers[eventName] then
 		self.handlers[eventName] = {}
@@ -26,7 +24,6 @@ function app.Event:Register(eventName, func)
 	table.insert(self.handlers[eventName], func)
 end
 
--- Run all handlers for a given event, when it fires
 app.Event:SetScript("OnEvent", function(self, event, ...)
 	if self.handlers[event] then
 		for _, handler in ipairs(self.handlers[event]) do
@@ -35,21 +32,138 @@ app.Event:SetScript("OnEvent", function(self, event, ...)
 	end
 end)
 
+-------------
+-- ON LOAD --
+-------------
+
+app.Event:Register("ADDON_LOADED", function(addOnName, containsBindings)
+	if addOnName == appName then
+		app.Flag = {}
+		app.Tooltip = {}
+
+		C_ChatInfo.RegisterAddonMessagePrefix("TransmogLootHelp")
+		app:CreateSlashCommands()
+	end
+end)
+
+-------------------
+-- VERSION COMMS --
+-------------------
+
+function app:SendAddonMessage(message)
+	if IsInRaid(2) or IsInGroup(2) then
+		ChatThrottleLib:SendAddonMessage("NORMAL", app.NamePrefix, message, "INSTANCE_CHAT")
+	elseif IsInRaid() then
+		ChatThrottleLib:SendAddonMessage("NORMAL", app.NamePrefix, message, "RAID")
+	elseif IsInGroup() then
+		ChatThrottleLib:SendAddonMessage("NORMAL", app.NamePrefix, message, "PARTY")
+	end
+end
+
+app.Event:Register("GROUP_ROSTER_UPDATE", function(category, partyGUID)
+	local message = "version:" .. C_AddOns.GetAddOnMetadata(appName, "Version")
+	app:SendAddonMessage(message)
+end)
+
+app.Event:Register("CHAT_MSG_ADDON", function(prefix, text, channel, sender, target, zoneChannelID, localID, name, instanceID)
+	if prefix == app.NamePrefix then
+		local version = text:match("version:(.+)")
+		if version and not app.Flag.VersionCheck then
+			local expansion, major, minor, iteration = version:match("v(%d+)%.(%d+)%.(%d+)%-(%d+)")
+			if expansion then
+				expansion = string.format("%02d", expansion)
+				major = string.format("%02d", major)
+				minor = string.format("%02d", minor)
+				local otherGameVersion = tonumber(expansion .. major .. minor)
+				local otherAddonVersion = tonumber(iteration)
+
+				local localVersion = C_AddOns.GetAddOnMetadata(appName, "Version")
+				local expansion2, major2, minor2, iteration2 = localVersion:match("v(%d+)%.(%d+)%.(%d+)%-(%d+)")
+				if expansion2 then
+					expansion2 = string.format("%02d", expansion2)
+					major2 = string.format("%02d", major2)
+					minor2 = string.format("%02d", minor2)
+					local localGameVersion = tonumber(expansion2 .. major2 .. minor2)
+					local localAddonVersion = tonumber(iteration2)
+
+					if otherGameVersion > localGameVersion or (otherGameVersion == localGameVersion and otherAddonVersion > localAddonVersion) then
+						app:Print(L.NEW_VERSION_AVAILABLE, version)
+						app.Flag.VersionCheck = true
+					end
+				end
+			end
+		end
+	end
+end)
+
+--------------------
+-- SLASH COMMANDS --
+--------------------
+
+function app:CreateSlashCommands()
+	SLASH_RELOADUI1 = "/rl"
+	SlashCmdList.RELOADUI = ReloadUI
+
+	SLASH_TransmogLootHelper1 = "/tlh"
+	function SlashCmdList.TransmogLootHelper(msg, editBox)
+		local command, rest = msg:match("^(%S*)%s*(.-)$")
+
+		if command == "default" then
+			app.Settings["message"] = L.DEFAULT_MESSAGE
+			app:Print(L.WHISPER_POPUP_SUCCESS, "\"" .. app.Settings["message"] .. "\"")
+		elseif command == "msg" then
+			app.RenamePopup:Show()
+		elseif command == "settings" then
+			app:OpenSettings()
+		elseif command == "resetpos" then
+			app.Settings["windowPosition"] = { ["left"] = GetScreenWidth()/2-100, ["bottom"] = GetScreenHeight()/2-100, ["width"] = 200, ["height"] = 200, }
+			app.Settings["pcWindowPosition"] = app.Settings["windowPosition"]
+			app:ShowWindow()
+		elseif command == "delete" then
+			api:DeleteCharacter(rest)
+		elseif command == "" then
+			api:ToggleWindow()
+		else
+			app:Print(L.INVALID_COMMAND)
+		end
+	end
+end
+
+-----------------------
+-- ADDON COMPARTMENT --
+-----------------------
+
+function TransmogLootHelper_Click(self, button)
+	if button == "LeftButton" then
+		api:ToggleWindow()
+	elseif button == "RightButton" then
+		app:OpenSettings()
+	end
+end
+
+function TransmogLootHelper_Enter(self, button)
+	GameTooltip:ClearLines()
+	GameTooltip:SetOwner(type(self) ~= "string" and self or button, "ANCHOR_LEFT")
+	GameTooltip:AddLine(L.SETTINGS_TOOLTIP)
+	GameTooltip:Show()
+end
+
+function TransmogLootHelper_Leave()
+	GameTooltip:Hide()
+end
+
 ----------------------
 -- HELPER FUNCTIONS --
 ----------------------
 
--- App colour
 function app:Colour(string)
 	return "|cff3FC7EB" .. string .. "|r"
 end
 
--- Print with addon prefix
 function app:Print(...)
 	print(app.NameShort .. ":", ...)
 end
 
--- Border
 function app:SetBorder(parent, a, b, c, d)
 	local border = CreateFrame("Frame", nil, parent, "BackdropTemplate")
 	border:SetPoint("TOPLEFT", parent, a or 0, b or 0)
@@ -64,7 +178,6 @@ function app:SetBorder(parent, a, b, c, d)
 	border:SetBackdropBorderColor(0.25, 0.78, 0.92)
 end
 
--- Button
 function app:MakeButton(parent, text)
 	local frame = CreateFrame("Button", nil, parent, "UIPanelButtonTemplate")
 	frame:SetText(text)
@@ -74,7 +187,6 @@ function app:MakeButton(parent, text)
 	return frame
 end
 
--- Scan the tooltip for any text
 function app:GetTooltipText(itemLinkie, searchString)
 	local tooltip = app.Tooltip[itemLinkie] or C_TooltipInfo.GetHyperlink(itemLinkie)
 	app.Tooltip[itemLinkie] = tooltip
@@ -153,7 +265,6 @@ function app:GetBonding(itemLinkie)
 	return false
 end
 
--- Detect unusable text on tooltips
 function app:HasRedTooltipText(itemLink)
 	local tooltip = C_TooltipInfo.GetHyperlink(itemLink)
 	if tooltip and tooltip["lines"] then
@@ -166,8 +277,7 @@ function app:HasRedTooltipText(itemLink)
 	end
 end
 
--- Get an item's SourceID (thank you Plusmouse!)
-function app:GetSourceID(itemLink)
+function app:GetSourceID(itemLink) -- Thank you Plusmouse!
 	local _, sourceID = C_TransmogCollection.GetItemInfo(itemLink)
 	if sourceID then
 		return sourceID
@@ -177,8 +287,7 @@ function app:GetSourceID(itemLink)
 	return sourceID
 end
 
--- Check if an item's appearance is collected (thank you Plusmouse!)
-function api:IsAppearanceCollected(itemLink, sourceID)
+function api:IsAppearanceCollected(itemLink, sourceID) -- Thank you Plusmouse!
 	assert(self == api, "Call TransmogLootHelper:IsAppearanceCollected(), not TransmogLootHelper.IsAppearanceCollected()")
 
 	local sourceID = sourceID or app:GetSourceID(itemLink)
@@ -186,7 +295,7 @@ function api:IsAppearanceCollected(itemLink, sourceID)
 		if app:GetTransmogText(itemLink, TRANSMOGRIFY_TOOLTIP_APPEARANCE_UNKNOWN) then
 			return false
 		else
-			return true -- Should be nil if the item does not have an appearance, but for our purposes this is fine
+			return true
 		end
 	else
 		local subClass = select(7, C_Item.GetItemInfoInstant(itemLink))
@@ -209,8 +318,7 @@ function api:IsAppearanceCollected(itemLink, sourceID)
 	end
 end
 
--- Check if an item's source is collected (thank you Plusmouse!)
-function api:IsSourceCollected(itemLink, sourceID)
+function api:IsSourceCollected(itemLink, sourceID) -- Thank you Plusmouse!
 	assert(self == api, "Call TransmogLootHelper:IsSourceCollected(), not TransmogLootHelper.IsSourceCollected()")
 
 	local sourceID = sourceID or app:GetSourceID(itemLink)
@@ -218,108 +326,9 @@ function api:IsSourceCollected(itemLink, sourceID)
 		if app:GetTransmogText(itemLink, TRANSMOGRIFY_TOOLTIP_APPEARANCE_UNKNOWN) or app:GetTransmogText(itemLink, TRANSMOGRIFY_TOOLTIP_ITEM_UNKNOWN_APPEARANCE_KNOWN) then
 			return false
 		else
-			return true -- Should be nil if the item does not have an appearance, but for our purposes this is fine
+			return true
 		end
 	else
 		return C_TransmogCollection.PlayerHasTransmogItemModifiedAppearance(sourceID)
 	end
 end
-
--------------
--- ON LOAD --
--------------
-
-app.Event:Register("ADDON_LOADED", function(addOnName, containsBindings)
-	if addOnName == appName then
-		app.Flag = {}
-		app.Flag.VersionCheck = 0
-		app.Tooltip = {}
-
-		C_ChatInfo.RegisterAddonMessagePrefix("TransmogLootHelp")
-
-		SLASH_RELOADUI1 = "/rl"
-		SlashCmdList.RELOADUI = ReloadUI
-
-		SLASH_TransmogLootHelper1 = "/tlh"
-		function SlashCmdList.TransmogLootHelper(msg, editBox)
-			-- Split message into command and rest
-			local command, rest = msg:match("^(%S*)%s*(.-)$")
-
-			-- Default message
-			if command == "default" then
-				TransmogLootHelper_Settings["message"] = L.DEFAULT_MESSAGE
-				app:Print(L.WHISPER_POPUP_SUCCESS, "\"" .. TransmogLootHelper_Settings["message"] .. "\"")
-			-- Customise message
-			elseif command == "msg" then
-				app.RenamePopup:Show()
-			-- Open settings
-			elseif command == "settings" then
-				app:OpenSettings()
-			-- Reset window positions
-			elseif command == "resetpos" then
-				TransmogLootHelper_Settings["windowPosition"] = { ["left"] = GetScreenWidth()/2-100, ["bottom"] = GetScreenHeight()/2-100, ["width"] = 200, ["height"] = 200, }
-				TransmogLootHelper_Settings["pcWindowPosition"] = TransmogLootHelper_Settings["windowPosition"]
-				app:ShowWindow()
-			-- Delete character from cache
-			elseif command == "delete" then
-				api:DeleteCharacter(rest)
-			-- Toggle window
-			elseif command == "" then
-				api:ToggleWindow()
-			-- Unlisted command
-			else
-				app:Print(L.INVALID_COMMAND)
-			end
-		end
-	end
-end)
-
--------------------
--- VERSION COMMS --
--------------------
-
-function app:SendAddonMessage(message)
-	if IsInRaid(2) or IsInGroup(2) then
-		ChatThrottleLib:SendAddonMessage("NORMAL", app.NamePrefix, message, "INSTANCE_CHAT")
-	elseif IsInRaid() then
-		ChatThrottleLib:SendAddonMessage("NORMAL", app.NamePrefix, message, "RAID")
-	elseif IsInGroup() then
-		ChatThrottleLib:SendAddonMessage("NORMAL", app.NamePrefix, message, "PARTY")
-	end
-end
-
-app.Event:Register("GROUP_ROSTER_UPDATE", function(category, partyGUID)
-	local message = "version:" .. C_AddOns.GetAddOnMetadata(appName, "Version")
-	app:SendAddonMessage(message)
-end)
-
-app.Event:Register("CHAT_MSG_ADDON", function(prefix, text, channel, sender, target, zoneChannelID, localID, name, instanceID)
-	if prefix == app.NamePrefix then
-		local version = text:match("version:(.+)")
-		if version and not app.Flag.VersionCheck then
-			local expansion, major, minor, iteration = version:match("v(%d+)%.(%d+)%.(%d+)%-(%d+)")
-			if expansion then
-				expansion = string.format("%02d", expansion)
-				major = string.format("%02d", major)
-				minor = string.format("%02d", minor)
-				local otherGameVersion = tonumber(expansion .. major .. minor)
-				local otherAddonVersion = tonumber(iteration)
-
-				local localVersion = C_AddOns.GetAddOnMetadata(appName, "Version")
-				local expansion2, major2, minor2, iteration2 = localVersion:match("v(%d+)%.(%d+)%.(%d+)%-(%d+)")
-				if expansion2 then
-					expansion2 = string.format("%02d", expansion2)
-					major2 = string.format("%02d", major2)
-					minor2 = string.format("%02d", minor2)
-					local localGameVersion = tonumber(expansion2 .. major2 .. minor2)
-					local localAddonVersion = tonumber(iteration2)
-
-					if otherGameVersion > localGameVersion or (otherGameVersion == localGameVersion and otherAddonVersion > localAddonVersion) then
-						app:Print(L.NEW_VERSION_AVAILABLE, version)
-						app.Flag.VersionCheck = true
-					end
-				end
-			end
-		end
-	end
-end)

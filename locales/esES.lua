@@ -161,7 +161,7 @@ L.SETTINGS_ICON_OPENABLE =               "Objetos que pueden abrirse"
 L.SETTINGS_ICON_OPENABLE_DESC =          "Mostrar un icono para indicar que un objeto se puede abrir, como cajas fuertes y bolsas de jefes de eventos."
 
 L.SETTINGS_HEADER_LOOT_TRACKER =         "Rastreador de botín"
-L.SETTINGS_MINIMAP =                     "Mostrar icono de minimapa"
+L.SETTINGS_MINIMAP_TITLE =               "Mostrar icono de minimapa"
 L.SETTINGS_MINIMAP_DESC =                "Muestra el icono del minimapa. Si desactivas esto, " .. app.NameShort .. " sigue disponible en el apartado de Addons."
 L.SETTINGS_AUTO_OPEN =                   "Abrir ventana automáticamente"
 L.SETTINGS_AUTO_OPEN_DESC =              "Abre automáticamente la ventana de " .. app.NameShort .. " cuando se saquea un objeto elegible."

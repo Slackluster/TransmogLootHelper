@@ -13,26 +13,29 @@ local L = app.locales
 
 app.Event:Register("ADDON_LOADED", function(addOnName, containsBindings)
 	if addOnName == appName then
-		if not TransmogLootHelper_Settings then TransmogLootHelper_Settings = {} end
-		if TransmogLootHelper_Settings["hide"] == nil then TransmogLootHelper_Settings["hide"] = false end
-		if TransmogLootHelper_Settings["message"] == nil then TransmogLootHelper_Settings["message"] = L.DEFAULT_MESSAGE end
-		if TransmogLootHelper_Settings["windowPosition"] == nil then TransmogLootHelper_Settings["windowPosition"] = { ["left"] = 1295, ["bottom"] = 836, ["width"] = 200, ["height"] = 200, } end
-		if TransmogLootHelper_Settings["windowLocked"] == nil then TransmogLootHelper_Settings["windowLocked"] = false end
-		if TransmogLootHelper_Settings["windowSort"] == nil then TransmogLootHelper_Settings["windowSort"] = 1 end
+		TransmogLootHelper_Settings = TransmogLootHelper_Settings or {}
+		app.Settings = TransmogLootHelper_Settings
 
-		app:CreateMessagePopup()
-		app:CreateLinkCopiedFrame()
+		app.Settings["hide"] = app.Settings["hide"] or false
+		app.Settings["message"] = app.Settings["message"] or L.DEFAULT_MESSAGE
+		app.Settings["windowPosition"] = app.Settings["windowPosition"] or { ["left"] = 1295, ["bottom"] = 836, ["width"] = 200, ["height"] = 200, }
+		app.Settings["windowLocked"] = app.Settings["windowLocked"] or false
+		app.Settings["windowSort"] = app.Settings["windowSort"] or 1
+
+		app:CreateMinimapButton()
 		app:CreateSettings()
 
 		-- Midnight cleanup
-		if TransmogLootHelper_Settings["remixFilter"] ~= nil then TransmogLootHelper_Settings["remixFilter"] = nil end
-		if TransmogLootHelper_Settings["remixWindowFilter"] ~= nil then TransmogLootHelper_Settings["remixWindowFilter"] = nil end
-		if TransmogLootHelper_Settings["remixWindowLocked"] ~= nil then TransmogLootHelper_Settings["remixWindowLocked"] = nil end
-		if TransmogLootHelper_Settings["remixWindowPosition"] ~= nil then TransmogLootHelper_Settings["remixWindowPosition"] = nil end
-		if TransmogLootHelper_Cache and TransmogLootHelper_Cache.Lemix ~= nil then TransmogLootHelper_Cache.Lemix = nil end
-		if TransmogLootHelper_Cache and TransmogLootHelper_Cache.LemixCharacters ~= nil then TransmogLootHelper_Cache.LemixCharacters = nil end
-		if TransmogLootHelper_Settings["simpleIcon"] then TransmogLootHelper_Settings["iconStyle"] = 3 end
-		TransmogLootHelper_Settings["simpleIcon"] = nil
+		app.Settings["remixFilter"] = nil
+		app.Settings["remixWindowFilter"] = nil
+		app.Settings["remixWindowLocked"] = nil
+		app.Settings["remixWindowPosition"] = nil
+		if app.Settings["simpleIcon"] then app.Settings["iconStyle"] = 3 end
+		app.Settings["simpleIcon"] = nil
+		if TransmogLootHelper_Cache then
+			TransmogLootHelper_Cache.Lemix = nil
+			TransmogLootHelper_Cache.LemixCharacters = nil
+		end
 	end
 end)
 
@@ -40,48 +43,17 @@ end)
 -- SETTINGS --
 --------------
 
--- Open settings
 function app:OpenSettings()
-	Settings.OpenToCategory(app.Settings:GetID())
+	Settings.OpenToCategory(app.SettingsCategory:GetID())
 end
 
--- Addon Compartment Click
-function TransmogLootHelper_Click(self, button)
-	if button == "LeftButton" then
-		api:ToggleWindow()
-	elseif button == "RightButton" then
-		app:OpenSettings()
-	end
-end
-
--- Addon Compartment Enter
-function TransmogLootHelper_Enter(self, button)
-	GameTooltip:ClearLines()
-	GameTooltip:SetOwner(type(self) ~= "string" and self or button, "ANCHOR_LEFT")
-	GameTooltip:AddLine(L.SETTINGS_TOOLTIP)
-	GameTooltip:Show()
-end
-
--- Addon Compartment Leave
-function TransmogLootHelper_Leave()
-	GameTooltip:Hide()
-end
-
--- Settings and minimap icon
-function app:CreateSettings()
-	-- Minimap button
+function app:CreateMinimapButton()
 	local miniButton = LibStub("LibDataBroker-1.1"):NewDataObject(app.NameLong, {
 		type = "data source",
 		text = app.NameLong,
-		icon = "Interface\\AddOns\\TransmogLootHelper\\assets\\icon.png",
+		icon = app.Icon,
 
-		OnClick = function(self, button)
-			if button == "LeftButton" then
-				api:ToggleWindow()
-			elseif button == "RightButton" then
-				app:OpenSettings()
-			end
-		end,
+		OnClick = TransmogLootHelper_Click,
 
 		OnTooltipShow = function(tooltip)
 			if not tooltip or not tooltip.AddLine then return end
@@ -89,41 +61,47 @@ function app:CreateSettings()
 		end,
 	})
 
-	local icon = LibStub("LibDBIcon-1.0", true)
-	icon:Register(appName, miniButton, TransmogLootHelper_Settings)
+	app.MinimapIcon = LibStub("LibDBIcon-1.0", true)
+	app.MinimapIcon:Register(appName, miniButton, app.Settings)
 
-	if TransmogLootHelper_Settings["minimapIcon"] == true then
-		TransmogLootHelper_Settings["hide"] = false
-		icon:Show(appName)
-	else
-		TransmogLootHelper_Settings["hide"] = true
-		icon:Hide(appName)
+	function app:ToggleMinimapIcon()
+		if app.Settings["minimapIcon"] then
+			app.Settings["hide"] = false
+			app.MinimapIcon:Show(appName)
+		else
+			app.Settings["hide"] = true
+			app.MinimapIcon:Hide(appName)
+		end
 	end
+	app:ToggleMinimapIcon()
+end
 
-	-- Settings page
-	local category, layout = Settings.RegisterVerticalLayoutCategory(app.Name)
-	Settings.RegisterAddOnCategory(category)
-	app.Settings = category
+function app:CreateSettings()
+	-- Helper functions
+	app.LinkCopiedFrame = CreateFrame("Frame", nil, UIParent, "BackdropTemplate")
+	app.LinkCopiedFrame:SetPoint("CENTER")
+	app.LinkCopiedFrame:SetFrameStrata("TOOLTIP")
+	app.LinkCopiedFrame:SetHeight(1)
+	app.LinkCopiedFrame:SetWidth(1)
+	app.LinkCopiedFrame:Hide()
 
-	TransmogLootHelper_SettingsTextMixin = {}
-	function TransmogLootHelper_SettingsTextMixin:Init(initializer)
-		local data = initializer:GetData()
-		self.LeftText:SetTextToFit(data.leftText)
-		self.MiddleText:SetTextToFit(data.middleText)
-		self.RightText:SetTextToFit(data.rightText)
-	end
+	local text = app.LinkCopiedFrame:CreateFontString(nil, "ARTWORK", "GameFontNormal")
+	text:SetPoint("CENTER", app.LinkCopiedFrame, "CENTER", 0, 0)
+	text:SetPoint("TOP", app.LinkCopiedFrame, "TOP", 0, 0)
+	text:SetJustifyH("CENTER")
+	text:SetText(app.IconReady .. " " .. L.SETTINGS_URL_COPIED)
 
-	local data = { leftText = L.SETTINGS_VERSION .. " |cffFFFFFF" .. C_AddOns.GetAddOnMetadata(appName, "Version") }
-	local text = layout:AddInitializer(Settings.CreateElementInitializer("TransmogLootHelper_SettingsText", data))
-	function text:GetExtent()
-		return 14
-	end
-
-	local data = { leftText = L.SETTINGS_SUPPORT_TEXTLONG }
-	local text = layout:AddInitializer(Settings.CreateElementInitializer("TransmogLootHelper_SettingsText", data))
-	function text:GetExtent()
-		return 28 + select(2, string.gsub(data.leftText, "\n", "")) * 12
-	end
+	app.LinkCopiedFrame.animation = app.LinkCopiedFrame:CreateAnimationGroup()
+	local fadeOut = app.LinkCopiedFrame.animation:CreateAnimation("Alpha")
+	fadeOut:SetFromAlpha(1)
+	fadeOut:SetToAlpha(0)
+	fadeOut:SetDuration(1)
+	fadeOut:SetStartDelay(1)
+	fadeOut:SetSmoothing("IN_OUT")
+	app.LinkCopiedFrame.animation:SetToFinalAlpha(true)
+	app.LinkCopiedFrame.animation:SetScript("OnFinished", function()
+		app.LinkCopiedFrame:Hide()
+	end)
 
 	StaticPopupDialogs["TRANSMOGLOOTHELPER_URL"] = {
 		text = L.SETTINGS_URL_COPY,
@@ -167,15 +145,111 @@ function app:CreateSettings()
 			editBox:SetText("")
 		end,
 	}
-	local function onSupportButtonClick()
-		StaticPopup_Show("TRANSMOGLOOTHELPER_URL", nil, nil, "https://buymeacoffee.com/Slackluster")
-	end
-	layout:AddInitializer(CreateSettingsButtonInitializer(L.SETTINGS_SUPPORT_TEXT, L.SETTINGS_SUPPORT_BUTTON, onSupportButtonClick, L.SETTINGS_SUPPORT_DESC, true))
 
-	local function onHelpButtonClick()
-		StaticPopup_Show("TRANSMOGLOOTHELPER_URL", nil, nil, "https://discord.gg/hGvF59hstx")
+	do
+		local frame = CreateFrame("Frame", nil, UIParent, "BackdropTemplate")
+		frame:SetPoint("CENTER")
+		frame:SetFrameStrata("TOOLTIP")
+		frame:SetBackdrop({
+			bgFile = "Interface/Tooltips/UI-Tooltip-Background",
+			edgeFile = "Interface/Tooltips/UI-Tooltip-Border",
+			edgeSize = 16,
+			insets = { left = 4, right = 4, top = 4, bottom = 4 },
+		})
+		frame:SetBackdropColor(0, 0, 0, 1)
+		frame:EnableMouse(true)
+		frame:SetHeight(85)
+		frame:SetWidth(500)
+		frame:Hide()
+
+		local close = CreateFrame("Button", "", frame, "UIPanelCloseButton")
+		close:SetPoint("TOPRIGHT", frame, "TOPRIGHT", 2, 2)
+		close:SetScript("OnClick", function()
+			frame:Hide()
+		end)
+
+		local string1 = frame:CreateFontString(nil, "ARTWORK", "GameFontNormal")
+		string1:SetPoint("CENTER", frame, "CENTER", 0, 0)
+		string1:SetPoint("TOP", frame, "TOP", 0, -10)
+		string1:SetJustifyH("CENTER")
+		string1:SetText(L.WHISPER_POPUP_CUSTOMIZE)
+
+		local editBox = CreateFrame("EditBox", nil, frame, "InputBoxTemplate")
+		editBox:SetSize(460, 20)
+		editBox:SetPoint("CENTER", frame, "CENTER", 0, 0)
+		editBox:SetPoint("TOP", frame, "TOP", 0, -30)
+		editBox:SetAutoFocus(false)
+		editBox:SetText(TransmogLootHelper_Settings["message"])
+		editBox:SetCursorPosition(0)
+
+		local border = CreateFrame("Frame", nil, editBox, "BackdropTemplate")
+		border:SetPoint("TOPLEFT", editBox, -6, 1)
+		border:SetPoint("BOTTOMRIGHT", editBox, 2, -2)
+		border:SetBackdrop({
+			bgFile = "Interface/Tooltips/UI-Tooltip-Background",
+			edgeFile = "Interface/Tooltips/UI-Tooltip-Border",
+			edgeSize = 14,
+			insets = { left = 4, right = 4, top = 4, bottom = 4 },
+		})
+		border:SetBackdropColor(0, 0, 0, 0)
+		border:SetBackdropBorderColor(0.25, 0.78, 0.92)
+
+		local string2 = frame:CreateFontString(nil, "ARTWORK", "GameFontNormal")
+		string2:SetPoint("CENTER", frame, "CENTER", 0, 0)
+		string2:SetPoint("TOP", frame, "TOP", 0, -60)
+		string2:SetJustifyH("CENTER")
+		string2:SetText("")
+
+		editBox:SetScript("OnEditFocusGained", function(self)
+			border:SetBackdropBorderColor(0.25, 0.78, 0.92)
+			string2:SetText("")
+		end)
+		editBox:SetScript("OnEditFocusLost", function(self)
+			local newValue = self:GetText()
+
+			if newValue == TransmogLootHelper_Settings["message"] then
+			else
+				local item = false
+				if string.find(newValue, "%%item") ~= nil then
+					item = true
+				end
+
+				if item == false then
+					border:SetBackdropBorderColor(1, 0, 0)
+					C_Timer.After(3, function()
+						border:SetBackdropBorderColor(0.25, 0.78, 0.92)
+					end)
+
+					string2:SetText(app.IconNotReady .. " " .. L.WHISPER_POPUP_ERROR)
+				else
+					border:SetBackdropBorderColor(0, 1, 0)
+					C_Timer.After(3, function()
+						border:SetBackdropBorderColor(0.25, 0.78, 0.92)
+					end)
+
+					string2:SetText(app.IconReady .. " " .. L.WHISPER_POPUP_SUCCESS)
+
+					TransmogLootHelper_Settings["message"] = newValue
+				end
+			end
+		end)
+		editBox:SetScript("OnEnterPressed", function(self)
+			self:ClearFocus()
+		end)
+		editBox:SetScript("OnEscapePressed", function(self)
+			self:SetText(TransmogLootHelper_Settings["message"])
+		end)
+
+		app.RenamePopup = frame
 	end
-	layout:AddInitializer(CreateSettingsButtonInitializer(L.SETTINGS_HELP_TEXT, L.SETTINGS_HELP_BUTTON, onHelpButtonClick, L.SETTINGS_HELP_DESC, true))
+
+	TransmogLootHelper_SettingsTextMixin = {}
+	function TransmogLootHelper_SettingsTextMixin:Init(initializer)
+		local data = initializer:GetData()
+		self.LeftText:SetTextToFit(data.leftText)
+		self.MiddleText:SetTextToFit(data.middleText)
+		self.RightText:SetTextToFit(data.rightText)
+	end
 
 	TransmogLootHelper_SettingsExpandMixin = CreateFromMixins(SettingsExpandableSectionMixin)
 
@@ -205,7 +279,64 @@ function app:CreateSettings()
 		end
 	end
 
-	local function createExpandableSection(layout, name)
+	local category, layout
+
+	local function button(name, buttonName, description, func)
+		layout:AddInitializer(CreateSettingsButtonInitializer(name, buttonName, func, description, true))
+	end
+
+	local function checkbox(variable, name, description, default, callback, parentSetting, parentCheckbox)
+		local setting = Settings.RegisterAddOnSetting(category, appName .. "_" .. variable, variable, app.Settings, type(default), name, default)
+		local checkbox = Settings.CreateCheckbox(category, setting, description)
+
+		if parentSetting and parentCheckbox then
+			checkbox:SetParentInitializer(parentCheckbox, function() return parentSetting:GetValue() end)
+			if callback then
+				parentSetting:SetValueChangedCallback(callback)
+			end
+		elseif callback then
+			setting:SetValueChangedCallback(callback)
+		end
+
+		return setting, checkbox
+	end
+
+	local function checkboxDropdown(cbVariable, cbName, description, cbDefaultValue, ddVariable, ddDefaultValue, options, callback)
+		local cbSetting = Settings.RegisterAddOnSetting(category, appName.."_"..cbVariable, cbVariable, app.Settings, type(cbDefaultValue), cbName, cbDefaultValue)
+		local ddSetting = Settings.RegisterAddOnSetting(category, appName.."_"..ddVariable, ddVariable, app.Settings, type(ddDefaultValue), "", ddDefaultValue)
+		local function GetOptions()
+			local container = Settings.CreateControlTextContainer()
+			for _, option in ipairs(options) do
+				container:Add(option.value, option.name, option.description)
+			end
+			return container:GetData()
+		end
+
+		local initializer = CreateSettingsCheckboxDropdownInitializer(cbSetting, cbName, description, ddSetting, GetOptions, "")
+		layout:AddInitializer(initializer)
+
+		if callback then
+			cbSetting:SetValueChangedCallback(callback)
+			ddSetting:SetValueChangedCallback(callback)
+		end
+	end
+
+	local function dropdown(variable, name, description, default, options, callback)
+		local setting = Settings.RegisterAddOnSetting(category, appName.."_"..variable, variable, app.Settings, type(default), name, default)
+		local function GetOptions()
+			local container = Settings.CreateControlTextContainer()
+			for _, option in ipairs(options) do
+				container:Add(option.value, option.name, option.description)
+			end
+			return container:GetData()
+		end
+		Settings.CreateDropdown(category, setting, GetOptions, description)
+		if callback then
+			setting:SetValueChangedCallback(callback)
+		end
+	end
+
+	local function expandableHeader(name)
 		local initializer = CreateFromMixins(SettingsExpandableSectionInitializer)
 		local data = { name = name, expanded = false }
 
@@ -219,128 +350,27 @@ function app:CreateSettings()
 		end
 	end
 
-	local expandInitializer, isExpanded = createExpandableSection(layout, L.SETTINGS_KEYSLASH_TITLE .. app.IconNew)
+	local function header(name)
+		layout:AddInitializer(CreateSettingsListSectionHeaderInitializer(name))
+	end
 
-		local action = "TLH_TOGGLEWINDOW"
+	local function keybind(name, isExpanded)
+		local action = name
 		local bindingIndex = C_KeyBindings.GetBindingIndex(action)
 		local initializer = CreateKeybindingEntryInitializer(bindingIndex, true)
 		local keybind = layout:AddInitializer(initializer)
-		keybind:AddShownPredicate(isExpanded)
+		if isExpanded ~= nil then keybind:AddShownPredicate(isExpanded) end
+	end
 
-		local data = { leftText = "|cffFFFFFF"
-			.. "/tlh" .. "\n\n"
-			.. "/tlh resetpos" .. "\n\n"
-			.. "/tlh settings" .. "\n\n"
-			.. "/tlh delete " .. app:Colour(L.SETTINGS_SLASH_CHARREALM) .. "\n\n"
-			.. "/tlh msg " .. "\n\n"
-			.. "/tlh default ",
-		middleText =
-			L.SETTINGS_SLASH_TOGGLE .. "\n\n" ..
-			L.SETTINGS_SLASH_RESETPOS .. "\n\n" ..
-			L.WINDOW_BUTTON_SETTINGS .. "\n\n" ..
-			L.SETTINGS_SLASH_DELETE_DESC .. "\n\n" ..
-			L.SETTINGS_WHISPER_CUSTOMIZE_DESC .. "\n\n" ..
-			L.SETTINGS_SLASH_WHISPER_DEFAULT
-		}
+	local function text(leftText, middleText, rightText, customExtent, isExpanded)
+		local data = { leftText = leftText, middleText = middleText, rightText = rightText }
 		local text = layout:AddInitializer(Settings.CreateElementInitializer("TransmogLootHelper_SettingsText", data))
 		function text:GetExtent()
+			if customExtent then return customExtent end
 			return 28 + select(2, string.gsub(data.leftText, "\n", "")) * 12
 		end
-		text:AddShownPredicate(isExpanded)
-
-	layout:AddInitializer(CreateSettingsListSectionHeaderInitializer(L.GENERAL))
-
-	local variable, name, tooltip = "overlay", L.SETTINGS_ITEM_OVERLAY, L.SETTINGS_ITEM_OVERLAY_DESC
-	local setting = Settings.RegisterAddOnSetting(category, appName.."_"..variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, true)
-	Settings.CreateCheckbox(category, setting, tooltip)
-	setting:SetValueChangedCallback(function()
-		app:SettingsChanged()
-	end)
-
-	local variable, name, tooltip = "iconPosition", L.SETTINGS_ICON_POSITION, L.SETTINGS_ICON_POSITION_DESC .. "\n\n" .. L.SETTINGS_BAGANATOR
-	local function GetOptions()
-		local container = Settings.CreateControlTextContainer()
-		container:Add(0, L.SETTINGS_ICONPOS_TL, L.SETTINGS_ICONPOS_OVERLAP1)
-		container:Add(1, L.SETTINGS_ICONPOS_TR, L.SETTINGS_ICONPOS_OVERLAP0)
-		container:Add(2, L.SETTINGS_ICONPOS_BL, L.SETTINGS_ICONPOS_OVERLAP0)
-		container:Add(3, L.SETTINGS_ICONPOS_BR, L.SETTINGS_ICONPOS_OVERLAP0)
-		return container:GetData()
+		if isExpanded ~= nil then text:AddShownPredicate(isExpanded) end
 	end
-	local setting = Settings.RegisterAddOnSetting(category, appName.."_"..variable, variable, TransmogLootHelper_Settings, Settings.VarType.Number, name, 1)
-	Settings.CreateDropdown(category, setting, GetOptions, tooltip)
-	setting:SetValueChangedCallback(function()
-		for i = 1, 4 do
-			app:ApplyItemOverlay(app.PreviewItem[i].frame, "item:"..i)
-		end
-		app:SettingsChanged()
-	end)
-
-	local variable, name, tooltip = "iconStyle", L.SETTINGS_ICON_STYLE .. app.IconNew, L.SETTINGS_ICON_STYLE_DESC
-	local function GetOptions()
-		local container = Settings.CreateControlTextContainer()
-		container:Add(1, L.SETTINGS_ICON_STYLE1, L.SETTINGS_ICON_STYLE1_DESC)
-		container:Add(2, L.SETTINGS_ICON_STYLE2, L.SETTINGS_ICON_STYLE2_DESC)
-		container:Add(3, L.SETTINGS_ICON_STYLE3, L.SETTINGS_ICON_STYLE3_DESC)
-		container:Add(4, L.SETTINGS_ICON_STYLE4, L.SETTINGS_ICON_STYLE4_DESC)
-		return container:GetData()
-	end
-	local setting = Settings.RegisterAddOnSetting(category, appName.."_"..variable, variable, TransmogLootHelper_Settings, Settings.VarType.Number, name, 1)
-	Settings.CreateDropdown(category, setting, GetOptions, tooltip)
-	setting:SetValueChangedCallback(function()
-		for i = 1, 4 do
-			app:ApplyItemOverlay(app.PreviewItem[i].frame, "item:"..i)
-		end
-		app:SettingsChanged()
-	end)
-
-	local variable, name, tooltip = "animateIcon", L.SETTINGS_ICON_ANIMATE, L.SETTINGS_ICON_ANIMATE_DESC
-	local setting = Settings.RegisterAddOnSetting(category, appName .. "_" .. variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, true)
-	local parentSetting = Settings.CreateCheckbox(category, setting, tooltip)
-	setting:SetValueChangedCallback(function()
-		for i = 1, 4 do
-			app:ApplyItemOverlay(app.PreviewItem[i].frame, "item:"..i)
-		end
-		app:SettingsChanged()
-	end)
-
-	local cbVariable, cbName, cbTooltip = "iconLearned", L.SETTINGS_ICONLEARNED, L.SETTINGS_ICONLEARNED_DESC
-	local cbSetting = Settings.RegisterAddOnSetting(category, appName.."_"..cbVariable, cbVariable, TransmogLootHelper_Settings, Settings.VarType.Boolean, cbName, true)
-	cbSetting:SetValueChangedCallback(function()
-		for i = 1, 4 do
-			app:ApplyItemOverlay(app.PreviewItem[i].frame, "item:"..i)
-		end
-		app:SettingsChanged()
-	end)
-
-	local ddVariable, ddName, ddTooltip = "learnedStyle", "", ""
-	local function GetOptions()
-		local container = Settings.CreateControlTextContainer()
-		container:Add(0, L.DEFAULT, L.SETTINGS_ICONLEARNED_DESC2)
-		container:Add(1, L.SETTINGS_ICON_STYLE1, L.SETTINGS_ICON_STYLE1_DESC)
-		container:Add(2, L.SETTINGS_ICON_STYLE2, L.SETTINGS_ICON_STYLE2_DESC)
-		container:Add(3, L.SETTINGS_ICON_STYLE3, L.SETTINGS_ICON_STYLE3_DESC)
-		container:Add(4, L.SETTINGS_ICON_STYLE4, L.SETTINGS_ICON_STYLE4_DESC)
-		return container:GetData()
-	end
-	local ddSetting = Settings.RegisterAddOnSetting(category, appName.."_"..ddVariable, ddVariable, TransmogLootHelper_Settings, Settings.VarType.Number, ddName, 0)
-	ddSetting:SetValueChangedCallback(function()
-		for i = 1, 4 do
-			app:ApplyItemOverlay(app.PreviewItem[i].frame, "item:"..i)
-		end
-		app:SettingsChanged()
-	end)
-
-	local initializer = CreateSettingsCheckboxDropdownInitializer(cbSetting, cbName, cbTooltip, ddSetting, GetOptions, ddName, ddTooltip)
-	layout:AddInitializer(initializer)
-
-	local variable, name, tooltip = "textBind", L.SETTINGS_BINDTEXT, L.SETTINGS_BINDTEXT_DESC
-	local setting = Settings.RegisterAddOnSetting(category, appName.."_"..variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, true)
-	Settings.CreateCheckbox(category, setting, tooltip)
-	setting:SetValueChangedCallback(function()
-		for i = 1, 4 do
-			app:ApplyItemOverlay(app.PreviewItem[i].frame, "item:"..i)
-		end
-	end)
 
 	TransmogLootHelper_SettingsItemRowMixin = {}
 
@@ -382,337 +412,158 @@ function app:CreateSettings()
 		{ icon = 134344, name = L.SETTINGS_PREVIEW .. "\n" .. L.SETTINGS_UNUSABLE },
 	}
 
-	local initializer = Settings.CreateElementInitializer("TransmogLootHelper_SettingsItemRow", app.PreviewItem)
-	layout:AddInitializer(initializer)
+	local function itemPreview()
+		local initializer = Settings.CreateElementInitializer("TransmogLootHelper_SettingsItemRow", app.PreviewItem)
+		layout:AddInitializer(initializer)
+	end
 
-	layout:AddInitializer(CreateSettingsListSectionHeaderInitializer(L.SETTINGS_HEADER_COLLECTION))
+	function app:SettingsChanged()
+		if C_AddOns.IsAddOnLoaded("Baganator") then
+			Baganator.API.RequestItemButtonsRefresh()
+		end
+	end
 
-	local variable, name, tooltip = "iconNewMog", L.SETTINGS_ICON_NEW_MOG, L.SETTINGS_ICON_NEW_MOG_DESC
-	local setting = Settings.RegisterAddOnSetting(category, appName .. "_" .. variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, true)
-	local parentSetting = Settings.CreateCheckbox(category, setting, tooltip)
-	setting:SetValueChangedCallback(function()
+	function app:UpdatePreviewItems()
+		for i = 1, 4 do
+			app:ApplyItemOverlay(app.PreviewItem[i].frame, "item:"..i)
+		end
+		app:SettingsChanged()
+	end
+
+	-- Settings
+	category, layout = Settings.RegisterVerticalLayoutCategory(app.Name)
+	Settings.RegisterAddOnCategory(category)
+	app.SettingsCategory = category
+
+	text(L.SETTINGS_VERSION .. " |cffFFFFFF" .. C_AddOns.GetAddOnMetadata(appName, "Version"), nil, nil, 14)
+	text(L.SETTINGS_SUPPORT_TEXTLONG)
+	button(L.SETTINGS_SUPPORT_TEXT, L.SETTINGS_SUPPORT_BUTTON, L.SETTINGS_SUPPORT_DESC, function() StaticPopup_Show("TRANSMOGLOOTHELPER_URL", nil, nil, "https://buymeacoffee.com/Slackluster") end)
+	button(L.SETTINGS_HELP_TEXT, L.SETTINGS_HELP_BUTTON, L.SETTINGS_HELP_DESC, function() StaticPopup_Show("TRANSMOGLOOTHELPER_URL", nil, nil, "https://discord.gg/hGvF59hstx") end)
+
+	local _, isExpanded = expandableHeader(L.SETTINGS_KEYSLASH_TITLE)
+
+		keybind("TLH_TOGGLEWINDOW", isExpanded)
+
+		local leftText = { "|cffFFFFFF" ..
+			"/tlh",
+			"/tlh resetpos",
+			"/tlh settings",
+			"/tlh delete " .. app:Colour(L.SETTINGS_SLASH_CHARREALM),
+			"/tlh msg ",
+			"/tlh default " }
+		local middleText = {
+			L.SETTINGS_SLASH_TOGGLE,
+			L.SETTINGS_SLASH_RESETPOS,
+			L.WINDOW_BUTTON_SETTINGS,
+			L.SETTINGS_SLASH_DELETE_DESC,
+			L.SETTINGS_WHISPER_CUSTOMIZE_DESC,
+			L.SETTINGS_SLASH_WHISPER_DEFAULT }
+		leftText = table.concat(leftText, "\n\n")
+		middleText = table.concat(middleText, "\n\n")
+		text(leftText, middleText, nil, nil, isExpanded)
+
+	header(L.GENERAL)
+
+	checkbox("overlay", L.SETTINGS_ITEM_OVERLAY, L.SETTINGS_ITEM_OVERLAY_DESC, true, function()
 		app:SettingsChanged()
 	end)
 
-	local variable, name, tooltip = "iconNewSource", L.SETTINGS_ICON_NEW_SOURCE, L.SETTINGS_ICON_NEW_SOURCE_DESC
-	local setting = Settings.RegisterAddOnSetting(category, appName .. "_" .. variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, false)
-	local subSetting = Settings.CreateCheckbox(category, setting, tooltip)
-	subSetting:SetParentInitializer(parentSetting, function() return TransmogLootHelper_Settings["iconNewMog"] end)
-	setting:SetValueChangedCallback(function()
-		app:SettingsChanged()
-	end)
+	dropdown("iconPosition", L.SETTINGS_ICON_POSITION, L.SETTINGS_ICON_POSITION_DESC .. "\n\n" .. L.SETTINGS_BAGANATOR, 1, {
+		{ value = 0, name = L.SETTINGS_ICONPOS_TL, description = L.SETTINGS_ICONPOS_OVERLAP1 },
+		{ value = 1, name = L.SETTINGS_ICONPOS_TR, description = L.SETTINGS_ICONPOS_OVERLAP0 },
+		{ value = 2, name = L.SETTINGS_ICONPOS_BL, description = L.SETTINGS_ICONPOS_OVERLAP0 },
+		{ value = 3, name = L.SETTINGS_ICONPOS_BR, description = L.SETTINGS_ICONPOS_OVERLAP0 },
+	}, function() app:UpdatePreviewItems() end)
 
-	local variable, name, tooltip = "iconNewCatalyst", L.SETTINGS_ICON_NEW_CATALYST, L.SETTINGS_ICON_NEW_CATALYST_DESC
-	local setting = Settings.RegisterAddOnSetting(category, appName .. "_" .. variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, true)
-	local subSetting = Settings.CreateCheckbox(category, setting, tooltip)
-	subSetting:SetParentInitializer(parentSetting, function() return TransmogLootHelper_Settings["iconNewMog"] end)
-	setting:SetValueChangedCallback(function()
-		app:SettingsChanged()
-	end)
+	dropdown("iconStyle", L.SETTINGS_ICON_STYLE .. app.IconNew, L.SETTINGS_ICON_STYLE_DESC, 1, {
+		{ value = 1, name = L.SETTINGS_ICON_STYLE1, description = L.SETTINGS_ICON_STYLE1_DESC },
+		{ value = 2, name = L.SETTINGS_ICON_STYLE2, description = L.SETTINGS_ICON_STYLE2_DESC },
+		{ value = 3, name = L.SETTINGS_ICON_STYLE3, description = L.SETTINGS_ICON_STYLE3_DESC },
+		{ value = 4, name = L.SETTINGS_ICON_STYLE4, description = L.SETTINGS_ICON_STYLE4_DESC },
+	}, function() app:UpdatePreviewItems() end)
 
-	local variable, name, tooltip = "iconNewUpgrade", L.SETTINGS_ICON_NEW_UPGRADE, L.SETTINGS_ICON_NEW_UPGRADE_DESC
-	local setting = Settings.RegisterAddOnSetting(category, appName .. "_" .. variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, true)
-	local subSetting = Settings.CreateCheckbox(category, setting, tooltip)
-	subSetting:SetParentInitializer(parentSetting, function() return TransmogLootHelper_Settings["iconNewMog"] end)
-	setting:SetValueChangedCallback(function()
-		app:SettingsChanged()
-	end)
+	checkbox("animateIcon", L.SETTINGS_ICON_ANIMATE, L.SETTINGS_ICON_ANIMATE_DESC, true, function() app:UpdatePreviewItems() end)
 
-	local variable, name, tooltip = "iconNewIllusion", L.SETTINGS_ICON_NEW_ILLUSION, L.SETTINGS_ICON_NEW_ILLUSION_DESC
-	local setting = Settings.RegisterAddOnSetting(category, appName.."_"..variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, true)
-	Settings.CreateCheckbox(category, setting, tooltip)
-	setting:SetValueChangedCallback(function()
-		app:SettingsChanged()
-	end)
+	checkboxDropdown("iconLearned", L.SETTINGS_ICONLEARNED, L.SETTINGS_ICONLEARNED_DESC, true, "learnedStyle", 0, {
+		{ value = 0, name = L.DEFAULT, description = L.SETTINGS_ICONLEARNED_DESC2 },
+		{ value = 1, name = L.SETTINGS_ICON_STYLE1, description = L.SETTINGS_ICON_STYLE1_DESC },
+		{ value = 2, name = L.SETTINGS_ICON_STYLE2, description = L.SETTINGS_ICON_STYLE2_DESC },
+		{ value = 3, name = L.SETTINGS_ICON_STYLE3, description = L.SETTINGS_ICON_STYLE3_DESC },
+		{ value = 4, name = L.SETTINGS_ICON_STYLE4, description = L.SETTINGS_ICON_STYLE4_DESC },
+	}, function() app:UpdatePreviewItems() end)
 
-	local variable, name, tooltip = "iconNewMount", L.SETTINGS_ICON_NEW_MOUNT, L.SETTINGS_ICON_NEW_MOUNT_DESC
-	local setting = Settings.RegisterAddOnSetting(category, appName.."_"..variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, true)
-	Settings.CreateCheckbox(category, setting, tooltip)
-	setting:SetValueChangedCallback(function()
-		app:SettingsChanged()
-	end)
+	checkbox("textBind", L.SETTINGS_BINDTEXT, L.SETTINGS_BINDTEXT_DESC, true, function() app:UpdatePreviewItems() end)
 
-	local variable, name, tooltip = "iconNewPet", L.SETTINGS_ICON_NEW_PET, L.SETTINGS_ICON_NEW_PET_DESC
-	local setting = Settings.RegisterAddOnSetting(category, appName .. "_" .. variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, true)
-	local parentSetting = Settings.CreateCheckbox(category, setting, tooltip)
-	setting:SetValueChangedCallback(function()
-		app:SettingsChanged()
-	end)
+	itemPreview()
 
-	local variable, name, tooltip = "iconNewPetMax", L.SETTINGS_ICON_NEW_PET_MAX, L.SETTINGS_ICON_NEW_PET_MAX_DESC
-	local setting = Settings.RegisterAddOnSetting(category, appName .. "_" .. variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, false)
-	local subSetting = Settings.CreateCheckbox(category, setting, tooltip)
-	subSetting:SetParentInitializer(parentSetting, function() return TransmogLootHelper_Settings["iconNewPet"] end)
-	setting:SetValueChangedCallback(function()
-		app:SettingsChanged()
-	end)
+	header(L.SETTINGS_HEADER_COLLECTION)
 
-	local variable, name, tooltip = "iconNewToy", L.SETTINGS_ICON_NEW_TOY, L.SETTINGS_ICON_NEW_TOY_DESC
-	local setting = Settings.RegisterAddOnSetting(category, appName.."_"..variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, true)
-	Settings.CreateCheckbox(category, setting, tooltip)
-	setting:SetValueChangedCallback(function()
-		app:SettingsChanged()
-	end)
+	local parentSetting, parentCheckbox = checkbox("iconNewMog", L.SETTINGS_ICON_NEW_MOG, L.SETTINGS_ICON_NEW_MOG_DESC, true, function() app:SettingsChanged() end)
 
-	local variable, name, tooltip = "iconNewRecipe", L.SETTINGS_ICON_NEW_RECIPE, L.SETTINGS_ICON_NEW_RECIPE_DESC
-	local setting = Settings.RegisterAddOnSetting(category, appName.."_"..variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, true)
-	Settings.CreateCheckbox(category, setting, tooltip)
-	setting:SetValueChangedCallback(function()
-		app:SettingsChanged()
-	end)
+	checkbox("iconNewSource", L.SETTINGS_ICON_NEW_SOURCE, L.SETTINGS_ICON_NEW_SOURCE_DESC, false, function() app:SettingsChanged() end, parentSetting, parentCheckbox)
 
-	local variable, name, tooltip = "iconNewDecor", L.SETTINGS_ICON_NEW_DECOR, L.SETTINGS_ICON_NEW_DECOR_DESC
-	local setting = Settings.RegisterAddOnSetting(category, appName.."_"..variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, true)
-	local parentSetting = Settings.CreateCheckbox(category, setting, tooltip)
-	setting:SetValueChangedCallback(function()
-		app:SettingsChanged()
-	end)
+	checkbox("iconNewCatalyst", L.SETTINGS_ICON_NEW_CATALYST, L.SETTINGS_ICON_NEW_CATALYST_DESC, true, function() app:SettingsChanged() end, parentSetting, parentCheckbox)
 
-	local variable, name, tooltip = "iconNewDecorXP", L.SETTINGS_ICON_NEW_DECORXP, L.SETTINGS_ICON_NEW_DECORXP_DESC
-	local setting = Settings.RegisterAddOnSetting(category, appName .. "_" .. variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, false)
-	local subSetting = Settings.CreateCheckbox(category, setting, tooltip)
-	subSetting:SetParentInitializer(parentSetting, function() return TransmogLootHelper_Settings["iconNewDecor"] end)
-	setting:SetValueChangedCallback(function()
-		app:SettingsChanged()
-	end)
+	checkbox("iconNewUpgrade", L.SETTINGS_ICON_NEW_UPGRADE, L.SETTINGS_ICON_NEW_UPGRADE_DESC, true, function() app:SettingsChanged() end, parentSetting, parentCheckbox)
 
-	layout:AddInitializer(CreateSettingsListSectionHeaderInitializer(L.SETTINGS_HEADER_OTHER_INFO))
+	checkbox("iconNewIllusion", L.SETTINGS_ICON_NEW_ILLUSION, L.SETTINGS_ICON_NEW_ILLUSION_DESC, true, function() app:SettingsChanged() end)
 
-	local variable, name, tooltip = "iconQuestGold", L.SETTINGS_ICON_QUEST_GOLD, L.SETTINGS_ICON_QUEST_GOLD_DESC
-	local setting = Settings.RegisterAddOnSetting(category, appName.."_"..variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, true)
-	Settings.CreateCheckbox(category, setting, tooltip)
+	checkbox("iconNewMount", L.SETTINGS_ICON_NEW_MOUNT, L.SETTINGS_ICON_NEW_MOUNT_DESC, true, function() app:SettingsChanged() end)
 
-	local variable, name, tooltip = "iconUsable", L.SETTINGS_ICON_USABLE, L.SETTINGS_ICON_USABLE_DESC
-	local setting = Settings.RegisterAddOnSetting(category, appName.."_"..variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, true)
-	Settings.CreateCheckbox(category, setting, tooltip)
+	local parentSetting, parentCheckbox = checkbox("iconNewPet", L.SETTINGS_ICON_NEW_PET, L.SETTINGS_ICON_NEW_PET_DESC, true, function() app:SettingsChanged() end)
 
-	local variable, name, tooltip = "iconContainer", L.SETTINGS_ICON_OPENABLE, L.SETTINGS_ICON_OPENABLE_DESC
-	local setting = Settings.RegisterAddOnSetting(category, appName.."_"..variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, true)
-	Settings.CreateCheckbox(category, setting, tooltip)
+	checkbox("iconNewPetMax", L.SETTINGS_ICON_NEW_PET_MAX, L.SETTINGS_ICON_NEW_PET_MAX_DESC, false, function() app:SettingsChanged() end, parentSetting, parentCheckbox)
 
-	-- Subcategory: Loot Tracker
-	local category, layout = Settings.RegisterVerticalLayoutSubcategory(app.Settings, L.SETTINGS_HEADER_LOOT_TRACKER)
+	checkbox("iconNewToy", L.SETTINGS_ICON_NEW_TOY, L.SETTINGS_ICON_NEW_TOY_DESC, true, function() app:SettingsChanged() end)
+
+	checkbox("iconNewRecipe", L.SETTINGS_ICON_NEW_RECIPE, L.SETTINGS_ICON_NEW_RECIPE_DESC, true, function() app:SettingsChanged() end)
+
+	local parentSetting, parentCheckbox = checkbox("iconNewDecor", L.SETTINGS_ICON_NEW_DECOR, L.SETTINGS_ICON_NEW_DECOR_DESC, true, function() app:SettingsChanged() end)
+
+	checkbox("iconNewDecorXP", L.SETTINGS_ICON_NEW_DECORXP, L.SETTINGS_ICON_NEW_DECORXP_DESC, false, function() app:SettingsChanged() end, parentSetting, parentCheckbox)
+
+	header(L.SETTINGS_HEADER_OTHER_INFO)
+
+	checkbox("iconQuestGold", L.SETTINGS_ICON_QUEST_GOLD, L.SETTINGS_ICON_QUEST_GOLD_DESC, true)
+
+	checkbox("iconUsable", L.SETTINGS_ICON_USABLE, L.SETTINGS_ICON_USABLE_DESC, true)
+
+	checkbox("iconContainer", L.SETTINGS_ICON_OPENABLE, L.SETTINGS_ICON_OPENABLE_DESC, true)
+
+	category, layout = Settings.RegisterVerticalLayoutSubcategory(app.SettingsCategory, L.SETTINGS_HEADER_LOOT_TRACKER)
 	Settings.RegisterAddOnCategory(category)
 
-	local variable, name, tooltip = "minimapIcon", L.SETTINGS_MINIMAP, L.SETTINGS_MINIMAP_DESC
-	local setting = Settings.RegisterAddOnSetting(category, appName.."_"..variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, true)
-	Settings.CreateCheckbox(category, setting, tooltip)
-	setting:SetValueChangedCallback(function()
-		if TransmogLootHelper_Settings["minimapIcon"] == true then
-			TransmogLootHelper_Settings["hide"] = false
-			icon:Show(appName)
-		else
-			TransmogLootHelper_Settings["hide"] = true
-			icon:Hide(appName)
-		end
-	end)
+	checkbox("minimapIcon", L.SETTINGS_MINIMAP_TITLE, L.SETTINGS_MINIMAP_DESC, true, function() app:ToggleMinimapIcon() end)
 
-	local variable, name, tooltip = "autoOpen", L.SETTINGS_AUTO_OPEN, L.SETTINGS_AUTO_OPEN_DESC
-	local setting = Settings.RegisterAddOnSetting(category, appName.."_"..variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, false)
-	Settings.CreateCheckbox(category, setting, tooltip)
+	checkbox("autoOpen", L.SETTINGS_AUTO_OPEN, L.SETTINGS_AUTO_OPEN_DESC, false)
 
-	local variable, name, tooltip = "collectMode", L.SETTINGS_COLLECTION_MODE, L.SETTINGS_COLLECTION_MODE_DESC
-	local function GetOptions()
-		local container = Settings.CreateControlTextContainer()
-		container:Add(1, L.SETTINGS_MODE_APPEARANCES, L.SETTINGS_MODE_APPEARANCES_DESC)
-		container:Add(2, L.SETTINGS_MODE_SOURCES, L.SETTINGS_MODE_SOURCES_DESC)
-		return container:GetData()
-	end
-	local setting = Settings.RegisterAddOnSetting(category, appName.."_"..variable, variable, TransmogLootHelper_Settings, Settings.VarType.Number, name, 1)
-	Settings.CreateDropdown(category, setting, GetOptions, tooltip)
+	dropdown("collectMode", L.SETTINGS_COLLECTION_MODE, L.SETTINGS_COLLECTION_MODE_DESC, 1, {
+		{ value = 1, name = L.SETTINGS_MODE_APPEARANCES, description = L.SETTINGS_MODE_APPEARANCES_DESC },
+		{ value = 2, name = L.SETTINGS_MODE_SOURCES, description = L.SETTINGS_MODE_SOURCES_DESC },
+	})
 
-	local variable, name, tooltip = "rarity", L.SETTINGS_RARITY, L.SETTINGS_RARITY_DESC
-	local function GetOptions()
-		local container = Settings.CreateControlTextContainer()
-		container:Add(0, "|cff" .. string.format("%02x%02x%02x", C_ColorOverrides.GetColorForQuality(0).r * 255, C_ColorOverrides.GetColorForQuality(0).g * 255, C_ColorOverrides.GetColorForQuality(0).b * 255) .. ITEM_QUALITY0_DESC .. "|r")
-		container:Add(1, "|cff" .. string.format("%02x%02x%02x", C_ColorOverrides.GetColorForQuality(1).r * 255, C_ColorOverrides.GetColorForQuality(1).g * 255, C_ColorOverrides.GetColorForQuality(1).b * 255) .. ITEM_QUALITY1_DESC .. "|r")
-		container:Add(2, "|cff" .. string.format("%02x%02x%02x", C_ColorOverrides.GetColorForQuality(2).r * 255, C_ColorOverrides.GetColorForQuality(2).g * 255, C_ColorOverrides.GetColorForQuality(2).b * 255) .. ITEM_QUALITY2_DESC .. "|r")
-		container:Add(3, "|cff" .. string.format("%02x%02x%02x", C_ColorOverrides.GetColorForQuality(3).r * 255, C_ColorOverrides.GetColorForQuality(3).g * 255, C_ColorOverrides.GetColorForQuality(3).b * 255) .. ITEM_QUALITY3_DESC .. "|r")
-		container:Add(4, "|cff" .. string.format("%02x%02x%02x", C_ColorOverrides.GetColorForQuality(4).r * 255, C_ColorOverrides.GetColorForQuality(4).g * 255, C_ColorOverrides.GetColorForQuality(4).b * 255) .. ITEM_QUALITY4_DESC .. "|r")
-		return container:GetData()
+	dropdown("rarity", L.SETTINGS_RARITY, L.SETTINGS_RARITY_DESC, 3, {
+		{ value = 0, name = "|cff" .. string.format("%02x%02x%02x", C_ColorOverrides.GetColorForQuality(0).r * 255, C_ColorOverrides.GetColorForQuality(0).g * 255, C_ColorOverrides.GetColorForQuality(0).b * 255) .. ITEM_QUALITY0_DESC .. "|r", description = nil },
+		{ value = 1, name = "|cff" .. string.format("%02x%02x%02x", C_ColorOverrides.GetColorForQuality(1).r * 255, C_ColorOverrides.GetColorForQuality(1).g * 255, C_ColorOverrides.GetColorForQuality(1).b * 255) .. ITEM_QUALITY1_DESC .. "|r", description = nil },
+		{ value = 2, name = "|cff" .. string.format("%02x%02x%02x", C_ColorOverrides.GetColorForQuality(2).r * 255, C_ColorOverrides.GetColorForQuality(2).g * 255, C_ColorOverrides.GetColorForQuality(2).b * 255) .. ITEM_QUALITY2_DESC .. "|r", description = nil },
+		{ value = 3, name = "|cff" .. string.format("%02x%02x%02x", C_ColorOverrides.GetColorForQuality(3).r * 255, C_ColorOverrides.GetColorForQuality(3).g * 255, C_ColorOverrides.GetColorForQuality(3).b * 255) .. ITEM_QUALITY3_DESC .. "|r", description = nil },
+		{ value = 4, name = "|cff" .. string.format("%02x%02x%02x", C_ColorOverrides.GetColorForQuality(4).r * 255, C_ColorOverrides.GetColorForQuality(4).g * 255, C_ColorOverrides.GetColorForQuality(4).b * 255) .. ITEM_QUALITY4_DESC .. "|r", description = nil },
+	})
 
-	end
-	local setting = Settings.RegisterAddOnSetting(category, appName.."_"..variable, variable, TransmogLootHelper_Settings, Settings.VarType.Number, name, 3)
-	Settings.CreateDropdown(category, setting, GetOptions, tooltip)
+	button(L.SETTINGS_WHISPER, L.SETTINGS_WHISPER_CUSTOMIZE, L.SETTINGS_WHISPER_CUSTOMIZE_DESC, function() app.RenamePopup:Show() end)
 
-	local function onRenameButtonClick()
-		app.RenamePopup:Show()
-	end
-	layout:AddInitializer(CreateSettingsButtonInitializer(L.SETTINGS_WHISPER, L.SETTINGS_WHISPER_CUSTOMIZE, onRenameButtonClick, L.SETTINGS_WHISPER_CUSTOMIZE_DESC .. ".", true))
-
-	-- Subcategory: Tweaks
-	local category, layout = Settings.RegisterVerticalLayoutSubcategory(app.Settings, L.SETTINGS_HEADER_TWEAKS)
+	category, layout = Settings.RegisterVerticalLayoutSubcategory(app.SettingsCategory, L.SETTINGS_HEADER_TWEAKS)
 	Settings.RegisterAddOnCategory(category)
 
-	local variable, name, tooltip = "instantCatalyst", L.SETTINGS_CATALYST, L.SETTINGS_CATALYST_DESC
-	local setting = Settings.RegisterAddOnSetting(category, appName .. "_" .. variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, true)
-	local parentSetting = Settings.CreateCheckbox(category, setting, tooltip)
+	local parentSetting, parentCheckbox = checkbox("instantCatalyst", L.SETTINGS_CATALYST, L.SETTINGS_CATALYST_DESC, true)
 
-	local variable, name, tooltip = "instantCatalystTooltip", L.SETTINGS_INSTANT_TOOLTIP,L.SETTINGS_INSTANT_TOOLTIP_DESC
-	local setting = Settings.RegisterAddOnSetting(category, appName .. "_" .. variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, true)
-	local subSetting = Settings.CreateCheckbox(category, setting, tooltip)
-	subSetting:SetParentInitializer(parentSetting, function() return TransmogLootHelper_Settings["instantCatalyst"] end)
+	checkbox("instantCatalystTooltip", L.SETTINGS_INSTANT_TOOLTIP,L.SETTINGS_INSTANT_TOOLTIP_DESC, true, nil, parentSetting, parentCheckbox)
 
-	local variable, name, tooltip = "instantVault", L.SETTINGS_VAULT, L.SETTINGS_VAULT_DESC
-	local setting = Settings.RegisterAddOnSetting(category, appName .. "_" .. variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, true)
-	local parentSetting = Settings.CreateCheckbox(category, setting, tooltip)
+	local parentSetting, parentCheckbox = checkbox("instantVault", L.SETTINGS_VAULT, L.SETTINGS_VAULT_DESC, true)
 
-	local variable, name, tooltip = "instantVaultTooltip", L.SETTINGS_INSTANT_TOOLTIP,L.SETTINGS_INSTANT_TOOLTIP_DESC
-	local setting = Settings.RegisterAddOnSetting(category, appName .. "_" .. variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, true)
-	local subSetting = Settings.CreateCheckbox(category, setting, tooltip)
-	subSetting:SetParentInitializer(parentSetting, function() return TransmogLootHelper_Settings["instantVault"] end)
+	checkbox("instantVaultTooltip", L.SETTINGS_INSTANT_TOOLTIP,L.SETTINGS_INSTANT_TOOLTIP_DESC, true, nil, parentSetting, parentCheckbox)
 
-	local variable, name, tooltip = "vendorAll", L.SETTINGS_VENDOR_ALL, L.SETTINGS_VENDOR_ALL_DESC
-	local setting = Settings.RegisterAddOnSetting(category, appName .. "_" .. variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, true)
-	Settings.CreateCheckbox(category, setting, tooltip)
+	checkbox("vendorAll", L.SETTINGS_VENDOR_ALL, L.SETTINGS_VENDOR_ALL_DESC, true)
 
-	local variable, name, tooltip = "hideGroupRolls", L.SETTINGS_HIDE_LOOT_ROLL_WINDOW, L.SETTINGS_HIDE_LOOT_ROLL_WINDOW_DESC
-	local setting = Settings.RegisterAddOnSetting(category, appName.."_"..variable, variable, TransmogLootHelper_Settings, Settings.VarType.Boolean, name, false)
-	local parentSetting = Settings.CreateCheckbox(category, setting, tooltip)
-end
-
--- Message change popup
-function app:CreateMessagePopup()
-	-- Create popup frame
-	local frame = CreateFrame("Frame", nil, UIParent, "BackdropTemplate")
-	frame:SetPoint("CENTER")
-	frame:SetFrameStrata("TOOLTIP")
-	frame:SetBackdrop({
-		bgFile = "Interface/Tooltips/UI-Tooltip-Background",
-		edgeFile = "Interface/Tooltips/UI-Tooltip-Border",
-		edgeSize = 16,
-		insets = { left = 4, right = 4, top = 4, bottom = 4 },
-	})
-	frame:SetBackdropColor(0, 0, 0, 1)
-	frame:EnableMouse(true)
-	frame:SetHeight(85)
-	frame:SetWidth(500)
-	frame:Hide()
-
-	-- Close button
-	local close = CreateFrame("Button", "", frame, "UIPanelCloseButton")
-	close:SetPoint("TOPRIGHT", frame, "TOPRIGHT", 2, 2)
-	close:SetScript("OnClick", function()
-		frame:Hide()
-	end)
-
-	-- Text
-	local string1 = frame:CreateFontString(nil, "ARTWORK", "GameFontNormal")
-	string1:SetPoint("CENTER", frame, "CENTER", 0, 0)
-	string1:SetPoint("TOP", frame, "TOP", 0, -10)
-	string1:SetJustifyH("CENTER")
-	string1:SetText(L.WHISPER_POPUP_CUSTOMIZE)
-
-	-- Editbox
-	local editBox = CreateFrame("EditBox", nil, frame, "InputBoxTemplate")
-	editBox:SetSize(460, 20)
-	editBox:SetPoint("CENTER", frame, "CENTER", 0, 0)
-	editBox:SetPoint("TOP", frame, "TOP", 0, -30)
-	editBox:SetAutoFocus(false)
-	editBox:SetText(TransmogLootHelper_Settings["message"])
-	editBox:SetCursorPosition(0)
-
-	local border = CreateFrame("Frame", nil, editBox, "BackdropTemplate")
-	border:SetPoint("TOPLEFT", editBox, -6, 1)
-	border:SetPoint("BOTTOMRIGHT", editBox, 2, -2)
-	border:SetBackdrop({
-		bgFile = "Interface/Tooltips/UI-Tooltip-Background",
-		edgeFile = "Interface/Tooltips/UI-Tooltip-Border",
-		edgeSize = 14,
-		insets = { left = 4, right = 4, top = 4, bottom = 4 },
-	})
-	border:SetBackdropColor(0, 0, 0, 0)
-	border:SetBackdropBorderColor(0.25, 0.78, 0.92)
-
-	-- Text 2
-	local string2 = frame:CreateFontString(nil, "ARTWORK", "GameFontNormal")
-	string2:SetPoint("CENTER", frame, "CENTER", 0, 0)
-	string2:SetPoint("TOP", frame, "TOP", 0, -60)
-	string2:SetJustifyH("CENTER")
-	string2:SetText("")
-
-	-- Edit functions
-	editBox:SetScript("OnEditFocusGained", function(self)
-		-- Reset our visual feedback
-		border:SetBackdropBorderColor(0.25, 0.78, 0.92)
-		string2:SetText("")
-	end)
-	editBox:SetScript("OnEditFocusLost", function(self)
-		-- Check if the message is gucci
-		local newValue = self:GetText()
-
-		if newValue == TransmogLootHelper_Settings["message"] then
-			-- Do nothing
-		else
-			local item = false
-			if string.find(newValue, "%%item") ~= nil then
-				item = true
-			end
-
-			if item == false then
-				-- Change the editbox border colour for some extra visual feedback
-				border:SetBackdropBorderColor(1, 0, 0)
-				C_Timer.After(3, function()
-					border:SetBackdropBorderColor(0.25, 0.78, 0.92)
-				end)
-
-				-- Set our feedback text message
-				string2:SetText(app.IconNotReady .. " " .. L.WHISPER_POPUP_ERROR)
-			-- Edit the message if all is gucci
-			else
-				-- Change the editbox border colour for some extra visual feedback
-				border:SetBackdropBorderColor(0, 1, 0)
-				C_Timer.After(3, function()
-					border:SetBackdropBorderColor(0.25, 0.78, 0.92)
-				end)
-
-				-- Set our feedback text message
-				string2:SetText(app.IconReady .. " " .. L.WHISPER_POPUP_SUCCESS)
-
-				-- Save the new message
-				TransmogLootHelper_Settings["message"] = newValue
-			end
-		end
-	end)
-	editBox:SetScript("OnEnterPressed", function(self)
-		self:ClearFocus()
-	end)
-	editBox:SetScript("OnEscapePressed", function(self)
-		self:SetText(TransmogLootHelper_Settings["message"])
-	end)
-
-	app.RenamePopup = frame
-end
-
-function app:CreateLinkCopiedFrame()
-	app.LinkCopiedFrame= CreateFrame("Frame", nil, UIParent, "BackdropTemplate")
-	app.LinkCopiedFrame:SetPoint("CENTER")
-	app.LinkCopiedFrame:SetFrameStrata("TOOLTIP")
-	app.LinkCopiedFrame:SetHeight(1)
-	app.LinkCopiedFrame:SetWidth(1)
-	app.LinkCopiedFrame:Hide()
-
-	local string = app.LinkCopiedFrame:CreateFontString(nil, "ARTWORK", "GameFontNormal")
-	string:SetPoint("CENTER", app.LinkCopiedFrame, "CENTER", 0, 0)
-	string:SetPoint("TOP", app.LinkCopiedFrame, "TOP", 0, 0)
-	string:SetJustifyH("CENTER")
-	string:SetText(app.IconReady .. " " .. L.SETTINGS_URL_COPIED)
-
-	app.LinkCopiedFrame.animation = app.LinkCopiedFrame:CreateAnimationGroup()
-	local fadeOut = app.LinkCopiedFrame.animation:CreateAnimation("Alpha")
-	fadeOut:SetFromAlpha(1)
-	fadeOut:SetToAlpha(0)
-	fadeOut:SetDuration(1)
-	fadeOut:SetStartDelay(1)
-	fadeOut:SetSmoothing("IN_OUT")
-	app.LinkCopiedFrame.animation:SetToFinalAlpha(true)
-	app.LinkCopiedFrame.animation:SetScript("OnFinished", function()
-		app.LinkCopiedFrame:Hide()
-	end)
-end
-
-function app:SettingsChanged()
-	if C_AddOns.IsAddOnLoaded("Baganator") then
-		Baganator.API.RequestItemButtonsRefresh()
-	end
+	checkbox("hideGroupRolls", L.SETTINGS_HIDE_LOOT_ROLL_WINDOW, L.SETTINGS_HIDE_LOOT_ROLL_WINDOW_DESC, false)
 end
