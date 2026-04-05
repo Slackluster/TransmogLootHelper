@@ -2,10 +2,9 @@
 -- Transmog Loot Helper: Database.lua --
 ----------------------------------------
 
--- Initialisation
 local appName, app = ...
 
--- Used strings
+-- Strings
 app.Name = "Transmog Loot Helper"
 app.NameLong = app:Colour("Transmog Loot Helper")
 app.NameShort = app:Colour("TLH")
@@ -13,7 +12,7 @@ app.NamePrefix = "TransmogLootHelp"
 _G["BINDING_NAME_TRANSMOGLOOTHELPER"] = app.Name
 _G["BINDING_NAME_SLACKWARE"] = "Slackware"
 
--- Used textures
+-- Textures
 app.Icon = "Interface\\AddOns\\TransmogLootHelper\\assets\\icon.png"
 app.IconTLH = "|T" .. app.Icon .. ":0|t"
 app.IconReady = "|TInterface\\RaidFrame\\ReadyCheck-Ready:0|t"
