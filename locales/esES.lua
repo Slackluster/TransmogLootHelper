@@ -4,7 +4,6 @@
 -- Spanish (Spain) localisation
 -- Translator(s): Ferran Carril
 
--- Initialisation
 if GetLocale() ~= "esES" then return end
 local appName, app = ...
 local L = app.locales

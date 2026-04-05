@@ -4,7 +4,6 @@
 -- Korean (Korea) localisation
 -- Translator(s):
 
--- Initialisation
 if GetLocale() ~= "koKR" then return end
 local appName, app = ...
 local L = app.locales
