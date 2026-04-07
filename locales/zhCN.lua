@@ -4,7 +4,6 @@
 -- Chinese (Simplified, PRC) localisation
 -- Translator(s):
 
--- Initialisation
 if GetLocale() ~= "zhCN" then return end
 local appName, app = ...
 local L = app.locales

@@ -4,7 +4,6 @@
 -- French (France) localisation
 -- Translator(s): Klep-Ysondre
 
--- Initialisation
 if GetLocale() ~= "frFR" then return end
 local appName, app = ...
 local L = app.locales
@@ -114,7 +113,7 @@ L.SETTINGS_ICONLEARNED_DESC =            "Afficher une icône pour indiquer que 
 L.DEFAULT =                              CHAT_DEFAULT -- Default
 L.SETTINGS_ICONLEARNED_DESC2 =           "Vous pouvez définir un style distinct pour les icônes apprises."
 L.SETTINGS_BINDTEXT =                    "Texte de liaison"
-L.SETTINGS_BINDTEXT_DESC =               "Afficher un indicateur de texte pour les objets liés quand équipé (LqÉ), les objets liés au bataillon (LaB) et les objets liés au batailloin jusqu'à l'équipement (LaB).."
+L.SETTINGS_BINDTEXT_DESC =               "Afficher un indicateur de texte pour les objets liés quand équipé (LqÉ), les objets liés au bataillon (LaB) et les objets liés au batailloin jusqu'à l'équipement (LaB).\n\n" .. L.SETTINGS_BAGANATOR
 L.SETTINGS_PREVIEW =                     "Aperçu :"
 L.SETTINGS_UNLEARNED =                   PROFESSIONS_CATEGORY_UNLEARNED -- Unlearned
 L.SETTINGS_USABLE =                      "Utilisable"
