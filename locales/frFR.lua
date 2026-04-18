@@ -160,7 +160,7 @@ L.SETTINGS_ICON_OPENABLE =               "Objets ouvrables"
 L.SETTINGS_ICON_OPENABLE_DESC =          "Afficher une icône pour indiquer qu'un objet peut être ouvert, comme les coffrets verrouillés et les sacs de boss d'événements."
 
 L.SETTINGS_HEADER_LOOT_TRACKER =         "Suivi du butin"
-L.SETTINGS_MINIMAP =                     "Afficher l'icône de la mini-carte"
+L.SETTINGS_MINIMAP_TITLE =               "Afficher l'icône de la mini-carte"
 L.SETTINGS_MINIMAP_DESC =                "Afficher l'icône sur la mini-carte. Si vous la désactivez, " .. app.NameShort .. " reste accessible via le compartiment des addons."
 L.SETTINGS_AUTO_OPEN =                   "Ouverture automatique de la fenêtre"
 L.SETTINGS_AUTO_OPEN_DESC =              "Afficher automatiquement la fenêtre " .. app.NameShort .. " lorsqu'un objet éligible est récupéré."
