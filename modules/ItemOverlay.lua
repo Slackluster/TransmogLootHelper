@@ -491,7 +491,7 @@ function app:ApplyItemOverlay(overlay, itemLink, itemLocation, containerInfo, ba
 					else
 						hideOverlay()
 					end
-				elseif app:HasRedTooltipText(itemLink) then
+				elseif app:IsUnusable(itemLink) then
 					showOverlay("red")
 				elseif app.Settings["iconNewSource"] and sourceMissing and not appearanceMissing then
 					showOverlay("yellow")
@@ -505,7 +505,7 @@ function app:ApplyItemOverlay(overlay, itemLink, itemLocation, containerInfo, ba
 					else
 						hideOverlay()
 					end
-				elseif app:HasRedTooltipText(itemLink) then
+				elseif app:IsUnusable(itemLink) then
 					showOverlay("red")
 				else
 					showOverlay("purple")
@@ -519,7 +519,7 @@ function app:ApplyItemOverlay(overlay, itemLink, itemLocation, containerInfo, ba
 					else
 						hideOverlay()
 					end
-				elseif app:HasRedTooltipText(itemLink) then
+				elseif app:IsUnusable(itemLink) then
 					showOverlay("red")
 				else
 					showOverlay("purple")
@@ -657,7 +657,7 @@ function app:ApplyItemOverlay(overlay, itemLink, itemLocation, containerInfo, ba
 					overlay.animation:Stop()
 				end
 			elseif app.Settings["iconUsable"] and itemEquipLoc == "ProfessionKnowledge" then
-				if app:HasRedTooltipText(itemLink) then
+				if app:IsUnusable(itemLink) then
 					hideOverlay()
 				else
 					showOverlay("yellow")
@@ -671,7 +671,7 @@ function app:ApplyItemOverlay(overlay, itemLink, itemLocation, containerInfo, ba
 					else
 						hideOverlay()
 					end
-				elseif app:HasRedTooltipText(itemLink) then
+				elseif app:IsUnusable(itemLink) then
 					showOverlay("red")
 				else
 					showOverlay("purple")
@@ -680,7 +680,7 @@ function app:ApplyItemOverlay(overlay, itemLink, itemLocation, containerInfo, ba
 				if not containerInfo then
 					hideOverlay()
 				else
-					if app:HasRedTooltipText(itemLink) then
+					if app:IsUnusable(itemLink) then
 						showOverlay("red")
 					else
 						showOverlay("yellow")

@@ -265,11 +265,11 @@ function app:GetBonding(itemLinkie)
 	return false
 end
 
-function app:HasRedTooltipText(itemLink)
+function app:IsUnusable(itemLink)
 	local tooltip = C_TooltipInfo.GetHyperlink(itemLink)
 	if tooltip and tooltip["lines"] then
 		for k, v in ipairs(tooltip["lines"]) do
-			if v.leftColor["r"] == 1 and v.leftColor["g"] > 0.1 and v.leftColor["g"] < 0.2 and v.leftColor["b"] > 0.1 and v.leftColor["b"] < 0.2 then
+			if v.usable ~= nil and v.usable == false then
 				return true
 			end
 		end
