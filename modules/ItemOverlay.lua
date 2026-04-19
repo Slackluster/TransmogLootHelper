@@ -664,8 +664,8 @@ function app:ApplyItemOverlay(overlay, itemLink, itemLocation, containerInfo, ba
 				end
 			elseif app.Settings["iconUsable"] and itemEquipLoc == "Customisation" then
 				local spellID = app:GetLearnedSpell(itemLink)
-				app:CacheRecipe(spellID, true)
-				if TransmogLootHelper_Cache.Recipes[spellID].learned or (app.QuestItem[itemID] and C_QuestLog.IsQuestFlaggedCompletedOnAccount(app.QuestItem[itemID])) then
+				if spellID then app:CacheRecipe(spellID, true) end
+				if (TransmogLootHelper_Cache.Recipes[spellID] and TransmogLootHelper_Cache.Recipes[spellID].learned) or (app.QuestItem[itemID] and C_QuestLog.IsQuestFlaggedCompletedOnAccount(app.QuestItem[itemID])) then
 					if app.Settings["iconLearned"] then
 						showOverlay("green")
 					else
