@@ -20,13 +20,15 @@ end)
 -- RECIPE (AND SPELL) TRACKING --
 ---------------------------------
 
-function app:CacheRecipe(spellID, learned)
+function app:CacheRecipe(spellID, isSpell, isLearned)
 	app.CharacterName = app.CharacterName or UnitName("player") .. "-" .. GetNormalizedRealmName()
 
 	if not TransmogLootHelper_Cache.Recipes[spellID] or type(TransmogLootHelper_Cache.Recipes[spellID]) == "boolean" then
 		TransmogLootHelper_Cache.Recipes[spellID] = { learned = false, knownBy = {} }
 	end
-	if learned then
+
+	local categoryID = C_TradeSkillUI.GetRecipeInfo(spellID).categoryID
+	if isLearned or (isSpell and categoryID == 0 and C_SpellBook.IsSpellKnown(spellID)) or (categoryID ~= 0 and C_TradeSkillUI.GetRecipeInfo(spellID).learned) then
 		TransmogLootHelper_Cache.Recipes[spellID].learned = true
 
 		local exists = false
@@ -48,11 +50,7 @@ app.Event:Register("TRADE_SKILL_SHOW", function()
 		C_Timer.After(2, function()
 			if not C_TradeSkillUI.IsTradeSkillLinked() and not C_TradeSkillUI.IsTradeSkillGuild() then
 				for _, recipeID in pairs(C_TradeSkillUI.GetAllRecipeIDs()) do
-					if C_TradeSkillUI.GetRecipeInfo(recipeID).learned then
-						app:CacheRecipe(recipeID, true)
-					else
-						app:CacheRecipe(recipeID)
-					end
+					app:CacheRecipe(recipeID)
 				end
 				api:UpdateOverlay()
 			end
@@ -115,46 +113,3 @@ end
 function SetTooltipMoney(frame, money, type, prefixText, suffixText)
 	frame:AddLine((prefixText or "") .. "  " .. GetCoinTextureString(money) .. " " .. (suffixText or ""), 1, 1, 1)
 end
-
---------------------
--- DECOR TRACKING --
---------------------
-
-app.Event:Register("PLAYER_ENTERING_WORLD", function(isInitialLogin, isReloadingUi)
-	C_HousingCatalog.CreateCatalogSearcher() -- Cache Decor
-end)
-
-app.Event:Register("HOUSE_DECOR_ADDED_TO_CHEST", function(decorGUID, recordID)
-	if not TransmogLootHelper_Cache.Decor[recordID] then
-		TransmogLootHelper_Cache.Decor[recordID] = { owned = 0 }
-	end
-
-	TransmogLootHelper_Cache.Decor[recordID].owned = TransmogLootHelper_Cache.Decor[recordID].owned + 1
-	TransmogLootHelper_Cache.Decor[recordID].grantsXP = false
-
-	local decorInfo = C_HousingCatalog.GetCatalogEntryInfoByRecordID(Enum.HousingCatalogEntryType.Decor, recordID, true)
-	if decorInfo then
-		TransmogLootHelper_Cache.Decor[recordID].xp = decorInfo.firstAcquisitionBonus
-	end
-	api:UpdateOverlay()
-end)
-
--- This is also triggered when we run C_HousingCatalog.CreateCatalogSearcher()
-app.Event:Register("HOUSING_STORAGE_UPDATED", function()
-	for itemID, recordID in pairs(app.Decor) do
-		local decorInfo = C_HousingCatalog.GetCatalogEntryInfoByRecordID(Enum.HousingCatalogEntryType.Decor, recordID, true)
-		if decorInfo then
-			if not decorInfo.numStored then
-				if decorInfo.quantity > 100000 then decorInfo.quantity = 0 end
-				decorInfo.numStored = decorInfo.remainingRedeemable + decorInfo.quantity
-			end
-			if not TransmogLootHelper_Cache.Decor[recordID] then
-				TransmogLootHelper_Cache.Decor[recordID] = { grantsXP = false, xp = decorInfo.firstAcquisitionBonus }
-				if (decorInfo.numStored + decorInfo.numPlaced) == 0 and decorInfo.firstAcquisitionBonus > 0 then
-					TransmogLootHelper_Cache.Decor[recordID].grantsXP = true
-				end
-			end
-			TransmogLootHelper_Cache.Decor[recordID].owned = decorInfo.numStored + decorInfo.numPlaced
-		end
-	end
-end)

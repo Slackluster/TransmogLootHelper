@@ -491,7 +491,7 @@ function app:ApplyItemOverlay(overlay, itemLink, itemLocation, containerInfo, ba
 					else
 						hideOverlay()
 					end
-				elseif app:HasRedTooltipText(itemLink) then
+				elseif app:IsUnusable(itemLink) then
 					showOverlay("red")
 				elseif app.Settings["iconNewSource"] and sourceMissing and not appearanceMissing then
 					showOverlay("yellow")
@@ -505,7 +505,7 @@ function app:ApplyItemOverlay(overlay, itemLink, itemLocation, containerInfo, ba
 					else
 						hideOverlay()
 					end
-				elseif app:HasRedTooltipText(itemLink) then
+				elseif app:IsUnusable(itemLink) then
 					showOverlay("red")
 				else
 					showOverlay("purple")
@@ -519,7 +519,7 @@ function app:ApplyItemOverlay(overlay, itemLink, itemLocation, containerInfo, ba
 					else
 						hideOverlay()
 					end
-				elseif app:HasRedTooltipText(itemLink) then
+				elseif app:IsUnusable(itemLink) then
 					showOverlay("red")
 				else
 					showOverlay("purple")
@@ -657,20 +657,21 @@ function app:ApplyItemOverlay(overlay, itemLink, itemLocation, containerInfo, ba
 					overlay.animation:Stop()
 				end
 			elseif app.Settings["iconUsable"] and itemEquipLoc == "ProfessionKnowledge" then
-				if app:HasRedTooltipText(itemLink) then
+				if app:IsUnusable(itemLink) then
 					hideOverlay()
 				else
 					showOverlay("yellow")
 				end
 			elseif app.Settings["iconUsable"] and itemEquipLoc == "Customisation" then
 				local spellID = app:GetLearnedSpell(itemLink)
-				if (TransmogLootHelper_Cache.Recipes[spellID] and TransmogLootHelper_Cache.Recipes[spellID].learned) or (app.QuestItem[itemID] and C_QuestLog.IsQuestFlaggedCompletedOnAccount(app.QuestItem[itemID])) or app:IsLearned(itemLink) then
+				if spellID then app:CacheRecipe(spellID, true) end
+				if (TransmogLootHelper_Cache.Recipes[spellID] and TransmogLootHelper_Cache.Recipes[spellID].learned) or (app.QuestItem[itemID] and C_QuestLog.IsQuestFlaggedCompletedOnAccount(app.QuestItem[itemID])) then
 					if app.Settings["iconLearned"] then
 						showOverlay("green")
 					else
 						hideOverlay()
 					end
-				elseif app:HasRedTooltipText(itemLink) then
+				elseif app:IsUnusable(itemLink) then
 					showOverlay("red")
 				else
 					showOverlay("purple")
@@ -679,7 +680,7 @@ function app:ApplyItemOverlay(overlay, itemLink, itemLocation, containerInfo, ba
 				if not containerInfo then
 					hideOverlay()
 				else
-					if app:HasRedTooltipText(itemLink) then
+					if app:IsUnusable(itemLink) then
 						showOverlay("red")
 					else
 						showOverlay("yellow")
@@ -1336,12 +1337,12 @@ function app:HookItemOverlay()
 		end)
 
 		app.Event:Register("NEW_RECIPE_LEARNED", function(recipeID, recipeLevel, baseRecipeID)
-			app:CacheRecipe(recipeID, true)
+			app:CacheRecipe(recipeID, false, true)
 			api:UpdateOverlay()
 		end)
 
 		app.Event:Register("LEARNED_SPELL_IN_SKILL_LINE", function(spellID, skillLineIndex, isGuildPerkSpell)
-			app:CacheRecipe(spellID, true)
+			app:CacheRecipe(spellID, true, true)
 			api:UpdateOverlay()
 		end)
 	end
