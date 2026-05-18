@@ -179,6 +179,10 @@ function app:ApplyItemOverlay(overlay, itemLink, itemLocation, containerInfo, ba
 					end
 				end
 			else
+				if app.Quantum[itemID] then
+					itemEquipLoc = "INVTYPE_QUANTUM"
+				end
+
 				local localeProfessionKnowledge = {
 					"Use: Study to increase your",
 					"Benutzen: Studieren, um Euer",
@@ -428,29 +432,76 @@ function app:ApplyItemOverlay(overlay, itemLink, itemLocation, containerInfo, ba
 					hideOverlay()
 				end
 			elseif app.Settings["iconNewMog"] and itemEquipLoc:find("INVTYPE") then
-				local attInfo
-				if C_AddOns.IsAddOnLoaded("AllTheThings") then
-					attInfo = AllTheThings.GetLinkReference(itemLink)
-				end
-				local tumInfo
-				if C_AddOns.IsAddOnLoaded("TransmogUpgradeMaster") then
-					tumInfo = TransmogUpgradeMaster_API.GetAppearanceMissingData(itemLink)
-				end
+				if itemEquipLoc == "INVTYPE_QUANTUM" then
+					if type(app.Quantum[itemID]) == "number" then
+						overlay.texture:SetTexture(app.Texture["INVTYPE_WEAPON"])
 
-				if not api:IsAppearanceCollected(itemLink) then
-					showOverlay("purple")
-				elseif app.Settings["iconNewSource"] and not api:IsSourceCollected(itemLink) then
-					showOverlay("yellow")
-				elseif app.Settings["iconNewCatalyst"] and ((tumInfo and tumInfo.catalystAppearanceMissing) or (attInfo and attInfo.filledCatalyst)) then
-					overlay.texture:SetAtlas("CreationCatalyst-32x32")
-					showOverlay("yellow")
-				elseif app.Settings["iconNewUpgrade"] and ((tumInfo and tumInfo.upgradeAppearanceMissing) or (attInfo and attInfo.filledUpgrade)) then
-					overlay.texture:SetAtlas("CovenantSanctum-Upgrade-Icon-Available")
-					showOverlay("yellow")
-				elseif app.Settings["iconLearned"] and not (classID == 15 and subclassID == 0) then
-					showOverlay("green")
+						if C_QuestLog.IsQuestFlaggedCompleted(app.Quantum[itemID]) then
+							showOverlay("green")
+						elseif app:IsUnusable(itemLink) then
+							showOverlay("red")
+						elseif C_QuestLog.IsQuestFlaggedCompletedOnAccount(app.Quantum[itemID]) then
+							showOverlay("yellow")
+						else
+							showOverlay("purple")
+						end
+					else
+						overlay.texture:SetTexture(app.Quantum[itemID].icon)
+
+						local armorClass
+						local playerClass = PlayerUtil.GetClassID()
+						for armor, classes in pairs(app.Armor) do
+							for _, class in pairs(classes) do
+								if class == playerClass then
+									armorClass = armor
+									break
+								end
+							end
+						end
+
+						local allComplete = true
+						for _, hqt in pairs(app.Quantum[itemID]) do
+							if type(hqt) == "number" and not C_QuestLog.IsQuestFlaggedCompletedOnAccount(hqt) then
+								allComplete = false
+								break
+							end
+						end
+
+						if allComplete and C_QuestLog.IsQuestFlaggedCompleted(app.Quantum[itemID][armorClass]) then
+							showOverlay("green")
+						elseif app:IsUnusable(itemLink) or C_QuestLog.IsQuestFlaggedCompleted(app.Quantum[itemID][armorClass]) then
+							showOverlay("red")
+						elseif allComplete then
+							showOverlay("yellow")
+						else
+							showOverlay("purple")
+						end
+					end
 				else
-					hideOverlay()
+					local attInfo
+					if C_AddOns.IsAddOnLoaded("AllTheThings") then
+						attInfo = AllTheThings.GetLinkReference(itemLink)
+					end
+					local tumInfo
+					if C_AddOns.IsAddOnLoaded("TransmogUpgradeMaster") then
+						tumInfo = TransmogUpgradeMaster_API.GetAppearanceMissingData(itemLink)
+					end
+
+					if not api:IsAppearanceCollected(itemLink) then
+						showOverlay("purple")
+					elseif app.Settings["iconNewSource"] and not api:IsSourceCollected(itemLink) then
+						showOverlay("yellow")
+					elseif app.Settings["iconNewCatalyst"] and ((tumInfo and tumInfo.catalystAppearanceMissing) or (attInfo and attInfo.filledCatalyst)) then
+						overlay.texture:SetAtlas("CreationCatalyst-32x32")
+						showOverlay("yellow")
+					elseif app.Settings["iconNewUpgrade"] and ((tumInfo and tumInfo.upgradeAppearanceMissing) or (attInfo and attInfo.filledUpgrade)) then
+						overlay.texture:SetAtlas("CovenantSanctum-Upgrade-Icon-Available")
+						showOverlay("yellow")
+					elseif app.Settings["iconLearned"] and not (classID == 15 and subclassID == 0) then
+						showOverlay("green")
+					else
+						hideOverlay()
+					end
 				end
 			elseif app.Settings["iconNewMog"] and (itemEquipLoc == "Ensemble" or itemEquipLoc == "Arsenal") then
 				local setID = C_Item.GetItemLearnTransmogSet(itemLink)
@@ -498,8 +549,20 @@ function app:ApplyItemOverlay(overlay, itemLink, itemLocation, containerInfo, ba
 					showOverlay("purple")
 				end
 			elseif app.Settings["iconNewMount"] and itemEquipLoc == "Mount" then
-				local mountID = C_MountJournal.GetMountFromItem(itemID)
-				local _, _, _, _, _, _, _, _, _, _, isCollected = C_MountJournal.GetMountInfoByID(mountID)
+				local _, isCollected = "", true
+				if itemID == 208216 then -- Quantum Courser
+					for mountID, _ in pairs(app.QuantumMount) do
+						local _, _, _, _, _, _, _, _, _, _, collected = C_MountJournal.GetMountInfoByID(mountID)
+						if not collected then
+							isCollected = false
+							break
+						end
+					end
+				else
+					local mountID = C_MountJournal.GetMountFromItem(itemID)
+					_, _, _, _, _, _, _, _, _, _, isCollected = C_MountJournal.GetMountInfoByID(mountID)
+				end
+
 				if isCollected then
 					if app.Settings["iconLearned"] then
 						showOverlay("green")

@@ -98,6 +98,7 @@ app.Texture = {
 	["INVTYPE_WEAPON"] = "Interface\\Icons\\inv_sword_04",
 	["INVTYPE_SHIELD"] = "Interface\\Icons\\inv_shield_06",
 	["INVTYPE_HOLDABLE"] = "Interface\\Icons\\inv_shield_06",
+	["INVTYPE_QUANTUM"] = "Interface\\Icons\\inv_misc_questionMark",
 
 	["Ensemble"] = "Interface\\Icons\\inv_chest_cloth_17",
 	["Arsenal"] = "Interface\\Icons\\achievement_arena_3v3_4",
@@ -126,6 +127,79 @@ app.Texture = {
 	["Customisation"] = "Interface\\Icons\\inv_10_jewelcrafting_gem1leveling_uncut_transparent",
 	["Container"] = "Interface\\Icons\\inv_misc_bag_16",
 	["Unknown"] = "Interface\\Icons\\inv_misc_questionMark",
+}
+
+app.Quantum = {
+	[208061] = { -- Quantum Headpiece
+		["Cloth"] = 77629,
+		["Leather"] = 77628,
+		["Mail"] = 77627,
+		["Plate"] = 77626,
+		["icon"] = app.Texture["INVTYPE_HEAD"],
+	},
+	[208062] = { -- Quantum Shoulders
+		["Cloth"] = 77641,
+		["Leather"] = 77640,
+		["Mail"] = 77639,
+		["Plate"] = 77638,
+		["icon"] = app.Texture["INVTYPE_SHOULDER"],
+	},
+	[208064] = { -- Quantum Chestpiece
+		["Cloth"] = 77637,
+		["Leather"] = 77636,
+		["Mail"] = 77635,
+		["Plate"] = 77634,
+		["icon"] = app.Texture["INVTYPE_CHEST"],
+	},
+	[208063] = { -- Quantum Gloves
+		["Cloth"] = 77633,
+		["Leather"] = 77632,
+		["Mail"] = 77631,
+		["Plate"] = 77630,
+		["icon"] = app.Texture["INVTYPE_HAND"],
+	},
+	[208065] = { -- Quantum Legs
+		["Cloth"] = 77625,
+		["Leather"] = 77624,
+		["Mail"] = 77623,
+		["Plate"] = 77622,
+		["icon"] = app.Texture["INVTYPE_LEGS"],
+	},
+	[208111] = 77597, -- Quantum Axe
+	[208117] = 77603, -- Quantum Bow
+	[208118] = 77604, -- Quantum Crossbow
+	[208119] = 77605, -- Quantum Firearm
+	[208125] = 77609, -- Quantum Focus
+	[208113] = 77599, -- Quantum Greataxe
+	[208114] = 77600, -- Quantum Greathammer
+	[208112] = 77598, -- Quantum Greatsword
+	[208120] = 77606, -- Quantum Knife
+	[208121] = 77607, -- Quantum Knuckles
+	[208110] = 77596, -- Quantum Mace
+	[208116] = 77602, -- Quantum Polearm
+	[208126] = 77611, -- Quantum Shield
+	[208115] = 77601, -- Quantum Staff
+	[208109] = 77595, -- Quantum Sword
+	[208123] = 77610, -- Quantum Wand
+	[208122] = 77608, -- Quantum Warglaives
+}
+
+app.QuantumMount = {
+	69, -- Deathcharger's Reins
+	185, -- Reins of the Raven Lord
+	213, -- Swift White Hawkstrider
+	264, -- Reins of the Blue Proto-Drake
+	395, -- Reins of the Drake of the North Wind
+	397, -- Reins of the Vitreous Stone Drake
+	410, -- Armored Razzashi Raptor
+	411, -- Swift Zulian Panther
+	875, -- Midnight's Eternal Reins
+	995, -- Sharkbait's Favorite Crackers
+	1040, -- Mummified Raptor Skull
+	1053, -- Underrot Crawg Harness
+	1252, -- Mechagon Peacekeeper
+	1406, -- Marrowfang's Reins
+	1481, -- Cartel Master's Gearglider
 }
 
 -- ItemID -> QuestID (sourced from ATT's "Mount Mods.lua" and "CharacterItemDB.lua" among others)
