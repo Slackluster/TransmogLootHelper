@@ -149,7 +149,7 @@ function app:CreateSettings()
 		frame:SetWidth(500)
 		frame:Hide()
 
-		local close = CreateFrame("Button", "", frame, "UIPanelCloseButton")
+		local close = CreateFrame("Button", nil, frame, "UIPanelCloseButton")
 		close:SetPoint("TOPRIGHT", frame, "TOPRIGHT", 2, 2)
 		close:SetScript("OnClick", function()
 			frame:Hide()
