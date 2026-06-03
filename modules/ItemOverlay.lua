@@ -491,10 +491,10 @@ function app:ApplyItemOverlay(overlay, itemLink, itemLocation, containerInfo, ba
 						showOverlay("purple")
 					elseif app.Settings["iconNewSource"] and not api:IsSourceCollected(itemLink) then
 						showOverlay("yellow")
-					elseif app.Settings["iconNewCatalyst"] and ((tumInfo and tumInfo.catalystAppearanceMissing) or (attInfo and attInfo.filledCatalyst)) then
+					elseif app.Settings["iconNewCatalyst"] and ((tumInfo and tumInfo.catalystAppearanceMissing) or (attInfo and attInfo.filledCatalyst)) and (not tumInfo or app.Settings["iconNewSource"] or not tumInfo.catalystAppearanceLearnedFromOtherItem) then
 						overlay.texture:SetAtlas("CreationCatalyst-32x32")
 						showOverlay("yellow")
-					elseif app.Settings["iconNewUpgrade"] and ((tumInfo and tumInfo.upgradeAppearanceMissing) or (attInfo and attInfo.filledUpgrade)) then
+					elseif app.Settings["iconNewUpgrade"] and ((tumInfo and (tumInfo.upgradeAppearanceMissing or tumInfo.catalystUpgradeAppearanceMissing)) or (attInfo and attInfo.filledCatalyst)) and (not tumInfo or app.Settings["iconNewSource"] or ((tumInfo.upgradeAppearanceMissing and not tumInfo.upgradeAppearanceLearnedFromOtherItem) or (tumInfo.catalystUpgradeAppearanceMissing and not tumInfo.catalystUpgradeAppearanceLearnedFromOtherItem))) then
 						overlay.texture:SetAtlas("CovenantSanctum-Upgrade-Icon-Available")
 						showOverlay("yellow")
 					elseif app.Settings["iconLearned"] and not (classID == 15 and subclassID == 0) then
