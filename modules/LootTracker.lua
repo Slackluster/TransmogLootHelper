@@ -473,7 +473,7 @@ function app:UpdateWindow()
 				if button == "LeftButton" then
 					if IsShiftKeyDown() then
 						ChatFrameUtil.InsertLink(lootInfo.item)
-					elseif IsAltKeyDown() then
+					elseif IsAltKeyDown() and not InCombatLockdown() then
 						if app.WeaponLoot[lootInfo.index].recentlyWhispered == 0 then
 							local msg = string.gsub(app.Settings["message"], "%%item", lootInfo.item)
 							C_ChatInfo.SendChatMessage(msg, "WHISPER", nil, lootInfo.player)
