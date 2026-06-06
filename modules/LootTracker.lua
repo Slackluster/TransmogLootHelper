@@ -60,15 +60,41 @@ function app:CreateWindowTooltip(text)
 	return frame
 end
 
-function app:ShowWindowTooltip(frame)
-	if GetScreenWidth()/2-app.Settings["windowPosition"].width/2-app.Window:GetLeft() >= 0 then
-		frame:ClearAllPoints()
-		frame:SetPoint("LEFT", app.Window, "RIGHT", 0, 0)
+function app:ShowWindowTooltip(text, hyperlink, secondary, position)
+	GameTooltip:ClearLines()
+	GameTooltip:Hide()
+	ShoppingTooltip1:ClearLines()
+	ShoppingTooltip1:Hide()
+	GameTooltip:SetOwner(app.Window, "ANCHOR_NONE")
+
+	if hyperlink then
+		GameTooltip:SetHyperlink(text)
 	else
-		frame:ClearAllPoints()
-		frame:SetPoint("RIGHT", app.Window, "LEFT", 0, 0)
+		GameTooltip:SetText(text)
 	end
-	frame:Show()
+
+	if position and position == "top" then
+		GameTooltip:SetPoint("BOTTOM", app.Window, "TOP", 0, 0)
+	elseif position and position == "bottom" then
+		GameTooltip:SetPoint("TOP", app.Window, "BOTTOM", 0, 0)
+	elseif (app.Tab and app.Tab.IsShown[0]) or GetScreenWidth()/2-app.Settings["windowPosition"].width/2-app.Window:GetLeft() >= 0 then
+		GameTooltip:SetPoint("LEFT", app.Window, "RIGHT", 0, 0)
+	else
+		GameTooltip:SetPoint("RIGHT", app.Window, "LEFT", 0, 0)
+	end
+	GameTooltip:Show()
+
+	if secondary then
+		ShoppingTooltip1:SetOwner(UIParent, "ANCHOR_NONE")
+		if GetScreenWidth()/2-app.Settings["windowPosition"].width/2-app.Window:GetLeft() >= 0 then
+			ShoppingTooltip1:SetPoint("TOPLEFT", GameTooltip, "BOTTOMLEFT", 0, 0)
+		else
+			ShoppingTooltip1:SetPoint("TOPRIGHT", GameTooltip, "BOTTOMRIGHT", 0, 0)
+		end
+		ShoppingTooltip1:SetText(secondary)
+		ShoppingTooltip1:SetScale(0.9)
+		ShoppingTooltip1:Show()
+	end
 end
 
 function app:MoveWindow()
@@ -78,6 +104,8 @@ function app:MoveWindow()
 		app.Window:StartMoving()
 		GameTooltip:ClearLines()
 		GameTooltip:Hide()
+		ShoppingTooltip1:ClearLines()
+		ShoppingTooltip1:Hide()
 	end
 end
 
@@ -125,6 +153,8 @@ function app:CreateWindow()
 		app.Window:StartSizing("BOTTOMRIGHT")
 		GameTooltip:ClearLines()
 		GameTooltip:Hide()
+		ShoppingTooltip1:ClearLines()
+		ShoppingTooltip1:Hide()
 	end)
 	corner:SetScript("OnMouseUp", function() app:SaveWindow() end)
 	app.Window.Corner = corner
@@ -135,10 +165,13 @@ function app:CreateWindow()
 		app.Window:Hide()
 	end)
 	close:SetScript("OnEnter", function()
-		app:ShowWindowTooltip(app.CloseButtonTooltip)
+		app:ShowWindowTooltip(L.WINDOW_BUTTON_CLOSE, nil, nil, "top")
 	end)
 	close:SetScript("OnLeave", function()
-		app.CloseButtonTooltip:Hide()
+		GameTooltip:ClearLines()
+		GameTooltip:Hide()
+		ShoppingTooltip1:ClearLines()
+		ShoppingTooltip1:Hide()
 	end)
 
 	app.LockButton = CreateFrame("Button", nil, app.Window, "UIPanelCloseButton")
@@ -156,10 +189,13 @@ function app:CreateWindow()
 		app.UnlockButton:Show()
 	end)
 	app.LockButton:SetScript("OnEnter", function()
-		app:ShowWindowTooltip(app.LockButtonTooltip)
+		app:ShowWindowTooltip(L.WINDOW_BUTTON_LOCK, nil, nil, "top")
 	end)
 	app.LockButton:SetScript("OnLeave", function()
-		app.LockButtonTooltip:Hide()
+		GameTooltip:ClearLines()
+		GameTooltip:Hide()
+		ShoppingTooltip1:ClearLines()
+		ShoppingTooltip1:Hide()
 	end)
 
 	app.UnlockButton = CreateFrame("Button", nil, app.Window, "UIPanelCloseButton")
@@ -177,10 +213,13 @@ function app:CreateWindow()
 		app.UnlockButton:Hide()
 	end)
 	app.UnlockButton:SetScript("OnEnter", function()
-		app:ShowWindowTooltip(app.UnlockButtonTooltip)
+		app:ShowWindowTooltip(L.WINDOW_BUTTON_UNLOCK, nil, nil, "top")
 	end)
 	app.UnlockButton:SetScript("OnLeave", function()
-		app.UnlockButtonTooltip:Hide()
+		GameTooltip:ClearLines()
+		GameTooltip:Hide()
+		ShoppingTooltip1:ClearLines()
+		ShoppingTooltip1:Hide()
 	end)
 
 	if app.Settings["windowLocked"] then
@@ -205,10 +244,13 @@ function app:CreateWindow()
 		app:OpenSettings()
 	end)
 	app.SettingsButton:SetScript("OnEnter", function()
-		app:ShowWindowTooltip(app.SettingsButtonTooltip)
+		app:ShowWindowTooltip(L.WINDOW_BUTTON_SETTINGS, nil, nil, "top")
 	end)
 	app.SettingsButton:SetScript("OnLeave", function()
-		app.SettingsButtonTooltip:Hide()
+		GameTooltip:ClearLines()
+		GameTooltip:Hide()
+		ShoppingTooltip1:ClearLines()
+		ShoppingTooltip1:Hide()
 	end)
 
 	app.ClearButton = CreateFrame("Button", nil, app.Window, "UIPanelCloseButton")
@@ -239,10 +281,13 @@ function app:CreateWindow()
 		end
 	end)
 	app.ClearButton:SetScript("OnEnter", function()
-		app:ShowWindowTooltip(app.ClearButtonTooltip)
+		app:ShowWindowTooltip(L.WINDOW_BUTTON_CLEAR, nil, nil, "top")
 	end)
 	app.ClearButton:SetScript("OnLeave", function()
-		app.ClearButtonTooltip:Hide()
+		GameTooltip:ClearLines()
+		GameTooltip:Hide()
+		ShoppingTooltip1:ClearLines()
+		ShoppingTooltip1:Hide()
 	end)
 
 	app.SortButton = CreateFrame("Button", nil, app.Window, "UIPanelCloseButton")
@@ -256,25 +301,25 @@ function app:CreateWindow()
 	app.SortButton:SetScript("OnClick", function()
 		if app.Settings["windowSort"] == 1 then
 			app.Settings["windowSort"] = 2
-			app.SortButtonTooltip1:Hide()
-			app:ShowWindowTooltip(app.SortButtonTooltip2)
+			app:ShowWindowTooltip(L.WINDOW_BUTTON_SORT2, nil, nil, "top")
 		elseif app.Settings["windowSort"] == 2 then
 			app.Settings["windowSort"] = 1
-			app.SortButtonTooltip2:Hide()
-			app:ShowWindowTooltip(app.SortButtonTooltip1)
+			app:ShowWindowTooltip(L.WINDOW_BUTTON_SORT1, nil, nil, "top")
 		end
 		app:UpdateWindow()
 	end)
 	app.SortButton:SetScript("OnEnter", function()
 		if app.Settings["windowSort"] == 1 then
-			app:ShowWindowTooltip(app.SortButtonTooltip1)
+			app:ShowWindowTooltip(L.WINDOW_BUTTON_SORT1, nil, nil, "top")
 		elseif app.Settings["windowSort"] == 2 then
-			app:ShowWindowTooltip(app.SortButtonTooltip2)
+			app:ShowWindowTooltip(L.WINDOW_BUTTON_SORT2, nil, nil, "top")
 		end
 	end)
 	app.SortButton:SetScript("OnLeave", function()
-		app.SortButtonTooltip1:Hide()
-		app.SortButtonTooltip2:Hide()
+		GameTooltip:ClearLines()
+		GameTooltip:Hide()
+		ShoppingTooltip1:ClearLines()
+		ShoppingTooltip1:Hide()
 	end)
 
 	local scrollFrame = CreateFrame("ScrollFrame", nil, app.Window, "ScrollFrameTemplate")
@@ -298,17 +343,6 @@ function app:CreateWindow()
 	scrollFrame:SetScript("OnVerticalScroll", function() scrollChild:SetPoint("BOTTOMRIGHT", scrollFrame) end)
 	app.Window.Child = scrollChild
 	app.Window.ScrollFrame = scrollFrame
-
-	app.LootHeaderTooltip = app:CreateWindowTooltip(L.WINDOW_HEADER_LOOT_DESC)
-	app.FilteredHeaderTooltip = app:CreateWindowTooltip(L.WINDOW_HEADER_FILTERED_DESC)
-	app.CloseButtonTooltip = app:CreateWindowTooltip(L.WINDOW_BUTTON_CLOSE)
-	app.LockButtonTooltip = app:CreateWindowTooltip(L.WINDOW_BUTTON_LOCK)
-	app.UnlockButtonTooltip = app:CreateWindowTooltip(L.WINDOW_BUTTON_UNLOCK)
-	app.SettingsButtonTooltip = app:CreateWindowTooltip(L.WINDOW_BUTTON_SETTINGS)
-	app.ClearButtonTooltip = app:CreateWindowTooltip(L.WINDOW_BUTTON_CLEAR)
-	app.SortButtonTooltip1 = app:CreateWindowTooltip(L.WINDOW_BUTTON_SORT1)
-	app.SortButtonTooltip2 = app:CreateWindowTooltip(L.WINDOW_BUTTON_SORT2)
-	app.CornerButtonTooltip = app:CreateWindowTooltip(L.WINDOW_BUTTON_CORNER)
 end
 
 function app:UpdateWindow()
@@ -350,12 +384,6 @@ function app:UpdateWindow()
 		app.Window.Weapons:SetHighlightAtlas("Options_List_Active", "ADD")
 		app.Window.Weapons:SetScript("OnDragStart", function() app:MoveWindow() end)
 		app.Window.Weapons:SetScript("OnDragStop", function() app:SaveWindow() end)
-		app.Window.Weapons:SetScript("OnEnter", function()
-			app:ShowWindowTooltip(app.LootHeaderTooltip)
-		end)
-		app.Window.Weapons:SetScript("OnLeave", function()
-			app.LootHeaderTooltip:Hide()
-		end)
 		app.Window.Weapons:SetScript("OnClick", function(self)
 			local children = {self:GetChildren()}
 
@@ -431,16 +459,7 @@ function app:UpdateWindow()
 			row:SetScript("OnDragStart", function() app:MoveWindow() end)
 			row:SetScript("OnDragStop", function() app:SaveWindow() end)
 			row:SetScript("OnEnter", function()
-				GameTooltip:ClearLines()
-
-				if GetScreenWidth()/2-app.Settings["windowPosition"].width/2-app.Window:GetLeft() >= 0 then
-					GameTooltip:SetOwner(app.Window, "ANCHOR_NONE")
-					GameTooltip:SetPoint("LEFT", app.Window, "RIGHT")
-				else
-					GameTooltip:SetOwner(app.Window, "ANCHOR_NONE")
-					GameTooltip:SetPoint("RIGHT", app.Window, "LEFT")
-				end
-				GameTooltip:SetHyperlink(lootInfo.item)
+				app:ShowWindowTooltip(lootInfo.item, true, L.WINDOW_HEADER_LOOT_DESC)
 
 				local emptyLine = false
 
@@ -468,6 +487,8 @@ function app:UpdateWindow()
 			row:SetScript("OnLeave", function()
 				GameTooltip:ClearLines()
 				GameTooltip:Hide()
+				ShoppingTooltip1:ClearLines()
+				ShoppingTooltip1:Hide()
 			end)
 			row:SetScript("OnClick", function(self, button)
 				if button == "LeftButton" then
@@ -552,12 +573,6 @@ function app:UpdateWindow()
 		app.Window.Armour:SetHighlightAtlas("Options_List_Active", "ADD")
 		app.Window.Armour:SetScript("OnDragStart", function() app:MoveWindow() end)
 		app.Window.Armour:SetScript("OnDragStop", function() app:SaveWindow() end)
-		app.Window.Armour:SetScript("OnEnter", function()
-			app:ShowWindowTooltip(app.LootHeaderTooltip)
-		end)
-		app.Window.Armour:SetScript("OnLeave", function()
-			app.LootHeaderTooltip:Hide()
-		end)
 		app.Window.Armour:SetScript("OnClick", function(self)
 			local children = {self:GetChildren()}
 
@@ -636,16 +651,7 @@ function app:UpdateWindow()
 			row:SetScript("OnDragStart", function() app:MoveWindow() end)
 			row:SetScript("OnDragStop", function() app:SaveWindow() end)
 			row:SetScript("OnEnter", function()
-				GameTooltip:ClearLines()
-
-				if GetScreenWidth()/2-app.Settings["windowPosition"].width/2-app.Window:GetLeft() >= 0 then
-					GameTooltip:SetOwner(app.Window, "ANCHOR_NONE")
-					GameTooltip:SetPoint("LEFT", app.Window, "RIGHT")
-				else
-					GameTooltip:SetOwner(app.Window, "ANCHOR_NONE")
-					GameTooltip:SetPoint("RIGHT", app.Window, "LEFT")
-				end
-				GameTooltip:SetHyperlink(lootInfo.item)
+				app:ShowWindowTooltip(lootInfo.item, true, L.WINDOW_HEADER_LOOT_DESC)
 
 				local emptyLine = false
 
@@ -673,6 +679,8 @@ function app:UpdateWindow()
 			row:SetScript("OnLeave", function()
 				GameTooltip:ClearLines()
 				GameTooltip:Hide()
+				ShoppingTooltip1:ClearLines()
+				ShoppingTooltip1:Hide()
 			end)
 			row:SetScript("OnClick", function(self, button)
 				if button == "LeftButton" then
@@ -757,12 +765,6 @@ function app:UpdateWindow()
 		app.Window.Filtered:SetHighlightAtlas("Options_List_Active", "ADD")
 		app.Window.Filtered:SetScript("OnDragStart", function() app:MoveWindow() end)
 		app.Window.Filtered:SetScript("OnDragStop", function() app:SaveWindow() end)
-		app.Window.Filtered:SetScript("OnEnter", function()
-			app:ShowWindowTooltip(app.FilteredHeaderTooltip)
-		end)
-		app.Window.Filtered:SetScript("OnLeave", function()
-			app.FilteredHeaderTooltip:Hide()
-		end)
 		app.Window.Filtered:SetScript("OnClick", function(self)
 			local children = {self:GetChildren()}
 
@@ -843,21 +845,13 @@ function app:UpdateWindow()
 			row:SetScript("OnDragStart", function() app:MoveWindow() end)
 			row:SetScript("OnDragStop", function() app:SaveWindow() end)
 			row:SetScript("OnEnter", function()
-				GameTooltip:ClearLines()
-
-				if GetScreenWidth()/2-app.Settings["windowPosition"].width/2-app.Window:GetLeft() >= 0 then
-					GameTooltip:SetOwner(app.Window, "ANCHOR_NONE")
-					GameTooltip:SetPoint("LEFT", app.Window, "RIGHT")
-				else
-					GameTooltip:SetOwner(app.Window, "ANCHOR_NONE")
-					GameTooltip:SetPoint("RIGHT", app.Window, "LEFT")
-				end
-				GameTooltip:SetHyperlink(lootInfo.item)
-				GameTooltip:Show()
+				app:ShowWindowTooltip(lootInfo.item, true, L.WINDOW_HEADER_FILTERED_DESC)
 			end)
 			row:SetScript("OnLeave", function()
 				GameTooltip:ClearLines()
 				GameTooltip:Hide()
+				ShoppingTooltip1:ClearLines()
+				ShoppingTooltip1:Hide()
 			end)
 			row:SetScript("OnClick", function(self, button)
 				if button == "LeftButton" then
@@ -955,10 +949,13 @@ function app:UpdateWindow()
 		app:SaveWindow()
 	end)
 	app.Window.Corner:SetScript("OnEnter", function()
-		app:ShowWindowTooltip(app.CornerButtonTooltip)
+		app:ShowWindowTooltip(L.WINDOW_BUTTON_CORNER, nil, nil, "bottom")
 	end)
 	app.Window.Corner:SetScript("OnLeave", function()
-		app.CornerButtonTooltip:Hide()
+		GameTooltip:ClearLines()
+		GameTooltip:Hide()
+		ShoppingTooltip1:ClearLines()
+		ShoppingTooltip1:Hide()
 	end)
 end
 
@@ -1042,7 +1039,7 @@ function app:RemoveLootedItem(itemID)
 end
 
 app.Event:Register("CHAT_MSG_LOOT", function(text, playerName, languageName, channelName, playerName2, specialFlags, zoneChannelID, channelIndex, channelBaseName, languageID, lineID, guid, bnSenderID, isMobile, isSubtitle, hideSenderInLetterbox, supressRaidIcons)
-	if not IsInGroup() then return end
+	--if not IsInGroup() then return end
 	if issecretvalue(text) then return end -- Without the option to declassify secrets later on, there is no alternative
 
 	local itemString = string.match(text, "(|cnIQ.-|h%[.-%]|h)")
@@ -1060,7 +1057,8 @@ app.Event:Register("CHAT_MSG_LOOT", function(text, playerName, languageName, cha
 		local itemID = C_Item.GetItemInfoInstant(itemString)
 		local itemType = classID.."."..subclassID
 
-		if unitName ~= selfName then
+		--if unitName ~= selfName then
+		if true then
 			if not api:IsAppearanceCollected(itemLink) or (not api:IsSourceCollected(itemLink) and app.Settings["collectMode"] == 2) then
 				if app:GetBonding(itemLink) == "BoA" then
 					app:AddFilteredLoot(itemLink, itemID, itemTexture, playerName, itemType, L.FILTER_REASON_UNTRADEABLE)
