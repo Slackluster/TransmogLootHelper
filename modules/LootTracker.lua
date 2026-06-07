@@ -1057,8 +1057,7 @@ app.Event:Register("CHAT_MSG_LOOT", function(text, playerName, languageName, cha
 		local itemID = C_Item.GetItemInfoInstant(itemString)
 		local itemType = classID.."."..subclassID
 
-		--if unitName ~= selfName then
-		if true then
+		if unitName ~= selfName then
 			if not api:IsAppearanceCollected(itemLink) or (not api:IsSourceCollected(itemLink) and app.Settings["collectMode"] == 2) then
 				if app:GetBonding(itemLink) == "BoA" then
 					app:AddFilteredLoot(itemLink, itemID, itemTexture, playerName, itemType, L.FILTER_REASON_UNTRADEABLE)
