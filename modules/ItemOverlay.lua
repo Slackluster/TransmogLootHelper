@@ -551,7 +551,7 @@ function app:ApplyItemOverlay(overlay, itemLink, itemLocation, containerInfo, ba
 			elseif app.Settings["iconNewMount"] and itemEquipLoc == "Mount" then
 				local _, isCollected = "", true
 				if itemID == 208216 then -- Quantum Courser
-					for mountID, _ in pairs(app.QuantumMount) do
+					for _, mountID in pairs(app.QuantumMount) do
 						local _, _, _, _, _, _, _, _, _, _, collected = C_MountJournal.GetMountInfoByID(mountID)
 						if not collected then
 							isCollected = false
