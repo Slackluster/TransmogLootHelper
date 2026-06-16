@@ -1,4 +1,4 @@
-## Interface: 120005
+## Interface: 120007
 ## Title: |cff3FC7EBTransmog Loot Helper|r
 ## Author: Slackluster
 ## IconTexture: Interface\AddOns\TransmogLootHelper\assets\icon.png
