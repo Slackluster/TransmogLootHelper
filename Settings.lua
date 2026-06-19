@@ -462,7 +462,7 @@ function app:CreateSettings()
 		{ value = 3, name = L.SETTINGS_ICONPOS_BR, description = L.SETTINGS_ICONPOS_OVERLAP0 },
 	}, function() app:UpdatePreviewItems() end)
 
-	dropdown("iconStyle", L.SETTINGS_ICON_STYLE .. app.IconNew, L.SETTINGS_ICON_STYLE_DESC, 1, {
+	dropdown("iconStyle", L.SETTINGS_ICON_STYLE, L.SETTINGS_ICON_STYLE_DESC, 1, {
 		{ value = 1, name = L.SETTINGS_ICON_STYLE1, description = L.SETTINGS_ICON_STYLE1_DESC },
 		{ value = 2, name = L.SETTINGS_ICON_STYLE2, description = L.SETTINGS_ICON_STYLE2_DESC },
 		{ value = 3, name = L.SETTINGS_ICON_STYLE3, description = L.SETTINGS_ICON_STYLE3_DESC },
