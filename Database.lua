@@ -13,7 +13,7 @@ _G["BINDING_NAME_TRANSMOGLOOTHELPER"] = app.Name
 _G["BINDING_NAME_SLACKWARE"] = "Slackware"
 
 -- Textures
-app.Icon = "Interface\\AddOns\\TransmogLootHelper\\assets\\icon.png"
+app.Icon = "Interface\\Icons\\ui_itemupgrade"
 app.IconTLH = "|T" .. app.Icon .. ":0|t"
 app.IconReady = "|TInterface\\RaidFrame\\ReadyCheck-Ready:0|t"
 app.IconNotReady = "|TInterface\\RaidFrame\\ReadyCheck-NotReady:0|t"
