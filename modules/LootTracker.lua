@@ -74,22 +74,22 @@ function app:ShowWindowTooltip(text, hyperlink, secondary, position)
 	end
 
 	if position and position == "top" then
-		GameTooltip:SetPoint("BOTTOM", app.Window, "TOP", 0, 0)
+		GameTooltip:SetPoint("BOTTOM", app.Window, "TOP")
 	elseif position and position == "bottom" then
-		GameTooltip:SetPoint("TOP", app.Window, "BOTTOM", 0, 0)
+		GameTooltip:SetPoint("TOP", app.Window, "BOTTOM")
 	elseif (app.Tab and app.Tab.IsShown[0]) or GetScreenWidth()/2-app.Settings["windowPosition"].width/2-app.Window:GetLeft() >= 0 then
-		GameTooltip:SetPoint("LEFT", app.Window, "RIGHT", 0, 0)
+		GameTooltip:SetPoint("LEFT", app.Window, "RIGHT")
 	else
-		GameTooltip:SetPoint("RIGHT", app.Window, "LEFT", 0, 0)
+		GameTooltip:SetPoint("RIGHT", app.Window, "LEFT")
 	end
 	GameTooltip:Show()
 
 	if secondary then
 		ShoppingTooltip1:SetOwner(UIParent, "ANCHOR_NONE")
 		if GetScreenWidth()/2-app.Settings["windowPosition"].width/2-app.Window:GetLeft() >= 0 then
-			ShoppingTooltip1:SetPoint("TOPLEFT", GameTooltip, "BOTTOMLEFT", 0, 0)
+			ShoppingTooltip1:SetPoint("TOPLEFT", GameTooltip, "BOTTOMLEFT")
 		else
-			ShoppingTooltip1:SetPoint("TOPRIGHT", GameTooltip, "BOTTOMRIGHT", 0, 0)
+			ShoppingTooltip1:SetPoint("TOPRIGHT", GameTooltip, "BOTTOMRIGHT")
 		end
 		ShoppingTooltip1:SetText(secondary)
 		ShoppingTooltip1:SetScale(0.9)
