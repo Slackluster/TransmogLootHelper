@@ -1,6 +1,7 @@
 ## Interface: 120007
 ## Title: |cff3FC7EBTransmog Loot Helper|r
 ## Author: Slackluster
+## Notes: Adds icons to your items to show their collection status
 ## IconTexture: Interface\AddOns\TransmogLootHelper\assets\icon.png
 ## Version: @project-version@
 ## X-Curse-Project-ID: 1033752
