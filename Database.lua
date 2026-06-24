@@ -14,13 +14,12 @@ _G["BINDING_NAME_SLACKWARE"] = "Slackware"
 
 -- Textures
 app.Icon = "Interface\\Icons\\ui_itemupgrade"
-app.IconTLH = "|T" .. app.Icon .. ":0|t"
-app.IconReady = "|TInterface\\RaidFrame\\ReadyCheck-Ready:0|t"
-app.IconNotReady = "|TInterface\\RaidFrame\\ReadyCheck-NotReady:0|t"
+app.IconReady = CreateSimpleTextureMarkup("Interface\\RaidFrame\\ReadyCheck-Ready")
+app.IconNotReady = CreateSimpleTextureMarkup("Interface\\RaidFrame\\ReadyCheck-NotReady")
 app.IconMaybeReady = "Interface\\AddOns\\TransmogLootHelper\\assets\\readycheck-ready-orange.blp"
-app.IconLMB = "|TInterface\\TutorialFrame\\UI-Tutorial-Frame:12:12:0:0:512:512:10:65:228:283|t"
-app.IconRMB = "|TInterface\\TutorialFrame\\UI-Tutorial-Frame:12:12:0:0:512:512:10:65:330:385|t"
-app.IconNew = "|A:UI-Journeys-GreatVault-Tag-new:33:49|a"
+app.IconLMB = CreateAtlasMarkup("housing-hotkey-icon-leftclick")
+app.IconRMB = CreateAtlasMarkup("housing-hotkey-icon-rightclick")
+app.IconNew = CreateAtlasMarkup("UI-Journeys-GreatVault-Tag-new")
 
 -- Type.Subtype -> item type
 app.Type = {

@@ -102,7 +102,7 @@ function app:RecipeTooltipInfo()
 			local recipeID = app:GetLearnedSpell(itemLink)
 			if recipeID and C_TradeSkillUI.GetProfessionInfoByRecipeID(recipeID).professionID ~= 0 and not TransmogLootHelper_Cache.Recipes[recipeID] then
 				tooltip:AddLine(" ")
-				tooltip:AddLine(app.IconTLH .. " " .. L.RECIPE_UNCACHED)
+				tooltip:AddLine(CreateSimpleTextureMarkup(app.Icon) .. " " .. L.RECIPE_UNCACHED)
 			end
 		end
 	end

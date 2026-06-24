@@ -466,7 +466,7 @@ function app:UpdateWindow()
 				if app.WeaponLoot[lootInfo.index].icon == app.IconMaybeReady then
 					GameTooltip:AddLine(" ")
 					emptyLine = true
-					GameTooltip:AddLine("|T"..app.IconMaybeReady..":0|t |c" .. lootInfo.color .. lootInfo.playerShort .. "|r " .. L.PLAYER_COLLECTED_APPEARANCE)
+					GameTooltip:AddLine(CreateSimpleTextureMarkup(app.IconMaybeReady) .. " |c" .. lootInfo.color .. lootInfo.playerShort .. "|r " .. L.PLAYER_COLLECTED_APPEARANCE)
 				end
 
 				local count = 0
@@ -526,7 +526,7 @@ function app:UpdateWindow()
 			local icon1 = row:CreateFontString(nil, "ARTWORK", "GameFontNormal")
 			icon1:SetPoint("LEFT", row)
 			icon1:SetScale(1.2)
-			icon1:SetText("|T"..(lootInfo.icon or "Interface\\Icons\\inv_misc_questionmark")..":0|t")
+			icon1:SetText(CreateSimpleTextureMarkup(lootInfo.icon or "Interface\\Icons\\inv_misc_questionmark"))
 
 			local text2 = row:CreateFontString(nil, "ARTWORK", "GameFontNormal")
 			text2:SetPoint("CENTER", icon1)
@@ -658,7 +658,7 @@ function app:UpdateWindow()
 				if app.ArmourLoot[lootInfo.index].icon == app.IconMaybeReady then
 					GameTooltip:AddLine(" ")
 					emptyLine = true
-					GameTooltip:AddLine("|T"..app.IconMaybeReady..":0|t |c" .. lootInfo.color .. lootInfo.playerShort .. "|r " .. L.PLAYER_COLLECTED_APPEARANCE)
+					GameTooltip:AddLine(CreateSimpleTextureMarkup(app.IconMaybeReady) .. " |c" .. lootInfo.color .. lootInfo.playerShort .. "|r " .. L.PLAYER_COLLECTED_APPEARANCE)
 				end
 
 				local count = 0
@@ -718,7 +718,7 @@ function app:UpdateWindow()
 			local icon1 = row:CreateFontString(nil, "ARTWORK", "GameFontNormal")
 			icon1:SetPoint("LEFT", row)
 			icon1:SetScale(1.2)
-			icon1:SetText("|T"..(lootInfo.icon or "Interface\\Icons\\inv_misc_questionmark")..":0|t")
+			icon1:SetText(CreateSimpleTextureMarkup(lootInfo.icon or "Interface\\Icons\\inv_misc_questionmark"))
 
 			local text2 = row:CreateFontString(nil, "ARTWORK", "GameFontNormal")
 			text2:SetPoint("CENTER", icon1)
@@ -872,7 +872,7 @@ function app:UpdateWindow()
 			local icon1 = row:CreateFontString(nil, "ARTWORK", "GameFontNormal")
 			icon1:SetPoint("LEFT", row)
 			icon1:SetScale(1.2)
-			icon1:SetText("|T"..(lootInfo.icon or "Interface\\Icons\\inv_misc_questionmark")..":0|t")
+			icon1:SetText(CreateSimpleTextureMarkup(lootInfo.icon or "Interface\\Icons\\inv_misc_questionmark"))
 
 			local text2 = row:CreateFontString(nil, "ARTWORK", "GameFontNormal")
 			text2:SetPoint("CENTER", icon1)
