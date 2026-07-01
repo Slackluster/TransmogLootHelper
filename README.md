@@ -27,6 +27,7 @@ It also features a loot tracker, showing you transmog looted by your fellow part
 Currently supported addons:
 - ArkInventory
 - Baganator
+- Bagforge
 - BetterBags
 - World Quest Tab
 - World Quests List

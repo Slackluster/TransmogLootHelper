@@ -410,6 +410,9 @@ function app:CreateSettings()
 		if C_AddOns.IsAddOnLoaded("Baganator") then
 			Baganator.API.RequestItemButtonsRefresh()
 		end
+		if C_AddOns.IsAddOnLoaded("Bagforge") and Bagforge.API then
+			Bagforge.API:RequestItemButtonsRefresh()
+		end
 	end
 
 	function app:UpdatePreviewItems()

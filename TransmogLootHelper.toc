@@ -3,7 +3,7 @@
 ## Author: Slackluster
 ## Notes: Adds icons to your items to show their collection status
 ## IconTexture: Interface\AddOns\TransmogLootHelper\assets\icon.png
-## Version: @project-version@
+## Version: v12.0.7-02
 ## X-Curse-Project-ID: 1033752
 ## X-Wago-ID: EGPXOkG1
 
@@ -42,6 +42,7 @@ integrations\ArkInventory.lua
 integrations\Baganator.lua
 integrations\BetterBags.lua
 integrations\OneWoW_Bags.lua
+integrations\Bagforge.lua
 integrations\WorldQuestTab.lua
 locales\enUS.lua
 locales\deDE.lua
