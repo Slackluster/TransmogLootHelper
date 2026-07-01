@@ -40,9 +40,9 @@ modules\LootTracker.lua
 modules\Tweaks.lua
 integrations\ArkInventory.lua
 integrations\Baganator.lua
+integrations\Bagforge.lua
 integrations\BetterBags.lua
 integrations\OneWoW_Bags.lua
-integrations\Bagforge.lua
 integrations\WorldQuestTab.lua
 locales\enUS.lua
 locales\deDE.lua
