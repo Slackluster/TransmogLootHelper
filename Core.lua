@@ -50,23 +50,23 @@ end)
 -- VERSION COMMS --
 -------------------
 
-function app:SendAddonMessage(message)
+function app:SendAddonMessage(message, versionCheck)
 	if IsInRaid(2) or IsInGroup(2) then
 		ChatThrottleLib:SendAddonMessage("NORMAL", app.NamePrefix, message, "INSTANCE_CHAT")
 	elseif IsInGroup() or IsInRaid() then
 		ChatThrottleLib:SendAddonMessage("NORMAL", app.NamePrefix, message, "RAID")
-	elseif IsInGuild() then
+	elseif versionCheck and IsInGuild() then
 		ChatThrottleLib:SendAddonMessage("NORMAL", app.NamePrefix, message, "GUILD")
 	end
 end
 
 app.Event:Register("GROUP_ROSTER_UPDATE", function(category, partyGUID)
-	app:SendAddonMessage("version:" .. C_AddOns.GetAddOnMetadata(appName, "Version"))
+	app:SendAddonMessage("version:" .. C_AddOns.GetAddOnMetadata(appName, "Version"), true)
 end)
 
 app.Event:Register("PLAYER_ENTERING_WORLD", function(isInitialLogin, isReloadingUi)
 	if isInitialLogin or isReloadingUi then
-		app:SendAddonMessage("version:" .. C_AddOns.GetAddOnMetadata(appName, "Version"))
+		app:SendAddonMessage("version:" .. C_AddOns.GetAddOnMetadata(appName, "Version"), true)
 	end
 end)
 
