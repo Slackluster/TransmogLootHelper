@@ -1072,21 +1072,12 @@ app.Event:Register("CHAT_MSG_LOOT", function(text, playerName, languageName, cha
 					end
 
 					local itemCategory = ""
-					local equippable = false
 					if (itemType == "4.0" and itemEquipLoc ~= "INVTYPE_HOLDABLE") or itemType == "4.1" or itemType == "4.2" or itemType == "4.3" or itemType == "4.4" then
 						itemCategory = "armor"
-						if itemType == app.Type["General"] or itemEquipLoc == "INVTYPE_CLOAK" or itemType == app.Type[armorClass] then
-							equippable = true
-						end
 					end
 					for k, v in pairs(app.Type) do
 						if v == itemType and not ((itemType == "4.0" and itemEquipLoc ~= "INVTYPE_HOLDABLE") or itemType == "4.1" or itemType == "4.2" or itemType == "4.3" or itemType == "4.4") then
 							itemCategory = "weapon"
-							for _, v2 in pairs(app.Weapon[k]) do
-								if v2 == app.ClassID then
-									equippable = true
-								end
-							end
 						end
 					end
 
