@@ -43,7 +43,7 @@ app.Event:Register("INSPECT_READY", function(inspecteeGUID)
 		end
 		ClearInspectPlayer()
 
-		itemLevel = math.min(unpack(itemLevel)) or 9999
+		itemLevel = #itemLevel > 0 and math.min(unpack(itemLevel)) or 9999
 		if app.GroupMembers[guid].ilv > itemLevel then
 			app:AddFilteredLoot(app.GroupMembers[inspecteeGUID].itemInfo.item, app.GroupMembers[inspecteeGUID].itemInfo.itemID, app.GroupMembers[inspecteeGUID].itemInfo.icon, app.GroupMembers[inspecteeGUID].itemInfo.player, app.GroupMembers[inspecteeGUID].itemInfo.itemType, L.FILTER_REASON_UNTRADEABLE .. "(" .. L.FILTER_REASON_ILV_UPGRADE .. ")")
 			print(app.GroupMembers[inspecteeGUID].itemInfo.item .. "is ilv upgrade, untradeable")
