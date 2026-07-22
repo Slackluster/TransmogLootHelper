@@ -25,7 +25,7 @@ app.Event:Register("GROUP_ROSTER_UPDATE", function(category, partyGUID)
 end)
 
 app.Event:Register("INSPECT_READY", function(inspecteeGUID)
-	if app.GroupMembers[inspecteeGUID] and app.GroupMembers[inspecteeGUID].slot then
+	if app.GroupMembers and app.GroupMembers[inspecteeGUID] and app.GroupMembers[inspecteeGUID].slot then
 		local itemLevel = {}
 		local slot = app.GroupMembers[inspecteeGUID].slot
 		if slot == 11 or slot == 13 or slot == 16 then
