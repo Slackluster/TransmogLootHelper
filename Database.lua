@@ -21,6 +21,33 @@ app.IconLMB = CreateAtlasMarkup("housing-hotkey-icon-leftclick")
 app.IconRMB = CreateAtlasMarkup("housing-hotkey-icon-rightclick")
 app.IconNew = CreateAtlasMarkup("UI-Journeys-GreatVault-Tag-new")
 
+-- ItemEquipLoc to key
+app.Slot = {
+	["INVTYPE_HEAD"] = 1,
+	["INVTYPE_NECK"] = 2,
+	["INVTYPE_SHOULDER"] = 3,
+	["INVTYPE_CLOAK"] = 15,
+	["INVTYPE_CHEST"] = 5,
+	["INVTYPE_ROBE"] = 5,
+	["INVTYPE_WRIST"] = 9,
+	["INVTYPE_HAND"] = 10,
+	["INVTYPE_WAIST"] = 6,
+	["INVTYPE_LEGS"] = 7,
+	["INVTYPE_FEET"] = 8,
+	-- Custom code for rings and trinkets
+	["INVTYPE_FINGER"] = 11, -- Also 12
+	["INVTYPE_TRINKET"] = 13, -- Also 14
+	-- Custom code for weapons
+	["INVTYPE_RANGED"] = 16, -- Main hand, no off hand
+	["INVTYPE_RANGEDRIGHT"] = 16, -- Main hand, no off hand (but also Wands, goddammit Blizzard)
+	["INVTYPE_2HWEAPON"] = 16, -- Main hand, no off hand
+	["INVTYPE_WEAPONMAINHAND"] = 16, -- Main hand
+	["INVTYPE_WEAPONOFFHAND"] = 16, -- Off hand
+	["INVTYPE_HOLDABLE"] = 16, -- Off hand
+	["INVTYPE_SHIELD"] = 16, -- Off hand
+	["INVTYPE_WEAPON"] = 16, -- Can be main hand or off hand, if char can Dual Wield
+}
+
 -- Type.Subtype -> item type
 app.Type = {
 	["General"] = "4.0", -- Neck, Ring, Trinket, Off-Hand (and shirts and tabards, yay)
