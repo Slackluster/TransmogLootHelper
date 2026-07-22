@@ -14,6 +14,9 @@ TransmogLootHelper:IsAppearanceCollected(itemLink)
 -- Check if an item's source is collected; returns true or false
 TransmogLootHelper:IsSourceCollected(itemLink)
 
+-- Returns the item level (since C_Item.GetDetailedItemLevelInfo() is currently unreliable)
+TransmogLootHelper:GetItemLevel(itemLink)
+
 -- Remove this character from the addon cache, marking things (namely recipes) only known by this character as unlearned
 -- characterName: string, "Character-Realm"
 TransmogLootHelper:DeleteCharacter(characterName)

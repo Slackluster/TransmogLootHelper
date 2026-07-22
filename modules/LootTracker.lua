@@ -1011,8 +1011,30 @@ function app:Stagger(t, show)
 	end)
 end
 
+function app:AddPendingLoot(itemInfo, itemCategory, itemEquipLoc, itemLevel, guid)
+	if app.GroupMembers[guid] then
+		app.GroupMembers[guid].slot = app.Slot[itemEquipLoc]
+		app.GroupMembers[guid].ilv = itemLevel
+		app.GroupMembers[guid].itemInfo = itemInfo
+		app.GroupMembers[guid].itemCategory = itemCategory
+		NotifyInspect(app.GroupMembers[guid].unitToken)
+	else
+		app:AddLoot(itemInfo, itemCategory)
+	end
+end
+
+function app:AddLoot(itemInfo, itemCategory)
+	if itemCategory == "weapon" then
+		table.insert(app.WeaponLoot, itemInfo)
+	elseif itemCategory == "armor" then
+		table.insert(app.ArmourLoot, itemInfo)
+	end
+	app.Flag.LastUpdate = GetServerTime()
+	app:Stagger(1, true)
+end
+
 function app:AddFilteredLoot(itemLink, itemID, itemTexture, playerName, itemType, filterReason)
-	app.FilteredLoot[#app.FilteredLoot+1] = { item = itemLink, itemID = itemID, icon = itemTexture, player = playerName, playerShort = filterReason, color = "ffFFFFFF", itemType = itemType }
+	table.insert(app.FilteredLoot, { item = itemLink, itemID = itemID, icon = itemTexture, player = playerName, playerShort = filterReason, color = "ffFFFFFF", itemType = itemType })
 
 	if #app.FilteredLoot > 100 then
 		table.remove(app.FilteredLoot, 1)
@@ -1039,25 +1061,23 @@ function app:RemoveLootedItem(itemID)
 end
 
 app.Event:Register("CHAT_MSG_LOOT", function(text, playerName, languageName, channelName, playerName2, specialFlags, zoneChannelID, channelIndex, channelBaseName, languageID, lineID, guid, bnSenderID, isMobile, isSubtitle, hideSenderInLetterbox, supressRaidIcons)
-	--if not IsInGroup() then return end
+	if not IsInGroup() then return end
 	if issecretvalue(text) then return end -- Without the option to declassify secrets later on, there is no alternative
 
 	local itemString = string.match(text, "(|cnIQ.-|h%[.-%]|h)")
 
 	if itemString and C_Item.IsEquippableItem(itemString) and guid ~= nil then
-		local playerNameShort = string.match(playerName, "^(.-)-")
-		local realmName = string.match(playerName, ".*-(.*)")
-		local unitName = playerNameShort, realmName
-		local selfName = UnitName("player")
+		local ownName, ownRealm = UnitName("player")
+		local selfName = ownName .. "-" .. ownRealm
 
-		local className, classFilename, classId = UnitClass(unitName)
+		local className, classFilename, classId = UnitClass(playerName)
 		local _, _, _, classColor = GetClassColor(classFilename)
 
 		local _, itemLink, itemQuality, _, _, _, _, _, itemEquipLoc, itemTexture, _, classID, subclassID = C_Item.GetItemInfo(itemString)
 		local itemID = C_Item.GetItemInfoInstant(itemString)
 		local itemType = classID.."."..subclassID
 
-		if unitName ~= selfName then
+		if playerName ~= selfName then
 			if not api:IsAppearanceCollected(itemLink) or (not api:IsSourceCollected(itemLink) and app.Settings["collectMode"] == 2) then
 				if app:GetBonding(itemLink) == "BoA" then
 					app:AddFilteredLoot(itemLink, itemID, itemTexture, playerName, itemType, L.FILTER_REASON_UNTRADEABLE)
@@ -1081,14 +1101,8 @@ app.Event:Register("CHAT_MSG_LOOT", function(text, playerName, languageName, cha
 						end
 					end
 
-					if itemCategory == "weapon" then
-						app.WeaponLoot[#app.WeaponLoot+1] = { item = itemLink, itemID = itemID, icon = itemTexture, player = playerName, playerShort = playerNameShort, color = classColor, recentlyWhispered = 0 }
-					elseif itemCategory == "armor" then
-						app.ArmourLoot[#app.ArmourLoot+1] = { item = itemLink, itemID = itemID, icon = itemTexture, player = playerName, playerShort = playerNameShort, color = classColor, recentlyWhispered = 0 }
-					end
-
-					app.Flag.LastUpdate = GetServerTime()
-					app:Stagger(1, true)
+					local itemLevel = api:GetItemLevel(itemLink)
+					app:AddPendingLoot({ item = itemLink, itemID = itemID, icon = itemTexture, player = playerName, playerShort = playerNameShort, color = classColor, itemType = itemType, recentlyWhispered = 0 },  itemCategory, itemEquipLoc, itemLevel, guid)
 				else
 					app:AddFilteredLoot(itemLink, itemID, itemTexture, playerName, itemType, L.FILTER_REASON_RARITY)
 				end

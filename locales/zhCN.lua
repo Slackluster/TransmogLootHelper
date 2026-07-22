@@ -54,6 +54,7 @@ L.WHISPER_COOLDOWN =                     "每件物品对同一玩家只能每30
 L.FILTER_REASON_UNTRADEABLE =            "不可交易"
 L.FILTER_REASON_RARITY =                 "品质过低"
 L.FILTER_REASON_KNOWN =                  "已知外观"
+-- L.FILTER_REASON_ILV_UPGRADE =            "iLv Upgrade"
 
 -- Tweaks
 L.INSTANT_BUTTON =                       "立即获取！"

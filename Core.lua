@@ -337,3 +337,18 @@ function api:IsSourceCollected(itemLink, sourceID) -- Thank you Plusmouse!
 		return C_TransmogCollection.PlayerHasTransmogItemModifiedAppearance(sourceID)
 	end
 end
+
+function api:GetItemLevel(itemLink)
+	local itemLevel = C_Item.GetDetailedItemLevelInfo(itemLink)
+	local itemID = C_Item.GetItemInfoInstant(itemLink)
+	local tooltipData = C_TooltipInfo.GetHyperlink(itemLink)
+	if tooltipData and tooltipData.lines then
+		for _, lineData in ipairs(tooltipData.lines) do
+			if lineData.type == Enum.TooltipDataLineType.ItemLevel then
+				itemLevel = lineData.itemLevel
+				break
+			end
+		end
+	end
+	return itemLevel
+end

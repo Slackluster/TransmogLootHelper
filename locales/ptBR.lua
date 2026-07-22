@@ -53,6 +53,7 @@ local L = app.locales
 -- L.FILTER_REASON_UNTRADEABLE =            "Untradeable"
 -- L.FILTER_REASON_RARITY =                 "Rarity too low"
 -- L.FILTER_REASON_KNOWN =                  "Known appearance"
+-- L.FILTER_REASON_ILV_UPGRADE =            "iLv Upgrade"
 
 -- Tweaks
 -- L.INSTANT_BUTTON =                       "Get it now!"
