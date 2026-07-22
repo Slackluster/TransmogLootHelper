@@ -1,6 +1,6 @@
---------------------------------------
--- Equip Recommended Gear: esMX.lua --
---------------------------------------
+------------------------------------
+-- Transmog Loot Helper: esMX.lua --
+------------------------------------
 -- Spanish (Mexico) localisation
 -- Translator(s): Ferran Carril
 

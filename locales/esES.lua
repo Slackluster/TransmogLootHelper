@@ -1,6 +1,6 @@
---------------------------------------
--- Equip Recommended Gear: esES.lua --
---------------------------------------
+------------------------------------
+-- Transmog Loot Helper: esES.lua --
+------------------------------------
 -- Spanish (Spain) localisation
 -- Translator(s): Ferran Carril
 

@@ -1,6 +1,6 @@
---------------------------------------
--- Equip Recommended Gear: enUS.lua --
---------------------------------------
+------------------------------------
+-- Transmog Loot Helper: enUS.lua --
+------------------------------------
 -- English (United States) localisation
 -- Translator(s): N/A
 

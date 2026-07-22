@@ -1,6 +1,6 @@
---------------------------------------
--- Equip Recommended Gear: deDE.lua --
---------------------------------------
+------------------------------------
+-- Transmog Loot Helper: deDE.lua --
+------------------------------------
 -- German (Germany) localisation
 -- Translator(s):
 

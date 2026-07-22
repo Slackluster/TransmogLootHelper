@@ -1,6 +1,6 @@
---------------------------------------
--- Equip Recommended Gear: zhCN.lua --
---------------------------------------
+------------------------------------
+-- Transmog Loot Helper: zhCN.lua --
+------------------------------------
 -- Chinese (Simplified, PRC) localisation
 -- Translator(s): XingDVD
 

@@ -1,6 +1,6 @@
---------------------------------------------
--- Transmoog Loot Helper: ItemOverlay.lua --
---------------------------------------------
+-------------------------------------------
+-- Transmog Loot Helper: ItemOverlay.lua --
+-------------------------------------------
 
 local appName, app = ...
 local api = app.api

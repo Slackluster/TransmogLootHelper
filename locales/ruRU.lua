@@ -1,6 +1,6 @@
---------------------------------------
--- Equip Recommended Gear: ruRU.lua --
---------------------------------------
+------------------------------------
+-- Transmog Loot Helper: ruRU.lua --
+------------------------------------
 -- Russian (Russia) localisation
 -- Translator(s): ZamestoTV
 

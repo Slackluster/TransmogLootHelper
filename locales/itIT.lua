@@ -1,6 +1,6 @@
---------------------------------------
--- Equip Recommended Gear: itIT.lua --
---------------------------------------
+------------------------------------
+-- Transmog Loot Helper: itIT.lua --
+------------------------------------
 -- Italian (Italy) localisation
 -- Translator(s):
 

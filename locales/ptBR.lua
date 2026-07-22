@@ -1,6 +1,6 @@
---------------------------------------
--- Equip Recommended Gear: ptBR.lua --
---------------------------------------
+------------------------------------
+-- Transmog Loot Helper: ptBR.lua --
+------------------------------------
 -- Portuguese (Brazil) localisation
 -- Translator(s):
 

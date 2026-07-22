@@ -1,6 +1,6 @@
---------------------------------------
--- Equip Recommended Gear: koKR.lua --
---------------------------------------
+------------------------------------
+-- Transmog Loot Helper: koKR.lua --
+------------------------------------
 -- Korean (Korea) localisation
 -- Translator(s):
 

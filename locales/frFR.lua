@@ -1,6 +1,6 @@
---------------------------------------
--- Equip Recommended Gear: frFR.lua --
---------------------------------------
+------------------------------------
+-- Transmog Loot Helper: frFR.lua --
+------------------------------------
 -- French (France) localisation
 -- Translator(s): Klep-Ysondre
 

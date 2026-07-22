@@ -1,6 +1,6 @@
-----------------------------------------
--- Transmoog Loot Helper: Recipes.lua --
-----------------------------------------
+---------------------------------------
+-- Transmog Loot Helper: Recipes.lua --
+---------------------------------------
 
 local appName, app = ...
 local api = app.api

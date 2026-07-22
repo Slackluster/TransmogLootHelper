@@ -1,6 +1,6 @@
---------------------------------------
--- Equip Recommended Gear: zhTW.lua --
---------------------------------------
+------------------------------------
+-- Transmog Loot Helper: zhTW.lua --
+------------------------------------
 -- Chinese (Traditional, Taiwan) localisation
 -- Translator(s):
 

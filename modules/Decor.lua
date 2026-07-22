@@ -1,6 +1,6 @@
---------------------------------------
--- Transmoog Loot Helper: Decor.lua --
---------------------------------------
+-------------------------------------
+-- Transmog Loot Helper: Decor.lua --
+-------------------------------------
 
 local appName, app = ...
 local api = app.api
