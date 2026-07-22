@@ -1068,7 +1068,7 @@ app.Event:Register("CHAT_MSG_LOOT", function(text, playerName, languageName, cha
 
 	if itemString and C_Item.IsEquippableItem(itemString) and guid ~= nil then
 		local ownName, ownRealm = UnitName("player")
-		local selfName = ownName .. "-" .. ownRealm
+		local selfName = ownName .. "-" .. (ownRealm or GetNormalizedRealmName())
 
 		local className, classFilename, classId = UnitClass(playerName)
 		local _, _, _, classColor = GetClassColor(classFilename)
