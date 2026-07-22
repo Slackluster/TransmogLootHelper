@@ -1079,7 +1079,8 @@ app.Event:Register("CHAT_MSG_LOOT", function(text, playerName, languageName, cha
 
 		if playerName ~= selfName then
 			if not api:IsAppearanceCollected(itemLink) or (not api:IsSourceCollected(itemLink) and app.Settings["collectMode"] == 2) then
-				if app:GetBonding(itemLink) == "BoA" then
+				local bonding = app:GetBonding(itemLink)
+				if bonding == "BoA" or bonding == "WuE" then
 					app:AddFilteredLoot(itemLink, itemID, itemTexture, playerName, itemType, L.FILTER_REASON_UNTRADEABLE)
 				elseif itemQuality >= app.Settings["rarity"] then
 					local armorClass
