@@ -53,7 +53,6 @@ L.WHISPER_COOLDOWN =                     "Вы можете шептать иг�
 L.FILTER_REASON_UNTRADEABLE =            "Нельзя передать"
 L.FILTER_REASON_RARITY =                 "Слишком низкая редкость"
 L.FILTER_REASON_KNOWN =                  "Известный внешний вид"
--- L.FILTER_REASON_ILV_UPGRADE =            "iLv Upgrade"
 
 -- Tweaks
 L.INSTANT_BUTTON =                       "Получить сейчас!"

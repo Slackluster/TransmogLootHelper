@@ -1067,6 +1067,7 @@ app.Event:Register("CHAT_MSG_LOOT", function(text, playerName, languageName, cha
 	local itemString = string.match(text, "(|cnIQ.-|h%[.-%]|h)")
 
 	if itemString and C_Item.IsEquippableItem(itemString) and guid ~= nil then
+		local playerNameShort = string.match(playerName, "^(.-)-")
 		local ownName, ownRealm = UnitName("player")
 		local selfName = ownName .. "-" .. (ownRealm or GetNormalizedRealmName())
 
@@ -1078,7 +1079,7 @@ app.Event:Register("CHAT_MSG_LOOT", function(text, playerName, languageName, cha
 		local itemType = classID.."."..subclassID
 
 		if playerName ~= selfName then
-			if not api:IsAppearanceCollected(itemLink) or (not api:IsSourceCollected(itemLink) and app.Settings["collectMode"] == 2) then
+			-- if not api:IsAppearanceCollected(itemLink) or (not api:IsSourceCollected(itemLink) and app.Settings["collectMode"] == 2) then
 				local bonding = app:GetBonding(itemLink)
 				if bonding == "BoA" or bonding == "WuE" then
 					app:AddFilteredLoot(itemLink, itemID, itemTexture, playerName, itemType, L.FILTER_REASON_UNTRADEABLE)
@@ -1102,16 +1103,19 @@ app.Event:Register("CHAT_MSG_LOOT", function(text, playerName, languageName, cha
 						end
 					end
 
-					local itemLevel = api:GetItemLevel(itemLink)
-					app:AddPendingLoot({ item = itemLink, itemID = itemID, icon = itemTexture, player = playerName, playerShort = playerNameShort, color = classColor, itemType = itemType, recentlyWhispered = 0 },  itemCategory, itemEquipLoc, itemLevel, guid)
+					if bonding == "BoP" then
+						app:AddPendingLoot({ item = itemLink, itemID = itemID, icon = itemTexture, player = playerName, playerShort = playerNameShort, color = classColor, itemType = itemType, recentlyWhispered = 0 }, itemCategory, itemEquipLoc, api:GetItemLevel(itemLink), guid)
+					else
+						app:AddLoot({ item = itemLink, itemID = itemID, icon = itemTexture, player = playerName, playerShort = playerNameShort, color = classColor, itemType = itemType, recentlyWhispered = 0 }, itemCategory)
+					end
 				else
 					app:AddFilteredLoot(itemLink, itemID, itemTexture, playerName, itemType, L.FILTER_REASON_RARITY)
 				end
-			else
-				if itemType ~= app.Type["General"] or (itemType == app.Type["General"] and itemEquipLoc ~= "INVTYPE_FINGER"	and itemEquipLoc ~= "INVTYPE_TRINKET" and itemEquipLoc ~= "INVTYPE_NECK") then
-					app:AddFilteredLoot(itemLink, itemID, itemTexture, playerName, itemType, L.FILTER_REASON_KNOWN)
-				end
-			end
+			-- else
+			-- 	if itemType ~= app.Type["General"] or (itemType == app.Type["General"] and itemEquipLoc ~= "INVTYPE_FINGER"	and itemEquipLoc ~= "INVTYPE_TRINKET" and itemEquipLoc ~= "INVTYPE_NECK") then
+			-- 		app:AddFilteredLoot(itemLink, itemID, itemTexture, playerName, itemType, L.FILTER_REASON_KNOWN)
+			-- 	end
+			-- end
 		end
 	end
 end)

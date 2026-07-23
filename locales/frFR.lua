@@ -53,7 +53,6 @@ L.WHISPER_COOLDOWN =                     "Vous ne pouvez chuchoter à un joueur 
 L.FILTER_REASON_UNTRADEABLE =            "Non échangeable"
 L.FILTER_REASON_RARITY =                 "Rareté trop faible"
 L.FILTER_REASON_KNOWN =                  "Apparence déjà connue"
--- L.FILTER_REASON_ILV_UPGRADE =            "iLv Upgrade"
 
 -- Tweaks
 L.INSTANT_BUTTON =                       "Obtenir maintenant !"

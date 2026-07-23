@@ -53,7 +53,6 @@ L.WHISPER_COOLDOWN =                     "Solo puedes susurrar a un jugador una 
 L.FILTER_REASON_UNTRADEABLE =            "No comercializable"
 L.FILTER_REASON_RARITY =                 "Rareza demasiado baja"
 L.FILTER_REASON_KNOWN =                  "Apariencia conocida"
--- L.FILTER_REASON_ILV_UPGRADE =            "iLv Upgrade"
 
 -- Tweaks
 L.INSTANT_BUTTON =                       "¡Recíbelo ahora!"
