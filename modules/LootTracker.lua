@@ -1032,7 +1032,7 @@ function app:AddFilteredLoot(itemLink, itemID, itemTexture, playerName, itemType
 	app:Stagger(1, false)
 end
 
-function app:FilterLootedItem(itemID, reason, sender)
+function app:MoveItemToFiltered(itemID, reason, sender)
 	for k, v in ipairs(app.WeaponLoot) do
 		if v.itemID == itemID and (not sender or v.player == sender) then
 			app:AddFilteredLoot(v.item, v.itemID, v.icon, v.player, v.itemType, reason)
@@ -1135,7 +1135,7 @@ end)
 
 app.Event:Register("TRANSMOG_COLLECTION_SOURCE_ADDED", function(itemModifiedAppearanceID)
 	local itemID = C_TransmogCollection.GetSourceInfo(itemModifiedAppearanceID).itemID
-	app:FilterLootedItem(itemID, L.FILTER_REASON_KNOWN)
+	app:MoveItemToFiltered(itemID, L.FILTER_REASON_KNOWN)
 
 	local message = "itemID:"..itemID..":learned"
 	app:SendAddonMessage(message)
@@ -1147,7 +1147,7 @@ app.Event:Register("CHAT_MSG_ADDON", function(prefix, text, channel, sender, tar
 			local itemID, key, value = text:match("^itemID:(%d+):?([^:]*)?:?([^:]*)$")
 
 			if key and key == "upgrade" then
-				app:FilterLootedItem(itemID, L.FILTER_REASON_UNTRADEABLE, sender)
+				app:MoveItemToFiltered(itemID, L.FILTER_REASON_UNTRADEABLE, sender)
 				app.Flag.LastUpdate = GetServerTime()
 				app:Stagger(1, false)
 			elseif (key and key == "learned") or not key then -- not key == old, remove after a while
