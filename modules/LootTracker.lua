@@ -1146,9 +1146,9 @@ app.Event:Register("TRANSMOG_COLLECTION_SOURCE_ADDED", function(itemModifiedAppe
 end)
 
 app.Event:Register("CHAT_MSG_ADDON", function(prefix, text, channel, sender, target, zoneChannelID, localID, name, instanceID)
-	if prefix == "TransmogLootHelp" then
+	if prefix == app.NamePrefix then
 		if text:find("^itemID:") then
-			local itemID, key, value = text:match("^itemID:(%d+):?([^:]*)?:?([^:]*)$")
+			local itemID, key, value = text:match("^itemID:(%d+):([^:]+):?(.*)$")
 
 			if key and key == "upgrade" then
 				app:MoveItemToFiltered(itemID, L.FILTER_REASON_UNTRADEABLE, sender)
