@@ -1017,7 +1017,19 @@ function app:AddPendingLoot(itemInfo, itemCategory, itemEquipLoc, itemLevel, gui
 		app.GroupMembers[guid].ilv = itemLevel
 		app.GroupMembers[guid].itemInfo = itemInfo
 		app.GroupMembers[guid].itemCategory = itemCategory
-		NotifyInspect(app.GroupMembers[guid].unitToken)
+
+		local function inspect(unitToken)
+			if not app.Inspecting then
+				app.Inspecting = true
+				NotifyInspect(unitToken)
+			else
+				print(UnitName(unitToken) .. " pending")
+				C_Timer.After(0.1, function()
+					inspect(unitToken)
+				end)
+			end
+		end
+		inspect(app.GroupMembers[guid].unitToken)
 	else
 		app:AddLoot(itemInfo, itemCategory)
 	end
