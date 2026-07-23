@@ -35,7 +35,6 @@ Settings.lua
 FrameTemplates.xml
 modules\Decor.lua
 modules\Recipes.lua
-modules\Inspect.lua
 modules\ItemOverlay.lua
 modules\LootTracker.lua
 modules\Tweaks.lua

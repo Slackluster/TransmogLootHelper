@@ -1011,30 +1011,6 @@ function app:Stagger(t, show)
 	end)
 end
 
-function app:AddPendingLoot(itemInfo, itemCategory, itemEquipLoc, itemLevel, guid)
-	if app.GroupMembers[guid] then
-		app.GroupMembers[guid].slot = app.Slot[itemEquipLoc]
-		app.GroupMembers[guid].ilv = itemLevel
-		app.GroupMembers[guid].itemInfo = itemInfo
-		app.GroupMembers[guid].itemCategory = itemCategory
-
-		local function inspect(unitToken)
-			if not app.Inspecting then
-				app.Inspecting = true
-				NotifyInspect(unitToken)
-			else
-				print(UnitName(unitToken) .. " pending")
-				C_Timer.After(0.1, function()
-					inspect(unitToken)
-				end)
-			end
-		end
-		inspect(app.GroupMembers[guid].unitToken)
-	else
-		app:AddLoot(itemInfo, itemCategory)
-	end
-end
-
 function app:AddLoot(itemInfo, itemCategory)
 	if itemCategory == "weapon" then
 		table.insert(app.WeaponLoot, itemInfo)
@@ -1056,15 +1032,16 @@ function app:AddFilteredLoot(itemLink, itemID, itemTexture, playerName, itemType
 	app:Stagger(1, false)
 end
 
-function app:RemoveLootedItem(itemID)
-	for k = #app.WeaponLoot, 1, -1 do
-		if app.WeaponLoot[k].itemID == itemID then
+function app:FilterLootedItem(itemID, reason, sender)
+	for k, v in ipairs(app.WeaponLoot) do
+		if v.itemID == itemID and (not sender or v.player == sender) then
+			app:AddFilteredLoot(v.item, v.itemID, v.icon, v.player, v.itemType, reason)
 			table.remove(app.WeaponLoot, k)
 		end
 	end
-
-	for k = #app.ArmourLoot, 1, -1 do
-		if app.ArmourLoot[k].itemID == itemID then
+	for k, v in ipairs(app.ArmourLoot) do
+		if v.itemID == itemID and (not sender or v.player == sender) then
+			app:AddFilteredLoot(v.item, v.itemID, v.icon, v.player, v.itemType, reason)
 			table.remove(app.ArmourLoot, k)
 		end
 	end
@@ -1086,12 +1063,12 @@ app.Event:Register("CHAT_MSG_LOOT", function(text, playerName, languageName, cha
 		local className, classFilename, classId = UnitClass(playerName)
 		local _, _, _, classColor = GetClassColor(classFilename)
 
-		local _, itemLink, itemQuality, _, _, _, _, _, itemEquipLoc, itemTexture, _, classID, subclassID = C_Item.GetItemInfo(itemString)
+		local _, itemLink, itemQuality, itemLevel, _, _, _, _, itemEquipLoc, itemTexture, _, classID, subclassID = C_Item.GetItemInfo(itemString)
 		local itemID = C_Item.GetItemInfoInstant(itemString)
 		local itemType = classID.."."..subclassID
 
 		if playerName ~= selfName then
-			-- if not api:IsAppearanceCollected(itemLink) or (not api:IsSourceCollected(itemLink) and app.Settings["collectMode"] == 2) then
+			if not api:IsAppearanceCollected(itemLink) or (not api:IsSourceCollected(itemLink) and app.Settings["collectMode"] == 2) then
 				local bonding = app:GetBonding(itemLink)
 				if bonding == "BoA" or bonding == "WuE" then
 					app:AddFilteredLoot(itemLink, itemID, itemTexture, playerName, itemType, L.FILTER_REASON_UNTRADEABLE)
@@ -1115,57 +1092,81 @@ app.Event:Register("CHAT_MSG_LOOT", function(text, playerName, languageName, cha
 						end
 					end
 
-					if bonding == "BoP" then
-						app:AddPendingLoot({ item = itemLink, itemID = itemID, icon = itemTexture, player = playerName, playerShort = playerNameShort, color = classColor, itemType = itemType, recentlyWhispered = 0 }, itemCategory, itemEquipLoc, api:GetItemLevel(itemLink), guid)
-					else
-						app:AddLoot({ item = itemLink, itemID = itemID, icon = itemTexture, player = playerName, playerShort = playerNameShort, color = classColor, itemType = itemType, recentlyWhispered = 0 }, itemCategory)
-					end
+					app:AddLoot({ item = itemLink, itemID = itemID, icon = itemTexture, player = playerName, playerShort = playerNameShort, color = classColor, itemType = itemType, recentlyWhispered = 0 }, itemCategory)
 				else
 					app:AddFilteredLoot(itemLink, itemID, itemTexture, playerName, itemType, L.FILTER_REASON_RARITY)
 				end
-			-- else
-			-- 	if itemType ~= app.Type["General"] or (itemType == app.Type["General"] and itemEquipLoc ~= "INVTYPE_FINGER"	and itemEquipLoc ~= "INVTYPE_TRINKET" and itemEquipLoc ~= "INVTYPE_NECK") then
-			-- 		app:AddFilteredLoot(itemLink, itemID, itemTexture, playerName, itemType, L.FILTER_REASON_KNOWN)
-			-- 	end
-			-- end
+			else
+				if itemType ~= app.Type["General"] or (itemType == app.Type["General"] and itemEquipLoc ~= "INVTYPE_FINGER"	and itemEquipLoc ~= "INVTYPE_TRINKET" and itemEquipLoc ~= "INVTYPE_NECK") then
+					app:AddFilteredLoot(itemLink, itemID, itemTexture, playerName, itemType, L.FILTER_REASON_KNOWN)
+				end
+			end
+		else
+			if app:GetBonding(itemLink) ~= "BoP" then return end
+
+			local slotNo = app.Slot[itemEquipLoc]
+			local equippedItemLevel = {}
+
+			local function getItemLevel(slot)
+				local itemLink = GetInventoryItemLink("player", slot)
+				if itemLink then
+					table.insert(equippedItemLevel, C_Item.GetCurrentItemLevel(ItemLocation:CreateFromEquipmentSlot(slot)))
+				elseif slot ~= 17 then
+					table.insert(equippedItemLevel, 0)
+				end
+			end
+
+			if slotNo == 11 or slotNo == 13 or slotNo == 16 then
+				for i = slotNo, slotNo+1 do
+					getItemLevel(slotNo)
+				end
+			else
+				getItemLevel(slotNo)
+			end
+
+			equippedItemLevel = math.min(unpack(equippedItemLevel))
+			if itemLevel > equippedItemLevel then
+				local message = "itemID:"..itemID..":upgrade"
+				app:SendAddonMessage(message)
+			end
 		end
 	end
 end)
 
 app.Event:Register("TRANSMOG_COLLECTION_SOURCE_ADDED", function(itemModifiedAppearanceID)
 	local itemID = C_TransmogCollection.GetSourceInfo(itemModifiedAppearanceID).itemID
-	app:RemoveLootedItem(itemID)
+	app:FilterLootedItem(itemID, L.FILTER_REASON_KNOWN)
 
-	local message = "itemID:"..itemID
+	local message = "itemID:"..itemID..":learned"
 	app:SendAddonMessage(message)
 end)
 
 app.Event:Register("CHAT_MSG_ADDON", function(prefix, text, channel, sender, target, zoneChannelID, localID, name, instanceID)
 	if prefix == "TransmogLootHelp" then
-		local itemID = tonumber(text:match("itemID:(.+)"))
-		if itemID then
-			for k, v in ipairs(app.WeaponLoot) do
-				if v.player == sender and v.itemID == itemID then
-					app.WeaponLoot[k].icon = app.IconMaybeReady
+		if text:find("^itemID:") then
+			local itemID, key, value = text:match("^itemID:(%d+):?([^:]*)?:?([^:]*)$")
+
+			if key and key == "upgrade" then
+				app:FilterLootedItem(itemID, L.FILTER_REASON_UNTRADEABLE, sender)
+				app.Flag.LastUpdate = GetServerTime()
+				app:Stagger(1, false)
+			elseif (key and key == "learned") or not key then -- not key == old, remove after a while
+				for k, v in ipairs(app.WeaponLoot) do
+					if v.player == sender and v.itemID == itemID then
+						app.WeaponLoot[k].icon = app.IconMaybeReady
+					end
 				end
-			end
-
-			for k, v in ipairs(app.ArmourLoot) do
-				if v.player == sender and v.itemID == itemID then
-					app.ArmourLoot[k].icon = app.IconMaybeReady
+				for k, v in ipairs(app.ArmourLoot) do
+					if v.player == sender and v.itemID == itemID then
+						app.ArmourLoot[k].icon = app.IconMaybeReady
+					end
 				end
+				app.Flag.LastUpdate = GetServerTime()
+				app:Stagger(1, false)
 			end
-
-			app.Flag.LastUpdate = GetServerTime()
-			app:Stagger(1, false)
-		end
-
-		local player = text:match("player:(.+)")
-		if player then
-			if app.Whispered[player] == nil then
-				app.Whispered[player] = 0
-			end
-
+		elseif text:find("^player:") then
+			local player = text:match("^player:(.+)$")
+			app.Whispered[player] = app.Whispered[player] or 0
 			for k, v in pairs(app.Whispered) do
 				if k == player then
 					app.Whispered[k] = app.Whispered[k] + 1
