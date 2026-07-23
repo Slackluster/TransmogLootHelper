@@ -88,6 +88,7 @@ app.Event:Register("INSPECT_READY", function(inspecteeGUID)
 			app.Inspecting = false
 			print(UnitName(app.GroupMembers[inspecteeGUID].unitToken) .. " done inspecting")
 		else
+			print(UnitName(app.GroupMembers[inspecteeGUID].unitToken) .. " pending")
 			C_Timer.After(0.1, function()
 				inspect(inspecteeGUID)
 			end)
