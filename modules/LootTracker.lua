@@ -1037,19 +1037,16 @@ function app:AddFilteredLoot(itemLink, itemID, itemTexture, playerName, itemType
 end
 
 function app:MoveItemToFiltered(itemID, reason, sender)
-	for k, v in ipairs(app.WeaponLoot) do
-		if v.itemID == itemID and (not sender or v.player == sender) then
-			app:AddFilteredLoot(v.item, v.itemID, v.icon, v.player, v.itemType, reason)
-			table.remove(app.WeaponLoot, k)
+	local function processTable(tableName)
+		for k, v in ipairs(tableName) do
+			if v.itemID == itemID and (not sender or v.player == sender) then
+				app:AddFilteredLoot(v.item, v.itemID, v.icon, v.player, v.itemType, reason)
+				table.remove(tableName, k)
+			end
 		end
 	end
-	for k, v in ipairs(app.ArmourLoot) do
-		if v.itemID == itemID and (not sender or v.player == sender) then
-			app:AddFilteredLoot(v.item, v.itemID, v.icon, v.player, v.itemType, reason)
-			table.remove(app.ArmourLoot, k)
-		end
-	end
-
+	processTable(app.WeaponLoot)
+	processTable(app.ArmourLoot)
 	app:UpdateWindow()
 end
 
@@ -1105,9 +1102,7 @@ app.Event:Register("CHAT_MSG_LOOT", function(text, playerName, languageName, cha
 					app:AddFilteredLoot(itemLink, itemID, itemTexture, playerName, itemType, L.FILTER_REASON_KNOWN)
 				end
 			end
-		else
-			if app:GetBonding(itemLink) ~= "BoP" then return end
-
+		elseif app:GetBonding(itemLink) == "BoP" then
 			local slotNo = app.Slot[itemEquipLoc]
 			local equippedItemLevel = {}
 
@@ -1149,6 +1144,7 @@ app.Event:Register("CHAT_MSG_ADDON", function(prefix, text, channel, sender, tar
 	if prefix == app.NamePrefix then
 		if text:find("^itemID:") then
 			local itemID, key, value = text:match("^itemID:(%d+):([^:]+):?(.*)$")
+			itemID = tonumber(itemID)
 
 			if key and key == "upgrade" then
 				app:MoveItemToFiltered(itemID, L.FILTER_REASON_UNTRADEABLE, sender)
