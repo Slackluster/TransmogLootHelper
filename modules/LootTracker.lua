@@ -1109,9 +1109,7 @@ app.Event:Register("CHAT_MSG_LOOT", function(text, playerName, languageName, cha
 				local found = false
 				local count = C_Item.GetItemCount(itemID, false, false, false, false)
 				if not count or count == 0 then
-					PlaySoundFile(567482, "Master")
 					C_Timer.After(1, function()
-						print("retrying")
 						findItem(itemID)
 					end)
 					return
