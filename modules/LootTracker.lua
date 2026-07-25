@@ -1102,32 +1102,52 @@ app.Event:Register("CHAT_MSG_LOOT", function(text, playerName, languageName, cha
 					app:AddFilteredLoot(itemLink, itemID, itemTexture, playerName, itemType, L.FILTER_REASON_KNOWN)
 				end
 			end
-		elseif app:GetBonding(itemLink) == "BoP" then
-			local slotNo = app.Slot[itemEquipLoc]
-			local equippedItemLevel = {}
+		else
+		-- elseif app:GetBonding(itemLink) == "BoP" then
+			local function findItem(itemID)
+				local tradeable = false
+				local found = false
+				local count = C_Item.GetItemCount(itemID, false, false, false, false)
+				if not count or count == 0 then
+					PlaySoundFile(567482, "Master")
+					C_Timer.After(1, function()
+						print("retrying")
+						findItem(itemID)
+					end)
+					return
+				end
 
-			local function getItemLevel(slot)
-				local itemLink = GetInventoryItemLink("player", slot)
-				if itemLink then
-					table.insert(equippedItemLevel, C_Item.GetCurrentItemLevel(ItemLocation:CreateFromEquipmentSlot(slot)))
-				elseif slot ~= 17 then
-					table.insert(equippedItemLevel, 0)
+				for bag = 0, 5 do
+					local slots = C_Container.GetContainerNumSlots(bag)
+					if slots > 0 then
+						for bagSlot = 1, slots do
+							if count < 1 then break end
+							local bagItemLink = C_Container.GetContainerItemLink(bag, bagSlot)
+							if bagItemLink then
+								local bagItemID = C_Item.GetItemInfoInstant(bagItemLink)
+								if bagItemID == itemID then
+									found = true
+									local tooltipData = C_TooltipInfo.GetBagItem(bag, bagSlot)
+									if tooltipData and tooltipData.lines then
+										for _, lineData in ipairs(tooltipData.lines) do
+											if lineData.type == Enum.TooltipDataLineType.TradeTimeRemaining then
+												tradeable = true
+												count = count - 1
+												break
+											end
+										end
+									end
+								end
+							end
+						end
+					end
+				end
+
+				if found and not tradeable then
+					app:SendAddonMessage("itemID:"..itemID..":untradeable")
 				end
 			end
-
-			if slotNo == 11 or slotNo == 13 or slotNo == 16 then
-				for i = slotNo, slotNo+1 do
-					getItemLevel(slotNo)
-				end
-			else
-				getItemLevel(slotNo)
-			end
-
-			equippedItemLevel = math.min(unpack(equippedItemLevel))
-			if itemLevel > equippedItemLevel then
-				local message = "itemID:"..itemID..":upgrade"
-				app:SendAddonMessage(message)
-			end
+			findItem(itemID)
 		end
 	end
 end)
@@ -1146,7 +1166,7 @@ app.Event:Register("CHAT_MSG_ADDON", function(prefix, text, channel, sender, tar
 			local itemID, key, value = text:match("^itemID:(%d+):([^:]+):?(.*)$")
 			itemID = tonumber(itemID)
 
-			if key and key == "upgrade" then
+			if key and (key == "upgrade" or key == "untradeable") then -- upgrade == old, remove after a while
 				app:MoveItemToFiltered(itemID, L.FILTER_REASON_UNTRADEABLE, sender)
 				app.Flag.LastUpdate = GetServerTime()
 				app:Stagger(1, false)
