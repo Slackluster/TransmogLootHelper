@@ -803,6 +803,7 @@ function app:ApplyItemOverlay(overlay, itemLink, itemLocation, containerInfo, ba
 			local spell = Spell:CreateFromSpellID(spellID)
 			spell:ContinueOnSpellLoad(function()
 				processOverlay(itemID)
+				api:UpdateOverlay()
 			end)
 		end)
 	end
