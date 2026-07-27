@@ -230,6 +230,82 @@ app.QuantumMount = {
 
 -- ItemID -> QuestID (sourced from ATT's "Mount Mods.lua" and "CharacterItemDB.lua" among others)
 app.QuestItem = {
+	-- Class books
+	[264895] = 87421, -- Trials of the Florafaun Hunter
+
+	-- Vulpera Bag of Tricks
+	[175158] = 59029, -- Flames of Fury
+	[175159] = 59032, -- Sinister Shadows
+	[175160] = 59035, -- Holy Relic
+
+	-- Season Unlocks
+	[236852] = 87353, -- Gallagio Highroller's Boomstone
+	[242623] = 90710, -- Enchanted Warbound Purifying Kit
+	[242622] = 90709, -- Warbound Purifying Kit
+	[246737] = 91521, -- K'areshi Voidstone
+	[265071] = 94482, -- Gleaming Sunmote
+
+	-- Campsites
+	[235608] = 86878, -- Nightfall Sanctum Campsite
+
+	-- Housing
+	[253802] = 92710, -- Deed of Patronage
+
+	-- Dastardly Duos
+	[240200] = 90460, -- Podium Upgrade: Longest Survival Run
+	[240201] = 90461, -- Podium Upgrade: Longest Time in Spotlights
+	[240202] = 90462, -- Podium Upgrade: Most Yards Traveled
+	[240199] = 90459, -- Podium Upgrade: Scrappiest
+	[240203] = 90463, -- Podium Upgrade: Scrappy
+	[240204] = 90464, -- Podium Upgrade: Survival Run
+	[240205] = 90465, -- Podium Upgrade: Time in Spotlights
+	[240206] = 90466, -- Podium Upgrade: Yards Traveled
+
+	-- Decor Duel
+	[262746] = 93808, -- "Clockwork Sentinel" Kit
+	[262741] = 93804, -- "Dispelling Leap" Kit
+	[262755] = 93839, -- "Eccentro-Magic Pulse" Enhancement
+	[262756] = 93838, -- "Make Decoy" Enhancement
+	[262743] = 93806, -- "Nullification Field" Kit
+	[262744] = 93807, -- "Riftwalk" Kit
+	[262745] = 93809, -- "Stealth" Kit
+	[262742] = 93805, -- "Swift" Kit
+
+	-- Pepe
+	[127865] = 39265, -- A Tiny Viking Helmet
+	[127867] = 39267, -- A Tiny Ninja Shroud
+	[127869] = 39266, -- A Tiny Plated Helm
+	[127870] = 39268, -- A Tiny Pirate Hat
+	[128874] = 39865, -- A Tiny Scarecrow Costume
+	[139632] = 43695, -- A Tiny Pair of Goggles
+	[161443] = 52269, -- A Tiny Voodoo Mask
+	[161451] = 52277, -- A Tiny Diving Helmet
+	[170151] = 56911, -- A Tiny Clockwork Key
+	[174865] = 58901, -- A Tiny Winter Hat
+	[186473] = 64078, -- A Tiny Winter Staff
+	[186524] = 64098, -- A Tiny Vial of Slime
+	[186580] = 64132, -- A Tiny Sinstone
+	[186593] = 64136, -- A Tiny Pair of Wings
+	[213181] = 79547, -- A Tiny Dragon Goblet
+	[213202] = 79550, -- A Tiny Explorer's Hat
+	[213207] = 79551, -- A Tiny Ear Warmer
+	[216907] = 80093, -- A Tiny Plumed Tricorne
+
+	-- Duck Disguiser
+	[216890] = 80083, -- Black Duck Disguise
+	[216897] = 80084, -- Brown Duck Disguise
+	[216898] = 80085, -- Mallard Duck Disguise
+	[216900] = 80087, -- Pink Duck Disguise
+	[216901] = 80088, -- White Duck Disguise
+	[216902] = 80089, -- Yellow Duck Disguise
+
+	-- Box of Puntables
+	[219291] = 81619, -- Puntable Baby Greench
+	[219286] = 81617, -- Puntable Globe Yeti
+	[234127] = 86423, -- Puntable Grumpling
+	[219255] = 81616, -- Puntable Rotten Little Helper
+	[219289] = 81618, -- Puntable Tiny Snowman
+
 	-- Pocopoc
 	[187833] = 65528, -- Dapper Pocopoc
 	[189451] = 65524, -- Chef Pocopoc
@@ -253,72 +329,6 @@ app.QuestItem = {
 	[190096] = 65534, -- Pocobold
 	[190098] = 65538, -- Pepepec
 	[190182] = 65600, -- Lovely Regal Pocopoc
-
-	-- Pepe
-	[127865] = 39265, -- A Tiny Viking Helmet
-	[127867] = 39267, -- A Tiny Ninja Shroud
-	[127869] = 39266, -- A Tiny Plated Helm
-	[127870] = 39268, -- A Tiny Pirate Hat
-	[128874] = 39865, -- A Tiny Scarecrow Costume
-	[139632] = 43695, -- A Tiny Pair of Goggles
-	[161443] = 52269, -- A Tiny Voodoo Mask
-	[161451] = 52277, -- A Tiny Diving Helmet
-	[170151] = 56911, -- A Tiny Clockwork Key
-	[174865] = 58901, -- A Tiny Winter Hat
-	[186473] = 64078, -- A Tiny Winter Staff
-	[186524] = 64098, -- A Tiny Vial of Slime
-	[186580] = 64132, -- A Tiny Sinstone
-	[186593] = 64136, -- A Tiny Pair of Wings
-	[213181] = 79547, -- A Tiny Dragon Goblet
-	[213202] = 79550, -- A Tiny Explorer's Hat
-	[213207] = 79551, -- A Tiny Ear Warmer
-
-	-- Music Rolls
-	[122195] = 38063,
-	[122196] = 38064,
-	[122197] = 38065,
-	[122198] = 38066,
-	[122199] = 38067,
-	[122200] = 38068,
-	[122201] = 38069,
-	[122202] = 38071,
-	[122203] = 38073,
-	[122204] = 38075,
-	[122205] = 38077,
-	[122206] = 38079,
-	[122207] = 38081,
-	[122208] = 38083,
-	[122209] = 38085,
-	[122210] = 38070,
-	[122211] = 38072,
-	[122212] = 38078,
-	[122213] = 38074,
-	[122214] = 38076,
-	[122215] = 38080,
-	[122216] = 38082,
-	[122217] = 38084,
-	[122218] = 38086,
-	[122219] = 38101,
-	[122221] = 38102,
-	[122222] = 38087,
-	[122223] = 38088,
-	[122224] = 38089,
-	[122226] = 38090,
-	[122228] = 38091,
-	[122229] = 38092,
-	[122231] = 38093,
-	[122232] = 38094,
-	[122233] = 38095,
-	[122234] = 38096,
-	[122236] = 38097,
-	[122237] = 38098,
-	[122238] = 38099,
-	[122239] = 38100,
-
-	-- Vulpera Bag of Tricks
-	[175158] = 59029, -- Flames of Fury
-	[175159] = 59032, -- Sinister Shadows
-	[175160] = 59035, -- Holy Relic
 
 	-- Drakewatcher Manuscript
 	[196961] = 69161, -- Cliffside Wylderdrake: Armor
@@ -698,6 +708,22 @@ app.QuestItem = {
 	[216710] = 80014, -- Highland Drake: Embodiment of the Draconic Gladiator
 	[224163] = 82741, -- Cliffside Wylderdrake: Midsummer Fire Festival Armor
 
+	-- D.R.I.V.E. Customisations
+	[232982] = 85775, -- Engine: The Pozzik Standard
+	[232985] = 85782, -- 22H Slicks
+	[232986] = 85781, -- GE86 Advance
+	[232981] = 85776, -- GNZ Airmaster 9000
+	[232984] = 85784, -- Handcrank
+	[236670] = 85787, -- Maniacal Melodies
+	[235390] = 86771, -- Paint: Body Roll Blue
+	[235389] = 86772, -- Paint: Goblin Green
+	[235388] = 86773, -- Paint: Redlining Red
+	[235391] = 86774, -- Paint: Yellow Cake Yellow
+	[232983] = 85783, -- Steamboil
+	[236671] = 85786, -- The Buzzer
+	[236672] = 85785, -- The Ol' Low-and-Slow
+	[236669] = 85788, -- The Whole Brass Band
+
 	-- Dirigible Schematic
 	[224768] = 82171, -- Delver's Dirigible Schematic: Wing-Mounted Propeller
 	[224769] = 82183, -- Delver's Dirigible Schematic: Rotor Blades
@@ -748,21 +774,62 @@ app.QuestItem = {
 	[238180] = 88817, -- Delver's Mana-Skimmer Schematic: Void Paint
 	[238182] = 88819, -- Delver's Mana-Skimmer Schematic: Hyperdrive
 
-	-- D.R.I.V.E. Customisations
-	[232982] = 85775, -- Engine: The Pozzik Standard
-	[232985] = 85782, -- 22H Slicks
-	[232986] = 85781, -- GE86 Advance
-	[232981] = 85776, -- GNZ Airmaster 9000
-	[232984] = 85784, -- Handcrank
-	[236670] = 85787, -- Maniacal Melodies
-	[235390] = 86771, -- Paint: Body Roll Blue
-	[235389] = 86772, -- Paint: Goblin Green
-	[235388] = 86773, -- Paint: Redlining Red
-	[235391] = 86774, -- Paint: Yellow Cake Yellow
-	[232983] = 85783, -- Steamboil
-	[236671] = 85786, -- The Buzzer
-	[236672] = 85785, -- The Ol' Low-and-Slow
-	[236669] = 85788, -- The Whole Brass Band
+	-- D.I.S.C.
+	[244905] = 90953, -- Miniature Titan Disc: Charged Crystal
+	[244903] = 90951, -- Miniature Titan Disc: Charged Touch
+	[244899] = 90947, -- Miniature Titan Disc: Critical Chain
+	[244902] = 90950, -- Miniature Titan Disc: Electric Current
+	[244900] = 90948, -- Miniature Titan Disc: Spark Burst
+	[244901] = 90949, -- Miniature Titan Disc: Statically Charged
+
+	-- Gravestone Cosmetic
+	[262966] = 93866, -- Budget Friendly
+	[262964] = 93868, -- Death's Hope
+	[262965] = 93867, -- Delver's Delight
+	[262963] = 93869, -- Pious Memorial
+	[262951] = 93859, -- Sin'dorei Gravestone
+
+	-- Music Rolls
+	[122195] = 38063,
+	[122196] = 38064,
+	[122197] = 38065,
+	[122198] = 38066,
+	[122199] = 38067,
+	[122200] = 38068,
+	[122201] = 38069,
+	[122202] = 38071,
+	[122203] = 38073,
+	[122204] = 38075,
+	[122205] = 38077,
+	[122206] = 38079,
+	[122207] = 38081,
+	[122208] = 38083,
+	[122209] = 38085,
+	[122210] = 38070,
+	[122211] = 38072,
+	[122212] = 38078,
+	[122213] = 38074,
+	[122214] = 38076,
+	[122215] = 38080,
+	[122216] = 38082,
+	[122217] = 38084,
+	[122218] = 38086,
+	[122219] = 38101,
+	[122221] = 38102,
+	[122222] = 38087,
+	[122223] = 38088,
+	[122224] = 38089,
+	[122226] = 38090,
+	[122228] = 38091,
+	[122229] = 38092,
+	[122231] = 38093,
+	[122232] = 38094,
+	[122233] = 38095,
+	[122234] = 38096,
+	[122236] = 38097,
+	[122237] = 38098,
+	[122238] = 38099,
+	[122239] = 38100,
 
 	-----------------
 	-- PATCH 6.0.2 --
@@ -1133,17 +1200,6 @@ app.QuestItem = {
 	[212872] = 79385, -- Hearthstone Card: Shadow Word: Ruin
 
 	------------------
-	-- PATCH 10.2.6 --
-	------------------
-	[216907] = 80093, -- A Tiny Plumed Tricorne
-	[216890] = 80083, -- Black Duck Disguise
-	[216897] = 80084, -- Brown Duck Disguise
-	[216898] = 80085, -- Mallard Duck Disguise
-	[216900] = 80087, -- Pink Duck Disguise
-	[216901] = 80088, -- White Duck Disguise
-	[216902] = 80089, -- Yellow Duck Disguise
-
-	------------------
 	-- PATCH 11.0.2 --
 	------------------
 	[224553] = 82998, -- Beledar's Attunement
@@ -1153,9 +1209,7 @@ app.QuestItem = {
 	[229195] = 84006, -- Queen's Pheromone
 	[228943] = 84689, -- Spymaster's Severed Thread
 
-	------------------
-	-- PATCH 11.0.5 --
-	------------------
+	-- Titles
 	[230264] = 85224, -- Bronze Celebration Titles: Broken Isles Enthusiast
 	[230261] = 85221, -- Bronze Celebration Titles: Cataclysm Enthusiast
 	[230258] = 85218, -- Bronze Celebration Titles: Classic Enthusiast
@@ -1171,62 +1225,10 @@ app.QuestItem = {
 	[229827] = 85014, -- Bronze Celebration Titles: Plaguelands Survivor
 	[230267] = 85227, -- Bronze Celebration Titles: Shadowlands Enthusiast
 	[230265] = 85225, -- Bronze Celebration Titles: Zuldazar Enthusiast
-
-	------------------
-	-- PATCH 11.0.7 --
-	------------------
-	[219291] = 81619, -- Puntable Baby Greench
-	[219286] = 81617, -- Puntable Globe Yeti
-	[234127] = 86423, -- Puntable Grumpling
-	[219255] = 81616, -- Puntable Rotten Little Helper
-	[219289] = 81618, -- Puntable Tiny Snowman
-
-	------------------
-	-- PATCH 11.1.0 --
-	------------------
-	[235037] = 86630, -- Crumpled Schematic: Wormhole Generator: Undermine
-	[236852] = 87353, -- Gallagio Highroller's Boomstone
-	[235608] = 86878, -- Nightfall Sanctum Campsite
-
-	------------------
-	-- PATCH 11.1.5 --
-	------------------
-	[242623] = 90710, -- Enchanted Warbound Purifying Kit
-	[242622] = 90709, -- Warbound Purifying Kit
-
-	------------------
-	-- PATCH 11.1.7 --
-	------------------
-	[244905] = 90953, -- Miniature Titan Disc: Charged Crystal
-	[244903] = 90951, -- Miniature Titan Disc: Charged Touch
-	[244899] = 90947, -- Miniature Titan Disc: Critical Chain
-	[244902] = 90950, -- Miniature Titan Disc: Electric Current
-	[244900] = 90948, -- Miniature Titan Disc: Spark Burst
-	[244901] = 90949, -- Miniature Titan Disc: Statically Charged
-	[240200] = 90460, -- Podium Upgrade: Longest Survival Run
-	[240201] = 90461, -- Podium Upgrade: Longest Time in Spotlights
-	[240202] = 90462, -- Podium Upgrade: Most Yards Traveled
-	[240199] = 90459, -- Podium Upgrade: Scrappiest
-	[240203] = 90463, -- Podium Upgrade: Scrappy
-	[240204] = 90464, -- Podium Upgrade: Survival Run
-	[240205] = 90465, -- Podium Upgrade: Time in Spotlights
-	[240206] = 90466, -- Podium Upgrade: Yards Traveled
-
-	------------------
-	-- PATCH 11.2.0 --
-	------------------
-
-	[246737] = 91521, -- K'areshi Voidstone
-
-	------------------
-	-- PATCH 11.2.5 --
-	------------------
 	[249242] = 91961, -- Bronze Celebration Titles: Khaz Algar Enthusiast
 
-	------------------
-	-- PATCH 12.0.1 --
-	------------------
-	[265071] = 94482, -- Gleaming Sunmote
+	-- Professions
+	[235037] = 86630, -- Crumpled Schematic: Wormhole Generator: Undermine
 }
 
 -- ItemID -> DecorID / RecordID
