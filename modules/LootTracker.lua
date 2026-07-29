@@ -515,6 +515,9 @@ function app:UpdateWindow()
 						elseif app.WeaponLoot[lootInfo.index].recentlyWhispered ~= 0 then
 							app:Print(L.WHISPER_COOLDOWN)
 						end
+					elseif not app.Flag.Warning1 then
+						app:Print("Use Alt " .. app.IconLMB .. " to whisper this player.")
+						app.Flag.Warning1 = true
 					end
 				elseif button == "RightButton" and IsShiftKeyDown() then
 					table.remove(app.WeaponLoot, lootInfo.index)
@@ -709,6 +712,9 @@ function app:UpdateWindow()
 						elseif app.ArmourLoot[lootInfo.index].recentlyWhispered ~= 0 then
 							app:Print(L.WHISPER_COOLDOWN)
 						end
+					elseif not app.Flag.Warning1 then
+						app:Print("Use Alt " .. app.IconLMB .. " to whisper this player.")
+						app.Flag.Warning1 = true
 					end
 				elseif button == "RightButton" and IsShiftKeyDown() then
 					table.remove(app.ArmourLoot, lootInfo.index)
