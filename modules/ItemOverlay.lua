@@ -123,6 +123,10 @@ function app:ApplyItemOverlay(overlay, itemLink, itemLocation, containerInfo, ba
 					local _, _, tradeskill = C_TradeSkillUI.GetTradeSkillLineForRecipe(spellID)
 					if app.Texture[tradeskill] then itemEquipLoc = "Recipe" end
 				end
+			elseif app.Quantum[itemID] then
+				itemEquipLoc = "INVTYPE_QUANTUM"
+			elseif app.Container[itemID] then
+				itemEquipLoc = "Container"
 			elseif classID == Enum.ItemClass.Consumable and subclassID == Enum.ItemConsumableSubclass.Other then
 				local itemName = C_Item.GetItemInfo(itemLink)
 
@@ -179,10 +183,6 @@ function app:ApplyItemOverlay(overlay, itemLink, itemLocation, containerInfo, ba
 					end
 				end
 			else
-				if app.Quantum[itemID] then
-					itemEquipLoc = "INVTYPE_QUANTUM"
-				end
-
 				local localeProfessionKnowledge = {
 					"Use: Study to increase your",
 					"Benutzen: Studieren, um Euer",

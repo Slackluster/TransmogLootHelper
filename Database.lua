@@ -3500,3 +3500,14 @@ app.Decor = {
 	[267210] = 18801,
 	[267211] = 18802,
 }
+
+app.Container = {
+	[206568] = true, -- Dented Raider's Helmet
+	[206569] = true, -- Dented Raider's Spaulders
+	[206575] = true, -- Dented Raider's Boots
+	[206570] = true, -- Dented Raider's Chestpiece
+	[206573] = true, -- Dented Raider's Belt
+	[206574] = true, -- Dented Raider's Leggings
+	[206571] = true, -- Dented Raider's Bracers
+	[206572] = true, -- Dented Raider's Gauntlets
+}
