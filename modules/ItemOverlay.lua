@@ -523,13 +523,15 @@ function app:ApplyItemOverlay(overlay, itemLink, itemLocation, containerInfo, ba
 					end
 				end
 
-				if (app.Settings["iconNewSource"] and not sourceMissing) or not appearanceMissing then
+				print(itemLink, sourceMissing, appearanceMissing)
+
+				if not appearanceMissing and (not app.Settings["iconNewSource"] or not sourceMissing) then
 					if app.Settings["iconLearned"] then
 						showOverlay("green")
 					else
 						hideOverlay()
 					end
-				elseif app:IsUnusable(itemLink) then
+				elseif app:IsUnusable(itemLink) and app:IsUnusable(itemLink) ~= ITEM_SPELL_KNOWN then
 					showOverlay("red")
 				elseif app.Settings["iconNewSource"] and sourceMissing and not appearanceMissing then
 					showOverlay("yellow")

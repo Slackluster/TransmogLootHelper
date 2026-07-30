@@ -275,7 +275,7 @@ function app:IsUnusable(itemLink)
 	if tooltip and tooltip["lines"] then
 		for k, v in ipairs(tooltip["lines"]) do
 			if v.usable ~= nil and v.usable == false then
-				return true
+				return v.leftText or true
 			end
 		end
 		return false
