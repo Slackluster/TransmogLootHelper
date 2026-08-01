@@ -523,8 +523,6 @@ function app:ApplyItemOverlay(overlay, itemLink, itemLocation, containerInfo, ba
 					end
 				end
 
-				print(itemLink, sourceMissing, appearanceMissing)
-
 				if not appearanceMissing and (not app.Settings["iconNewSource"] or not sourceMissing) then
 					if app.Settings["iconLearned"] then
 						showOverlay("green")
