@@ -241,7 +241,8 @@ function app:GetLearnedSpell(itemLinkie)
 	app.Tooltip[itemLinkie] = tooltip
 
 	if tooltip and tooltip.lines then
-		for _, line in ipairs(tooltip.lines) do
+		for i = #tooltip.lines, 1, -1 do
+			local line = tooltip.lines[i]
 			if line.type == Enum.TooltipDataLineType.ItemSpellTriggerLearn then
 				return line.spellID
 			end
