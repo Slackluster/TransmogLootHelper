@@ -32,8 +32,7 @@ app.Event:Register("ADDON_LOADED", function(addOnName, containsBindings)
 							end
 
 							local itemLocation = ItemLocation:CreateFromBagAndSlot(bag, bagSlot)
-							local exists = C_Item.DoesItemExist(itemLocation)
-							if exists then
+							if C_Item.DoesItemExist(itemLocation) then
 								local itemLink = C_Item.GetItemLink(itemLocation)
 								local containerInfo = C_Container.GetContainerItemInfo(bag, bagSlot)
 								app:ApplyItemOverlay(itemButton.TLHOverlay, itemLink, itemLocation, containerInfo)
@@ -55,43 +54,31 @@ app.Event:Register("ADDON_LOADED", function(addOnName, containsBindings)
 				-- 					itemButton.TLHOverlay:SetPoint("CENTER", itemButton)
 				-- 					local w, l = itemButton:GetSize()
 				-- 					itemButton.TLHOverlay:SetSize(w, l)
-
-				-- 					itemButton.TLHOverlay.tex = itemButton.TLHOverlay.tex or itemButton.TLHOverlay:CreateTexture(nil, "OVERLAY")
-				-- 					itemButton.TLHOverlay.tex:SetAllPoints()
-				-- 					itemButton.TLHOverlay.tex:SetColorTexture(1, 0, 0, 0.5)
-
-				-- 					itemButton.TLHOverlay:SetFrameStrata("TOOLTIP")
-				-- 					itemButton.TLHOverlay:SetFrameLevel(1000)
 				-- 				end
 
 				-- 				if itemButton and itemButton.TLHOverlay then
 				-- 					local itemLocation = ItemLocation:CreateFromBagAndSlot(itemButton.BagID, itemButton.SlotID)
-				-- 					local exists = C_Item.DoesItemExist(itemLocation)
-				-- 					if exists then
+				-- 					if C_Item.DoesItemExist(itemLocation) then
 				-- 						local itemLink = C_Item.GetItemLink(itemLocation)
 				-- 						local containerInfo = C_Container.GetContainerItemInfo(itemButton.BagID, itemButton.SlotID)
 				-- 						app:ApplyItemOverlay(itemButton.TLHOverlay, itemLink, itemLocation, containerInfo)
-
-				-- 						C_Timer.After(1, function()
-				-- 							print(itemButton:GetSize(), ":", itemButton.TLHOverlay:GetSize())
-				-- 						end)
-				-- 					-- else
-				-- 					-- 	itemButton.TLHOverlay:Hide()
+				-- 					else
+				-- 						itemButton.TLHOverlay:Hide()
 				-- 					end
 				-- 				end
 				-- 			end
 				-- 		end
 
-				-- 		if not app.Flag.ElvUIBankHook then
-				-- 			for i = 1, 6 do
-				-- 				local button = _G["ElvUIBankBag"..i]
-				-- 				if button then
-				-- 					button:HookScript("OnClick", function() app:UpdateElvUIOverlay() end)
-				-- 					print("hooking")
-				-- 				end
-				-- 			end
-				-- 			app.Flag.ElvUIBankHook = true
-				-- 		end
+				-- 		-- if not app.Flag.ElvUIBankHook then
+				-- 		-- 	for i = 1, 6 do
+				-- 		-- 		local button = _G["ElvUIBankBag"..i]
+				-- 		-- 		if button then
+				-- 		-- 			button:HookScript("OnClick", function() app:UpdateElvUIOverlay() end)
+				-- 		-- 			print("hooking")
+				-- 		-- 		end
+				-- 		-- 	end
+				-- 		-- 	app.Flag.ElvUIBankHook = true
+				-- 		-- end
 				-- 	end
 				-- end)
 			end

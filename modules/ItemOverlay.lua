@@ -837,8 +837,7 @@ function app:HookItemOverlay()
 				end
 
 				local itemLocation = ItemLocation:CreateFromBagAndSlot(itemButton:GetBagID(), itemButton:GetID())
-				local exists = C_Item.DoesItemExist(itemLocation)
-				if exists then
+				if C_Item.DoesItemExist(itemLocation) then
 					local itemLink = C_Item.GetItemLink(itemLocation)
 					local containerInfo = C_Container.GetContainerItemInfo(itemButton:GetBagID(), itemButton:GetID())
 					app:ApplyItemOverlay(itemButton.TLHOverlay, itemLink, itemLocation, containerInfo)
@@ -881,12 +880,11 @@ function app:HookItemOverlay()
 						end
 
 						if itemButton and itemButton.TLHOverlay then
-							local itemLocation = ItemLocation:CreateFromBagAndSlot(BankPanel.selectedTabID, i)
-							local exists = false
+							local itemLocation
 							if BankPanel.selectedTabID then
-								exists = C_Item.DoesItemExist(itemLocation)
+								itemLocation = ItemLocation:CreateFromBagAndSlot(BankPanel.selectedTabID, i)
 							end
-							if exists then
+							if itemLocation and C_Item.DoesItemExist(itemLocation) then
 								local itemLink = C_Item.GetItemLink(itemLocation)
 								local containerInfo = C_Container.GetContainerItemInfo(BankPanel.selectedTabID, i)
 								app:ApplyItemOverlay(itemButton.TLHOverlay, itemLink, itemLocation, containerInfo)
