@@ -1414,7 +1414,7 @@ function api:UpdateOverlay()
 				app:WorldQuestOverlay()
 				app:TradeskillOverlay()
 				app:AuctionHouseOverlay()
-				if C_AddOns.IsAddOnLoaded("Baganator") then Baganator.API.RequestItemButtonsRefresh() end
+				if C_AddOns.IsAddOnLoaded("Baganator") and Baganator.API then Baganator.API.RequestItemButtonsRefresh() end
 				if C_AddOns.IsAddOnLoaded("Bagforge") and Bagforge.API then Bagforge.API:RequestItemButtonsRefresh() end
 				if C_AddOns.IsAddOnLoaded("ElvUI") then app:UpdateElvUIOverlay() end
 
