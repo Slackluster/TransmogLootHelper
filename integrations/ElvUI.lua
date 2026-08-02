@@ -83,7 +83,6 @@ app.Event:Register("ADDON_LOADED", function(addOnName, containsBindings)
 				-- end)
 			end
 
-
 			app.Event:Register("BAG_UPDATE_DELAYED", function() app:UpdateElvUIOverlay() end)
 			app.Event:Register("BANKFRAME_OPENED", function() app:UpdateElvUIOverlay() end)
 			app.Event:Register("GUILDBANKBAGSLOTS_CHANGED", function() app:UpdateElvUIOverlay() end)
