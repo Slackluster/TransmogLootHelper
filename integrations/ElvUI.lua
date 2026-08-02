@@ -43,17 +43,19 @@ app.Event:Register("ADDON_LOADED", function(addOnName, containsBindings)
 					end
 				end
 
-				-- BANK AND WARBANK WON'T WORK FUCK YOU
 				-- C_Timer.After(1, function()
 				-- 	if ElvUI_BankContainerFrame and ElvUI_BankContainerFrame:IsShown() then
 				-- 		for tab = 1, 6 do
 				-- 			for i = 1, 98 do
 				-- 				local itemButton = _G["ElvUIBankTabs"..tab.."Item"..i]
 				-- 				if itemButton and not itemButton.TLHOverlay then
-				-- 					itemButton.TLHOverlay = CreateFrame("Frame", nil, itemButton)
-				-- 					itemButton.TLHOverlay:SetPoint("CENTER", itemButton)
-				-- 					local w, l = itemButton:GetSize()
-				-- 					itemButton.TLHOverlay:SetSize(w, l)
+				-- 					itemButton.TLHOverlay = CreateFrame("Frame", "TLHOverlay"..tab..i, _G["ElvUIBankTabs"..tab])
+				-- 					-- itemButton.TLHOverlay = CreateFrame("Frame", "TLHOverlay"..tab..i, itemButton)
+				-- 					itemButton.TLHOverlay:SetAllPoints(itemButton)
+
+				-- 					-- itemButton.TLHOverlay.tex = itemButton.TLHOverlay:CreateTexture(nil, "OVERLAY")
+				-- 					-- itemButton.TLHOverlay.tex:SetAllPoints()
+				-- 					-- itemButton.TLHOverlay.tex:SetColorTexture(1, 0, 0, 0.5)
 				-- 				end
 
 				-- 				if itemButton and itemButton.TLHOverlay then
@@ -62,6 +64,7 @@ app.Event:Register("ADDON_LOADED", function(addOnName, containsBindings)
 				-- 						local itemLink = C_Item.GetItemLink(itemLocation)
 				-- 						local containerInfo = C_Container.GetContainerItemInfo(itemButton.BagID, itemButton.SlotID)
 				-- 						app:ApplyItemOverlay(itemButton.TLHOverlay, itemLink, itemLocation, containerInfo)
+				-- 						itemButton.TLHOverlay:Show()
 				-- 					else
 				-- 						itemButton.TLHOverlay:Hide()
 				-- 					end
