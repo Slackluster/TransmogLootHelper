@@ -29,6 +29,7 @@ Currently supported addons:
 - Baganator
 - Bagforge
 - BetterBags
+- ElvUI (bags, not bank)
 - World Quest Tab
 - World Quests List
 - WoWNotes Bags

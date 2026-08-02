@@ -1418,6 +1418,7 @@ function api:UpdateOverlay()
 				app:AuctionHouseOverlay()
 				if C_AddOns.IsAddOnLoaded("Baganator") then Baganator.API.RequestItemButtonsRefresh() end
 				if C_AddOns.IsAddOnLoaded("Bagforge") and Bagforge.API then Bagforge.API:RequestItemButtonsRefresh() end
+				if C_AddOns.IsAddOnLoaded("ElvUI") then app:UpdateElvUIOverlay() end
 
 				app.RefreshTimer = GetServerTime()
 			end
