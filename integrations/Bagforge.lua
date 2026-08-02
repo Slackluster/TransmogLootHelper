@@ -1,7 +1,7 @@
 local appName, app = ...
 
 app.Event:Register("ADDON_LOADED", function(addOnName, containsBindings)
-	if addOnName == appName then
+	if addOnName == appName and app.Settings["overlay"] then
 		EventUtil.ContinueOnAddOnLoaded("Bagforge", function()
 			local API = Bagforge and Bagforge.API
 			if not API or not API.RegisterItemButtonCallback then

@@ -1,7 +1,7 @@
 local appName, app = ...
 
 app.Event:Register("ADDON_LOADED", function(addOnName, containsBindings)
-	if addOnName == appName then
+	if addOnName == appName and app.Settings["overlay"] then
 		EventUtil.ContinueOnAddOnLoaded("OneWoW_Bags", function()
 			if OneWoW_Bags_API then
 				local function UpdateItemButton(button, bagID, slotID)

@@ -2,7 +2,7 @@ local appName, app = ...
 local api = app.api
 
 app.Event:Register("ADDON_LOADED", function(addOnName, containsBindings)
-	if addOnName == appName then
+	if addOnName == appName and app.Settings["overlay"] then
 		EventUtil.ContinueOnAddOnLoaded("Baganator", function()
 			Baganator.API.RegisterCornerWidget("Transmog Loot Helper", "transmogloothelper",
 				function(icon, itemDetails)
