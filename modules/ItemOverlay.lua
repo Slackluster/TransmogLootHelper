@@ -1302,6 +1302,8 @@ function app:HookItemOverlay()
 									v.TLHOverlay.icon:SetPoint("RIGHT", v)
 
 									C_Timer.After(0.2, function()
+										v.TLHOverlay.icon:ClearAllPoints()
+										v.TLHOverlay.icon:SetPoint("RIGHT", v)
 										v.TLHOverlay.animation:Stop()
 										v.TLHOverlay.animationTexture:Hide()
 									end)
