@@ -1401,7 +1401,9 @@ function app:HookItemOverlay()
 		end)
 
 		app.Event:Register("BAG_UPDATE_DELAYED", function()
-			api:UpdateOverlay()
+			C_Timer.After(1, function()
+				api:UpdateOverlay()
+			end)
 		end)
 	end
 end
