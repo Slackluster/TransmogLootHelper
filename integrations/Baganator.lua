@@ -28,10 +28,14 @@ app.Event:Register("ADDON_LOADED", function(addOnName, containsBindings)
 			local frame1 = _G["Baganator_SingleViewBackpackViewFrame" .. skin]
 			local frame2 = _G["Baganator_CategoryViewBackpackViewFrame" .. skin]
 			if frame1 then
-				frame1:HookScript("OnShow", function() api:UpdateOverlay() end)
+				frame1:HookScript("OnShow", function()
+					Baganator.API.RequestItemButtonsRefresh()
+				end)
 			end
 			if frame2 then
-				frame2:HookScript("OnShow", function() api:UpdateOverlay() end)
+				frame2:HookScript("OnShow", function()
+					Baganator.API.RequestItemButtonsRefresh()
+				end)
 			end
 		end)
 	end
