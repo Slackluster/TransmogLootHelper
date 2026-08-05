@@ -770,6 +770,8 @@ function app:ApplyItemOverlay(overlay, itemLink, itemLocation, containerInfo, ba
 		else
 			overlay.text:SetText("")
 		end
+
+		api:UpdateOverlay()
 	end
 
 	local ignore = {
@@ -803,9 +805,6 @@ function app:ApplyItemOverlay(overlay, itemLink, itemLocation, containerInfo, ba
 			local spell = Spell:CreateFromSpellID(spellID)
 			spell:ContinueOnSpellLoad(function()
 				processOverlay(itemID)
-				C_Timer.After(0.1, function()
-					api:UpdateOverlay()
-				end)
 			end)
 		end)
 	end
@@ -1401,9 +1400,7 @@ function app:HookItemOverlay()
 		end)
 
 		app.Event:Register("BAG_UPDATE_DELAYED", function()
-			C_Timer.After(1, function()
-				api:UpdateOverlay()
-			end)
+			api:UpdateOverlay()
 		end)
 	end
 end
@@ -1412,7 +1409,7 @@ function api:UpdateOverlay()
 	assert(self == api, "Call TransmogLootHelper:UpdateOverlay(), not TransmogLootHelper.UpdateOverlay()")
 
 	if app.Settings["overlay"] then
-		RunNextFrame(function()
+		C_Timer.After(0.1, function()
 			app.RefreshTimer = app.RefreshTimer or 0
 			if GetServerTime() > app.RefreshTimer + 1 then
 				app:BankOverlay()
