@@ -1409,7 +1409,7 @@ function api:UpdateOverlay()
 	assert(self == api, "Call TransmogLootHelper:UpdateOverlay(), not TransmogLootHelper.UpdateOverlay()")
 
 	if app.Settings["overlay"] then
-		C_Timer.After(0.1, function()
+		C_Timer.After(1, function()
 			app.RefreshTimer = app.RefreshTimer or 0
 			if GetServerTime() > app.RefreshTimer + 1 then
 				app:BankOverlay()
