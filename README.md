@@ -30,6 +30,7 @@ Currently supported addons:
 - Bagforge
 - BetterBags
 - ElvUI (bags, not bank)
+- Krowi's Extended Vendor UI
 - World Quest Tab
 - World Quests List
 - WoWNotes Bags
