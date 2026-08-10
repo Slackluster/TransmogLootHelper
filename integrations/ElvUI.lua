@@ -44,7 +44,7 @@ app.Event:Register("ADDON_LOADED", function(addOnName, containsBindings)
 				end
 
 				-- C_Timer.After(1, function()
-				-- 	if ElvUI_BankContainerFrame and ElvUI_BankContainerFrame:IsShown() then
+				-- 	if ElvUI_BankContainerFrame and ElvUI_BankContainerFrame:IsVisible() then
 				-- 		for tab = 1, 6 do
 				-- 			for i = 1, 98 do
 				-- 				local itemButton = _G["ElvUIBankTabs"..tab.."Item"..i]

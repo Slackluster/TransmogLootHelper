@@ -868,7 +868,7 @@ function app:HookItemOverlay()
 				return
 			end
 
-			if BankFrame and BankFrame:IsShown() then
+			if BankFrame and BankFrame:IsVisible() then
 				local function bank()
 					for i = 1, 98 do
 						local itemButton = BankPanel:FindItemButtonByContainerSlotID(i)
@@ -924,7 +924,7 @@ function app:HookItemOverlay()
 				return
 			end
 
-			if GuildBankFrame and GuildBankFrame:IsShown() then
+			if GuildBankFrame and GuildBankFrame:IsVisible() then
 				for i = 1, 7 do
 					for j = 1, 14 do
 						local itemButton = GuildBankFrame.Columns[i].Buttons[j]
@@ -952,7 +952,7 @@ function app:HookItemOverlay()
 		app.Event:Register("NEW_RECIPE_LEARNED", function() C_Timer.After(0.1, guildBankOverlay) end)
 
 		local function blackMarketOverlay()
-			if BlackMarketFrame and BlackMarketFrame:IsShown() then
+			if BlackMarketFrame and BlackMarketFrame:IsVisible() then
 				if not app.BlackMarketFrameHook then
 					BlackMarketFrame.ScrollBox:RegisterCallback("OnAcquiredFrame", function(_, v, data) -- Thank you Plusmouse!
 						C_Timer.After(0.1, function()
@@ -1204,14 +1204,14 @@ function app:HookItemOverlay()
 				end
 			end
 
-			if QuestInfoRewardsFrame and not WorldMapFrame:IsShown() then
+			if QuestInfoRewardsFrame and not WorldMapFrame:IsVisible() then
 				rewardOverlay(QuestInfoRewardsFrame)
 				C_Timer.After(1, function()
 					rewardOverlay(QuestInfoRewardsFrame)
 				end)
 			end
 
-			if MapQuestInfoRewardsFrame and WorldMapFrame:IsShown() then
+			if MapQuestInfoRewardsFrame and WorldMapFrame:IsVisible() then
 				rewardOverlay(MapQuestInfoRewardsFrame)
 			end
 		end
@@ -1250,7 +1250,7 @@ function app:HookItemOverlay()
 		EventRegistry:RegisterCallback("MapCanvas.MapSet", function() app:WorldQuestOverlay() end)
 
 		local function encounterJournalOverlay()
-			if EncounterJournal and EncounterJournal:IsShown() and not app.Flag.EncounterJournalHook then
+			if EncounterJournal and EncounterJournal:IsVisible() and not app.Flag.EncounterJournalHook then
 				EncounterJournalEncounterFrameInfo.LootContainer.ScrollBox:RegisterCallback("OnAcquiredFrame", function(_, v)
 					RunNextFrame(function()
 						if v then
@@ -1278,7 +1278,7 @@ function app:HookItemOverlay()
 		app.Event:Register("UPDATE_INSTANCE_INFO", encounterJournalOverlay)
 
 		function app:TradeskillOverlay()
-			if ProfessionsFrame and ProfessionsFrame:IsShown() then
+			if ProfessionsFrame and ProfessionsFrame:IsVisible() then
 				if not app.TradeskillHook then
 					ProfessionsFrame.CraftingPage.RecipeList.ScrollBox:RegisterCallback("OnAcquiredFrame", function(_, v, data) -- Thank you Plusmouse!
 						if not v.TLHOverlay then
@@ -1318,7 +1318,7 @@ function app:HookItemOverlay()
 		app.Event:Register("TRADE_SKILL_SHOW", function() app:TradeskillOverlay() end)
 
 		function app:AuctionHouseOverlay()
-			if AuctionHouseFrame and AuctionHouseFrame:IsShown() and not app.Flag.AuctionHouseHook then
+			if AuctionHouseFrame and AuctionHouseFrame:IsVisible() and not app.Flag.AuctionHouseHook then
 				AuctionHouseFrame.BrowseResultsFrame.ItemList.ScrollBox:RegisterCallback("OnAcquiredFrame", function(_, v) -- Thank you Plusmouse!
 					C_Timer.After(0.1, function()
 						if not v.TLHOverlay then
@@ -1356,7 +1356,7 @@ function app:HookItemOverlay()
 
 		local function greatVaultOverlay()
 			local function doTheThing()
-				if WeeklyRewardsFrame and WeeklyRewardsFrame:IsShown() then
+				if WeeklyRewardsFrame and WeeklyRewardsFrame:IsVisible() then
 					local children = { WeeklyRewardsFrame:GetChildren() }
 					for k, v in pairs(children) do
 						if type(v) == "table" and v.hasRewards and v.ItemFrame then

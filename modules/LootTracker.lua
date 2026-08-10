@@ -981,7 +981,7 @@ end
 function api:ToggleWindow()
 	assert(self == api, "Call TransmogLootHelper:ToggleWindow(), not TransmogLootHelper.ToggleWindow()")
 
-	if app.Window:IsShown() then
+	if app.Window:IsVisible() then
 		app.Window:Hide()
 	else
 		app:ShowWindow()
