@@ -192,6 +192,19 @@ function app:MakeButton(parent, text)
 	return frame
 end
 
+function app:GetTooltipItem(tooltip, itemData)
+	local _, itemID, itemLink
+	if itemData and itemData.id then
+		itemID = itemData.id
+		_, itemLink = C_Item.GetItemInfo(itemID)
+	elseif tooltip.GetItem then
+		_, itemLink, itemID = tooltip:GetItem()
+	else
+		_, itemLink, itemID = TooltipUtil.GetDisplayedItem(GameTooltip)
+	end
+	return itemID, itemLink
+end
+
 function app:GetTooltipText(itemLinkie, searchString)
 	local tooltip = app.Tooltip[itemLinkie] or C_TooltipInfo.GetHyperlink(itemLinkie)
 	app.Tooltip[itemLinkie] = tooltip

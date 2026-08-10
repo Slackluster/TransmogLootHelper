@@ -87,17 +87,8 @@ end
 function app:RecipeTooltipInfo()
 	local function OnTooltipSetItem(tooltip, itemData)
 		if app.Settings["iconNewRecipe"] then
-			local _, itemLink, itemID
-			if itemData and itemData.id then
-				itemID = itemData.id
-				_, itemLink = C_Item.GetItemInfo(itemID)
-			elseif tooltip.GetItem then
-				_, itemLink, itemID = tooltip:GetItem()
-			else
-				_, itemLink, itemID = TooltipUtil.GetDisplayedItem(GameTooltip)
-			end
-
-			if not itemLink and itemID then return end
+			local _, itemLink = app:GetTooltipItem(tooltip, itemData)
+			if not itemLink then return end
 
 			local recipeID = app:GetLearnedSpell(itemLink)
 			if recipeID and C_TradeSkillUI.GetProfessionInfoByRecipeID(recipeID).professionID ~= 0 and not TransmogLootHelper_Cache.Recipes[recipeID] then
