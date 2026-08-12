@@ -1218,7 +1218,22 @@ function app:HookItemOverlay()
 
 		app.Event:Register("QUEST_DETAIL", function() app:QuestOverlay() end)
 		app.Event:Register("QUEST_COMPLETE", function() app:QuestOverlay("turnin") end)
-		hooksecurefunc("QuestMapFrame_ShowQuestDetails", function() app:QuestOverlay() C_Timer.After(0.1, function() app:QuestOverlay() end) end)
+		app.Event:Register("QUEST_LOG_UPDATE", function()
+			C_Timer.After(1, function()
+				if not app.RefreshTimerQuest then
+					app:QuestOverlay()
+					print("qm1")
+				end
+				app.RefreshTimerQuest = app.RefreshTimerQuest or 0
+				C_Timer.After(5, function()
+					if GetServerTime() > app.RefreshTimerQuest + 5 then
+						app:QuestOverlay()
+						print("qm2")
+						app.RefreshTimerQuest = GetServerTime()
+					end
+				end)
+			end)
+		end)
 
 		function app:WorldQuestOverlay()
 			C_Timer.After(0.1, function()
@@ -1406,14 +1421,12 @@ end
 
 function api:UpdateOverlay()
 	assert(self == api, "Call TransmogLootHelper:UpdateOverlay(), not TransmogLootHelper.UpdateOverlay()")
-
 	if app.Settings["overlay"] then
 		C_Timer.After(1, function()
 			app.RefreshTimer = app.RefreshTimer or 0
 			if GetServerTime() > app.RefreshTimer + 1 then
 				app:BankOverlay()
 				app:MerchantOverlay()
-				app:QuestOverlay()
 				app:WorldQuestOverlay()
 				app:TradeskillOverlay()
 				app:AuctionHouseOverlay()
