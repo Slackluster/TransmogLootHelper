@@ -11,7 +11,6 @@ app.Event:Register("ADDON_LOADED", function(addOnName, containsBindings)
 						return
 					end
 					app:ApplyItemOverlay(icon.overlay, itemDetails.itemLink, nil, { hasLoot = itemDetails.hasLoot }, true)
-					api:UpdateOverlay()
 					return icon:IsShown()
 				end,
 				function(itemButton)
