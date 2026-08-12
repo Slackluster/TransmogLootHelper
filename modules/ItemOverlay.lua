@@ -105,7 +105,7 @@ function app:ApplyItemOverlay(overlay, itemLink, itemLocation, containerInfo, ba
 
 			if containerInfo and containerInfo.hasLoot then
 				itemEquipLoc = "Container"
-			elseif C_Item.IsDecorItem(itemLink) or app.Decor[itemID] then
+			elseif C_Item.IsDecorItem(itemLink) then
 				itemEquipLoc = "Decor"
 			elseif classID == Enum.ItemClass.Miscellaneous and subclassID == Enum.ItemMiscellaneousSubclass.Mount then
 				itemEquipLoc = "Mount"
@@ -644,15 +644,10 @@ function app:ApplyItemOverlay(overlay, itemLink, itemLocation, containerInfo, ba
 					hideOverlay()
 				end
 			elseif app.Settings["iconNewDecor"] and itemEquipLoc == "Decor" then
-				local decorInfo, recordID
-				if app.Decor[itemID] then
-					decorInfo = C_HousingCatalog.GetCatalogEntryInfoByRecordID(Enum.HousingCatalogEntryType.Decor, app.Decor[itemID], true)
-				else
-					decorInfo = C_HousingCatalog.GetCatalogEntryInfoByItem(itemID, true)
-				end
-
+				local decorInfo = C_HousingCatalog.GetCatalogEntryInfoByItem(itemID, true)
+				local recordID
 				if decorInfo then
-					recordID = decorInfo.entryID.recordID or app.Decor[itemID]
+					recordID = decorInfo.entryID.recordID
 				end
 
 				if recordID then
