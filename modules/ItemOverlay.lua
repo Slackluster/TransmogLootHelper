@@ -900,6 +900,7 @@ function app:HookItemOverlay()
 		hooksecurefunc(BankPanel, "RefreshBankPanel", function() app:BankOverlay() end)
 		hooksecurefunc(BankPanel, "OnUpdate", function() app:BankOverlay() end)
 		app.Event:Register("BANKFRAME_OPENED", function() app:BankOverlay() end)
+		app.Event:Register("BAG_UPDATE_DELAYED", function() app:BankOverlay() end)
 		app.Event:Register("TRANSMOG_COLLECTION_UPDATED", function() C_Timer.After(0.1, function() app:BankOverlay() end) end)
 		app.Event:Register("NEW_RECIPE_LEARNED", function() C_Timer.After(0.1, function() app:BankOverlay() end) end)
 
@@ -1403,10 +1404,6 @@ function app:HookItemOverlay()
 
 		app.Event:Register("LEARNED_SPELL_IN_SKILL_LINE", function(spellID, skillLineIndex, isGuildPerkSpell)
 			app:CacheRecipe(spellID, true, true)
-			api:UpdateOverlay()
-		end)
-
-		app.Event:Register("BAG_UPDATE_DELAYED", function()
 			api:UpdateOverlay()
 		end)
 	end
