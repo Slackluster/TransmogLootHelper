@@ -1222,13 +1222,11 @@ function app:HookItemOverlay()
 			C_Timer.After(1, function()
 				if not app.RefreshTimerQuest then
 					app:QuestOverlay()
-					print("qm1")
 				end
 				app.RefreshTimerQuest = app.RefreshTimerQuest or 0
 				C_Timer.After(5, function()
 					if GetServerTime() > app.RefreshTimerQuest + 5 then
 						app:QuestOverlay()
-						print("qm2")
 						app.RefreshTimerQuest = GetServerTime()
 					end
 				end)
