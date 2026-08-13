@@ -89,6 +89,10 @@ function app:ApplyItemOverlay(overlay, itemLink, itemLocation, containerInfo, ba
 	end
 	createOverlay()
 
+	-- local serverTime = GetServerTime()
+	-- if overlay.lastUpdate and serverTime <= overlay.lastUpdate then return end
+	-- overlay.lastUpdate = serverTime
+
 	local function processOverlay(itemID)
 		local hasItemLocation = false
 		if itemLocation or bagAddon then
@@ -245,6 +249,9 @@ function app:ApplyItemOverlay(overlay, itemLink, itemLocation, containerInfo, ba
 		overlay:Show()
 
 		local function showOverlay(color)
+			if overlay.color and overlay.color == color and overlay.texture:GetTexture() == icon then return end
+			overlay.color = color
+
 			local function setCorner(style)
 				overlay.texture:ClearAllPoints()
 				if style == 1 then
@@ -341,11 +348,12 @@ function app:ApplyItemOverlay(overlay, itemLink, itemLocation, containerInfo, ba
 			overlay.border:SetTexture(nil)
 			overlay.animationTexture:Show()
 			if color == "purple" then
-				overlay.animation:Stop()
-				overlay.animationTexture:Hide()
 				if app.Settings["animateIcon"] then
 					overlay.animation:Play()
 					overlay.animationTexture:Show()
+				else
+					overlay.animation:Stop()
+					overlay.animationTexture:Hide()
 				end
 
 				if app.Settings["iconStyle"] == 1 then
@@ -358,11 +366,12 @@ function app:ApplyItemOverlay(overlay, itemLink, itemLocation, containerInfo, ba
 					overlay.texture:SetTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\cosmetic-icon-purple.png")
 				end
 			elseif color == "yellow" then
-				overlay.animation:Stop()
-				overlay.animationTexture:Hide()
 				if app.Settings["animateIcon"] then
 					overlay.animation:Play()
 					overlay.animationTexture:Show()
+				else
+					overlay.animation:Stop()
+					overlay.animationTexture:Hide()
 				end
 
 				if app.Settings["iconStyle"] == 1 then
@@ -766,7 +775,7 @@ function app:ApplyItemOverlay(overlay, itemLink, itemLocation, containerInfo, ba
 			overlay.text:SetText("")
 		end
 
-		api:UpdateOverlay()
+
 	end
 
 	local ignore = {
@@ -1230,6 +1239,8 @@ function app:HookItemOverlay()
 		end)
 
 		function app:WorldQuestOverlay()
+			if C_AddOns.IsAddOnLoaded("WorldQuestTab") then return end
+
 			C_Timer.After(0.1, function()
 				for pin in WorldMapFrame:EnumeratePinsByTemplate("WorldMap_WorldQuestPinTemplate") do
 					if not pin.TLHOverlay then
@@ -1411,20 +1422,17 @@ end
 
 function api:UpdateOverlay()
 	assert(self == api, "Call TransmogLootHelper:UpdateOverlay(), not TransmogLootHelper.UpdateOverlay()")
-	if app.Settings["overlay"] then
-		C_Timer.After(1, function()
-			app.RefreshTimer = app.RefreshTimer or 0
-			if GetServerTime() > app.RefreshTimer + 1 then
-				app:BankOverlay()
-				app:MerchantOverlay()
-				app:TradeskillOverlay()
-				app:AuctionHouseOverlay()
-				if C_AddOns.IsAddOnLoaded("Baganator") and Baganator.API then Baganator.API.RequestItemButtonsRefresh() end
-				if C_AddOns.IsAddOnLoaded("Bagforge") and Bagforge.API then Bagforge.API:RequestItemButtonsRefresh() end
-				if C_AddOns.IsAddOnLoaded("ElvUI") then app:UpdateElvUIOverlay() end
-
-				app.RefreshTimer = GetServerTime()
-			end
-		end)
-	end
+	if not app.Settings["overlay"] or app.Flag.RefreshPending then return end
+	app.Flag.RefreshPending = true
+	C_Timer.After(0.5, function()
+		app:BankOverlay()
+		app:MerchantOverlay()
+		app:WorldQuestOverlay()
+		app:TradeskillOverlay()
+		app:AuctionHouseOverlay()
+		if C_AddOns.IsAddOnLoaded("Baganator") and Baganator.API then Baganator.API.RequestItemButtonsRefresh() end
+		if C_AddOns.IsAddOnLoaded("Bagforge") and Bagforge.API then Bagforge.API:RequestItemButtonsRefresh() end
+		if C_AddOns.IsAddOnLoaded("ElvUI") then app:UpdateElvUIOverlay() end
+		app.Flag.RefreshPending = false
+	end)
 end

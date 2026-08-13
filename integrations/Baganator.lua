@@ -11,6 +11,7 @@ app.Event:Register("ADDON_LOADED", function(addOnName, containsBindings)
 						return
 					end
 					app:ApplyItemOverlay(icon.overlay, itemDetails.itemLink, nil, { hasLoot = itemDetails.hasLoot }, true)
+					Baganator.API.RequestItemButtonsRefresh()
 					return icon:IsShown()
 				end,
 				function(itemButton)

@@ -10,18 +10,23 @@ app.Event:Register("ADDON_LOADED", function(addOnName, containsBindings)
 					rewardsFrame.TLHOverlay = CreateFrame("Frame", nil, rewardsFrame)
 					rewardsFrame.TLHOverlay:SetAllPoints(rewardsFrame)
 				end
-				rewardsFrame.TLHOverlay:Hide() -- Hide our overlay initially, updating doesn't work like for regular itemButtons
+				local set = false
 
 				if data.questInfo.questID then
 					local bestIndex, bestType = QuestUtils_GetBestQualityItemRewardIndex(data.questInfo.questID)
 					if bestIndex and bestType then
 						local itemLink = GetQuestLogItemLink(bestType, bestIndex, data.questInfo.questID)
 						if itemLink then
+							set = true
 							app:ApplyItemOverlay(rewardsFrame.TLHOverlay, itemLink)
 							rewardsFrame.TLHOverlay.icon:SetScale(0.9)
 							rewardsFrame.TLHOverlay.text:SetText("")
 						end
 					end
+				end
+
+				if not set then
+					rewardsFrame.TLHOverlay:Hide()
 				end
 			end, self)
 
@@ -31,18 +36,24 @@ app.Event:Register("ADDON_LOADED", function(addOnName, containsBindings)
 					pin.TLHOverlay:SetAllPoints(pin:GetButton())
 					pin.TLHOverlay:SetScale(0.8)
 				end
-				pin.TLHOverlay:Hide() -- Hide our overlay initially, updating doesn't work like for regular itemButtons
+				local set = false
 
+				local itemLink
 				if pin.questID then
 					local bestIndex, bestType = QuestUtils_GetBestQualityItemRewardIndex(pin.questID)
 					if bestIndex and bestType then
-						local itemLink = GetQuestLogItemLink(bestType, bestIndex, pin.questID)
+						itemLink = GetQuestLogItemLink(bestType, bestIndex, pin.questID)
 						if itemLink then
+							set = true
 							app:ApplyItemOverlay(pin.TLHOverlay, itemLink)
 							pin.TLHOverlay.icon:SetScale(1.2)
 							pin.TLHOverlay.text:SetText("")
 						end
 					end
+				end
+
+				if not set then
+					pin.TLHOverlay:Hide()
 				end
 			end, self)
 		end)
