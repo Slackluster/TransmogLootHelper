@@ -1417,7 +1417,6 @@ function api:UpdateOverlay()
 			if GetServerTime() > app.RefreshTimer + 1 then
 				app:BankOverlay()
 				app:MerchantOverlay()
-				app:WorldQuestOverlay()
 				app:TradeskillOverlay()
 				app:AuctionHouseOverlay()
 				if C_AddOns.IsAddOnLoaded("Baganator") and Baganator.API then Baganator.API.RequestItemButtonsRefresh() end
