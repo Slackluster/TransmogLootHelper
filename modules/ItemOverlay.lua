@@ -833,7 +833,6 @@ function app:HookItemOverlay()
 					return
 				end
 
-
 				for _, itemButton in ipairs(container.Items) do
 					if itemButton and not itemButton.TLHOverlay then
 						itemButton.TLHOverlay = CreateFrame("Frame", nil, itemButton)
@@ -861,18 +860,18 @@ function app:HookItemOverlay()
 
 		function app:BankOverlay()
 			if BankFrame and BankFrame:IsVisible() then
-				if not app.BankThrottle then
-					app.BankThrottle = 0
+				if not app.Flag.BankThrottle then
+					app.Flag.BankThrottle = 0
 					C_Timer.After(0.1, function()
-						if app.BankThrottle >= 1 then
-							app.BankThrottle = nil
+						if app.Flag.BankThrottle >= 1 then
+							app.Flag.BankThrottle = nil
 							app:BankOverlay()
 						else
-							app.BankThrottle = nil
+							app.Flag.BankThrottle = nil
 						end
 					end)
 				else
-					app.BankThrottle = 1
+					app.Flag.BankThrottle = 1
 					return
 				end
 
@@ -916,18 +915,18 @@ function app:HookItemOverlay()
 
 		function app:GuildBankOverlay()
 			if GuildBankFrame and GuildBankFrame:IsVisible() then
-				if not app.GuildBankThrottle then
-					app.GuildBankThrottle = 0
+				if not app.Flag.GuildBankThrottle then
+					app.Flag.GuildBankThrottle = 0
 					C_Timer.After(0.1, function()
-						if app.GuildBankThrottle >= 1 then
-							app.GuildBankThrottle = nil
+						if app.Flag.GuildBankThrottle >= 1 then
+							app.Flag.GuildBankThrottle = nil
 							app:GuildBankOverlay()
 						else
-							app.GuildBankThrottle = nil
+							app.Flag.GuildBankThrottle = nil
 						end
 					end)
 				else
-					app.GuildBankThrottle = 1
+					app.Flag.GuildBankThrottle = 1
 					return
 				end
 
