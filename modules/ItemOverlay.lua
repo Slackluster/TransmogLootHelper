@@ -29,7 +29,7 @@ end)
 -- ITEM OVERLAY --
 ------------------
 
-function app:ApplyItemOverlay(overlay, itemLink, itemLocation, containerInfo, bagAddon, additionalInfo)
+function app:ApplyItemOverlay(overlay, itemLink, itemLocation, containerInfo, bagAddon, additionalInfo, callback)
 	local function createOverlay()
 		if not overlay.text then
 			overlay.text = overlay:CreateFontString(nil, "OVERLAY", "GameFontNormalOutline")
@@ -419,10 +419,12 @@ function app:ApplyItemOverlay(overlay, itemLink, itemLocation, containerInfo, ba
 				overlay.animationTexture:Hide()
 			end
 
+			overlay:Show()
 			overlay.icon:Show()
 		end
 
 		local function hideOverlay()
+			overlay:Hide()
 			overlay.icon:Hide()
 			overlay.animation:Stop()
 			overlay.animationTexture:Hide()
@@ -770,6 +772,8 @@ function app:ApplyItemOverlay(overlay, itemLink, itemLocation, containerInfo, ba
 		else
 			overlay.text:SetText("")
 		end
+
+		if callback then callback() end
 	end
 
 	local ignore = {
@@ -1345,8 +1349,8 @@ function app:HookItemOverlay()
 					C_Timer.After(0.1, function()
 						if not v.TLHOverlay then
 							v.TLHOverlay = CreateFrame("Frame", nil, v)
+							v.TLHOverlay:Hide()
 						end
-						v.TLHOverlay:Hide()
 
 						local rowData = v.rowData
 						if rowData then
@@ -1354,20 +1358,23 @@ function app:HookItemOverlay()
 							if itemID then
 								local _, itemLink = C_Item.GetItemInfo(itemID)
 								if itemLink then
-									if itemID == 82800 and rowData.itemKey.battlePetSpeciesID then -- Can't extract pet info from this preview cage
-										app:ApplyItemOverlay(v.TLHOverlay, itemLink, nil, nil, nil, rowData.itemKey.battlePetSpeciesID)
-									else
-										app:ApplyItemOverlay(v.TLHOverlay, itemLink)
+									local function setPos()
+										v.TLHOverlay.text:SetText("")
+										v.TLHOverlay.icon:ClearAllPoints()
+										v.TLHOverlay.icon:SetPoint("LEFT", v, 134, 0)
+										v.TLHOverlay.animation:Stop()
+										v.TLHOverlay.animationTexture:Hide()
 									end
-									v.TLHOverlay.text:SetText("")
 
-									v.TLHOverlay.icon:ClearAllPoints()
-									v.TLHOverlay.icon:SetPoint("LEFT", v, 134, 0)
-									v.TLHOverlay.animation:Stop()
-									v.TLHOverlay.animationTexture:Hide()
+									local speciesID
+									if itemID == 82800 and rowData.itemKey.battlePetSpeciesID then -- Can't extract pet info from this preview cage
+										speciesID = rowData.itemKey.battlePetSpeciesID
+									end
+									return app:ApplyItemOverlay(v.TLHOverlay, itemLink, nil, nil, nil, speciesID, setPos)
 								end
 							end
 						end
+						v.TLHOverlay:Hide()
 					end)
 				end)
 				app.Flag.AuctionHouseHook = true
