@@ -89,10 +89,6 @@ function app:ApplyItemOverlay(overlay, itemLink, itemLocation, containerInfo, ba
 	end
 	createOverlay()
 
-	-- local serverTime = GetServerTime()
-	-- if overlay.lastUpdate and serverTime <= overlay.lastUpdate then return end
-	-- overlay.lastUpdate = serverTime
-
 	local function processOverlay(itemID)
 		local hasItemLocation = false
 		if itemLocation or bagAddon then
@@ -774,8 +770,6 @@ function app:ApplyItemOverlay(overlay, itemLink, itemLocation, containerInfo, ba
 		else
 			overlay.text:SetText("")
 		end
-
-
 	end
 
 	local ignore = {
