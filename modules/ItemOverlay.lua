@@ -816,35 +816,38 @@ end
 function app:HookItemOverlay()
 	if app.Settings["overlay"] then
 		local function bagsOverlay(container) -- Thank you Plusmouse!
-			if not app.BagThrottle then app.BagThrottle = {} end
-			if not app.BagThrottle[container] then
-				app.BagThrottle[container] = 0
-				C_Timer.After(0.1, function()
-					if app.BagThrottle[container] >= 1 then
-						app.BagThrottle[container] = nil
-						bagsOverlay(container)
-					else
-						app.BagThrottle[container] = nil
-					end
-				end)
-			else
-				app.BagThrottle[container] = 1
-				return
-			end
-
-			for _, itemButton in ipairs(container.Items) do
-				if itemButton and not itemButton.TLHOverlay then
-					itemButton.TLHOverlay = CreateFrame("Frame", nil, itemButton)
-					itemButton.TLHOverlay:SetAllPoints(itemButton)
+			if (ContainerFrame1 and ContainerFrame1:IsVisible()) or (ContainerFrame2 and ContainerFrame2:IsVisible()) or (ContainerFrame3 and ContainerFrame3:IsVisible()) or (ContainerFrame4 and ContainerFrame4:IsVisible()) or (ContainerFrame5 and ContainerFrame5:IsVisible()) or (ContainerFrame6 and ContainerFrame6:IsVisible()) then
+				if not app.BagThrottle then app.BagThrottle = {} end
+				if not app.BagThrottle[container] then
+					app.BagThrottle[container] = 0
+					C_Timer.After(0.1, function()
+						if app.BagThrottle[container] >= 1 then
+							app.BagThrottle[container] = nil
+							bagsOverlay(container)
+						else
+							app.BagThrottle[container] = nil
+						end
+					end)
+				else
+					app.BagThrottle[container] = 1
+					return
 				end
 
-				local itemLocation = ItemLocation:CreateFromBagAndSlot(itemButton:GetBagID(), itemButton:GetID())
-				if C_Item.DoesItemExist(itemLocation) then
-					local itemLink = C_Item.GetItemLink(itemLocation)
-					local containerInfo = C_Container.GetContainerItemInfo(itemButton:GetBagID(), itemButton:GetID())
-					app:ApplyItemOverlay(itemButton.TLHOverlay, itemLink, itemLocation, containerInfo)
-				else
-					itemButton.TLHOverlay:Hide()
+
+				for _, itemButton in ipairs(container.Items) do
+					if itemButton and not itemButton.TLHOverlay then
+						itemButton.TLHOverlay = CreateFrame("Frame", nil, itemButton)
+						itemButton.TLHOverlay:SetAllPoints(itemButton)
+					end
+
+					local itemLocation = ItemLocation:CreateFromBagAndSlot(itemButton:GetBagID(), itemButton:GetID())
+					if C_Item.DoesItemExist(itemLocation) then
+						local itemLink = C_Item.GetItemLink(itemLocation)
+						local containerInfo = C_Container.GetContainerItemInfo(itemButton:GetBagID(), itemButton:GetID())
+						app:ApplyItemOverlay(itemButton.TLHOverlay, itemLink, itemLocation, containerInfo)
+					else
+						itemButton.TLHOverlay:Hide()
+					end
 				end
 			end
 		end
@@ -857,22 +860,22 @@ function app:HookItemOverlay()
 		hooksecurefunc(ContainerFrameCombinedBags, "UpdateItems", bagsOverlay)
 
 		function app:BankOverlay()
-			if not app.BankThrottle then
-				app.BankThrottle = 0
-				C_Timer.After(0.1, function()
-					if app.BankThrottle >= 1 then
-						app.BankThrottle = nil
-						app:BankOverlay()
-					else
-						app.BankThrottle = nil
-					end
-				end)
-			else
-				app.BankThrottle = 1
-				return
-			end
-
 			if BankFrame and BankFrame:IsVisible() then
+				if not app.BankThrottle then
+					app.BankThrottle = 0
+					C_Timer.After(0.1, function()
+						if app.BankThrottle >= 1 then
+							app.BankThrottle = nil
+							app:BankOverlay()
+						else
+							app.BankThrottle = nil
+						end
+					end)
+				else
+					app.BankThrottle = 1
+					return
+				end
+
 				local function bank()
 					for i = 1, 98 do
 						local itemButton = BankPanel:FindItemButtonByContainerSlotID(i)
@@ -910,26 +913,24 @@ function app:HookItemOverlay()
 		hooksecurefunc(BankPanel, "OnUpdate", function() app:BankOverlay() end)
 		app.Event:Register("BANKFRAME_OPENED", function() app:BankOverlay() end)
 		app.Event:Register("BAG_UPDATE_DELAYED", function() app:BankOverlay() end)
-		app.Event:Register("TRANSMOG_COLLECTION_UPDATED", function() C_Timer.After(0.1, function() app:BankOverlay() end) end)
-		app.Event:Register("NEW_RECIPE_LEARNED", function() C_Timer.After(0.1, function() app:BankOverlay() end) end)
 
-		local function guildBankOverlay()
-			if not app.GuildBankThrottle then
-				app.GuildBankThrottle = 0
-				C_Timer.After(0.1, function()
-					if app.GuildBankThrottle >= 1 then
-						app.GuildBankThrottle = nil
-						guildBankOverlay()
-					else
-						app.GuildBankThrottle = nil
-					end
-				end)
-			else
-				app.GuildBankThrottle = 1
-				return
-			end
-
+		function app:GuildBankOverlay()
 			if GuildBankFrame and GuildBankFrame:IsVisible() then
+				if not app.GuildBankThrottle then
+					app.GuildBankThrottle = 0
+					C_Timer.After(0.1, function()
+						if app.GuildBankThrottle >= 1 then
+							app.GuildBankThrottle = nil
+							app:GuildBankOverlay()
+						else
+							app.GuildBankThrottle = nil
+						end
+					end)
+				else
+					app.GuildBankThrottle = 1
+					return
+				end
+
 				for i = 1, 7 do
 					for j = 1, 14 do
 						local itemButton = GuildBankFrame.Columns[i].Buttons[j]
@@ -948,13 +949,23 @@ function app:HookItemOverlay()
 						end
 					end
 				end
+
+				if not app.Flag.GuildBankHook then
+					for i = 1, 8 do
+						local tab = _G["GuildBankTab" .. i]
+						if tab and tab.Button then
+							tab.Button:HookScript("OnClick", function()
+								app:GuildBankOverlay()
+							end)
+							print("hooked", i)
+						end
+					end
+					app.Flag.GuildBankHook = true
+				end
 			end
 		end
 
-		app.Event:Register("GUILDBANKBAGSLOTS_CHANGED", guildBankOverlay)
-		app.Event:Register("TRANSMOG_COLLECTION_UPDATED", guildBankOverlay)
-		app.Event:Register("TRANSMOG_COLLECTION_UPDATED", function() C_Timer.After(0.1, guildBankOverlay) end)
-		app.Event:Register("NEW_RECIPE_LEARNED", function() C_Timer.After(0.1, guildBankOverlay) end)
+		app.Event:Register("GUILDBANKBAGSLOTS_CHANGED", function() app:GuildBankOverlay() end)
 
 		local function blackMarketOverlay()
 			if BlackMarketFrame and BlackMarketFrame:IsVisible() then
@@ -1121,8 +1132,6 @@ function app:HookItemOverlay()
 		end
 
 		app.Event:Register("MERCHANT_SHOW", function() C_Timer.After(0.1, function() app:MerchantOverlay() end) end)
-		app.Event:Register("TRANSMOG_COLLECTION_UPDATED", function() C_Timer.After(0.1, function() app:MerchantOverlay() end) end)
-		app.Event:Register("NEW_RECIPE_LEARNED", function() C_Timer.After(0.1, function() app:MerchantOverlay() end) end)
 
 		function app:QuestOverlay(mode)
 			local function rewardOverlay(rewardsFrame)
@@ -1426,8 +1435,8 @@ function api:UpdateOverlay()
 	app.Flag.RefreshPending = true
 	C_Timer.After(0.5, function()
 		app:BankOverlay()
+		app:GuildBankOverlay()
 		app:MerchantOverlay()
-		app:WorldQuestOverlay()
 		app:TradeskillOverlay()
 		app:AuctionHouseOverlay()
 		if C_AddOns.IsAddOnLoaded("Baganator") and Baganator.API then Baganator.API.RequestItemButtonsRefresh() end
