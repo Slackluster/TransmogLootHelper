@@ -951,10 +951,7 @@ function app:HookItemOverlay()
 					for i = 1, 8 do
 						local tab = _G["GuildBankTab" .. i]
 						if tab and tab.Button then
-							tab.Button:HookScript("OnClick", function()
-								app:GuildBankOverlay()
-							end)
-							print("hooked", i)
+							tab.Button:HookScript("OnClick", function() app:GuildBankOverlay() end)
 						end
 					end
 					app.Flag.GuildBankHook = true
