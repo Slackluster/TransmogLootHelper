@@ -1331,8 +1331,6 @@ function app:HookItemOverlay()
 							end
 						end
 					end)
-					-- Fix "attempted to iterate a table that cannot be accessed while tainted" error when PlayerCastingBarFrame:IsAttachedToPlayerFrame() is enabled (thank you AcidWeb and Foxlit!)
-					function ProfessionsFrame.OrdersPage.OrderView:SetOverrideCastBarActive() end
 					app.TradeskillHook = true
 				end
 			end
