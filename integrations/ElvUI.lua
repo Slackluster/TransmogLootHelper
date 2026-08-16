@@ -4,6 +4,13 @@ app.Event:Register("ADDON_LOADED", function(addOnName, containsBindings)
 	if addOnName == appName and app.Settings["overlay"] then
 		EventUtil.ContinueOnAddOnLoaded("ElvUI", function()
 			function app:UpdateElvUIOverlay()
+				if C_AddOns.IsAddOnLoaded("ArkInventory")
+				or C_AddOns.IsAddOnLoaded("Baganator")
+				or C_AddOns.IsAddOnLoaded("Bagforge")
+				or C_AddOns.IsAddOnLoaded("BetterBags")
+				or C_AddOns.IsAddOnLoaded("OneWoW_Bags")
+				then return end
+
 				local container = "ElvUI"
 				if not app.BagThrottle then app.BagThrottle = {} end
 				if not app.BagThrottle[container] then
