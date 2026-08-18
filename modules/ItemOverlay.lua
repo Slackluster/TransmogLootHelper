@@ -749,7 +749,7 @@ function app:ApplyItemOverlay(overlay, itemLink, itemLocation, containerInfo, ba
 			if itemID == 3 then -- Fake preview item
 				overlay.text:SetText("|cff00CCFF" .. L.BINDTEXT_BOA .. "|r")
 			elseif not (bagAddon and C_AddOns.IsAddOnLoaded("Baganator")) then
-				if itemLocation and C_Item.IsBoundToAccountUntilEquip(itemLocation) then
+				if itemLocation and C_Item.DoesItemExist(itemLocation) and C_Item.IsBoundToAccountUntilEquip(itemLocation) then
 					if C_Item.IsBound(itemLocation) then
 						overlay.text:SetText("")
 					else
@@ -757,7 +757,7 @@ function app:ApplyItemOverlay(overlay, itemLink, itemLocation, containerInfo, ba
 					end
 				elseif not itemLocation and app:GetBonding(itemLink) == "WuE" then -- Vendor WuE
 					overlay.text:SetText("|cff00CCFF" .. L.BINDTEXT_WUE .. "|r")
-				elseif itemLocation and C_Item.IsBound(itemLocation) then
+				elseif itemLocation and C_Item.DoesItemExist(itemLocation) and C_Item.IsBound(itemLocation) then
 					if app:GetBonding(itemLink) == "BoA" then
 						overlay.text:SetText("|cff00CCFF" .. L.BINDTEXT_BOA .. "|r")
 					else
