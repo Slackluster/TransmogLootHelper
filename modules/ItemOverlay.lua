@@ -814,7 +814,7 @@ end
 function app:HookItemOverlay()
 	if app.Settings["overlay"] then
 		local function bagsOverlay(container) -- Thank you Plusmouse!
-			if (ContainerFrame1 and ContainerFrame1:IsVisible()) or (ContainerFrame2 and ContainerFrame2:IsVisible()) or (ContainerFrame3 and ContainerFrame3:IsVisible()) or (ContainerFrame4 and ContainerFrame4:IsVisible()) or (ContainerFrame5 and ContainerFrame5:IsVisible()) or (ContainerFrame6 and ContainerFrame6:IsVisible()) then
+			if (ContainerFrame1 and ContainerFrame1:IsVisible()) or (ContainerFrame2 and ContainerFrame2:IsVisible()) or (ContainerFrame3 and ContainerFrame3:IsVisible()) or (ContainerFrame4 and ContainerFrame4:IsVisible()) or (ContainerFrame5 and ContainerFrame5:IsVisible()) or (ContainerFrame6 and ContainerFrame6:IsVisible()) or (ContainerFrameCombinedBags and ContainerFrameCombinedBags:IsVisible()) then
 				if not app.BagThrottle then app.BagThrottle = {} end
 				if not app.BagThrottle[container] then
 					app.BagThrottle[container] = 0
