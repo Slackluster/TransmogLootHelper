@@ -743,6 +743,10 @@ function app:ApplyItemOverlay(overlay, itemLink, itemLocation, containerInfo, ba
 			end
 		elseif not C_Item.IsEquippableItem(itemLink) then
 			hideOverlay()
+		else
+			overlay.icon:Hide()
+			overlay.animation:Stop()
+			overlay.animationTexture:Hide()
 		end
 
 		if app.Settings["textBind"] then
