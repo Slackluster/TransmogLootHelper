@@ -741,7 +741,7 @@ function app:ApplyItemOverlay(overlay, itemLink, itemLocation, containerInfo, ba
 			else
 				hideOverlay()
 			end
-		else
+		elseif not C_Item.IsEquippableItem(itemLink) then
 			hideOverlay()
 		end
 
