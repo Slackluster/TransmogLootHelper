@@ -753,7 +753,7 @@ function app:ApplyItemOverlay(overlay, itemLink, itemLocation, containerInfo, ba
 			if itemID == 3 then -- Fake preview item
 				overlay.text:SetText("|cff00CCFF" .. L.BINDTEXT_BOA .. "|r")
 			elseif not (bagAddon and C_AddOns.IsAddOnLoaded("Baganator")) then
-				if itemLocation and C_Item.IsEquippableItem(itemLink) and C_Item.IsBoundToAccountUntilEquip(itemLocation) then
+				if itemLocation and C_Item.DoesItemExist(itemLocation) and C_Item.IsEquippableItem(itemLink) and C_Item.IsBoundToAccountUntilEquip(itemLocation) then
 					if C_Item.IsBound(itemLocation) then
 						overlay.text:SetText("")
 					else
