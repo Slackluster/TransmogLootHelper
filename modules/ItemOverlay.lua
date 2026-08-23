@@ -741,40 +741,31 @@ function app:ApplyItemOverlay(overlay, itemLink, itemLocation, containerInfo, ba
 			else
 				hideOverlay()
 			end
-		elseif not C_Item.IsEquippableItem(itemLink) then
-			hideOverlay()
 		else
 			overlay.icon:Hide()
 			overlay.animation:Stop()
 			overlay.animationTexture:Hide()
 		end
 
+		overlay.text:SetText("")
 		if app.Settings["textBind"] then
 			if itemID == 3 then -- Fake preview item
 				overlay.text:SetText("|cff00CCFF" .. L.BINDTEXT_BOA .. "|r")
 			elseif not (bagAddon and C_AddOns.IsAddOnLoaded("Baganator")) then
-				if itemLocation and C_Item.DoesItemExist(itemLocation) and C_Item.IsEquippableItem(itemLink) and C_Item.IsBoundToAccountUntilEquip(itemLocation) then
-					if C_Item.IsBound(itemLocation) then
-						overlay.text:SetText("")
-					else
+				if itemLocation and C_Item.IsItemBindToAccountUntilEquip(itemLink) then
+					if not C_Item.IsBound(itemLocation) then
 						overlay.text:SetText("|cff00CCFF" .. L.BINDTEXT_WUE .. "|r")
 					end
-				elseif not itemLocation and app:GetBonding(itemLink) == "WuE" then -- Vendor WuE
+				elseif not itemLocation and C_Item.IsItemBindToAccountUntilEquip(itemLink) then
 					overlay.text:SetText("|cff00CCFF" .. L.BINDTEXT_WUE .. "|r")
 				elseif itemLocation and C_Item.DoesItemExist(itemLocation) and C_Item.IsBound(itemLocation) then
-					if app:GetBonding(itemLink) == "BoA" then
+					if C_Item.IsItemBindToAccount(itemLink) then
 						overlay.text:SetText("|cff00CCFF" .. L.BINDTEXT_BOA .. "|r")
-					else
-						overlay.text:SetText("")
 					end
-				elseif bindType == 2 or bindType == 3 then
+				elseif bindType == Enum.ItemBind.OnEquip or bindType == Enum.ItemBind.OnUse then
 					overlay.text:SetText(L.BINDTEXT_BOE)
-				else
-					overlay.text:SetText("")
 				end
 			end
-		else
-			overlay.text:SetText("")
 		end
 
 		if callback then callback() end
