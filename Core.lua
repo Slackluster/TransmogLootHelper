@@ -222,8 +222,7 @@ end
 function app:GetTransmogText(itemLinkie, searchString)
 	local cvar = C_CVar.GetCVarInfo("missingTransmogSourceInItemTooltips")
 	if cvar ~= "1" then C_CVar.SetCVar("missingTransmogSourceInItemTooltips", 1) end
-	local tooltip = app.Tooltip[itemLinkie] or C_TooltipInfo.GetHyperlink(itemLinkie)
-	app.Tooltip[itemLinkie] = tooltip
+	local tooltip = C_TooltipInfo.GetHyperlink(itemLinkie)
 	if cvar ~= "1" then C_CVar.SetCVar("missingTransmogSourceInItemTooltips", cvar) end
 
 	if tooltip and tooltip["lines"] then
