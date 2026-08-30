@@ -797,12 +797,16 @@ function app:ApplyItemOverlay(overlay, itemLink, itemLocation, containerInfo, ba
 		local item = Item:CreateFromItemID(itemID)
 
 		item:ContinueOnItemLoad(function() RunNextFrame(function()
-			local spellID = select(2, C_Item.GetItemSpell(itemLink)) or 61304
-			local spell = Spell:CreateFromSpellID(spellID)
-			spell:ContinueOnSpellLoad(function() RunNextFrame(function()
-				if app.OverlayCache[itemLink] then app.OverlayCache[itemLink] = nil end
+			local spellID = select(2, C_Item.GetItemSpell(itemLink))
+			if spellID then
+				local spell = Spell:CreateFromSpellID(spellID)
+				spell:ContinueOnSpellLoad(function() RunNextFrame(function()
+					app.OverlayCache[itemLink] = nil
+					processOverlay(itemID)
+				end) end)
+			else
 				processOverlay(itemID)
-			end) end)
+			end
 		end) end)
 	end
 end
