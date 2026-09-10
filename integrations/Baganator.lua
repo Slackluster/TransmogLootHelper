@@ -23,19 +23,21 @@ app.Event:Register("ADDON_LOADED", function(addOnName, containsBindings)
 				{ corner = "top_right", priority = 1 }
 			)
 
-			local skin = Baganator.API.Skins.GetCurrentSkin()
-			local frame1 = _G["Baganator_SingleViewBackpackViewFrame" .. skin]
-			local frame2 = _G["Baganator_CategoryViewBackpackViewFrame" .. skin]
-			if frame1 then
-				frame1:HookScript("OnShow", function()
-					Baganator.API.RequestItemButtonsRefresh()
-				end)
-			end
-			if frame2 then
-				frame2:HookScript("OnShow", function()
-					Baganator.API.RequestItemButtonsRefresh()
-				end)
-			end
+			C_Timer.After(5, function()
+				local skin = Baganator.API.Skins.GetCurrentSkin()
+				local frame1 = _G["Baganator_SingleViewBackpackViewFrame" .. skin]
+				local frame2 = _G["Baganator_CategoryViewBackpackViewFrame" .. skin]
+				if frame1 then
+					frame1:HookScript("OnShow", function()
+						Baganator.API.RequestItemButtonsRefresh()
+					end)
+				end
+				if frame2 then
+					frame2:HookScript("OnShow", function()
+						Baganator.API.RequestItemButtonsRefresh()
+					end)
+				end
+			end)
 		end)
 	end
 end)
