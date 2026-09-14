@@ -512,7 +512,9 @@ function app:CreateSettings()
 
 	checkbox("iconNewToy", L.SETTINGS_ICON_NEW_TOY, L.SETTINGS_ICON_NEW_TOY_DESC, true, function() app:SettingsChanged() end)
 
-	checkbox("iconNewRecipe", L.SETTINGS_ICON_NEW_RECIPE, L.SETTINGS_ICON_NEW_RECIPE_DESC, true, function() app:SettingsChanged() end)
+	local parentSetting, parentCheckbox = checkbox("iconNewRecipe", L.SETTINGS_ICON_NEW_RECIPE, L.SETTINGS_ICON_NEW_RECIPE_DESC, true, function() app:SettingsChanged() end)
+
+	checkbox("recipesPerChar", L.SETTINGS_RECIPE_PERCHAR, L.SETTINGS_RECIPE_PERCHAR_DESC, false, function() app:SettingsChanged() end, parentSetting, parentCheckbox)
 
 	local parentSetting, parentCheckbox = checkbox("iconNewDecor", L.SETTINGS_ICON_NEW_DECOR, L.SETTINGS_ICON_NEW_DECOR_DESC, true, function() app:SettingsChanged() end)
 
