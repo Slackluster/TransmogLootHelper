@@ -627,7 +627,11 @@ function app:ApplyItemOverlay(overlay, itemLink, itemLocation, containerInfo, ba
 					if TransmogLootHelper_Cache.Recipes[recipeID] then
 						if TransmogLootHelper_Cache.Recipes[recipeID].learned then
 							if app.Settings["recipesPerChar"] and not C_SpellBook.IsSpellKnown(recipeID) then
-								showOverlay("yellow")
+								if C_TradeSkillUI.IsRecipeProfessionLearned(recipeID) then
+									showOverlay("yellow")
+								else
+									showOverlay("red")
+								end
 							elseif app.Settings["iconLearned"] then
 								showOverlay("green")
 							else
