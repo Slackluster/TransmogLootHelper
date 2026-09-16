@@ -20,6 +20,7 @@ app.Event:Register("ADDON_LOADED", function(addOnName, containsBindings)
 		app.Settings["windowPosition"] = app.Settings["windowPosition"] or { ["left"] = 1295, ["bottom"] = 836, ["width"] = 200, ["height"] = 200, }
 		app.Settings["windowLocked"] = app.Settings["windowLocked"] or false
 		app.Settings["windowSort"] = app.Settings["windowSort"] or 1
+		app.Settings.seenNew = app.Settings.seenNew or {}
 
 		app:CreateMinimapButton()
 		app:CreateSettings()
@@ -274,11 +275,27 @@ function app:CreateSettings()
 
 	local category, layout
 
+	local function addNewTag(initializer, variable, setting1, setting2)
+		if NewSettings and not app.Settings.seenNew[variable] then
+			local _, _, _, interfaceVersion = GetBuildInfo()
+			local patch = string.format("%d.%d.%d", math.floor(interfaceVersion / 10000), math.floor(interfaceVersion / 100) % 100, interfaceVersion % 100)
+
+			initializer.data.newTagID = appName .. "_" .. variable
+
+			NewSettings[patch] = NewSettings[patch] or {}
+			table.insert(NewSettings[patch], appName .. "_" .. variable)
+
+			local function callback() app.Settings.seenNew[variable] = true end
+			if setting1 then setting1:SetValueChangedCallback(callback) end
+			if setting2 then setting2:SetValueChangedCallback(callback) end
+		end
+	end
+
 	local function button(name, buttonName, description, func)
 		layout:AddInitializer(CreateSettingsButtonInitializer(name, buttonName, func, description, true))
 	end
 
-	local function checkbox(variable, name, description, default, callback, parentSetting, parentCheckbox)
+	local function checkbox(variable, name, description, default, callback, parentSetting, parentCheckbox, isNew)
 		local setting = Settings.RegisterAddOnSetting(category, appName .. "_" .. variable, variable, app.Settings, type(default), name, default)
 		local checkbox = Settings.CreateCheckbox(category, setting, description)
 
@@ -291,12 +308,14 @@ function app:CreateSettings()
 			setting:SetValueChangedCallback(callback)
 		end
 
+		if isNew then addNewTag(checkbox, variable, setting) end
+
 		return setting, checkbox
 	end
 
-	local function checkboxDropdown(cbVariable, cbName, description, cbDefaultValue, ddVariable, ddDefaultValue, options, callback)
-		local cbSetting = Settings.RegisterAddOnSetting(category, appName.."_"..cbVariable, cbVariable, app.Settings, type(cbDefaultValue), cbName, cbDefaultValue)
-		local ddSetting = Settings.RegisterAddOnSetting(category, appName.."_"..ddVariable, ddVariable, app.Settings, type(ddDefaultValue), "", ddDefaultValue)
+	local function checkboxDropdown(cbVariable, cbName, description, cbDefaultValue, ddVariable, ddDefaultValue, options, callback, isNew)
+		local cbSetting = Settings.RegisterAddOnSetting(category, appName .. "_" .. cbVariable, cbVariable, app.Settings, type(cbDefaultValue), cbName, cbDefaultValue)
+		local ddSetting = Settings.RegisterAddOnSetting(category, appName .. "_" .. ddVariable, ddVariable, app.Settings, type(ddDefaultValue), "", ddDefaultValue)
 		local function GetOptions()
 			local container = Settings.CreateControlTextContainer()
 			for _, option in ipairs(options) do
@@ -312,10 +331,12 @@ function app:CreateSettings()
 			cbSetting:SetValueChangedCallback(callback)
 			ddSetting:SetValueChangedCallback(callback)
 		end
+
+		if isNew then addNewTag(initializer, cbVariable, cbSetting, ddSetting) end
 	end
 
-	local function dropdown(variable, name, description, default, options, callback)
-		local setting = Settings.RegisterAddOnSetting(category, appName.."_"..variable, variable, app.Settings, type(default), name, default)
+	local function dropdown(variable, name, description, default, options, callback, isNew)
+		local setting = Settings.RegisterAddOnSetting(category, appName .. "_" .. variable, variable, app.Settings, type(default), name, default)
 		local function GetOptions()
 			local container = Settings.CreateControlTextContainer()
 			for _, option in ipairs(options) do
@@ -323,10 +344,14 @@ function app:CreateSettings()
 			end
 			return container:GetData()
 		end
-		Settings.CreateDropdown(category, setting, GetOptions, description)
+
+		local initializer = Settings.CreateDropdown(category, setting, GetOptions, description)
+
 		if callback then
 			setting:SetValueChangedCallback(callback)
 		end
+
+		if isNew then addNewTag(initializer, variable, setting) end
 	end
 
 	local function expandableHeader(name)
@@ -436,7 +461,7 @@ function app:CreateSettings()
 	button(L.SETTINGS_SUPPORT_TEXT, L.SETTINGS_SUPPORT_BUTTON, L.SETTINGS_SUPPORT_DESC, function() StaticPopup_Show("TRANSMOGLOOTHELPER_URL", nil, nil, "https://buymeacoffee.com/Slackluster") end)
 	button(L.SETTINGS_HELP_TEXT, L.SETTINGS_HELP_BUTTON, L.SETTINGS_HELP_DESC, function() StaticPopup_Show("TRANSMOGLOOTHELPER_URL", nil, nil, "https://discord.gg/hGvF59hstx") end)
 
-	local _, isExpanded = expandableHeader(L.SETTINGS_KEYSLASH_TITLE)
+	local _, isExpanded = expandableHeader(L.SETTINGS_KEYSLASH_TITLE, true)
 
 		keybind("TLH_TOGGLEWINDOW", isExpanded)
 
@@ -514,7 +539,7 @@ function app:CreateSettings()
 
 	local parentSetting, parentCheckbox = checkbox("iconNewRecipe", L.SETTINGS_ICON_NEW_RECIPE, L.SETTINGS_ICON_NEW_RECIPE_DESC, true, function() app:SettingsChanged() end)
 
-	checkbox("recipesPerChar", L.SETTINGS_RECIPE_PERCHAR, L.SETTINGS_RECIPE_PERCHAR_DESC, false, function() app:SettingsChanged() end, parentSetting, parentCheckbox)
+	checkbox("recipesPerChar", L.SETTINGS_RECIPE_PERCHAR, L.SETTINGS_RECIPE_PERCHAR_DESC, false, function() app:SettingsChanged() end, parentSetting, parentCheckbox, true)
 
 	local parentSetting, parentCheckbox = checkbox("iconNewDecor", L.SETTINGS_ICON_NEW_DECOR, L.SETTINGS_ICON_NEW_DECOR_DESC, true, function() app:SettingsChanged() end)
 
