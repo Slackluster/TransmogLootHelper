@@ -39,6 +39,7 @@ end)
 app.Event:Register("ADDON_LOADED", function(addOnName, containsBindings)
 	if addOnName == appName then
 		app.Flag = {}
+		app.Version = C_AddOns.GetAddOnMetadata(appName, "Version")
 		app.Tooltip = {}
 
 		C_ChatInfo.RegisterAddonMessagePrefix("TransmogLootHelp")
@@ -61,12 +62,12 @@ function app:SendAddonMessage(message, versionCheck)
 end
 
 app.Event:Register("GROUP_ROSTER_UPDATE", function(category, partyGUID)
-	app:SendAddonMessage("version:" .. C_AddOns.GetAddOnMetadata(appName, "Version"), true)
+	app:SendAddonMessage("version:" .. app.Version, true)
 end)
 
 app.Event:Register("PLAYER_ENTERING_WORLD", function(isInitialLogin, isReloadingUi)
 	if isInitialLogin or isReloadingUi then
-		app:SendAddonMessage("version:" .. C_AddOns.GetAddOnMetadata(appName, "Version"), true)
+		app:SendAddonMessage("version:" .. app.Version, true)
 	end
 end)
 
@@ -82,7 +83,7 @@ app.Event:Register("CHAT_MSG_ADDON", function(prefix, text, channel, sender, tar
 				local otherGameVersion = tonumber(expansion .. major .. minor)
 				local otherAddonVersion = tonumber(iteration)
 
-				local localVersion = C_AddOns.GetAddOnMetadata(appName, "Version")
+				local localVersion = app.Version
 				local expansion2, major2, minor2, iteration2 = localVersion:match("v(%d+)%.(%d+)%.(%d+)%-(%d+)")
 				if expansion2 then
 					expansion2 = string.format("%02d", expansion2)
