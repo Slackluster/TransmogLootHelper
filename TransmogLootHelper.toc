@@ -1,4 +1,4 @@
-## Interface: 120100
+## Interface: 16001, 120100
 ## Title: |cff3FC7EBTransmog Loot Helper|r
 ## Author: Slackluster
 ## Notes: Adds icons to your items to show their collection status
@@ -30,14 +30,15 @@ libs\ChatThrottleLib\ChatThrottleLib.xml
 libs\LibDBIcon-1.0\embeds.xml
 libs\LibDBIcon-1.0\LibDBIcon-1.0\LibDBIcon-1.0.lua
 Core.lua
+_[Game].lua
 Database.lua
 Settings.lua
 FrameTemplates.xml
-modules\Decor.lua
+modules\Decor.lua [AllowLoadGameType standard]
 modules\Recipes.lua
 modules\ItemOverlay.lua
-modules\LootTracker.lua
-modules\Tweaks.lua
+modules\LootTracker.lua [AllowLoadGameType standard]
+modules\Tweaks.lua [AllowLoadGameType standard]
 integrations\ArkInventory.lua
 integrations\Baganator.lua
 integrations\Bagforge.lua

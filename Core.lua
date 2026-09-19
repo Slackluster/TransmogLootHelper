@@ -114,21 +114,25 @@ function app:CreateSlashCommands()
 	function SlashCmdList.TransmogLootHelper(msg, editBox)
 		local command, rest = msg:match("^(%S*)%s*(.-)$")
 
-		if command == "default" then
+		if command == "default" and app.Retail then
 			app.Settings["message"] = L.DEFAULT_MESSAGE
 			app:Print(L.WHISPER_POPUP_SUCCESS, "\"" .. app.Settings["message"] .. "\"")
-		elseif command == "msg" then
+		elseif command == "msg" and app.Retail then
 			app.RenamePopup:Show()
 		elseif command == "settings" then
 			app:OpenSettings()
-		elseif command == "resetpos" then
+		elseif command == "resetpos" and app.Retail then
 			app.Settings["windowPosition"] = { ["left"] = GetScreenWidth()/2-100, ["bottom"] = GetScreenHeight()/2-100, ["width"] = 200, ["height"] = 200, }
 			app.Settings["pcWindowPosition"] = app.Settings["windowPosition"]
 			app:ShowWindow()
 		elseif command == "delete" then
 			api:DeleteCharacter(rest)
 		elseif command == "" then
-			api:ToggleWindow()
+			if app.Retail then
+				api:ToggleWindow()
+			elseif app.Forever then
+				app:OpenSettings()
+			end
 		else
 			app:Print(L.INVALID_COMMAND)
 		end

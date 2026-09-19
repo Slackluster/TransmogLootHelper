@@ -40,6 +40,8 @@ function app:OpenSettings()
 end
 
 function app:CreateMinimapButton()
+	if app.Forever then return end
+
 	local miniButton = LibStub("LibDataBroker-1.1"):NewDataObject(app.NameLong, {
 		type = "data source",
 		text = app.NameLong,
@@ -477,22 +479,36 @@ function app:CreateSettings()
 
 	local _, isExpanded = expandableHeader(L.SETTINGS_KEYSLASH_TITLE, true)
 
+		if app.Retail then
+
 		keybind("TLH_TOGGLEWINDOW", isExpanded)
 
-		local leftText = { "|cffFFFFFF" ..
-			"/tlh",
-			"/tlh resetpos",
-			"/tlh settings",
-			"/tlh delete " .. app:Colour(L.SETTINGS_SLASH_CHARREALM),
-			"/tlh msg ",
-			"/tlh default " }
-		local middleText = {
-			L.SETTINGS_SLASH_TOGGLE,
-			L.SETTINGS_SLASH_RESETPOS,
-			L.WINDOW_BUTTON_SETTINGS,
-			L.SETTINGS_SLASH_DELETE_DESC,
-			L.SETTINGS_WHISPER_CUSTOMIZE_DESC,
-			L.SETTINGS_SLASH_WHISPER_DEFAULT }
+		end
+
+		local leftText, middleText
+		if app.Retail then
+			leftText = { "|cffFFFFFF" ..
+				"/tlh",
+				"/tlh resetpos",
+				"/tlh settings",
+				"/tlh delete " .. app:Colour(L.SETTINGS_SLASH_CHARREALM),
+				"/tlh msg ",
+				"/tlh default " }
+			middleText = {
+				L.SETTINGS_SLASH_TOGGLE,
+				L.SETTINGS_SLASH_RESETPOS,
+				L.WINDOW_BUTTON_SETTINGS,
+				L.SETTINGS_SLASH_DELETE_DESC,
+				L.SETTINGS_WHISPER_CUSTOMIZE_DESC,
+				L.SETTINGS_SLASH_WHISPER_DEFAULT }
+		elseif app.Forever then
+			leftText = { "|cffFFFFFF" ..
+				"/tlh",
+				"/tlh delete " .. app:Colour(L.SETTINGS_SLASH_CHARREALM) }
+			middleText = {
+				L.WINDOW_BUTTON_SETTINGS,
+				L.SETTINGS_SLASH_DELETE_DESC }
+		end
 		leftText = table.concat(leftText, "\n\n")
 		middleText = table.concat(middleText, "\n\n")
 		text(leftText, middleText, nil, nil, isExpanded)
@@ -537,27 +553,39 @@ function app:CreateSettings()
 
 	checkbox("iconNewSource", L.SETTINGS_ICON_NEW_SOURCE, L.SETTINGS_ICON_NEW_SOURCE_DESC, false, function() app:SettingsChanged() end, parentSetting, parentCheckbox)
 
+	if app.Retail then
+
 	checkbox("iconNewCatalyst", L.SETTINGS_ICON_NEW_CATALYST, L.SETTINGS_ICON_NEW_CATALYST_DESC, true, function() app:SettingsChanged() end, parentSetting, parentCheckbox)
 
 	checkbox("iconNewUpgrade", L.SETTINGS_ICON_NEW_UPGRADE, L.SETTINGS_ICON_NEW_UPGRADE_DESC, true, function() app:SettingsChanged() end, parentSetting, parentCheckbox)
 
 	checkbox("iconNewIllusion", L.SETTINGS_ICON_NEW_ILLUSION, L.SETTINGS_ICON_NEW_ILLUSION_DESC, true, function() app:SettingsChanged() end)
 
+	end
+
 	checkbox("iconNewMount", L.SETTINGS_ICON_NEW_MOUNT, L.SETTINGS_ICON_NEW_MOUNT_DESC, true, function() app:SettingsChanged() end)
 
 	local parentSetting, parentCheckbox = checkbox("iconNewPet", L.SETTINGS_ICON_NEW_PET, L.SETTINGS_ICON_NEW_PET_DESC, true, function() app:SettingsChanged() end)
+
+	if app.Retail then
 
 	checkbox("iconNewPetMax", L.SETTINGS_ICON_NEW_PET_MAX, L.SETTINGS_ICON_NEW_PET_MAX_DESC, false, function() app:SettingsChanged() end, parentSetting, parentCheckbox)
 
 	checkbox("iconNewToy", L.SETTINGS_ICON_NEW_TOY, L.SETTINGS_ICON_NEW_TOY_DESC, true, function() app:SettingsChanged() end)
 
+	end
+
 	local parentSetting, parentCheckbox = checkbox("iconNewRecipe", L.SETTINGS_ICON_NEW_RECIPE, L.SETTINGS_ICON_NEW_RECIPE_DESC, true, function() app:SettingsChanged() end)
 
 	checkbox("recipesPerChar", L.SETTINGS_RECIPE_PERCHAR, L.SETTINGS_RECIPE_PERCHAR_DESC, false, function() app:SettingsChanged() end, parentSetting, parentCheckbox, true)
 
+	if app.Retail then
+
 	local parentSetting, parentCheckbox = checkbox("iconNewDecor", L.SETTINGS_ICON_NEW_DECOR, L.SETTINGS_ICON_NEW_DECOR_DESC, true, function() app:SettingsChanged() end)
 
 	checkbox("iconNewDecorXP", L.SETTINGS_ICON_NEW_DECORXP, L.SETTINGS_ICON_NEW_DECORXP_DESC, false, function() app:SettingsChanged() end, parentSetting, parentCheckbox)
+
+	end
 
 	header(L.SETTINGS_HEADER_OTHER_INFO)
 
@@ -566,6 +594,8 @@ function app:CreateSettings()
 	checkbox("iconUsable", L.SETTINGS_ICON_USABLE, L.SETTINGS_ICON_USABLE_DESC, true)
 
 	checkbox("iconContainer", L.SETTINGS_ICON_OPENABLE, L.SETTINGS_ICON_OPENABLE_DESC, true)
+
+	if app.Retail then
 
 	category, layout = Settings.RegisterVerticalLayoutSubcategory(app.SettingsCategory, L.SETTINGS_HEADER_LOOT_TRACKER)
 	Settings.RegisterAddOnCategory(category)
@@ -603,4 +633,6 @@ function app:CreateSettings()
 	checkbox("vendorAll", L.SETTINGS_VENDOR_ALL, L.SETTINGS_VENDOR_ALL_DESC, true)
 
 	checkbox("hideGroupRolls", L.SETTINGS_HIDE_LOOT_ROLL_WINDOW, L.SETTINGS_HIDE_LOOT_ROLL_WINDOW_DESC, false)
+
+	end
 end
