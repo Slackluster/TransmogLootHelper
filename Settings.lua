@@ -12,14 +12,11 @@ local L = app.locales
 
 app.Event:Register("ADDON_LOADED", function(addOnName, containsBindings)
 	if addOnName == appName then
-		TransmogLootHelper_Settings = TransmogLootHelper_Settings or {}
-		app.Settings = TransmogLootHelper_Settings
-
-		app.Settings["hide"] = app.Settings["hide"] or false
-		app.Settings["message"] = app.Settings["message"] or L.DEFAULT_MESSAGE
-		app.Settings["windowPosition"] = app.Settings["windowPosition"] or { ["left"] = 1295, ["bottom"] = 836, ["width"] = 200, ["height"] = 200, }
-		app.Settings["windowLocked"] = app.Settings["windowLocked"] or false
-		app.Settings["windowSort"] = app.Settings["windowSort"] or 1
+		app.Settings.hide = app.Settings.hide or false
+		app.Settings.message = app.Settings.message or L.DEFAULT_MESSAGE
+		app.Settings.windowPosition = app.Settings.windowPosition or { left = 1295, bottom = 836, width = 200, height = 200, }
+		app.Settings.windowLocked = app.Settings.windowLocked or false
+		app.Settings.windowSort = app.Settings.windowSort or 1
 		app.Settings.seen = app.Settings.seen or {}
 
 		app:CreateMinimapButton()
@@ -33,7 +30,7 @@ end)
 
 function app:OpenSettings()
 	if InCombatLockdown() then
-		app:Print(ERR_AFFECTING_COMBAT..".")
+		app:Print(ERR_AFFECTING_COMBAT .. ".")
 	else
 		Settings.OpenToCategory(app.SettingsCategory:GetID())
 	end
@@ -59,11 +56,11 @@ function app:CreateMinimapButton()
 	app.MinimapIcon:Register(appName, miniButton, app.Settings)
 
 	function app:ToggleMinimapIcon()
-		if app.Settings["minimapIcon"] then
-			app.Settings["hide"] = false
+		if app.Settings.minimapIcon then
+			app.Settings.hide = false
 			app.MinimapIcon:Show(appName)
 		else
-			app.Settings["hide"] = true
+			app.Settings.hide = true
 			app.MinimapIcon:Hide(appName)
 		end
 	end
@@ -173,7 +170,7 @@ function app:CreateSettings()
 		editBox:SetPoint("CENTER", frame, "CENTER")
 		editBox:SetPoint("TOP", frame, "TOP", 0, -30)
 		editBox:SetAutoFocus(false)
-		editBox:SetText(TransmogLootHelper_Settings["message"])
+		editBox:SetText(app.Settings.message)
 		editBox:SetCursorPosition(0)
 
 		local border = CreateFrame("Frame", nil, editBox, "BackdropTemplate")
@@ -201,7 +198,7 @@ function app:CreateSettings()
 		editBox:SetScript("OnEditFocusLost", function(self)
 			local newValue = self:GetText()
 
-			if newValue == TransmogLootHelper_Settings["message"] then
+			if newValue == app.Settings.message then
 			else
 				local item = false
 				if string.find(newValue, "%%item") ~= nil then
@@ -223,7 +220,7 @@ function app:CreateSettings()
 
 					string2:SetText(app.IconReady .. " " .. L.WHISPER_POPUP_SUCCESS)
 
-					TransmogLootHelper_Settings["message"] = newValue
+					app.Settings.message = newValue
 				end
 			end
 		end)
@@ -231,7 +228,7 @@ function app:CreateSettings()
 			self:ClearFocus()
 		end)
 		editBox:SetScript("OnEscapePressed", function(self)
-			self:SetText(TransmogLootHelper_Settings["message"])
+			self:SetText(app.Settings.message)
 		end)
 
 		app.RenamePopup = frame
@@ -414,7 +411,7 @@ function app:CreateSettings()
 		for i = 1, 4 do
 			local item = data[i]
 			if item then
-				local btn = self["ItemButton"..i]
+				local btn = self["ItemButton" .. i]
 				btn.Icon:SetTexture(item.icon)
 				btn.Name:SetText(item.name)
 
@@ -422,7 +419,7 @@ function app:CreateSettings()
 					btn.TLHOverlay = CreateFrame("Frame", nil, btn)
 					btn.TLHOverlay:SetAllPoints(btn.Icon)
 				end
-				app:ApplyItemOverlay(btn.TLHOverlay, "item:"..i)
+				app:ApplyItemOverlay(btn.TLHOverlay, "item:" .. i)
 				app.PreviewItem[i].frame = btn.TLHOverlay
 
 				btn:SetScript("OnEnter", function()
@@ -462,7 +459,7 @@ function app:CreateSettings()
 
 	function app:UpdatePreviewItems()
 		for i = 1, 4 do
-			app:ApplyItemOverlay(app.PreviewItem[i].frame, "item:"..i)
+			app:ApplyItemOverlay(app.PreviewItem[i].frame, "item:" .. i)
 		end
 		app:SettingsChanged()
 	end

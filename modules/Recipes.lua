@@ -23,16 +23,16 @@ end)
 function app:CacheRecipe(spellID, isSpell, isLearned)
 	app.CharacterName = app.CharacterName or UnitName("player") .. "-" .. GetNormalizedRealmName()
 
-	if not TransmogLootHelper_Cache.Recipes[spellID] or type(TransmogLootHelper_Cache.Recipes[spellID]) == "boolean" then
-		TransmogLootHelper_Cache.Recipes[spellID] = { learned = false, knownBy = {} }
+	if not app.Cache.Recipes[spellID] or type(app.Cache.Recipes[spellID]) == "boolean" then
+		app.Cache.Recipes[spellID] = { learned = false, knownBy = {} }
 	end
 
 	local categoryID = C_TradeSkillUI.GetRecipeInfo(spellID).categoryID
 	if isLearned or (isSpell and categoryID == 0 and C_SpellBook.IsSpellKnown(spellID)) or (categoryID ~= 0 and C_TradeSkillUI.GetRecipeInfo(spellID).learned) then
-		TransmogLootHelper_Cache.Recipes[spellID].learned = true
+		app.Cache.Recipes[spellID].learned = true
 
 		local exists = false
-		for i, character in ipairs(TransmogLootHelper_Cache.Recipes[spellID].knownBy) do
+		for i, character in ipairs(app.Cache.Recipes[spellID].knownBy) do
 			if character == app.CharacterName then
 				exists = true
 				break
@@ -40,7 +40,7 @@ function app:CacheRecipe(spellID, isSpell, isLearned)
 		end
 
 		if not exists then
-			table.insert(TransmogLootHelper_Cache.Recipes[spellID].knownBy, app.CharacterName)
+			table.insert(app.Cache.Recipes[spellID].knownBy, app.CharacterName)
 		end
 	end
 end
@@ -63,7 +63,7 @@ function api:DeleteCharacter(characterName)
 
 	local removed = 0
 	local unlearned = 0
-	for recipeID, recipeInfo in pairs(TransmogLootHelper_Cache.Recipes) do
+	for recipeID, recipeInfo in pairs(app.Cache.Recipes) do
 		local oldRemoved = removed
 		for i = #recipeInfo.knownBy, 1, -1 do
 			if recipeInfo.knownBy[i]:lower() == characterName:lower() then
@@ -86,12 +86,12 @@ end
 
 function app:RecipeTooltipInfo()
 	local function OnTooltipSetItem(tooltip, itemData)
-		if app.Settings["iconNewRecipe"] then
+		if app.Settings.iconNewRecipe then
 			local _, itemLink = app:GetTooltipItem(tooltip, itemData)
 			if not itemLink then return end
 
 			local recipeID = app:GetLearnedSpell(itemLink)
-			if recipeID and C_TradeSkillUI.GetProfessionInfoByRecipeID(recipeID).professionID ~= 0 and not TransmogLootHelper_Cache.Recipes[recipeID] then
+			if recipeID and C_TradeSkillUI.GetProfessionInfoByRecipeID(recipeID).professionID ~= 0 and not app.Cache.Recipes[recipeID] then
 				tooltip:AddLine(" ")
 				tooltip:AddLine(CreateSimpleTextureMarkup(app.Icon) .. " " .. L.RECIPE_UNCACHED)
 			end

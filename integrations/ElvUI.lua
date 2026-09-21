@@ -1,7 +1,7 @@
 local appName, app = ...
 
 app.Event:Register("ADDON_LOADED", function(addOnName, containsBindings)
-	if addOnName == appName and app.Settings["overlay"] then
+	if addOnName == appName and app.Settings.overlay then
 		EventUtil.ContinueOnAddOnLoaded("ElvUI", function()
 			function app:UpdateElvUIOverlay()
 				if C_AddOns.IsAddOnLoaded("ArkInventory")
@@ -12,7 +12,7 @@ app.Event:Register("ADDON_LOADED", function(addOnName, containsBindings)
 				then return end
 
 				local container = "ElvUI"
-				if not app.BagThrottle then app.BagThrottle = {} end
+				app.BagThrottle = app.BagThrottle or {}
 				if not app.BagThrottle[container] then
 					app.BagThrottle[container] = 0
 					C_Timer.After(0.1, function()
@@ -32,7 +32,7 @@ app.Event:Register("ADDON_LOADED", function(addOnName, containsBindings)
 					local slots = C_Container.GetContainerNumSlots(bag)
 					if slots > 0 then
 						for bagSlot = 1, slots do
-							local itemButton = _G["ElvUI_ContainerFrameBag"..bag.."Slot"..bagSlot]
+							local itemButton = _G["ElvUI_ContainerFrameBag" .. bag .. "Slot" .. bagSlot]
 							if itemButton and not itemButton.TLHOverlay then
 								itemButton.TLHOverlay = CreateFrame("Frame", nil, itemButton)
 								itemButton.TLHOverlay:SetAllPoints()
@@ -54,10 +54,10 @@ app.Event:Register("ADDON_LOADED", function(addOnName, containsBindings)
 				-- 	if ElvUI_BankContainerFrame and ElvUI_BankContainerFrame:IsVisible() then
 				-- 		for tab = 1, 6 do
 				-- 			for i = 1, 98 do
-				-- 				local itemButton = _G["ElvUIBankTabs"..tab.."Item"..i]
+				-- 				local itemButton = _G["ElvUIBankTabs" .. tab .. "Item" .. i]
 				-- 				if itemButton and not itemButton.TLHOverlay then
-				-- 					itemButton.TLHOverlay = CreateFrame("Frame", "TLHOverlay"..tab..i, _G["ElvUIBankTabs"..tab])
-				-- 					-- itemButton.TLHOverlay = CreateFrame("Frame", "TLHOverlay"..tab..i, itemButton)
+				-- 					itemButton.TLHOverlay = CreateFrame("Frame", "TLHOverlay" .. tab .. i, _G["ElvUIBankTabs" .. tab])
+				-- 					-- itemButton.TLHOverlay = CreateFrame("Frame", "TLHOverlay" .. tab .. i, itemButton)
 				-- 					itemButton.TLHOverlay:SetAllPoints(itemButton)
 
 				-- 					-- itemButton.TLHOverlay.tex = itemButton.TLHOverlay:CreateTexture(nil, "OVERLAY")
@@ -81,7 +81,7 @@ app.Event:Register("ADDON_LOADED", function(addOnName, containsBindings)
 
 				-- 		-- if not app.Flag.ElvUIBankHook then
 				-- 		-- 	for i = 1, 6 do
-				-- 		-- 		local button = _G["ElvUIBankBag"..i]
+				-- 		-- 		local button = _G["ElvUIBankBag" .. i]
 				-- 		-- 		if button then
 				-- 		-- 			button:HookScript("OnClick", function() app:UpdateElvUIOverlay() end)
 				-- 		-- 			print("hooking")

@@ -77,7 +77,7 @@ function app:ShowWindowTooltip(text, hyperlink, secondary, position)
 		GameTooltip:SetPoint("BOTTOM", app.Window, "TOP")
 	elseif position and position == "bottom" then
 		GameTooltip:SetPoint("TOP", app.Window, "BOTTOM")
-	elseif (app.Tab and app.Tab.IsShown[0]) or GetScreenWidth()/2-app.Settings["windowPosition"].width/2-app.Window:GetLeft() >= 0 then
+	elseif (app.Tab and app.Tab.IsShown[0]) or GetScreenWidth()/2-app.Settings.windowPosition.width/2-app.Window:GetLeft() >= 0 then
 		GameTooltip:SetPoint("LEFT", app.Window, "RIGHT")
 	else
 		GameTooltip:SetPoint("RIGHT", app.Window, "LEFT")
@@ -86,7 +86,7 @@ function app:ShowWindowTooltip(text, hyperlink, secondary, position)
 
 	if secondary then
 		ShoppingTooltip1:SetOwner(UIParent, "ANCHOR_NONE")
-		if GetScreenWidth()/2-app.Settings["windowPosition"].width/2-app.Window:GetLeft() >= 0 then
+		if GetScreenWidth()/2-app.Settings.windowPosition.width/2-app.Window:GetLeft() >= 0 then
 			ShoppingTooltip1:SetPoint("TOPLEFT", GameTooltip, "BOTTOMLEFT")
 		else
 			ShoppingTooltip1:SetPoint("TOPRIGHT", GameTooltip, "BOTTOMRIGHT")
@@ -98,7 +98,7 @@ function app:ShowWindowTooltip(text, hyperlink, secondary, position)
 end
 
 function app:MoveWindow()
-	if app.Settings["windowLocked"] then
+	if app.Settings.windowLocked then
 		app.UnlockButton:LockHighlight()
 	else
 		app.Window:StartMoving()
@@ -116,7 +116,7 @@ function app:SaveWindow()
 	local left = app.Window:GetLeft()
 	local bottom = app.Window:GetBottom()
 	local width, height = app.Window:GetSize()
-	app.Settings["windowPosition"] = { ["left"] = left, ["bottom"] = bottom, ["width"] = width, ["height"] = height, }
+	app.Settings.windowPosition = { left = left, bottom = bottom, width = width, height = height, }
 end
 
 function app:CreateWindow()
@@ -183,7 +183,7 @@ function app:CreateWindow()
 	app.LockButton:SetPushedTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\buttons.blp")
 	app.LockButton:GetPushedTexture():SetTexCoord(183/256, 219/256, 81/128, 119/128)
 	app.LockButton:SetScript("OnClick", function()
-		app.Settings["windowLocked"] = true
+		app.Settings.windowLocked = true
 		app.Window.Corner:Hide()
 		app.LockButton:Hide()
 		app.UnlockButton:Show()
@@ -207,7 +207,7 @@ function app:CreateWindow()
 	app.UnlockButton:SetPushedTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\buttons.blp")
 	app.UnlockButton:GetPushedTexture():SetTexCoord(148/256, 184/256, 81/128, 119/128)
 	app.UnlockButton:SetScript("OnClick", function()
-		app.Settings["windowLocked"] = false
+		app.Settings.windowLocked = false
 		app.Window.Corner:Show()
 		app.LockButton:Show()
 		app.UnlockButton:Hide()
@@ -222,7 +222,7 @@ function app:CreateWindow()
 		ShoppingTooltip1:Hide()
 	end)
 
-	if app.Settings["windowLocked"] then
+	if app.Settings.windowLocked then
 		app.Window.Corner:Hide()
 		app.LockButton:Hide()
 		app.UnlockButton:Show()
@@ -265,7 +265,7 @@ function app:CreateWindow()
 		if IsShiftKeyDown() then
 			app:Clear()
 		else
-			StaticPopupDialogs["TLH_CLEAR_LOOT"] = {
+			StaticPopupDialogs["TRANSMOGLOOTHELPER_CLEAR_LOOT"] = {
 				text = app.NameLong .. "\n" .. L.CLEAR_CONFIRM,
 				button1 = YES,
 				button2 = NO,
@@ -277,7 +277,7 @@ function app:CreateWindow()
 				hideOnEscape = true,
 				showAlert = true,
 			}
-			StaticPopup_Show("TLH_CLEAR_LOOT")
+			StaticPopup_Show("TRANSMOGLOOTHELPER_CLEAR_LOOT")
 		end
 	end)
 	app.ClearButton:SetScript("OnEnter", function()
@@ -299,19 +299,19 @@ function app:CreateWindow()
 	app.SortButton:SetPushedTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\buttons.blp")
 	app.SortButton:GetPushedTexture():SetTexCoord(76/256, 112/256, 81/128, 119/128)
 	app.SortButton:SetScript("OnClick", function()
-		if app.Settings["windowSort"] == 1 then
-			app.Settings["windowSort"] = 2
+		if app.Settings.windowSort == 1 then
+			app.Settings.windowSort = 2
 			app:ShowWindowTooltip(L.WINDOW_BUTTON_SORT2, nil, nil, "top")
-		elseif app.Settings["windowSort"] == 2 then
-			app.Settings["windowSort"] = 1
+		elseif app.Settings.windowSort == 2 then
+			app.Settings.windowSort = 1
 			app:ShowWindowTooltip(L.WINDOW_BUTTON_SORT1, nil, nil, "top")
 		end
 		app:UpdateWindow()
 	end)
 	app.SortButton:SetScript("OnEnter", function()
-		if app.Settings["windowSort"] == 1 then
+		if app.Settings.windowSort == 1 then
 			app:ShowWindowTooltip(L.WINDOW_BUTTON_SORT1, nil, nil, "top")
-		elseif app.Settings["windowSort"] == 2 then
+		elseif app.Settings.windowSort == 2 then
 			app:ShowWindowTooltip(L.WINDOW_BUTTON_SORT2, nil, nil, "top")
 		end
 	end)
@@ -442,9 +442,9 @@ function app:UpdateWindow()
 			weaponsSorted[#weaponsSorted+1] = { item = v.item, icon = v.icon, player = v.player, playerShort = v.playerShort, color = v.color, index = k}
 		end
 
-		if app.Settings["windowSort"] == 1 then
+		if app.Settings.windowSort == 1 then
 			table.sort(weaponsSorted, customSort)
-		elseif app.Settings["windowSort"] == 2 then
+		elseif app.Settings.windowSort == 2 then
 			table.sort(weaponsSorted, function(a, b) return a.index > b.index end)
 		end
 
@@ -495,10 +495,10 @@ function app:UpdateWindow()
 					if IsShiftKeyDown() then
 						ChatFrameUtil.InsertLink(lootInfo.item)
 					elseif IsAltKeyDown() and InCombatLockdown() then
-						app:Print(ERR_AFFECTING_COMBAT..".")
+						app:Print(ERR_AFFECTING_COMBAT .. ".")
 					elseif IsAltKeyDown() then
 						if app.WeaponLoot[lootInfo.index].recentlyWhispered == 0 then
-							local msg = string.gsub(app.Settings["message"], "%%item", lootInfo.item)
+							local msg = string.gsub(app.Settings.message, "%%item", lootInfo.item)
 							C_ChatInfo.SendChatMessage(msg, "WHISPER", nil, lootInfo.player)
 							local message = "player:" .. lootInfo.player
 							app:SendAddonMessage(message)
@@ -639,9 +639,9 @@ function app:UpdateWindow()
 			armourSorted[#armourSorted+1] = { item = v.item, icon = v.icon, player = v.player, playerShort = v.playerShort, color = v.color, index = k}
 		end
 
-		if app.Settings["windowSort"] == 1 then
+		if app.Settings.windowSort == 1 then
 			table.sort(armourSorted, customSort)
-		elseif app.Settings["windowSort"] == 2 then
+		elseif app.Settings.windowSort == 2 then
 			table.sort(armourSorted, function(a, b) return a.index > b.index end)
 		end
 
@@ -692,10 +692,10 @@ function app:UpdateWindow()
 					if IsShiftKeyDown() then
 						ChatEditChatFrameUtil.InsertLink_InsertLink(lootInfo.item)
 					elseif IsAltKeyDown() and InCombatLockdown() then
-						app:Print(ERR_AFFECTING_COMBAT..".")
+						app:Print(ERR_AFFECTING_COMBAT .. ".")
 					elseif IsAltKeyDown() then
 						if app.ArmourLoot[lootInfo.index].recentlyWhispered == 0 then
-							local msg = string.gsub(app.Settings["message"], "%%item", lootInfo.item)
+							local msg = string.gsub(app.Settings.message, "%%item", lootInfo.item)
 							C_ChatInfo.SendChatMessage(msg, "WHISPER", nil, lootInfo.player)
 							local message = "player:" .. lootInfo.player
 							app:SendAddonMessage(message)
@@ -838,9 +838,9 @@ function app:UpdateWindow()
 			filteredSorted[#filteredSorted+1] = { item = v.item, icon = v.icon, player = v.player, playerShort = v.playerShort, color = v.color, itemType = v.itemType, index = k}
 		end
 
-		if app.Settings["windowSort"] == 1 then
+		if app.Settings.windowSort == 1 then
 			table.sort(filteredSorted, customSort)
-		elseif app.Settings["windowSort"] == 2 then
+		elseif app.Settings.windowSort == 2 then
 			table.sort(filteredSorted, function(a, b) return a.index > b.index end)
 		end
 
@@ -971,8 +971,8 @@ end
 
 function app:ShowWindow()
 	app.Window:ClearAllPoints()
-	app.Window:SetSize(app.Settings["windowPosition"].width, app.Settings["windowPosition"].height)
-	app.Window:SetPoint("BOTTOMLEFT", UIParent, "BOTTOMLEFT", app.Settings["windowPosition"].left, app.Settings["windowPosition"].bottom)
+	app.Window:SetSize(app.Settings.windowPosition.width, app.Settings.windowPosition.height)
+	app.Window:SetPoint("BOTTOMLEFT", UIParent, "BOTTOMLEFT", app.Settings.windowPosition.left, app.Settings.windowPosition.bottom)
 
 	app.Window:Show()
 	app:UpdateWindow()
@@ -1002,7 +1002,7 @@ end
 function app:Stagger(t, show)
 	C_Timer.After(t, function()
 		if GetServerTime() - app.Flag.LastUpdate >= t then
-			if show and app.Settings["autoOpen"] then
+			if show and app.Settings.autoOpen then
 				app:ShowWindow()
 			else
 				app:UpdateWindow()
@@ -1010,7 +1010,7 @@ function app:Stagger(t, show)
 		else
 			C_Timer.After(t, function()
 				if GetServerTime() - app.Flag.LastUpdate >= t then
-					if show and app.Settings["autoOpen"] then
+					if show and app.Settings.autoOpen then
 						app:ShowWindow()
 					else
 						app:UpdateWindow()
@@ -1072,14 +1072,14 @@ app.Event:Register("CHAT_MSG_LOOT", function(text, playerName, languageName, cha
 
 		local _, itemLink, itemQuality, itemLevel, _, _, _, _, itemEquipLoc, itemTexture, _, classID, subclassID = C_Item.GetItemInfo(itemString)
 		local itemID = C_Item.GetItemInfoInstant(itemString)
-		local itemType = classID.."."..subclassID
+		local itemType = classID .. "." .. subclassID
 
 		if playerName ~= selfName then
-			if not api:IsAppearanceCollected(itemLink) or (not api:IsSourceCollected(itemLink) and app.Settings["collectMode"] == 2) then
+			if not api:IsAppearanceCollected(itemLink) or (not api:IsSourceCollected(itemLink) and app.Settings.collectMode == 2) then
 				local bonding = app:GetBonding(itemLink)
 				if bonding == "BoA" or bonding == "WuE" then
 					app:AddFilteredLoot(itemLink, itemID, itemTexture, playerName, itemType, L.FILTER_REASON_UNTRADEABLE)
-				elseif itemQuality >= app.Settings["rarity"] then
+				elseif itemQuality >= app.Settings.rarity then
 					local armorClass
 					for k, v in pairs(app.Armor) do
 						for _, v2 in pairs(v) do
@@ -1148,7 +1148,7 @@ app.Event:Register("CHAT_MSG_LOOT", function(text, playerName, languageName, cha
 				end
 
 				if found and not tradeable then
-					app:SendAddonMessage("itemID:"..itemID..":untradeable")
+					app:SendAddonMessage("itemID:" .. itemID .. ":untradeable")
 				end
 			end
 			findItem(itemID)
@@ -1160,7 +1160,7 @@ app.Event:Register("TRANSMOG_COLLECTION_SOURCE_ADDED", function(itemModifiedAppe
 	local itemID = C_TransmogCollection.GetSourceInfo(itemModifiedAppearanceID).itemID
 	app:MoveItemToFiltered(itemID, L.FILTER_REASON_KNOWN)
 
-	local message = "itemID:"..itemID..":learned"
+	local message = "itemID:" .. itemID .. ":learned"
 	app:SendAddonMessage(message)
 end)
 

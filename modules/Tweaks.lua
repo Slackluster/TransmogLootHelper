@@ -11,7 +11,7 @@ local L = app.locales
 ----------------------
 
 app.Event:Register("PLAYER_INTERACTION_MANAGER_FRAME_SHOW", function(type)
-	if app.Settings["instantCatalyst"] and type == 44 then
+	if app.Settings.instantCatalyst and type == 44 then
 		ItemInteractionFrame.ButtonFrame.ActionButton:HookScript("OnClick", function()
 			if IsShiftKeyDown() then
 				ItemInteractionFrame:CompleteItemInteraction()
@@ -33,7 +33,7 @@ app.Event:Register("PLAYER_INTERACTION_MANAGER_FRAME_SHOW", function(type)
 			if IsShiftKeyDown() then
 				ItemInteractionFrame.ButtonFrame.ActionButton:SetText(app.IconReady .. " " .. L.INSTANT_BUTTON)
 			end
-			if app.Settings["instantCatalystTooltip"] then
+			if app.Settings.instantCatalystTooltip then
 				GameTooltip:SetOwner(self, "ANCHOR_BOTTOM")
 				GameTooltip:SetText(L.INSTANT_TOOLTIP)
 				GameTooltip:Show()
@@ -53,7 +53,7 @@ end)
 -------------------------
 
 app.Event:Register("WEEKLY_REWARDS_UPDATE", function()
-	if app.Settings["instantVault"] and WeeklyRewardsFrame and WeeklyRewardsFrame:IsVisible() then
+	if app.Settings.instantVault and WeeklyRewardsFrame and WeeklyRewardsFrame:IsVisible() then
 		WeeklyRewardsFrame.SelectRewardButton:HookScript("OnClick", function()
 			if IsShiftKeyDown() then
 				StaticPopupDialogs["CONFIRM_SELECT_WEEKLY_REWARD"].OnAccept(StaticPopup1, StaticPopup1.data)
@@ -74,7 +74,7 @@ app.Event:Register("WEEKLY_REWARDS_UPDATE", function()
 			if IsShiftKeyDown() then
 				WeeklyRewardsFrame.SelectRewardButton:SetText(app.IconReady .. " " .. L.INSTANT_BUTTON)
 			end
-			if app.Settings["instantVaultTooltip"] then
+			if app.Settings.instantVaultTooltip then
 				GameTooltip:SetOwner(self, "ANCHOR_BOTTOM")
 				GameTooltip:SetText(L.INSTANT_TOOLTIP)
 				GameTooltip:Show()
@@ -94,7 +94,7 @@ end)
 ---------------------
 
 app.Event:Register("MERCHANT_SHOW", function()
-	if app.Settings["vendorAll"] then
+	if app.Settings.vendorAll then
 		RunNextFrame(function()
 			SetMerchantFilter(1)
 			MerchantFrame_Update()
@@ -107,7 +107,7 @@ end)
 ---------------------------
 
 app.Event:Register("START_LOOT_ROLL", function(rollID, rollTime, lootHandle)
-	if app.Settings["hideGroupRolls"] and GroupLootHistoryFrame then
+	if app.Settings.hideGroupRolls and GroupLootHistoryFrame then
 		local hidden = false
 		GroupLootHistoryFrame:HookScript("OnShow", function()
 			if hidden == false then

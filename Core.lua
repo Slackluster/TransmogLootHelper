@@ -38,8 +38,13 @@ end)
 
 app.Event:Register("ADDON_LOADED", function(addOnName, containsBindings)
 	if addOnName == appName then
-		app.Flag = {}
+		TransmogLootHelper_Cache = TransmogLootHelper_Cache or {}
+		TransmogLootHelper_Settings = TransmogLootHelper_Settings or {}
+
 		app.Version = C_AddOns.GetAddOnMetadata(appName, "Version")
+		app.Cache = TransmogLootHelper_Cache
+		app.Settings = TransmogLootHelper_Settings
+		app.Flag = {}
 		app.Tooltip = {}
 
 		C_ChatInfo.RegisterAddonMessagePrefix("TransmogLootHelp")
@@ -115,15 +120,15 @@ function app:CreateSlashCommands()
 		local command, rest = msg:match("^(%S*)%s*(.-)$")
 
 		if command == "default" and app.Retail then
-			app.Settings["message"] = L.DEFAULT_MESSAGE
-			app:Print(L.WHISPER_POPUP_SUCCESS, "\"" .. app.Settings["message"] .. "\"")
+			app.Settings.message = L.DEFAULT_MESSAGE
+			app:Print(L.WHISPER_POPUP_SUCCESS, "\"" .. app.Settings.message .. "\"")
 		elseif command == "msg" and app.Retail then
 			app.RenamePopup:Show()
 		elseif command == "settings" then
 			app:OpenSettings()
 		elseif command == "resetpos" and app.Retail then
-			app.Settings["windowPosition"] = { ["left"] = GetScreenWidth()/2-100, ["bottom"] = GetScreenHeight()/2-100, ["width"] = 200, ["height"] = 200, }
-			app.Settings["pcWindowPosition"] = app.Settings["windowPosition"]
+			app.Settings.windowPosition = { left = GetScreenWidth()/2-100, bottom = GetScreenHeight()/2-100, width = 200, height = 200, }
+			app.Settings.pcWindowPosition = app.Settings.windowPosition
 			app:ShowWindow()
 		elseif command == "delete" then
 			api:DeleteCharacter(rest)
@@ -214,9 +219,9 @@ function app:GetTooltipText(itemLinkie, searchString)
 	local tooltip = app.Tooltip[itemLinkie] or C_TooltipInfo.GetHyperlink(itemLinkie)
 	app.Tooltip[itemLinkie] = tooltip
 
-	if tooltip and tooltip["lines"] then
-		for k, v in ipairs(tooltip["lines"]) do
-			if v["leftText"] and v["leftText"]:find(searchString) then
+	if tooltip and tooltip.lines then
+		for k, v in ipairs(tooltip.lines) do
+			if v.leftText and v.leftText:find(searchString) then
 				return true
 			end
 		end
@@ -230,9 +235,9 @@ function app:GetTransmogText(itemLinkie, searchString)
 	local tooltip = C_TooltipInfo.GetHyperlink(itemLinkie)
 	if cvar ~= "1" then C_CVar.SetCVar("missingTransmogSourceInItemTooltips", cvar) end
 
-	if tooltip and tooltip["lines"] then
-		for k, v in ipairs(tooltip["lines"]) do
-			if v["leftText"] and v["leftText"]:find(searchString) then
+	if tooltip and tooltip.lines then
+		for k, v in ipairs(tooltip.lines) do
+			if v.leftText and v.leftText:find(searchString) then
 				return true
 			end
 		end
@@ -290,8 +295,8 @@ end
 
 function app:IsUnusable(itemLink)
 	local tooltip = C_TooltipInfo.GetHyperlink(itemLink)
-	if tooltip and tooltip["lines"] then
-		for k, v in ipairs(tooltip["lines"]) do
+	if tooltip and tooltip.lines then
+		for k, v in ipairs(tooltip.lines) do
 			if v.usable ~= nil and v.usable == false then
 				return v.leftText or true
 			end
