@@ -14,7 +14,7 @@ L.DELETED_ENTRIES =                      "Entrées supprimées :"
 L.DELETED_REMOVED =                      "Objets uniques supprimés :"
 
 -- Version comms
-L.NEW_VERSION_AVAILABLE =                "Une nouvelle version de " .. app.NameLong .. " est disponible :"
+L.NEW_VERSION_AVAILABLE =                "Une nouvelle version de %s est disponible :" -- %s becomes the addon name
 
 -- Item overlay
 L.BINDTEXT_WUE =                         "LaB" -- Lié au Bataillon
@@ -45,7 +45,7 @@ L.WINDOW_HEADER_FILTERED_DESC =          "|r" .. app.IconRMB .. "|cffFFFFFF : d�
                                          "|rMaj " .. app.IconRMB .. "|cffFFFFFF : supprimer l'objet"
 
 L.PLAYER_COLLECTED_APPEARANCE =          "a obtenu une apparence avec cet objet"
-L.PLAYER_WHISPERED =                     "a été contacté par des utilisateurs de " .. app.NameShort
+L.PLAYER_WHISPERED =                     "a été contacté par des utilisateurs de %s" -- %s becomes the addon name
 L.WHISPERED_TIME =                       "fois"
 L.WHISPERED_TIMES =                      "fois"
 L.WHISPER_COOLDOWN =                     "Vous ne pouvez chuchoter à un joueur qu'une fois toutes les 30 secondes par objet."
@@ -82,12 +82,12 @@ L.SETTINGS_SLASH_WHISPER_DEFAULT =       "Réinitialiser le message chuchoté"
 L.SETTINGS_SLASH_DELETE_DESC =           "Marquer les recettes uniques d'un personnage comme non apprises"
 L.SETTINGS_SLASH_CHARREALM =             "Personnage-Royaume"
 
-L.REQUIRES_RELOAD =                      "|cffFF0000" .. REQUIRES_RELOAD .. ".|r\n\nUtilisez |cffFFFFFF/reload|r ou reconnectez-vous." -- "Requires Reload"
+L.REQUIRES_RELOAD =                      REQUIRES_RELOAD -- "Requires Reload"
 
 L.GENERAL =                              GENERAL -- "General"
 L.SETTINGS_ITEM_OVERLAY =                "Overlay sur les objets"
 L.SETTINGS_BAGANATOR =                   "Pour les utilisateurs de Baganator, ceci est géré dans ses paramètres."
-L.SETTINGS_ITEM_OVERLAY_DESC =           "Afficher une icône et du texte sur les objets pour indiquer leur statut.\n\n" .. L.REQUIRES_RELOAD
+L.SETTINGS_ITEM_OVERLAY_DESC =           "Afficher une icône et du texte sur les objets pour indiquer leur statut."
 L.SETTINGS_ICON_POSITION =               "Position de l'icône"
 L.SETTINGS_ICON_POSITION_DESC =          "Choisir le coin d'affichage de l'icône."
 L.SETTINGS_ICONPOS_TL =                  "Haut gauche"
@@ -113,7 +113,7 @@ L.SETTINGS_ICONLEARNED_DESC =            "Afficher une icône pour indiquer que 
 L.DEFAULT =                              CHAT_DEFAULT -- Default
 L.SETTINGS_ICONLEARNED_DESC2 =           "Vous pouvez définir un style distinct pour les icônes apprises."
 L.SETTINGS_BINDTEXT =                    "Texte de liaison"
-L.SETTINGS_BINDTEXT_DESC =               "Afficher un indicateur de texte pour les objets liés quand équipé (LqÉ), les objets liés au bataillon (LaB) et les objets liés au batailloin jusqu'à l'équipement (LaB).\n\n" .. L.SETTINGS_BAGANATOR
+L.SETTINGS_BINDTEXT_DESC =               "Afficher un indicateur de texte pour les objets liés quand équipé (LqÉ), les objets liés au bataillon (LaB) et les objets liés au batailloin jusqu'à l'équipement (LaB)."
 L.SETTINGS_PREVIEW =                     "Aperçu :"
 L.SETTINGS_UNLEARNED =                   PROFESSIONS_CATEGORY_UNLEARNED -- Unlearned
 L.SETTINGS_USABLE =                      "Utilisable"
@@ -163,22 +163,22 @@ L.SETTINGS_ICON_OPENABLE_DESC =          "Afficher une icône pour indiquer qu'u
 
 L.SETTINGS_HEADER_LOOT_TRACKER =         "Suivi du butin"
 L.SETTINGS_MINIMAP_TITLE =               "Afficher l'icône de la mini-carte"
-L.SETTINGS_MINIMAP_DESC =                "Afficher l'icône sur la mini-carte. Si vous la désactivez, " .. app.NameShort .. " reste accessible via le compartiment des addons."
+L.SETTINGS_MINIMAP_DESC =                "Afficher l'icône sur la mini-carte. Si vous la désactivez, %s reste accessible via le compartiment des addons." -- %s becomes the addon name
 L.SETTINGS_AUTO_OPEN =                   "Ouverture automatique de la fenêtre"
-L.SETTINGS_AUTO_OPEN_DESC =              "Afficher automatiquement la fenêtre " .. app.NameShort .. " lorsqu'un objet éligible est récupéré."
+L.SETTINGS_AUTO_OPEN_DESC =              "Afficher automatiquement la fenêtre %s lorsqu'un objet éligible est récupéré." -- %s becomes the addon name
 L.SETTINGS_COLLECTION_MODE =             "Mode de collection"
-L.SETTINGS_COLLECTION_MODE_DESC =        "Définit quand " .. app.NameShort .. " doit afficher les nouvelles transmogrifications obtenues par d'autres."
+L.SETTINGS_COLLECTION_MODE_DESC =        "Définit quand %s doit afficher les nouvelles transmogrifications obtenues par d'autres." -- %s becomes the addon name
 L.SETTINGS_MODE_APPEARANCES =            "Apparences"
 L.SETTINGS_MODE_APPEARANCES_DESC =       "Afficher les objets uniquement s'ils ont une nouvelle apparence."
 L.SETTINGS_MODE_SOURCES =                "Sources"
 L.SETTINGS_MODE_SOURCES_DESC =           "Afficher les objets s'il s'agit d'une nouvelle source, y compris pour les apparences connues."
 L.SETTINGS_RARITY =                      "Qualité"
-L.SETTINGS_RARITY_DESC =                 "Définit à partir de quelle qualité " .. app.NameShort .. " doit afficher le butin."
+L.SETTINGS_RARITY_DESC =                 "Définit à partir de quelle qualité %s doit afficher le butin." -- %s becomes the addon name
 L.SETTINGS_WHISPER =                     "Message chuchoté"
 L.SETTINGS_WHISPER_CUSTOMIZE =           "Personnaliser"
 L.SETTINGS_WHISPER_CUSTOMIZE_DESC =      "Personnaliser le message chuchoté"
 L.WHISPER_POPUP_CUSTOMIZE =              "Personnalisez votre message chuchoté :"
-L.WHISPER_POPUP_ERROR =                  "Le message ne contient pas |cff3FC7EB%item|r. Le message n'a pas été mis à jour."
+L.WHISPER_POPUP_ERROR =                  "Le message ne contient pas %s. Le message n'a pas été mis à jour." -- %s becomes %item
 L.WHISPER_POPUP_SUCCESS =                "Le message a été mis à jour."
 
 L.SETTINGS_HEADER_TWEAKS =               "Ajustements"
@@ -191,4 +191,4 @@ L.SETTINGS_INSTANT_TOOLTIP_DESC =        "Afficher l'infobulle expliquant le fon
 L.SETTINGS_VENDOR_ALL =                  "Désactiver le filtre des vendeurs"
 L.SETTINGS_VENDOR_ALL_DESC =             "Définit automatiquement les filtres des vendeurs sur |cffFFFFFFTous|r afin d'afficher les objets normalement non visibles pour votre classe."
 L.SETTINGS_HIDE_LOOT_ROLL_WINDOW =       "Masquer la fenêtre de jet de butin"
-L.SETTINGS_HIDE_LOOT_ROLL_WINDOW_DESC =  "Masquer la fenêtre des jets de butin et leurs résultats. Vous pouvez la réafficher avec |cff00ccff/loot|r."
+L.SETTINGS_HIDE_LOOT_ROLL_WINDOW_DESC =  "Masquer la fenêtre des jets de butin et leurs résultats. Vous pouvez la réafficher avec %s." -- %s becomes /loot

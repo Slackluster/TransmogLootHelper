@@ -76,7 +76,7 @@ function api:DeleteCharacter(characterName)
 			unlearned = unlearned + 1
 		end
 	end
-	app:Print(L.DELETED_ENTRIES .. " " .. removed .. " | " .. L.DELETED_REMOVED .. " " .. unlearned)
+	app:Print(L.DELETED_ENTRIES, removed .. " | " .. L.DELETED_REMOVED, unlearned)
 	api:UpdateOverlay()
 end
 

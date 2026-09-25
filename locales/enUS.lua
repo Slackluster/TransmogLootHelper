@@ -14,7 +14,7 @@ L.DELETED_ENTRIES =                      "Deleted entries:"
 L.DELETED_REMOVED =                      "Unique collectibles removed:"
 
 -- Version comms
-L.NEW_VERSION_AVAILABLE =                "There is a newer version of " .. app.NameLong .. " available:"
+L.NEW_VERSION_AVAILABLE =                "There is a newer version of %s available:" -- %s becomes the addon name
 
 -- Item overlay
 L.BINDTEXT_WUE =                         "WuE" -- Abbreviation for "Warbound until Equipped"
@@ -45,7 +45,7 @@ L.WINDOW_HEADER_FILTERED_DESC =          "|r" .. app.IconRMB .. "|cffFFFFFF: Deb
                                          "|rShift " .. app.IconRMB .. "|cffFFFFFF: Remove the item"
 
 L.PLAYER_COLLECTED_APPEARANCE =          "collected an appearance from this item" -- Preceded by a character name
-L.PLAYER_WHISPERED =                     "has been whispered by " .. app.NameShort .. " users"
+L.PLAYER_WHISPERED =                     "has been whispered by %s users" -- %s becomes the addon name
 L.WHISPERED_TIME =                       "time"
 L.WHISPERED_TIMES =                      "times"
 L.WHISPER_COOLDOWN =                     "You may only whisper a player once every 30 seconds per item."
@@ -82,12 +82,12 @@ L.SETTINGS_SLASH_WHISPER_DEFAULT =       "Set the whisper message to its default
 L.SETTINGS_SLASH_DELETE_DESC =           "Mark a character's unique recipes etc. as unlearned"
 L.SETTINGS_SLASH_CHARREALM =             "Character-Realm"
 
-L.REQUIRES_RELOAD =                      "|cffFF0000" .. REQUIRES_RELOAD .. ".|r Use |cffFFFFFF/reload|r or relog." -- "Requires Reload"
+L.REQUIRES_RELOAD =                      REQUIRES_RELOAD -- "Requires Reload"
 
 L.GENERAL =                              GENERAL -- "General"
 L.SETTINGS_ITEM_OVERLAY =                "Item Overlay"
 L.SETTINGS_BAGANATOR =                   "For Baganator users this is managed by Baganator's own settings."
-L.SETTINGS_ITEM_OVERLAY_DESC =           "Show an icon and text on items, to indicate collection status and more.\n\n" .. L.REQUIRES_RELOAD
+L.SETTINGS_ITEM_OVERLAY_DESC =           "Show an icon and text on items, to indicate collection status and more."
 L.SETTINGS_ICON_POSITION =               "Icon Position"
 L.SETTINGS_ICON_POSITION_DESC =          "On which corner the icon appears."
 L.SETTINGS_ICONPOS_TL =                  "Top Left"
@@ -113,7 +113,7 @@ L.SETTINGS_ICONLEARNED_DESC =            "Show an icon to indicate the below tra
 L.DEFAULT =                              CHAT_DEFAULT -- "Default"
 L.SETTINGS_ICONLEARNED_DESC2 =           "You can set a separate style for learned icons."
 L.SETTINGS_BINDTEXT =                    "Binding Text"
-L.SETTINGS_BINDTEXT_DESC =               "Show a text indicator for Bind-on-Equip items (BoE), Warbound items (BoA), and Warbound-until-Equipped (WuE) items.\n\n" .. L.SETTINGS_BAGANATOR
+L.SETTINGS_BINDTEXT_DESC =               "Show a text indicator for Bind-on-Equip items (BoE), Warbound items (BoA), and Warbound-until-Equipped (WuE) items."
 L.SETTINGS_PREVIEW =                     "Preview:"
 L.SETTINGS_UNLEARNED =                   PROFESSIONS_CATEGORY_UNLEARNED -- "Unlearned"
 L.SETTINGS_USABLE =                      "Usable"
@@ -163,22 +163,22 @@ L.SETTINGS_ICON_OPENABLE_DESC =          "Show an icon to indicate an item can b
 
 L.SETTINGS_HEADER_LOOT_TRACKER =         "Loot Tracker"
 L.SETTINGS_MINIMAP_TITLE =               "Show Minimap Icon"
-L.SETTINGS_MINIMAP_DESC =                "Show the minimap icon. If you disable this, " .. app.NameShort .. " is still available from the Addon Compartment."
+L.SETTINGS_MINIMAP_DESC =                "Show the minimap icon. If you disable this, %s is still available from the Addon Compartment." -- %s becomes the addon name
 L.SETTINGS_AUTO_OPEN =                   "Auto Open Window"
-L.SETTINGS_AUTO_OPEN_DESC =              "Automatically show the " .. app.NameShort .. " window when an eligible item is looted."
+L.SETTINGS_AUTO_OPEN_DESC =              "Automatically show the %s window when an eligible item is looted." -- %s becomes the addon name
 L.SETTINGS_COLLECTION_MODE =             "Collection Mode"
-L.SETTINGS_COLLECTION_MODE_DESC =        "Set when " .. app.NameShort .. " should show new transmog looted by others."
+L.SETTINGS_COLLECTION_MODE_DESC =        "Set when %s should show new transmog looted by others." -- %s becomes the addon name
 L.SETTINGS_MODE_APPEARANCES =            "Appearances"
 L.SETTINGS_MODE_APPEARANCES_DESC =       "Show items only if they have a new appearance."
 L.SETTINGS_MODE_SOURCES =                "Sources"
 L.SETTINGS_MODE_SOURCES_DESC =           "Show items if they are a new source, including for known appearances."
 L.SETTINGS_RARITY =                      "Rarity"
-L.SETTINGS_RARITY_DESC =                 "Set from what quality and up " .. app.NameShort .. " should show loot."
+L.SETTINGS_RARITY_DESC =                 "Set from what quality and up %s should show loot." -- %s becomes the addon name
 L.SETTINGS_WHISPER =                     "Whisper Message"
 L.SETTINGS_WHISPER_CUSTOMIZE =           "Customize"
 L.SETTINGS_WHISPER_CUSTOMIZE_DESC =      "Customize the whisper message"
 L.WHISPER_POPUP_CUSTOMIZE =              "Customize your whisper message:"
-L.WHISPER_POPUP_ERROR =                  "Message does not include |cff3FC7EB%item|r. Message is not updated."
+L.WHISPER_POPUP_ERROR =                  "Message does not include %s. Message is not updated." -- %s becomes %item
 L.WHISPER_POPUP_SUCCESS =                "Message is updated."
 
 L.SETTINGS_HEADER_TWEAKS =               "Tweaks"
@@ -189,6 +189,6 @@ L.SETTINGS_VAULT_DESC =                  "Hold Shift to instantly receive your r
 L.SETTINGS_INSTANT_TOOLTIP =             "Show Tooltip"
 L.SETTINGS_INSTANT_TOOLTIP_DESC =        "Show the tooltip explaining how this feature works. The button text still changes when this is disabled."
 L.SETTINGS_VENDOR_ALL =                  "Disable Vendor Filter"
-L.SETTINGS_VENDOR_ALL_DESC =             "Automatically set all vendor filters to |cffFFFFFFAll|r to display items normally not shown to your class."
+L.SETTINGS_VENDOR_ALL_DESC =             "Automatically set all vendor filters to \"All\" to display items normally not shown to your class."
 L.SETTINGS_HIDE_LOOT_ROLL_WINDOW =       "Hide Loot Roll Window"
-L.SETTINGS_HIDE_LOOT_ROLL_WINDOW_DESC =  "Hide the window that shows loot rolls and their results. You can show the window again with |cff00ccff/loot|r."
+L.SETTINGS_HIDE_LOOT_ROLL_WINDOW_DESC =  "Hide the window that shows loot rolls and their results. You can show the window again with %s." -- %s becomes /loot

@@ -14,7 +14,7 @@ L.DELETED_ENTRIES =                      "Entradas eliminadas:"
 L.DELETED_REMOVED =                      "Objetos únicos coleccionables eliminados:"
 
 -- Version comms
-L.NEW_VERSION_AVAILABLE =                "Hay una versión más nueva de " .. app.NameLong .. " disponible:"
+L.NEW_VERSION_AVAILABLE =                "Hay una versión más nueva de %s disponible:" -- %s becomes the addon name
 
 -- Item overlay
 L.BINDTEXT_WUE =                         "WuE" -- Abbreviation for "Warbound until Equipped"
@@ -45,7 +45,7 @@ L.WINDOW_HEADER_FILTERED_DESC =          "|r" .. app.IconRMB .. "|cffFFFFFF: Dep
                                          "|rMayús " .. app.IconRMB .. "|cffFFFFFF: Eliminar el objeto"
 
 L.PLAYER_COLLECTED_APPEARANCE =          "ha conseguido una apariencia de este objeto" -- Preceded by a character name
-L.PLAYER_WHISPERED =                     "ha sido susurrado por " .. app.NameShort .. ""
+L.PLAYER_WHISPERED =                     "ha sido susurrado por %s" -- %s becomes the addon name
 L.WHISPERED_TIME =                       "vez"
 L.WHISPERED_TIMES =                      "veces"
 L.WHISPER_COOLDOWN =                     "Solo puedes susurrar a un jugador una vez cada 30 segundos por objeto."
@@ -82,12 +82,12 @@ L.SETTINGS_SLASH_WHISPER_DEFAULT =       "Establecer el mensaje de susurro a su 
 L.SETTINGS_SLASH_DELETE_DESC =           "Marcar recetas únicas de un personaje, etc. como no aprendidas"
 L.SETTINGS_SLASH_CHARREALM =             "Personaje-Reino"
 
-L.REQUIRES_RELOAD =                      "|cffFF0000" .. REQUIRES_RELOAD .. ".|r Usa |cffFFFFFF/reload|r o vuelve a conectarte." -- "Requires Reload"
+L.REQUIRES_RELOAD =                      REQUIRES_RELOAD -- "Requires Reload"
 
 L.GENERAL =                              GENERAL -- "General"
 L.SETTINGS_ITEM_OVERLAY =                "Superposición en objetos"
 L.SETTINGS_BAGANATOR =                   "Para usuarios de Baganator, esto se gestiona mediante las opciones propias de Baganator."
-L.SETTINGS_ITEM_OVERLAY_DESC =           "Muestra un icono y texto en los objetos para indicar si son coleccionables y más.\n\n" .. L.REQUIRES_RELOAD
+L.SETTINGS_ITEM_OVERLAY_DESC =           "Muestra un icono y texto en los objetos para indicar si son coleccionables y más."
 L.SETTINGS_ICON_POSITION =               "Posición del icono"
 L.SETTINGS_ICON_POSITION_DESC =          "En qué esquina aparece el icono."
 L.SETTINGS_ICONPOS_TL =                  "Arriba izquierda"
@@ -113,7 +113,7 @@ L.SETTINGS_ICONLEARNED_DESC =            "Muestra un icono para indicar que los 
 L.DEFAULT =                              CHAT_DEFAULT -- "Default"
 L.SETTINGS_ICONLEARNED_DESC2 =           "Puedes establecer un estilo separado para los iconos de aprendidos."
 L.SETTINGS_BINDTEXT =                    "Texto de objetos ligados"
-L.SETTINGS_BINDTEXT_DESC =               "Muestra un indicador de texto para los objetos que se ligan al equiparlos (BoE), objetos ligados a la banda guerrera (BoA) y ligados a la banda guerrera hasta que te equipas con ellos (WuE).\n\n" .. L.SETTINGS_BAGANATOR
+L.SETTINGS_BINDTEXT_DESC =               "Muestra un indicador de texto para los objetos que se ligan al equiparlos (BoE), objetos ligados a la banda guerrera (BoA) y ligados a la banda guerrera hasta que te equipas con ellos (WuE)."
 L.SETTINGS_PREVIEW =                     "Vista Previa:"
 L.SETTINGS_UNLEARNED =                   PROFESSIONS_CATEGORY_UNLEARNED -- "Unlearned"
 L.SETTINGS_USABLE =                      "Utilizable"
@@ -163,22 +163,22 @@ L.SETTINGS_ICON_OPENABLE_DESC =          "Mostrar un icono para indicar que un o
 
 L.SETTINGS_HEADER_LOOT_TRACKER =         "Rastreador de botín"
 L.SETTINGS_MINIMAP_TITLE =               "Mostrar icono de minimapa"
-L.SETTINGS_MINIMAP_DESC =                "Muestra el icono del minimapa. Si desactivas esto, " .. app.NameShort .. " sigue disponible en el apartado de Addons."
+L.SETTINGS_MINIMAP_DESC =                "Muestra el icono del minimapa. Si desactivas esto, %s sigue disponible en el apartado de Addons." -- %s becomes the addon name
 L.SETTINGS_AUTO_OPEN =                   "Abrir ventana automáticamente"
-L.SETTINGS_AUTO_OPEN_DESC =              "Abre automáticamente la ventana de " .. app.NameShort .. " cuando se saquea un objeto elegible."
+L.SETTINGS_AUTO_OPEN_DESC =              "Abre automáticamente la ventana de %s cuando se saquea un objeto elegible." -- %s becomes the addon name
 L.SETTINGS_COLLECTION_MODE =             "Modo colección"
-L.SETTINGS_COLLECTION_MODE_DESC =        "Establecer cuándo " .. app.NameShort .. " debe mostrar nuevo transmog saqueado por otros."
+L.SETTINGS_COLLECTION_MODE_DESC =        "Establecer cuándo %s debe mostrar nuevo transmog saqueado por otros." -- %s becomes the addon name
 L.SETTINGS_MODE_APPEARANCES =            "Apariencias"
 L.SETTINGS_MODE_APPEARANCES_DESC =       "Mostrar objetos solo si tienen una nueva apariencia."
 L.SETTINGS_MODE_SOURCES =                "Fuentes"
 L.SETTINGS_MODE_SOURCES_DESC =           "Mostrar objetos si son una nueva fuente, incluyendo apariencias conocidas."
 L.SETTINGS_RARITY =                      "Rareza"
-L.SETTINGS_RARITY_DESC =                 "Establece a partir de qué calidad " .. app.NameShort .. " debe mostrar el botín."
+L.SETTINGS_RARITY_DESC =                 "Establece a partir de qué calidad %s debe mostrar el botín." -- %s becomes the addon name
 L.SETTINGS_WHISPER =                     "Mensaje de susurro"
 L.SETTINGS_WHISPER_CUSTOMIZE =           "Personalizar"
 L.SETTINGS_WHISPER_CUSTOMIZE_DESC =      "Personaliza el mensaje de susurro"
 L.WHISPER_POPUP_CUSTOMIZE =              "Personaliza tu mensaje de susurro:"
-L.WHISPER_POPUP_ERROR =                  "El mensaje no incluye |cff3FC7EB%item|r. Mensaje no actualizado."
+L.WHISPER_POPUP_ERROR =                  "El mensaje no incluye %s. Mensaje no actualizado." -- %s becomes %item
 L.WHISPER_POPUP_SUCCESS =                "Mensaje actualizado."
 
 L.SETTINGS_HEADER_TWEAKS =               "Retoques"
@@ -191,4 +191,4 @@ L.SETTINGS_INSTANT_TOOLTIP_DESC =        "Muestra la información emergente que 
 L.SETTINGS_VENDOR_ALL =                  "Deshabilitar filtro de vendedor"
 L.SETTINGS_VENDOR_ALL_DESC =             "Establece automáticamente todos los filtros de vendedor en |cffFFFFFFTodos|r para mostrar los objetos que normalmente no se mostrarían a tu clase."
 L.SETTINGS_HIDE_LOOT_ROLL_WINDOW =       "Ocultar ventana de tirada de botín"
-L.SETTINGS_HIDE_LOOT_ROLL_WINDOW_DESC =  "Oculta la ventana que muestra las tiradas de botín y sus resultados. Puedes mostrar la ventana de nuevo con |cff00ccff/loot|r."
+L.SETTINGS_HIDE_LOOT_ROLL_WINDOW_DESC =  "Oculta la ventana que muestra las tiradas de botín y sus resultados. Puedes mostrar la ventana de nuevo con %s." -- %s becomes /loot

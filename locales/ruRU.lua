@@ -14,7 +14,7 @@ L.DELETED_ENTRIES =                      "Удаленные записи:"
 L.DELETED_REMOVED =                      "Уникальные коллекционные предметы удалены:"
 
 -- Version comms
-L.NEW_VERSION_AVAILABLE =                "Доступна новая версия " .. app.NameLong .. ":"
+L.NEW_VERSION_AVAILABLE =                "Доступна новая версия %s:" -- %s becomes the addon name
 
 -- Item overlay
 L.BINDTEXT_WUE =                         "WuE" -- Abbreviation for "Warbound until Equipped"
@@ -45,7 +45,7 @@ L.WINDOW_HEADER_FILTERED_DESC =          "|r" .. app.IconRMB .. "|cffFFFFFF: О�
                                          "|rShift " .. app.IconRMB .. "|cffFFFFFF: Удалить предмет"
 
 L.PLAYER_COLLECTED_APPEARANCE =          "собрал внешний вид этого предмета" -- Preceded by a character name
-L.PLAYER_WHISPERED =                     "получил сообщение от игрока " .. app.NameShort
+L.PLAYER_WHISPERED =                     "получил сообщение от игрока %s" -- %s becomes the addon name
 L.WHISPERED_TIME =                       "раз"
 L.WHISPERED_TIMES =                      "раза"
 L.WHISPER_COOLDOWN =                     "Вы можете шептать игроку только раз в 30 секунд для каждого предмета."
@@ -82,12 +82,12 @@ L.SETTINGS_SLASH_WHISPER_DEFAULT =       "Установите для личны
 L.SETTINGS_SLASH_DELETE_DESC =           "Отметьте уникальные рецепты персонажа и т.д. как неизученные"
 L.SETTINGS_SLASH_CHARREALM =             "Персонаж-Сервер"
 
-L.REQUIRES_RELOAD =                      "|cffFF0000" .. REQUIRES_RELOAD .. ".|r Используйте |cffFFFFFF/reload|r или перезайдите."
+L.REQUIRES_RELOAD =                      REQUIRES_RELOAD -- "Requires Reload"
 
 L.GENERAL =                              GENERAL -- "General"
 L.SETTINGS_ITEM_OVERLAY =                "Накладка на предметы"
 L.SETTINGS_BAGANATOR =                   "Для пользователей Baganator это управляется собственными настройками Baganator."
-L.SETTINGS_ITEM_OVERLAY_DESC =           "Показывать иконку и текст на предметах, чтобы указать статус коллекции и прочее.\n\n" .. L.REQUIRES_RELOAD
+L.SETTINGS_ITEM_OVERLAY_DESC =           "Показывать иконку и текст на предметах, чтобы указать статус коллекции и прочее."
 L.SETTINGS_ICON_POSITION =               "Положение иконки"
 L.SETTINGS_ICON_POSITION_DESC =          "В каком углу появляется иконка?"
 L.SETTINGS_ICONPOS_TL =                  "Верхний левый"
@@ -113,7 +113,7 @@ L.SETTINGS_ICON_LEARNED_DESC =           "Показывать иконку, е�
 L.DEFAULT =                              CHAT_DEFAULT -- "Default"
 L.SETTINGS_ICONLEARNED_DESC2 =           "Вы можете установить отдельный стиль иконок для изученных."
 L.SETTINGS_BINDTEXT =                    "Текст привязки"
-L.SETTINGS_BINDTEXT_DESC =               "Показывать текстовый индикатор для предметов с привязкой при экипировке (ПпЭ), предметов, привязанных к учетной записи (ПпУ), и предметов, привязанных до экипировки (ВнЭ).\n\n" .. L.SETTINGS_BAGANATOR
+L.SETTINGS_BINDTEXT_DESC =               "Показывать текстовый индикатор для предметов с привязкой при экипировке (ПпЭ), предметов, привязанных к учетной записи (ПпУ), и предметов, привязанных до экипировки (ВнЭ)."
 L.SETTINGS_PREVIEW =                     "Предварительный просмотр:"
 L.SETTINGS_UNLEARNED =                   PROFESSIONS_CATEGORY_UNLEARNED -- "Unlearned"
 L.SETTINGS_USABLE =                      "Пригодный"
@@ -163,22 +163,22 @@ L.SETTINGS_ICON_OPENABLE_DESC =          "Показывать иконку, е�
 
 L.SETTINGS_HEADER_LOOT_TRACKER =         "Отслеживание лута"
 L.SETTINGS_MINIMAP_TITLE =               "Показывать иконку на миникарте"
-L.SETTINGS_MINIMAP_DESC =                "Показывать иконку на миникарте. Если вы отключите это, " .. app.NameShort .. " все еще доступен из отсека аддонов."
+L.SETTINGS_MINIMAP_DESC =                "Показывать иконку на миникарте. Если вы отключите это, %s все еще доступен из отсека аддонов." -- %s becomes the addon name
 L.SETTINGS_AUTO_OPEN =                   "Автооткрытие окна"
-L.SETTINGS_AUTO_OPEN_DESC =              "Автоматически показывать окно " .. app.NameShort .. ", когда добыт подходящий предмет."
+L.SETTINGS_AUTO_OPEN_DESC =              "Автоматически показывать окно %s, когда добыт подходящий предмет." -- %s becomes the addon name
 L.SETTINGS_COLLECTION_MODE =             "Режим коллекции"
-L.SETTINGS_COLLECTION_MODE_DESC =        "Установить, когда " .. app.NameShort .. " должен показывать новый трансмог, добытый другими."
+L.SETTINGS_COLLECTION_MODE_DESC =        "Установить, когда %s должен показывать новый трансмог, добытый другими." -- %s becomes the addon name
 L.SETTINGS_MODE_APPEARANCES =            "Внешние виды"
 L.SETTINGS_MODE_APPEARANCES_DESC =       "Показывать предметы, только если у них есть новый внешний вид."
 L.SETTINGS_MODE_SOURCES =                "Источники"
 L.SETTINGS_MODE_SOURCES_DESC =           "Показывать предметы, если они являются новым источником, включая известные внешние виды."
 L.SETTINGS_RARITY =                      "Редкость"
-L.SETTINGS_RARITY_DESC =                 "Установить, начиная с какого качества " .. app.NameShort .. " должен показывать лут."
+L.SETTINGS_RARITY_DESC =                 "Установить, начиная с какого качества %s должен показывать лут." -- %s becomes the addon name
 L.SETTINGS_WHISPER =                     "Сообщение шепотом"
 L.SETTINGS_WHISPER_CUSTOMIZE =           "Настроить"
 L.SETTINGS_WHISPER_CUSTOMIZE_DESC =      "Настроить сообщение шепотом"
 L.WHISPER_POPUP_CUSTOMIZE =              "Настройте ваше сообщение шепотом:"
-L.WHISPER_POPUP_ERROR =                  "Сообщение не содержит |cff3FC7EB%item|r. Сообщение не обновлено."
+L.WHISPER_POPUP_ERROR =                  "Сообщение не содержит %s. Сообщение не обновлено." -- %s becomes %item
 L.WHISPER_POPUP_SUCCESS =                "Сообщение обновлено."
 
 L.SETTINGS_HEADER_TWEAKS =               "Хитрости"
@@ -191,4 +191,4 @@ L.SETTINGS_INSTANT_TOOLTIP_DESC =        "Показывать подсказк�
 L.SETTINGS_VENDOR_ALL =                  "Отключить фильтр торговца"
 L.SETTINGS_VENDOR_ALL_DESC =             "Автоматически устанавливать все фильтры торговца на |cffFFFFFFВсе|r, чтобы отображать предметы, обычно не показываемые для вашего класса."
 L.SETTINGS_HIDE_LOOT_ROLL_WINDOW =       "Скрыть окно бросков лута"
-L.SETTINGS_HIDE_LOOT_ROLL_WINDOW_DESC =  "Скрыть окно, показывающее броски лута и их результаты. Вы можете снова показать окно с помощью |cff00ccff/loot|r."
+L.SETTINGS_HIDE_LOOT_ROLL_WINDOW_DESC =  "Скрыть окно, показывающее броски лута и их результаты. Вы можете снова показать окно с помощью %s." -- %s becomes /loot

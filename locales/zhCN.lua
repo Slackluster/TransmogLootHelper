@@ -4,7 +4,6 @@
 -- Chinese (Simplified, PRC) localisation
 -- Translator(s): XingDVD
 
--- Initialisation
 if GetLocale() ~= "zhCN" then return end
 local appName, app = ...
 local L = app.locales
@@ -15,7 +14,7 @@ L.DELETED_ENTRIES =                      "已删除条目："
 L.DELETED_REMOVED =                      "已移除的独特可收集物品："
 
 -- Version comms
-L.NEW_VERSION_AVAILABLE =                "现在 " .. app.NameLong .. " 有新版本可用："
+L.NEW_VERSION_AVAILABLE =                "现在 %s 有新版本可用：" -- %s becomes the addon name
 
 -- Item overlay
 L.BINDTEXT_WUE =                         "WuE"
@@ -46,7 +45,7 @@ L.WINDOW_HEADER_FILTERED_DESC =          "|r" .. app.IconRMB .. "|cffFFFFFF：�
                                          "|rShift " .. app.IconRMB .. "|cffFFFFFF：移除此物品"
 
 L.PLAYER_COLLECTED_APPEARANCE =          "已从该物品收集了外观" -- Preceded by a character name
-L.PLAYER_WHISPERED =                     "已被 " .. app.NameShort .. " 用户密语"
+L.PLAYER_WHISPERED =                     "已被 %s 用户密语" -- %s becomes the addon name
 L.WHISPERED_TIME =                       "次"
 L.WHISPERED_TIMES =                      "次"
 L.WHISPER_COOLDOWN =                     "每件物品对同一玩家只能每30秒密语一次。"
@@ -83,12 +82,12 @@ L.SETTINGS_SLASH_WHISPER_DEFAULT =       "将密语消息重置为默认"
 L.SETTINGS_SLASH_DELETE_DESC =           "标记角色的独特配方等为未学习"
 L.SETTINGS_SLASH_CHARREALM =             "角色-服务器"
 
-L.REQUIRES_RELOAD =                      "|cffFF0000" .. REQUIRES_RELOAD .. ".|r 使用 |cffFFFFFF/reload|r 或重新登录。" -- "Requires Reload"
+L.REQUIRES_RELOAD =                      REQUIRES_RELOAD -- "Requires Reload"
 
 L.GENERAL =                              GENERAL -- "General"
 L.SETTINGS_ITEM_OVERLAY =                "物品覆盖层"
 L.SETTINGS_BAGANATOR =                   "Baganator用户请在Baganator设置中管理此选项。"
-L.SETTINGS_ITEM_OVERLAY_DESC =           "在物品上显示图标和文本，以指示收集状态等。\n\n" .. L.REQUIRES_RELOAD
+L.SETTINGS_ITEM_OVERLAY_DESC =           "在物品上显示图标和文本，以指示收集状态等。"
 L.SETTINGS_ICON_POSITION =               "图标位置"
 L.SETTINGS_ICON_POSITION_DESC =          "图标显示在哪个角落。"
 L.SETTINGS_ICONPOS_TL =                  "左上"
@@ -114,7 +113,7 @@ L.SETTINGS_ICONLEARNED_DESC =            "显示图标以指示以下追踪的�
 L.DEFAULT =                              CHAT_DEFAULT -- Default
 L.SETTINGS_ICONLEARNED_DESC2 =           "您可以为已学习的图标设置单独的样式。"
 L.SETTINGS_BINDTEXT =                    "绑定文本"
-L.SETTINGS_BINDTEXT_DESC =               "为装备后绑定(BoE)、战团绑定(BoA)和装备前绑定(WuE)物品显示文本标识。\n\n" .. L.SETTINGS_BAGANATOR
+L.SETTINGS_BINDTEXT_DESC =               "为装备后绑定(BoE)、战团绑定(BoA)和装备前绑定(WuE)物品显示文本标识。"
 L.SETTINGS_PREVIEW =                     "预览："
 L.SETTINGS_UNLEARNED =                   PROFESSIONS_CATEGORY_UNLEARNED -- Unlearned
 L.SETTINGS_USABLE =                      "可用"
@@ -164,22 +163,22 @@ L.SETTINGS_ICON_OPENABLE_DESC =          "显示图标以指示物品可开启�
 
 L.SETTINGS_HEADER_LOOT_TRACKER =         "战利品追踪器"
 L.SETTINGS_MINIMAP_TITLE =               "显示小地图图标"
-L.SETTINGS_MINIMAP_DESC =                "显示小地图图标。如果您禁用此选项，仍可通过插件目录访问 " .. app.NameShort .. " 。"
+L.SETTINGS_MINIMAP_DESC =                "显示小地图图标。如果您禁用此选项，仍可通过插件目录访问 %s。" -- %s becomes the addon name
 L.SETTINGS_AUTO_OPEN =                   "自动打开窗口"
-L.SETTINGS_AUTO_OPEN_DESC =              "当拾取符合条件的物品时，自动显示 " .. app.NameShort .. " 窗口。"
+L.SETTINGS_AUTO_OPEN_DESC =              "当拾取符合条件的物品时，自动显示 %s 窗口。" -- %s becomes the addon name
 L.SETTINGS_COLLECTION_MODE =             "收集模式"
-L.SETTINGS_COLLECTION_MODE_DESC =        "设置 " .. app.NameShort .. " 何时显示他人拾取的新幻化物品。"
+L.SETTINGS_COLLECTION_MODE_DESC =        "设置 %s 何时显示他人拾取的新幻化物品。" -- %s becomes the addon name
 L.SETTINGS_MODE_APPEARANCES =            "外观"
 L.SETTINGS_MODE_APPEARANCES_DESC =       "仅当物品有新外观时显示。"
 L.SETTINGS_MODE_SOURCES =                "来源"
 L.SETTINGS_MODE_SOURCES_DESC =           "当物品是新来源时显示，包括已知外观的新来源。"
 L.SETTINGS_RARITY =                      "品质"
-L.SETTINGS_RARITY_DESC =                 "设置 " .. app.NameShort .. " 应显示什么品质及以上的战利品。"
+L.SETTINGS_RARITY_DESC =                 "设置 %s 应显示什么品质及以上的战利品。" -- %s becomes the addon name
 L.SETTINGS_WHISPER =                     "密语消息"
 L.SETTINGS_WHISPER_CUSTOMIZE =           "自定义"
 L.SETTINGS_WHISPER_CUSTOMIZE_DESC =      "自定义密语消息"
 L.WHISPER_POPUP_CUSTOMIZE =              "自定义您的密语消息："
-L.WHISPER_POPUP_ERROR =                  "消息未包含 |cff3FC7EB%item|r。消息未更新。"
+L.WHISPER_POPUP_ERROR =                  "消息未包含 %s。消息未更新。" -- %s becomes %item
 L.WHISPER_POPUP_SUCCESS =                "消息已更新。"
 
 L.SETTINGS_HEADER_TWEAKS =               "调整功能"
@@ -192,4 +191,4 @@ L.SETTINGS_INSTANT_TOOLTIP_DESC =        "显示解释此功能如何工作的�
 L.SETTINGS_VENDOR_ALL =                  "禁用商人过滤"
 L.SETTINGS_VENDOR_ALL_DESC =             "自动将所有商人过滤器设置为|cffFFFFFF全部|r，以显示通常不对您职业显示的物品。"
 L.SETTINGS_HIDE_LOOT_ROLL_WINDOW =       "隐藏掷骰窗口"
-L.SETTINGS_HIDE_LOOT_ROLL_WINDOW_DESC =  "隐藏显示掷骰及其结果的窗口。您可以使用|cff00ccff/loot|r再次显示窗口。"
+L.SETTINGS_HIDE_LOOT_ROLL_WINDOW_DESC =  "隐藏显示掷骰及其结果的窗口。您可以使用%s再次显示窗口。" -- %s becomes /loot

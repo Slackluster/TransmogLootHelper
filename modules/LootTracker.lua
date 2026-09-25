@@ -477,9 +477,9 @@ function app:UpdateWindow()
 					GameTooltip:AddLine(" ")
 				end
 				if count == 1 then
-					GameTooltip:AddLine("|c" .. lootInfo.color .. lootInfo.playerShort .. "|r " .. L.PLAYER_WHISPERED .. " " .. count .. " " .. L.WHISPERED_TIME)
+					GameTooltip:AddLine("|c" .. lootInfo.color .. lootInfo.playerShort .. "|r " .. string.format(L.PLAYER_WHISPERED, app.NameShort) .. " " .. count .. " " .. L.WHISPERED_TIME)
 				elseif count > 1 then
-					GameTooltip:AddLine("|c" .. lootInfo.color .. lootInfo.playerShort .. "|r " .. L.PLAYER_WHISPERED .. " " .. count .. " " .. L.WHISPERED_TIMES)
+					GameTooltip:AddLine("|c" .. lootInfo.color .. lootInfo.playerShort .. "|r " .. string.format(L.PLAYER_WHISPERED, app.NameShort) .. " " .. count .. " " .. L.WHISPERED_TIMES)
 				end
 
 				GameTooltip:Show()
@@ -674,9 +674,9 @@ function app:UpdateWindow()
 					GameTooltip:AddLine(" ")
 				end
 				if count == 1 then
-					GameTooltip:AddLine("|c" .. lootInfo.color .. lootInfo.playerShort .. "|r " .. L.PLAYER_WHISPERED .. " " .. count .. " " .. L.WHISPERED_TIME)
+					GameTooltip:AddLine("|c" .. lootInfo.color .. lootInfo.playerShort .. "|r " .. string.format(L.PLAYER_WHISPERED, app.NameShort) .. " " .. count .. " " .. L.WHISPERED_TIME)
 				elseif count > 1 then
-					GameTooltip:AddLine("|c" .. lootInfo.color .. lootInfo.playerShort .. "|r " .. L.PLAYER_WHISPERED .. " " .. count .. " " .. L.WHISPERED_TIMES)
+					GameTooltip:AddLine("|c" .. lootInfo.color .. lootInfo.playerShort .. "|r " .. string.format(L.PLAYER_WHISPERED, app.NameShort) .. " " .. count .. " " .. L.WHISPERED_TIMES)
 				end
 
 				GameTooltip:Show()

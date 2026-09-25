@@ -211,7 +211,7 @@ function app:CreateSettings()
 						border:SetBackdropBorderColor(0.25, 0.78, 0.92)
 					end)
 
-					string2:SetText(app.IconNotReady .. " " .. L.WHISPER_POPUP_ERROR)
+					string2:SetText(app.IconNotReady .. " " .. string.format(L.WHISPER_POPUP_ERROR, "|cff3FC7EB%item|r"))
 				else
 					border:SetBackdropBorderColor(0, 1, 0)
 					C_Timer.After(3, function()
@@ -512,7 +512,7 @@ function app:CreateSettings()
 
 	header(L.GENERAL)
 
-	checkbox("overlay", L.SETTINGS_ITEM_OVERLAY, L.SETTINGS_ITEM_OVERLAY_DESC, true, function()
+	checkbox("overlay", L.SETTINGS_ITEM_OVERLAY, L.SETTINGS_ITEM_OVERLAY_DESC .. "\n\n|cffFF0000" .. L.REQUIRES_RELOAD, true, function()
 		app:SettingsChanged()
 	end)
 
@@ -540,7 +540,7 @@ function app:CreateSettings()
 		{ value = 4, name = L.SETTINGS_ICON_STYLE4, description = L.SETTINGS_ICON_STYLE4_DESC },
 	}, function() app:UpdatePreviewItems() end)
 
-	checkbox("textBind", L.SETTINGS_BINDTEXT, L.SETTINGS_BINDTEXT_DESC, true, function() app:UpdatePreviewItems() end)
+	checkbox("textBind", L.SETTINGS_BINDTEXT, L.SETTINGS_BINDTEXT_DESC .. "\n\n" .. L.SETTINGS_BAGANATOR, true, function() app:UpdatePreviewItems() end)
 
 	itemPreview()
 
@@ -597,16 +597,16 @@ function app:CreateSettings()
 	category, layout = Settings.RegisterVerticalLayoutSubcategory(app.SettingsCategory, L.SETTINGS_HEADER_LOOT_TRACKER)
 	Settings.RegisterAddOnCategory(category)
 
-	checkbox("minimapIcon", L.SETTINGS_MINIMAP_TITLE, L.SETTINGS_MINIMAP_DESC, true, function() app:ToggleMinimapIcon() end)
+	checkbox("minimapIcon", L.SETTINGS_MINIMAP_TITLE, string.format(L.SETTINGS_MINIMAP_DESC, app.NameShort), true, function() app:ToggleMinimapIcon() end)
 
-	checkbox("autoOpen", L.SETTINGS_AUTO_OPEN, L.SETTINGS_AUTO_OPEN_DESC, false)
+	checkbox("autoOpen", L.SETTINGS_AUTO_OPEN, string.format(L.SETTINGS_AUTO_OPEN_DESC, app.NameShort), false)
 
-	dropdown("collectMode", L.SETTINGS_COLLECTION_MODE, L.SETTINGS_COLLECTION_MODE_DESC, 1, {
+	dropdown("collectMode", L.SETTINGS_COLLECTION_MODE, string.format(L.SETTINGS_COLLECTION_MODE_DESC, app.NameShort), 1, {
 		{ value = 1, name = L.SETTINGS_MODE_APPEARANCES, description = L.SETTINGS_MODE_APPEARANCES_DESC },
 		{ value = 2, name = L.SETTINGS_MODE_SOURCES, description = L.SETTINGS_MODE_SOURCES_DESC },
 	})
 
-	dropdown("rarity", L.SETTINGS_RARITY, L.SETTINGS_RARITY_DESC, 3, {
+	dropdown("rarity", L.SETTINGS_RARITY, string.format(L.SETTINGS_RARITY_DESC, app.NameShort), 3, {
 		{ value = 0, name = "|cff" .. string.format("%02x%02x%02x", C_ColorOverrides.GetColorForQuality(0).r * 255, C_ColorOverrides.GetColorForQuality(0).g * 255, C_ColorOverrides.GetColorForQuality(0).b * 255) .. ITEM_QUALITY0_DESC .. "|r", description = nil },
 		{ value = 1, name = "|cff" .. string.format("%02x%02x%02x", C_ColorOverrides.GetColorForQuality(1).r * 255, C_ColorOverrides.GetColorForQuality(1).g * 255, C_ColorOverrides.GetColorForQuality(1).b * 255) .. ITEM_QUALITY1_DESC .. "|r", description = nil },
 		{ value = 2, name = "|cff" .. string.format("%02x%02x%02x", C_ColorOverrides.GetColorForQuality(2).r * 255, C_ColorOverrides.GetColorForQuality(2).g * 255, C_ColorOverrides.GetColorForQuality(2).b * 255) .. ITEM_QUALITY2_DESC .. "|r", description = nil },
@@ -629,7 +629,7 @@ function app:CreateSettings()
 
 	checkbox("vendorAll", L.SETTINGS_VENDOR_ALL, L.SETTINGS_VENDOR_ALL_DESC, true)
 
-	checkbox("hideGroupRolls", L.SETTINGS_HIDE_LOOT_ROLL_WINDOW, L.SETTINGS_HIDE_LOOT_ROLL_WINDOW_DESC, false)
+	checkbox("hideGroupRolls", L.SETTINGS_HIDE_LOOT_ROLL_WINDOW, string.format(L.SETTINGS_HIDE_LOOT_ROLL_WINDOW_DESC, "|cff00CCFF/loot|r"), false)
 
 	end
 end
