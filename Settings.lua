@@ -45,11 +45,8 @@ function app:CreateMinimapButton()
 		icon = app.Icon,
 
 		OnClick = TransmogLootHelper_Click,
-
-		OnTooltipShow = function(tooltip)
-			if not tooltip or not tooltip.AddLine then return end
-			tooltip:AddLine(L.SETTINGS_TOOLTIP)
-		end,
+		OnEnter = TransmogLootHelper_Enter,
+		OnLeave = TransmogLootHelper_Leave,
 	})
 
 	app.MinimapIcon = LibStub("LibDBIcon-1.0", true)
@@ -80,7 +77,7 @@ function app:CreateSettings()
 	text:SetPoint("CENTER", app.LinkCopiedFrame, "CENTER")
 	text:SetPoint("TOP", app.LinkCopiedFrame, "TOP")
 	text:SetJustifyH("CENTER")
-	text:SetText(app.IconReady .. " " .. L.SETTINGS_URL_COPIED)
+	text:SetText(app.IconReady .. " " .. L.LINK_COPIED)
 
 	app.LinkCopiedFrame.animation = app.LinkCopiedFrame:CreateAnimationGroup()
 	local fadeOut = app.LinkCopiedFrame.animation:CreateAnimation("Alpha")
@@ -95,7 +92,7 @@ function app:CreateSettings()
 	end)
 
 	StaticPopupDialogs["TRANSMOGLOOTHELPER_URL"] = {
-		text = L.SETTINGS_URL_COPY,
+		text = L.CTRL_C_COPY,
 		button1 = CLOSE,
 		whileDead = true,
 		hasEditBox = true,
@@ -163,7 +160,7 @@ function app:CreateSettings()
 		string1:SetPoint("CENTER", frame, "CENTER")
 		string1:SetPoint("TOP", frame, "TOP", 0, -10)
 		string1:SetJustifyH("CENTER")
-		string1:SetText(L.WHISPER_POPUP_CUSTOMIZE)
+		string1:SetText(L.WHISPER_CUSTOMIZE_DESC2)
 
 		local editBox = CreateFrame("EditBox", nil, frame, "InputBoxTemplate")
 		editBox:SetSize(460, 20)
@@ -424,7 +421,7 @@ function app:CreateSettings()
 
 				btn:SetScript("OnEnter", function()
 					GameTooltip:SetOwner(btn, "ANCHOR_BOTTOM")
-					GameTooltip:SetText(L.SETTINGS_PREVIEWTOOLTIP[i], nil, nil, nil, nil, true)
+					GameTooltip:SetText(L.PREVIEW_TOOLTIP[i], nil, nil, nil, nil, true)
 					GameTooltip:Show()
 				end)
 				btn:SetScript("OnLeave", GameTooltip_Hide)
@@ -437,10 +434,10 @@ function app:CreateSettings()
 	end
 
 	app.PreviewItem = {
-		{ icon = 345787, name = L.SETTINGS_PREVIEW .. "\n" .. L.SETTINGS_UNLEARNED },
-		{ icon = 135349, name = L.SETTINGS_PREVIEW .. "\n" .. L.SETTINGS_USABLE },
-		{ icon = 134940, name = L.SETTINGS_PREVIEW .. "\n" .. L.SETTINGS_LEARNED },
-		{ icon = 134344, name = L.SETTINGS_PREVIEW .. "\n" .. L.SETTINGS_UNUSABLE },
+		{ icon = 345787, name = L.PREVIEW .. "\n" .. L.UNLEARNED },
+		{ icon = 135349, name = L.PREVIEW .. "\n" .. L.USABLE },
+		{ icon = 134940, name = L.PREVIEW .. "\n" .. L.LEARNED },
+		{ icon = 134344, name = L.PREVIEW .. "\n" .. L.UNUSABLE },
 	}
 
 	local function itemPreview()
@@ -469,12 +466,12 @@ function app:CreateSettings()
 	Settings.RegisterAddOnCategory(category)
 	app.SettingsCategory = category
 
-	text(L.SETTINGS_VERSION .. " |cffFFFFFF" .. app.Version, nil, nil, 14)
-	text(L.SETTINGS_SUPPORT_TEXTLONG)
-	button(L.SETTINGS_SUPPORT_TEXT, L.SETTINGS_SUPPORT_BUTTON, L.SETTINGS_SUPPORT_DESC, function() StaticPopup_Show("TRANSMOGLOOTHELPER_URL", nil, nil, "https://buymeacoffee.com/Slackluster") end)
-	button(L.SETTINGS_HELP_TEXT, L.SETTINGS_HELP_BUTTON, L.SETTINGS_HELP_DESC, function() StaticPopup_Show("TRANSMOGLOOTHELPER_URL", nil, nil, "https://discord.gg/hGvF59hstx") end)
+	text(L.VERSION .. " |cffFFFFFF" .. app.Version, nil, nil, 14)
+	text(L.SUPPORT_TEXTLONG1 .. "\n" .. L.SUPPORT_TEXTLONG2)
+	button(L.SUPPORT, L.BUY_ME_A_COFFEE, L.THANK_YOU, function() StaticPopup_Show("TRANSMOGLOOTHELPER_URL", nil, nil, "https://buymeacoffee.com/Slackluster") end)
+	button(L.FEEDBACK_AND_HELP, L.DISCORD, L.JOIN_DISCORD_SERVER, function() StaticPopup_Show("TRANSMOGLOOTHELPER_URL", nil, nil, "https://discord.gg/hGvF59hstx") end)
 
-	local _, isExpanded = expandableHeader(L.SETTINGS_KEYSLASH_TITLE, true)
+	local _, isExpanded = expandableHeader(L.KEYBINDINGS_AND_SLASH_COMMANDS, true)
 
 		if app.Retail then
 
@@ -488,23 +485,23 @@ function app:CreateSettings()
 				"/tlh",
 				"/tlh resetpos",
 				"/tlh settings",
-				"/tlh delete " .. app:Colour(L.SETTINGS_SLASH_CHARREALM),
+				"/tlh delete " .. app:Colour(L.CHARACTER_REALM),
 				"/tlh msg ",
 				"/tlh default " }
 			middleText = {
-				L.SETTINGS_SLASH_TOGGLE,
-				L.SETTINGS_SLASH_RESETPOS,
-				L.WINDOW_BUTTON_SETTINGS,
-				L.SETTINGS_SLASH_DELETE_DESC,
-				L.SETTINGS_WHISPER_CUSTOMIZE_DESC,
-				L.SETTINGS_SLASH_WHISPER_DEFAULT }
+				L.TOGGLE_TRACKING_WINDOW,
+				L.RESET_WINDOW_POSITION,
+				L.OPEN_SETTINGS,
+				L.DELETE_CHAR_RECIPES,
+				L.WHISPER_CUSTOMIZE_DESC1,
+				L.WHISPER_SET_DEFAULT }
 		elseif app.Forever then
 			leftText = { "|cffFFFFFF" ..
 				"/tlh",
-				"/tlh delete " .. app:Colour(L.SETTINGS_SLASH_CHARREALM) }
+				"/tlh delete " .. app:Colour(L.CHARACTER_REALM) }
 			middleText = {
-				L.WINDOW_BUTTON_SETTINGS,
-				L.SETTINGS_SLASH_DELETE_DESC }
+				L.OPEN_SETTINGS,
+				L.DELETE_CHAR_RECIPES }
 		end
 		leftText = table.concat(leftText, "\n\n")
 		middleText = table.concat(middleText, "\n\n")
@@ -512,101 +509,101 @@ function app:CreateSettings()
 
 	header(L.GENERAL)
 
-	checkbox("overlay", L.SETTINGS_ITEM_OVERLAY, L.SETTINGS_ITEM_OVERLAY_DESC .. "\n\n|cffFF0000" .. L.REQUIRES_RELOAD, true, function()
+	checkbox("overlay", L.ITEM_OVERLAY, L.ITEM_OVERLAY_DESC .. "\n\n|cffFF0000" .. L.REQUIRES_RELOAD, true, function()
 		app:SettingsChanged()
 	end)
 
-	dropdown("iconPosition", L.SETTINGS_ICON_POSITION, L.SETTINGS_ICON_POSITION_DESC .. "\n\n" .. L.SETTINGS_BAGANATOR, 1, {
-		{ value = 0, name = L.SETTINGS_ICONPOS_TL, description = L.SETTINGS_ICONPOS_OVERLAP1 },
-		{ value = 1, name = L.SETTINGS_ICONPOS_TR, description = L.SETTINGS_ICONPOS_OVERLAP0 },
-		{ value = 2, name = L.SETTINGS_ICONPOS_BL, description = L.SETTINGS_ICONPOS_OVERLAP0 },
-		{ value = 3, name = L.SETTINGS_ICONPOS_BR, description = L.SETTINGS_ICONPOS_OVERLAP0 },
+	dropdown("iconPosition", L.ICON_POSITION, L.ICON_POSITION_DESC .. "\n\n" .. L.BAGANATOR_SETTINGS, 1, {
+		{ value = 0, name = L.TOP_LEFT, description = L.OVERLAP_ISSUES_QUALITY },
+		{ value = 1, name = L.TOP_RIGHT, description = L.OVERLAP_ISSUES_NONE },
+		{ value = 2, name = L.BOTTOM_LEFT, description = L.OVERLAP_ISSUES_NONE },
+		{ value = 3, name = L.BOTTOM_RIGHT, description = L.OVERLAP_ISSUES_NONE },
 	}, function() app:UpdatePreviewItems() end)
 
-	dropdown("iconStyle", L.SETTINGS_ICON_STYLE, L.SETTINGS_ICON_STYLE_DESC, 1, {
-		{ value = 1, name = L.SETTINGS_ICON_STYLE1, description = L.SETTINGS_ICON_STYLE1_DESC },
-		{ value = 2, name = L.SETTINGS_ICON_STYLE2, description = L.SETTINGS_ICON_STYLE2_DESC },
-		{ value = 3, name = L.SETTINGS_ICON_STYLE3, description = L.SETTINGS_ICON_STYLE3_DESC },
-		{ value = 4, name = L.SETTINGS_ICON_STYLE4, description = L.SETTINGS_ICON_STYLE4_DESC },
+	dropdown("iconStyle", L.ICON_STYLE, L.ICON_STYLE_DESC, 1, {
+		{ value = 1, name = L.ICON_STYLE_FANCYCIRCLE, description = L.ICON_STYLE_FANCYCIRCLE_DESC },
+		{ value = 2, name = L.ICON_STYLE_SIMPLECIRCLE, description = L.ICON_STYLE_SIMPLECIRCLE_DESC },
+		{ value = 3, name = L.ICON_STYLE_SIMPLEICON, description = L.ICON_STYLE_SIMPLEICON_DESC },
+		{ value = 4, name = L.ICON_STYLE_COSMETICICON, description = L.ICON_STYLE_COSMETICICON_DESC },
 	}, function() app:UpdatePreviewItems() end)
 
-	checkbox("animateIcon", L.SETTINGS_ICON_ANIMATE, L.SETTINGS_ICON_ANIMATE_DESC, true, function() app:UpdatePreviewItems() end)
+	checkbox("animateIcon", L.ICON_ANIMATION, L.ICON_ANIMATION_DESC, true, function() app:UpdatePreviewItems() end)
 
-	checkboxDropdown("iconLearned", L.SETTINGS_ICONLEARNED, L.SETTINGS_ICONLEARNED_DESC, true, "learnedStyle", 0, {
-		{ value = 0, name = L.DEFAULT, description = L.SETTINGS_ICONLEARNED_DESC2 },
-		{ value = 1, name = L.SETTINGS_ICON_STYLE1, description = L.SETTINGS_ICON_STYLE1_DESC },
-		{ value = 2, name = L.SETTINGS_ICON_STYLE2, description = L.SETTINGS_ICON_STYLE2_DESC },
-		{ value = 3, name = L.SETTINGS_ICON_STYLE3, description = L.SETTINGS_ICON_STYLE3_DESC },
-		{ value = 4, name = L.SETTINGS_ICON_STYLE4, description = L.SETTINGS_ICON_STYLE4_DESC },
+	checkboxDropdown("iconLearned", L.ICON_LEARNED, L.ICON_LEARNED_DESC, true, "learnedStyle", 0, {
+		{ value = 0, name = L.DEFAULT, description = L.ICON_LEARNED_DESC2 },
+		{ value = 1, name = L.ICON_STYLE_FANCYCIRCLE, description = L.ICON_STYLE_FANCYCIRCLE_DESC },
+		{ value = 2, name = L.ICON_STYLE_SIMPLECIRCLE, description = L.ICON_STYLE_SIMPLECIRCLE_DESC },
+		{ value = 3, name = L.ICON_STYLE_SIMPLEICON, description = L.ICON_STYLE_SIMPLEICON_DESC },
+		{ value = 4, name = L.ICON_STYLE_COSMETICICON, description = L.ICON_STYLE_COSMETICICON_DESC },
 	}, function() app:UpdatePreviewItems() end)
 
-	checkbox("textBind", L.SETTINGS_BINDTEXT, L.SETTINGS_BINDTEXT_DESC .. "\n\n" .. L.SETTINGS_BAGANATOR, true, function() app:UpdatePreviewItems() end)
+	checkbox("textBind", L.BINDING_TEXT, L.BINDING_TEXT_DESC .. "\n\n" .. L.BAGANATOR_SETTINGS, true, function() app:UpdatePreviewItems() end)
 
 	itemPreview()
 
-	header(L.SETTINGS_HEADER_COLLECTION)
+	header(L.COLLECTION_INFO)
 
-	local parentSetting, parentCheckbox = checkbox("iconNewMog", L.SETTINGS_ICON_NEW_MOG, L.SETTINGS_ICON_NEW_MOG_DESC, true, function() app:SettingsChanged() end)
+	local parentSetting, parentCheckbox = checkbox("iconNewMog", L.APPEARANCES, L.APPEARANCES_ICON_DESC, true, function() app:SettingsChanged() end)
 
-	checkbox("iconNewSource", L.SETTINGS_ICON_NEW_SOURCE, L.SETTINGS_ICON_NEW_SOURCE_DESC, false, function() app:SettingsChanged() end, parentSetting, parentCheckbox)
+	checkbox("iconNewSource", L.APPEARANCE_SOURCES, L.APPEARANCE_SOURCES_ICON_DESC, false, function() app:SettingsChanged() end, parentSetting, parentCheckbox)
 
 	if app.Retail then
 
-	checkbox("iconNewCatalyst", L.SETTINGS_ICON_NEW_CATALYST, L.SETTINGS_ICON_NEW_CATALYST_DESC, true, function() app:SettingsChanged() end, parentSetting, parentCheckbox)
+	checkbox("iconNewCatalyst", L.CATALYST, L.CATALYST_ICON_DESC, true, function() app:SettingsChanged() end, parentSetting, parentCheckbox)
 
-	checkbox("iconNewUpgrade", L.SETTINGS_ICON_NEW_UPGRADE, L.SETTINGS_ICON_NEW_UPGRADE_DESC, true, function() app:SettingsChanged() end, parentSetting, parentCheckbox)
+	checkbox("iconNewUpgrade", L.UPGRADE, L.UPGRADE_ICON_DESC, true, function() app:SettingsChanged() end, parentSetting, parentCheckbox)
 
-	checkbox("iconNewIllusion", L.SETTINGS_ICON_NEW_ILLUSION, L.SETTINGS_ICON_NEW_ILLUSION_DESC, true, function() app:SettingsChanged() end)
+	checkbox("iconNewIllusion", L.ILLUSIONS, L.ILLUSIONS_ICON_DESC, true, function() app:SettingsChanged() end)
 
 	end
 
-	checkbox("iconNewMount", L.SETTINGS_ICON_NEW_MOUNT, L.SETTINGS_ICON_NEW_MOUNT_DESC, true, function() app:SettingsChanged() end)
+	checkbox("iconNewMount", L.MOUNTS, L.MOUNTS_ICON_DESC, true, function() app:SettingsChanged() end)
 
-	local parentSetting, parentCheckbox = checkbox("iconNewPet", L.SETTINGS_ICON_NEW_PET, L.SETTINGS_ICON_NEW_PET_DESC, true, function() app:SettingsChanged() end)
+	local parentSetting, parentCheckbox = checkbox("iconNewPet", L.PETS, L.PETS_ICON_DESC, true, function() app:SettingsChanged() end)
 
 	if app.Retail then
 
-	checkbox("iconNewPetMax", L.SETTINGS_ICON_NEW_PET_MAX, L.SETTINGS_ICON_NEW_PET_MAX_DESC, false, function() app:SettingsChanged() end, parentSetting, parentCheckbox)
+	checkbox("iconNewPetMax", L.PETS_COLLECT_MAX, L.SETTINGS_ICON_NEW_PET_MAX_DESC, false, function() app:SettingsChanged() end, parentSetting, parentCheckbox)
 
-	checkbox("iconNewToy", L.SETTINGS_ICON_NEW_TOY, L.SETTINGS_ICON_NEW_TOY_DESC, true, function() app:SettingsChanged() end)
+	checkbox("iconNewToy", L.TOYS, L.TOYS_ICON_DESC, true, function() app:SettingsChanged() end)
 
 	end
 
-	local parentSetting, parentCheckbox = checkbox("iconNewRecipe", L.SETTINGS_ICON_NEW_RECIPE, L.SETTINGS_ICON_NEW_RECIPE_DESC, true, function() app:SettingsChanged() end)
+	local parentSetting, parentCheckbox = checkbox("iconNewRecipe", L.RECIPES, L.RECIPES_ICON_DESC, true, function() app:SettingsChanged() end)
 
-	checkbox("recipesPerChar", L.SETTINGS_RECIPE_PERCHAR, L.SETTINGS_RECIPE_PERCHAR_DESC, false, function() app:SettingsChanged() end, parentSetting, parentCheckbox, true)
+	checkbox("recipesPerChar", L.TRACK_PER_CHARACTER, L.TRACK_PER_CHARACTER_ICON_DESC, false, function() app:SettingsChanged() end, parentSetting, parentCheckbox, true)
 
 	if app.Retail then
 
-	local parentSetting, parentCheckbox = checkbox("iconNewDecor", L.SETTINGS_ICON_NEW_DECOR, L.SETTINGS_ICON_NEW_DECOR_DESC, true, function() app:SettingsChanged() end)
+	local parentSetting, parentCheckbox = checkbox("iconNewDecor", L.DECOR, L.DECOR_ICON_DESC, true, function() app:SettingsChanged() end)
 
-	checkbox("iconNewDecorXP", L.SETTINGS_ICON_NEW_DECORXP, L.SETTINGS_ICON_NEW_DECORXP_DESC, false, function() app:SettingsChanged() end, parentSetting, parentCheckbox)
+	checkbox("iconNewDecorXP", L.ONLY_HOUSE_XP, L.ONLY_HOUSE_XP_ICON_DESC, false, function() app:SettingsChanged() end, parentSetting, parentCheckbox)
 
 	end
 
-	header(L.SETTINGS_HEADER_OTHER_INFO)
+	header(L.OTHER_INFORMATION)
 
-	checkbox("iconQuestGold", L.SETTINGS_ICON_QUEST_GOLD, L.SETTINGS_ICON_QUEST_GOLD_DESC, true)
+	checkbox("iconQuestGold", L.QUEST_REWARD_SELL_VALUE, L.QUEST_REWARD_SELL_VALUE_ICON_DESC, true)
 
-	checkbox("iconUsable", L.SETTINGS_ICON_USABLE, L.SETTINGS_ICON_USABLE_DESC, true)
+	checkbox("iconUsable", L.USABLE_ITEMS, L.SETTINGS_ICON_USABLE_DESC, true)
 
-	checkbox("iconContainer", L.SETTINGS_ICON_OPENABLE, L.SETTINGS_ICON_OPENABLE_DESC, true)
+	checkbox("iconContainer", L.CONTAINERS, L.CONTAINERS_ICON_DESC, true)
 
 	if app.Retail then
 
-	category, layout = Settings.RegisterVerticalLayoutSubcategory(app.SettingsCategory, L.SETTINGS_HEADER_LOOT_TRACKER)
+	category, layout = Settings.RegisterVerticalLayoutSubcategory(app.SettingsCategory, L.LOOT_TRACKER)
 	Settings.RegisterAddOnCategory(category)
 
-	checkbox("minimapIcon", L.SETTINGS_MINIMAP_TITLE, string.format(L.SETTINGS_MINIMAP_DESC, app.NameShort), true, function() app:ToggleMinimapIcon() end)
+	checkbox("minimapIcon", L.SHOW_MINIMAP_ICON, string.format(L.SHOW_MINIMAP_ICON_DESC, app.NameShort), true, function() app:ToggleMinimapIcon() end)
 
-	checkbox("autoOpen", L.SETTINGS_AUTO_OPEN, string.format(L.SETTINGS_AUTO_OPEN_DESC, app.NameShort), false)
+	checkbox("autoOpen", L.AUTO_OPEN_WINDOW, string.format(L.AUTO_OPEN_WINDOW_DESC, app.NameShort), false)
 
-	dropdown("collectMode", L.SETTINGS_COLLECTION_MODE, string.format(L.SETTINGS_COLLECTION_MODE_DESC, app.NameShort), 1, {
-		{ value = 1, name = L.SETTINGS_MODE_APPEARANCES, description = L.SETTINGS_MODE_APPEARANCES_DESC },
-		{ value = 2, name = L.SETTINGS_MODE_SOURCES, description = L.SETTINGS_MODE_SOURCES_DESC },
+	dropdown("collectMode", L.COLLECTION_MODE, string.format(L.COLLECTION_MODE_DESC, app.NameShort), 1, {
+		{ value = 1, name = L.APPEARANCES, description = L.COLLECTION_MODE_APPEARANCES_DESC },
+		{ value = 2, name = L.APPEARANCE_SOURCES, description = L.COLLECTION_MODE_SOURCES_DESC },
 	})
 
-	dropdown("rarity", L.SETTINGS_RARITY, string.format(L.SETTINGS_RARITY_DESC, app.NameShort), 3, {
+	dropdown("rarity", L.RARITY, string.format(L.RARITY_SETTING_DESC, app.NameShort), 3, {
 		{ value = 0, name = "|cff" .. string.format("%02x%02x%02x", C_ColorOverrides.GetColorForQuality(0).r * 255, C_ColorOverrides.GetColorForQuality(0).g * 255, C_ColorOverrides.GetColorForQuality(0).b * 255) .. ITEM_QUALITY0_DESC .. "|r", description = nil },
 		{ value = 1, name = "|cff" .. string.format("%02x%02x%02x", C_ColorOverrides.GetColorForQuality(1).r * 255, C_ColorOverrides.GetColorForQuality(1).g * 255, C_ColorOverrides.GetColorForQuality(1).b * 255) .. ITEM_QUALITY1_DESC .. "|r", description = nil },
 		{ value = 2, name = "|cff" .. string.format("%02x%02x%02x", C_ColorOverrides.GetColorForQuality(2).r * 255, C_ColorOverrides.GetColorForQuality(2).g * 255, C_ColorOverrides.GetColorForQuality(2).b * 255) .. ITEM_QUALITY2_DESC .. "|r", description = nil },
@@ -614,22 +611,22 @@ function app:CreateSettings()
 		{ value = 4, name = "|cff" .. string.format("%02x%02x%02x", C_ColorOverrides.GetColorForQuality(4).r * 255, C_ColorOverrides.GetColorForQuality(4).g * 255, C_ColorOverrides.GetColorForQuality(4).b * 255) .. ITEM_QUALITY4_DESC .. "|r", description = nil },
 	})
 
-	button(L.SETTINGS_WHISPER, L.SETTINGS_WHISPER_CUSTOMIZE, L.SETTINGS_WHISPER_CUSTOMIZE_DESC, function() app.RenamePopup:Show() end)
+	button(L.WHISPER_MESSAGE, L.CUSTOMIZE, L.WHISPER_CUSTOMIZE_DESC1, function() app.RenamePopup:Show() end)
 
-	category, layout = Settings.RegisterVerticalLayoutSubcategory(app.SettingsCategory, L.SETTINGS_HEADER_TWEAKS)
+	category, layout = Settings.RegisterVerticalLayoutSubcategory(app.SettingsCategory, L.TWEAKS)
 	Settings.RegisterAddOnCategory(category)
 
-	local parentSetting, parentCheckbox = checkbox("instantCatalyst", L.SETTINGS_CATALYST, L.SETTINGS_CATALYST_DESC, true)
+	local parentSetting, parentCheckbox = checkbox("instantCatalyst", L.INSTANT_CATALYST, L.INSTANT_CATALYST_DESC, true)
 
-	checkbox("instantCatalystTooltip", L.SETTINGS_INSTANT_TOOLTIP,L.SETTINGS_INSTANT_TOOLTIP_DESC, true, nil, parentSetting, parentCheckbox)
+	checkbox("instantCatalystTooltip", L.SHOW_TOOLTIP,L.SETTINGS_INSTANT_TOOLTIP_DESC, true, nil, parentSetting, parentCheckbox)
 
-	local parentSetting, parentCheckbox = checkbox("instantVault", L.SETTINGS_VAULT, L.SETTINGS_VAULT_DESC, true)
+	local parentSetting, parentCheckbox = checkbox("instantVault", L.INSTANT_VAULT, L.INSTANT_VAULT_DESC, true)
 
-	checkbox("instantVaultTooltip", L.SETTINGS_INSTANT_TOOLTIP,L.SETTINGS_INSTANT_TOOLTIP_DESC, true, nil, parentSetting, parentCheckbox)
+	checkbox("instantVaultTooltip", L.SHOW_TOOLTIP,L.SETTINGS_INSTANT_TOOLTIP_DESC, true, nil, parentSetting, parentCheckbox)
 
-	checkbox("vendorAll", L.SETTINGS_VENDOR_ALL, L.SETTINGS_VENDOR_ALL_DESC, true)
+	checkbox("vendorAll", L.DISABLE_VENDOR_FILTER, L.DISABLE_VENDOR_FILTER_DESC, true)
 
-	checkbox("hideGroupRolls", L.SETTINGS_HIDE_LOOT_ROLL_WINDOW, string.format(L.SETTINGS_HIDE_LOOT_ROLL_WINDOW_DESC, "|cff00CCFF/loot|r"), false)
+	checkbox("hideGroupRolls", L.HIDE_LOOT_ROLL_WINDOW, string.format(L.HIDE_LOOT_ROLL_WINDOW_DESC, "|cff00CCFF/loot|r"), false)
 
 	end
 end

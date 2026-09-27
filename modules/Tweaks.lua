@@ -22,7 +22,7 @@ app.Event:Register("PLAYER_INTERACTION_MANAGER_FRAME_SHOW", function(type)
 		ItemInteractionFrame.ButtonFrame.ActionButton:HookScript("OnEvent", function(self, event, key, state)
 			if key == "LSHIFT" or key == "RSHIFT" then
 				if IsShiftKeyDown() then
-					ItemInteractionFrame.ButtonFrame.ActionButton:SetText(app.IconReady .. " " .. L.INSTANT_BUTTON)
+					ItemInteractionFrame.ButtonFrame.ActionButton:SetText(app.IconReady .. " " .. L.GET_IT_NOW)
 				else
 					ItemInteractionFrame.ButtonFrame.ActionButton:SetText(buttonText)
 				end
@@ -31,11 +31,11 @@ app.Event:Register("PLAYER_INTERACTION_MANAGER_FRAME_SHOW", function(type)
 		end)
 		ItemInteractionFrame.ButtonFrame.ActionButton:HookScript("OnEnter", function(self)
 			if IsShiftKeyDown() then
-				ItemInteractionFrame.ButtonFrame.ActionButton:SetText(app.IconReady .. " " .. L.INSTANT_BUTTON)
+				ItemInteractionFrame.ButtonFrame.ActionButton:SetText(app.IconReady .. " " .. L.GET_IT_NOW)
 			end
 			if app.Settings.instantCatalystTooltip then
 				GameTooltip:SetOwner(self, "ANCHOR_BOTTOM")
-				GameTooltip:SetText(L.INSTANT_TOOLTIP)
+				GameTooltip:SetText(L.HOLD_SHIFT_TOOLTIP)
 				GameTooltip:Show()
 			end
 			self:RegisterEvent("MODIFIER_STATE_CHANGED")
@@ -63,7 +63,7 @@ app.Event:Register("WEEKLY_REWARDS_UPDATE", function()
 		WeeklyRewardsFrame.SelectRewardButton:HookScript("OnEvent", function(self, event, key, state)
 			if key == "LSHIFT" or key == "RSHIFT" then
 				if IsShiftKeyDown() then
-					WeeklyRewardsFrame.SelectRewardButton:SetText(app.IconReady .. " " .. L.INSTANT_BUTTON)
+					WeeklyRewardsFrame.SelectRewardButton:SetText(app.IconReady .. " " .. L.GET_IT_NOW)
 				else
 					WeeklyRewardsFrame.SelectRewardButton:SetText(WEEKLY_REWARDS_SELECT_REWARD)
 				end
@@ -72,11 +72,11 @@ app.Event:Register("WEEKLY_REWARDS_UPDATE", function()
 		end)
 		WeeklyRewardsFrame.SelectRewardButton:HookScript("OnEnter", function(self)
 			if IsShiftKeyDown() then
-				WeeklyRewardsFrame.SelectRewardButton:SetText(app.IconReady .. " " .. L.INSTANT_BUTTON)
+				WeeklyRewardsFrame.SelectRewardButton:SetText(app.IconReady .. " " .. L.GET_IT_NOW)
 			end
 			if app.Settings.instantVaultTooltip then
 				GameTooltip:SetOwner(self, "ANCHOR_BOTTOM")
-				GameTooltip:SetText(L.INSTANT_TOOLTIP)
+				GameTooltip:SetText(L.HOLD_SHIFT_TOOLTIP)
 				GameTooltip:Show()
 			end
 			self:RegisterEvent("MODIFIER_STATE_CHANGED")

@@ -165,7 +165,7 @@ function app:CreateWindow()
 		app.Window:Hide()
 	end)
 	close:SetScript("OnEnter", function()
-		app:ShowWindowTooltip(L.WINDOW_BUTTON_CLOSE, nil, nil, "top")
+		app:ShowWindowTooltip(L.CLOSE_WINDOW, nil, nil, "top")
 	end)
 	close:SetScript("OnLeave", function()
 		GameTooltip:ClearLines()
@@ -189,7 +189,7 @@ function app:CreateWindow()
 		app.UnlockButton:Show()
 	end)
 	app.LockButton:SetScript("OnEnter", function()
-		app:ShowWindowTooltip(L.WINDOW_BUTTON_LOCK, nil, nil, "top")
+		app:ShowWindowTooltip(L.LOCK_WINDOW, nil, nil, "top")
 	end)
 	app.LockButton:SetScript("OnLeave", function()
 		GameTooltip:ClearLines()
@@ -213,7 +213,7 @@ function app:CreateWindow()
 		app.UnlockButton:Hide()
 	end)
 	app.UnlockButton:SetScript("OnEnter", function()
-		app:ShowWindowTooltip(L.WINDOW_BUTTON_UNLOCK, nil, nil, "top")
+		app:ShowWindowTooltip(L.UNLOCK_WINDOW, nil, nil, "top")
 	end)
 	app.UnlockButton:SetScript("OnLeave", function()
 		GameTooltip:ClearLines()
@@ -244,7 +244,7 @@ function app:CreateWindow()
 		app:OpenSettings()
 	end)
 	app.SettingsButton:SetScript("OnEnter", function()
-		app:ShowWindowTooltip(L.WINDOW_BUTTON_SETTINGS, nil, nil, "top")
+		app:ShowWindowTooltip(L.OPEN_SETTINGS, nil, nil, "top")
 	end)
 	app.SettingsButton:SetScript("OnLeave", function()
 		GameTooltip:ClearLines()
@@ -281,7 +281,7 @@ function app:CreateWindow()
 		end
 	end)
 	app.ClearButton:SetScript("OnEnter", function()
-		app:ShowWindowTooltip(L.WINDOW_BUTTON_CLEAR, nil, nil, "top")
+		app:ShowWindowTooltip(L.CLEAR_ALL_ITEMS .. "\n" .. L.HOLD_SHIFT_TO_SKIP, nil, nil, "top")
 	end)
 	app.ClearButton:SetScript("OnLeave", function()
 		GameTooltip:ClearLines()
@@ -301,18 +301,18 @@ function app:CreateWindow()
 	app.SortButton:SetScript("OnClick", function()
 		if app.Settings.windowSort == 1 then
 			app.Settings.windowSort = 2
-			app:ShowWindowTooltip(L.WINDOW_BUTTON_SORT2, nil, nil, "top")
+			app:ShowWindowTooltip(L.SORT_ALPHABETICAL .. "\n" .. L.SORTED_CURRENT .. "|cffFFFFFF " .. L.SORTED_NEW .. "|r", nil, nil, "top")
 		elseif app.Settings.windowSort == 2 then
 			app.Settings.windowSort = 1
-			app:ShowWindowTooltip(L.WINDOW_BUTTON_SORT1, nil, nil, "top")
+			app:ShowWindowTooltip(L.SORT_NEW .. "\n" .. L.SORTED_CURRENT .. "|cffFFFFFF " .. L.SORTED_ALPHABETICAL .. "|r", nil, nil, "top")
 		end
 		app:UpdateWindow()
 	end)
 	app.SortButton:SetScript("OnEnter", function()
 		if app.Settings.windowSort == 1 then
-			app:ShowWindowTooltip(L.WINDOW_BUTTON_SORT1, nil, nil, "top")
+			app:ShowWindowTooltip(L.SORT_NEW .. "\n" .. L.SORTED_CURRENT .. "|cffFFFFFF " .. L.SORTED_ALPHABETICAL .. "|r", nil, nil, "top")
 		elseif app.Settings.windowSort == 2 then
-			app:ShowWindowTooltip(L.WINDOW_BUTTON_SORT2, nil, nil, "top")
+			app:ShowWindowTooltip(L.SORT_ALPHABETICAL .. "\n" .. L.SORTED_CURRENT .. "|cffFFFFFF " .. L.SORTED_NEW .. "|r", nil, nil, "top")
 		end
 	end)
 	app.SortButton:SetScript("OnLeave", function()
@@ -407,9 +407,9 @@ function app:UpdateWindow()
 	end
 
 	if #app.WeaponLoot >= 1 then
-		app.WeaponsHeader:SetText(AUCTION_CATEGORY_WEAPONS .. " (" .. #app.WeaponLoot .. ")")
+		app.WeaponsHeader:SetText(L.WEAPONS .. " (" .. #app.WeaponLoot .. ")")
 	else
-		app.WeaponsHeader:SetText(AUCTION_CATEGORY_WEAPONS)
+		app.WeaponsHeader:SetText(L.WEAPONS)
 	end
 
 	if #app.WeaponLoot >= 1 then
@@ -459,7 +459,7 @@ function app:UpdateWindow()
 			row:SetScript("OnDragStart", function() app:MoveWindow() end)
 			row:SetScript("OnDragStop", function() app:SaveWindow() end)
 			row:SetScript("OnEnter", function()
-				app:ShowWindowTooltip(lootInfo.item, true, L.WINDOW_HEADER_LOOT_DESC)
+				app:ShowWindowTooltip(lootInfo.item, true, L.ALT .. " " .. app.IconLMB .. "|cffFFFFFF: " .. L.WHISPER_AND_REQUEST_ITEM .. "|r" .. L.SHIFT .. " " .. app.IconLMB .. "|cffFFFFFF: " .. L.LINK_ITEM .. "|r" .. L.SHIFT .. " " .. app.IconRMB .. "|cffFFFFFF: " .. L.REMOVE_ITEM .. "|r")
 
 				local emptyLine = false
 
@@ -604,9 +604,9 @@ function app:UpdateWindow()
 	if #app.WeaponLoot >= 1 and app.ShowWeapons == true then offset = -16*#app.WeaponLoot end
 	app.Window.Armour:SetPoint("TOPLEFT", app.Window.Weapons, "BOTTOMLEFT", 0, offset)
 	if #app.ArmourLoot >= 1 then
-		app.ArmourHeader:SetText(AUCTION_CATEGORY_ARMOR .. " (" .. #app.ArmourLoot .. ")")
+		app.ArmourHeader:SetText(L.ARMOR .. " (" .. #app.ArmourLoot .. ")")
 	else
-		app.ArmourHeader:SetText(AUCTION_CATEGORY_ARMOR)
+		app.ArmourHeader:SetText(L.ARMOR)
 	end
 
 	if #app.ArmourLoot >= 1 then
@@ -656,7 +656,7 @@ function app:UpdateWindow()
 			row:SetScript("OnDragStart", function() app:MoveWindow() end)
 			row:SetScript("OnDragStop", function() app:SaveWindow() end)
 			row:SetScript("OnEnter", function()
-				app:ShowWindowTooltip(lootInfo.item, true, L.WINDOW_HEADER_LOOT_DESC)
+				app:ShowWindowTooltip(lootInfo.item, true, L.ALT .. " " .. app.IconLMB .. "|cffFFFFFF: " .. L.WHISPER_AND_REQUEST_ITEM .. "|r" .. L.SHIFT .. " " .. app.IconLMB .. "|cffFFFFFF: " .. L.LINK_ITEM .. "|r" .. L.SHIFT .. " " .. app.IconRMB .. "|cffFFFFFF: " .. L.REMOVE_ITEM .. "|r")
 
 				local emptyLine = false
 
@@ -797,11 +797,11 @@ function app:UpdateWindow()
 	if #app.ArmourLoot >= 1 and app.ShowArmour == true then offset = -16*#app.ArmourLoot end
 	app.Window.Filtered:SetPoint("TOPLEFT", app.Window.Armour, "BOTTOMLEFT", 0, offset)
 	if #app.FilteredLoot >= 100 then
-		app.FilteredHeader:SetText(L.WINDOW_HEADER_FILTERED .. " (100+)")
+		app.FilteredHeader:SetText(L.FILTERED .. " (100+)")
 	elseif #app.FilteredLoot >= 1 then
-		app.FilteredHeader:SetText(L.WINDOW_HEADER_FILTERED .. " (" .. #app.FilteredLoot .. ")")
+		app.FilteredHeader:SetText(L.FILTERED .. " (" .. #app.FilteredLoot .. ")")
 	else
-		app.FilteredHeader:SetText(L.WINDOW_HEADER_FILTERED)
+		app.FilteredHeader:SetText(L.FILTERED)
 	end
 
 	if #app.FilteredLoot >= 1 then
@@ -855,7 +855,7 @@ function app:UpdateWindow()
 			row:SetScript("OnDragStart", function() app:MoveWindow() end)
 			row:SetScript("OnDragStop", function() app:SaveWindow() end)
 			row:SetScript("OnEnter", function()
-				app:ShowWindowTooltip(lootInfo.item, true, L.WINDOW_HEADER_FILTERED_DESC)
+				app:ShowWindowTooltip(lootInfo.item, true, app.IconRMB .. "|cffFFFFFF: " .. L.DEBUG_ITEM .. "|r" .. L.SHIFT .. " " .. app.IconLMB .. "|cffFFFFFF: " .. L.LINK_ITEM .. "|r" .. L.SHIFT .. " " .. app.IconRMB .. "|cffFFFFFF: " .. L.REMOVE_ITEM .. "|r")
 			end)
 			row:SetScript("OnLeave", function()
 				GameTooltip:ClearLines()
@@ -959,7 +959,7 @@ function app:UpdateWindow()
 		app:SaveWindow()
 	end)
 	app.Window.Corner:SetScript("OnEnter", function()
-		app:ShowWindowTooltip(L.WINDOW_BUTTON_CORNER, nil, nil, "bottom")
+		app:ShowWindowTooltip(L.DOUBLE .. " " .. app.IconLMB .. "|cffFFFFFF: " .. L.AUTOSIZE_WINDOW .. "|r", nil, nil, "bottom")
 	end)
 	app.Window.Corner:SetScript("OnLeave", function()
 		GameTooltip:ClearLines()

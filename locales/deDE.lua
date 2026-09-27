@@ -8,13 +8,141 @@ if GetLocale() ~= "deDE" then return end
 local appName, app = ...
 local L = app.locales
 
--- Slash commands
--- L.INVALID_COMMAND =                      "Invalid command."
--- L.DELETED_ENTRIES =                      "Deleted entries:"
--- L.DELETED_REMOVED =                      "Unique collectibles removed:"
-
--- Version comms
+-- Core
 -- L.NEW_VERSION_AVAILABLE =                "There is a newer version of %s available:" -- %s becomes the addon name
+
+-- L.INVALID_COMMAND =                      "Invalid command"
+
+-- Settings
+-- L.VERSION =                              GAME_VERSION_LABEL .. ":" -- "Version"
+-- L.SUPPORT_TEXTLONG1 =                    "Developing this addon takes a significant amount of time and effort."
+-- L.SUPPORT_TEXTLONG2 =                    "Please consider financially supporting the developer."
+-- L.SUPPORT =                              "Support"
+-- L.BUY_ME_A_COFFEE =                      "Buy Me a Coffee" -- Brand name, if there isn't a localised version, keep it the way it is
+-- L.THANK_YOU =                            "Thank you!"
+-- L.FEEDBACK_AND_HELP =                    "Feedback & Help"
+-- L.DISCORD =                              "Discord" -- Brand name, if there isn't a localised version, keep it the way it is
+-- L.JOIN_DISCORD_SERVER =                  "Join the Discord server."
+-- L.CTRL_C_COPY =                          "Ctrl+C to copy:"
+-- L.LINK_COPIED =                          "Link copied to clipboard"
+
+-- L.KEYBINDINGS_AND_SLASH_COMMANDS =       SETTINGS_KEYBINDINGS_LABEL .. " & Slash Commands" -- "Keybindings"
+-- _G["BINDING_NAME_TLH_TOGGLEWINDOW"] =    app.NameShort .. ": Toggle Window"
+-- L.TOGGLE_TRACKING_WINDOW =               "Toggle the tracking window"
+-- L.RESET_WINDOW_POSITION =                "Reset the tracking window position"
+-- L.OPEN_SETTINGS =                        "Open the settings"
+-- L.CHARACTER_REALM =                      "Character-Realm"
+-- L.DELETE_CHAR_RECIPES =                  "Mark a character's unique recipes etc. as unlearned"
+-- L.WHISPER_SET_DEFAULT =                  "Set the whisper message to its default"
+
+-- L.GENERAL =                              GENERAL -- "General"
+-- L.ITEM_OVERLAY =                         "Item Overlay"
+-- L.ITEM_OVERLAY_DESC =                    "Show an icon and text on items, to indicate collection status and more."
+-- L.REQUIRES_RELOAD =                      REQUIRES_RELOAD -- "Requires Reload"
+-- L.ICON_POSITION =                        "Icon Position"
+-- L.ICON_POSITION_DESC =                   "On which corner the icon appears."
+-- L.BAGANATOR_SETTINGS =                   "For Baganator users this is managed by Baganator's own settings."
+-- L.TOP_LEFT =                             "Top Left"
+-- L.TOP_RIGHT =                            "Top Right"
+-- L.BOTTOM_LEFT =                          "Bottom Left"
+-- L.BOTTOM_RIGHT =                         "Bottom Right"
+-- L.OVERLAP_ISSUES_NONE =                  "No known overlap issues."
+-- L.OVERLAP_ISSUES_QUALITY =               "This may overlap with a crafted item's quality."
+-- L.ICON_STYLE =                           "Icon Style"
+-- L.ICON_STYLE_DESC =                      "The style of the status icon."
+-- L.ICON_STYLE_FANCYCIRCLE =               "Fancy Circle"
+-- L.ICON_STYLE_FANCYCIRCLE_DESC =          "Type icon with round status border on corner"
+-- L.ICON_STYLE_SIMPLECIRCLE =              "Simple Circle"
+-- L.ICON_STYLE_SIMPLECIRCLE_DESC =         "Status icon with plain round background on corner"
+-- L.ICON_STYLE_SIMPLEICON =                "Simple Icon"
+-- L.ICON_STYLE_SIMPLEICON_DESC =           "Status icon in corner"
+-- L.ICON_STYLE_COSMETICICON =              "Cosmetic Icon"
+-- L.ICON_STYLE_COSMETICICON_DESC =         "Status border in corner (no animation)"
+-- L.ICON_ANIMATION =                       "Icon Animation"
+-- L.ICON_ANIMATION_DESC =                  "Show a pretty animated swirl on icons for learnable and usable items."
+-- L.ICON_LEARNED =                         "Learned Icon"
+-- L.ICON_LEARNED_DESC =                    "Show an icon to indicate the below tracked collectibles are learned."
+-- L.DEFAULT =                              CHAT_DEFAULT -- "Default"
+-- L.ICON_LEARNED_DESC2 =                   "You can set a separate style for learned icons."
+-- L.BINDING_TEXT =                         "Binding Text"
+-- L.BINDING_TEXT_DESC =                    "Show a text indicator for Bind-on-Equip items (BoE), Warbound items (BoA), and Warbound-until-Equipped (WuE) items."
+
+-- L.PREVIEW =                              "Preview:"
+-- L.UNLEARNED =                            PROFESSIONS_CATEGORY_UNLEARNED -- "Unlearned"
+-- L.USABLE =                               "Usable"
+-- L.LEARNED =                              PROFESSIONS_CATEGORY_LEARNED -- "Learned"
+-- L.UNUSABLE =                             MOUNT_JOURNAL_FILTER_UNUSABLE -- "Unusable"
+-- L.PREVIEW_TOOLTIP = {}
+-- L.PREVIEW_TOOLTIP[1] =                   "Unlearned items are completely new to your collection."
+-- L.PREVIEW_TOOLTIP[2] =                   "Usable items are things like containers, new sources for known appearances, etc."
+-- L.PREVIEW_TOOLTIP[3] =                   "Learned items are already in your collection."
+-- L.PREVIEW_TOOLTIP[4] =                   "Unusable items are things like locked containers, recipes for a profession you don't know, etc."
+
+-- L.COLLECTION_INFO =                      "Collection Info"
+-- L.APPEARANCES =                          WARDROBE -- "Appearances"
+-- L.APPEARANCES_ICON_DESC =                "Show an icon to indicate an item's appearance is unlearned."
+-- L.APPEARANCE_SOURCES =                   "Sources"
+-- L.APPEARANCE_SOURCES_ICON_DESC =         "Show an icon to indicate an item's appearance source is unlearned."
+-- L.CATALYST =                             "Catalyst"
+-- L.CATALYST_ICON_DESC =                   "Show an icon when catalyzing an item grants a new appearance."
+-- L.UPGRADE =                              "Upgrade"
+-- L.UPGRADE_ICON_DESC =                    "Show an icon when upgrading an item grants a new appearance."
+-- L.ILLUSIONS =                            "Illusions"
+-- L.ILLUSIONS_ICON_DESC =                  "Show an icon to indicate an illusion is unlearned."
+-- L.MOUNTS =                               MOUNTS -- "Mounts"
+-- L.MOUNTS_ICON_DESC =                     "Show an icon to indicate a mount is unlearned."
+-- L.PETS =                                 PETS -- "Pets"
+-- L.PETS_ICON_DESC =                       "Show an icon to indicate a pet is unlearned."
+-- L.PETS_COLLECT_MAX =                     "Collect 3/3"
+-- L.PETS_COLLECT_MAX_ICON_DESC =           "Also take the maximum number of pets you can own into account (usually 3)."
+-- L.TOYS =                                 "Toys"
+-- L.TOYS_ICON_DESC =                       "Show an icon to indicate a toy is unlearned."
+-- L.RECIPES =                              PROFESSIONS_RECIPES_TAB -- "Recipes"
+-- L.RECIPES_ICON_DESC =                    "Show an icon to indicate a recipe is unlearned."
+-- L.TRACK_PER_CHARACTER =                  "Track per Character"
+-- L.TRACK_PER_CHARACTER_ICON_DESC =        "Show learned recipes as learnable for alts."
+-- L.DECOR =                                CATALOG_SHOP_TYPE_DECOR -- "Decor"
+-- L.DECOR_ICON_DESC =                      "Show an icon to indicate you don't own a housing decor."
+-- L.ONLY_HOUSE_XP =                        "Only with House XP"
+-- L.ONLY_HOUSE_XP_ICON_DESC =              "Only show the icon for housing decor that grants House XP."
+
+-- L.OTHER_INFORMATION =                    "Other Information"
+-- L.QUEST_REWARD_SELL_VALUE =              "Quest Reward Sell Value"
+-- L.QUEST_REWARD_SELL_VALUE_ICON_DESC =    "Show an icon to indicate which quest reward has the highest vendor sell value, if there are multiple."
+-- L.USABLE_ITEMS =                         "Usable Items"
+-- L.USABLE_ITEMS_ICON_DESC =               "Show an icon to indicate an item can be used (profession knowledge, unlockable customisations, and spellbooks)."
+-- L.CONTAINERS =                           AUCTION_CATEGORY_CONTAINERS -- "Containers"
+-- L.CONTAINERS_ICON_DESC =                 "Show an icon to indicate an item can be opened, such as lockboxes and holiday boss bags."
+
+-- L.LOOT_TRACKER =                         "Loot Tracker"
+-- L.SHOW_MINIMAP_ICON =                    "Show Minimap Icon"
+-- L.SHOW_MINIMAP_ICON_DESC =               "Show the minimap icon. If you disable this, %s is still available from the Addon Compartment." -- %s becomes the addon name
+-- L.AUTO_OPEN_WINDOW =                     "Auto Open Window"
+-- L.AUTO_OPEN_WINDOW_DESC =                "Automatically show the %s window when an eligible item is looted." -- %s becomes the addon name
+-- L.COLLECTION_MODE =                      "Collection Mode"
+-- L.COLLECTION_MODE_DESC =                 "Set when %s should show new transmog looted by others." -- %s becomes the addon name
+-- L.COLLECTION_MODE_APPEARANCES_DESC =     "Show items only if they have a new appearance."
+-- L.COLLECTION_MODE_SOURCES_DESC =         "Show items if they are a new source, including for known appearances."
+-- L.RARITY =                               RARITY -- "Rarity"
+-- L.RARITY_SETTING_DESC =                  "Set from what quality and up %s should show loot." -- %s becomes the addon name
+-- L.WHISPER_MESSAGE =                      "Whisper Message"
+-- L.CUSTOMIZE =                            "Customize"
+-- L.WHISPER_CUSTOMIZE_DESC1 =              "Customize the whisper message"
+-- L.WHISPER_CUSTOMIZE_DESC2 =              "Customize your whisper message:"
+-- L.WHISPER_POPUP_ERROR =                  "Message does not include %s" -- %s becomes "%item"
+-- L.WHISPER_POPUP_SUCCESS =                "Message updated:"
+
+-- L.TWEAKS =                               "Tweaks"
+-- L.INSTANT_CATALYST =                     "Instant Catalyst"
+-- L.INSTANT_CATALYST_DESC =                "Hold Shift to instantly catalyze an item, skipping the 5 second timer."
+-- L.INSTANT_VAULT =                        "Instant Great Vault"
+-- L.INSTANT_VAULT_DESC =                   "Hold Shift to instantly receive your reward from the Great Vault and skip the 5 second timer."
+-- L.SHOW_TOOLTIP =                         "Show Tooltip"
+-- L.SHOW_TOOLTIP_SETTING_DESC =            "Show the tooltip explaining how this feature works. The button text still changes when this is disabled."
+-- L.DISABLE_VENDOR_FILTER =                "Disable Vendor Filter"
+-- L.DISABLE_VENDOR_FILTER_DESC =           "Automatically set all vendor filters to \"All\" to display items normally not shown to your class."
+-- L.HIDE_LOOT_ROLL_WINDOW =                "Hide Loot Roll Window"
+-- L.HIDE_LOOT_ROLL_WINDOW_DESC =           "Hide the window that shows loot rolls and their results. You can show the window again with %s." -- %s becomes "/loot"
 
 -- Item overlay
 -- L.BINDTEXT_WUE =                         "WuE" -- Abbreviation for "Warbound until Equipped"
@@ -25,170 +153,44 @@ local L = app.locales
 
 -- Loot tracker
 -- L.DEFAULT_MESSAGE =                      "Do you need the %item you looted? If not, I'd like to have it for transmog. :)"
+
+-- L.CLOSE_WINDOW =                         "Close the window"
+-- L.LOCK_WINDOW =                          "Lock the window"
+-- L.UNLOCK_WINDOW =                        "Unlock the window"
+-- L.CLEAR_ALL_ITEMS =                      "Clear all items"
+-- L.HOLD_SHIFT_TO_SKIP =                   "Hold Shift to skip confirmation"
+-- L.SORT_NEW =                             "Sort by newest first"
+-- L.SORT_ALPHABETICAL =                    "Sort alphabetically"
+-- L.SORTED_CURRENT =                       "Current sorting:"
+-- L.SORTED_ALPHABETICAL =                  "alphabetical"
+-- L.SORTED_NEW =                           "newest first"
 -- L.CLEAR_CONFIRM =                        "Do you want to clear all loot?"
+-- L.DOUBLE =                               "Double" -- Followed by RMB or LMB
+-- L.CTRL =                                 "Ctrl" -- Followed by RMB or LMB
+-- L.ALT =                                  "Alt" -- Followed by RMB or LMB
+-- L.SHIFT =                                "Shift" -- Followed by RMB or LMB
+-- L.AUTOSIZE_WINDOW =                      "Autosize to fit the window"
+-- L.WHISPER_AND_REQUEST_ITEM =             "Whisper and request the item"
+-- L.LINK_ITEM =                            "Link the item"
+-- L.REMOVE_ITEM =                          "Remove the item"
+-- L.DEBUG_ITEM =                           "Debug this item"
 
--- L.WINDOW_BUTTON_CLOSE =                  "Close the window"
--- L.WINDOW_BUTTON_LOCK =                   "Lock the window"
--- L.WINDOW_BUTTON_UNLOCK =                 "Unlock the window"
--- L.WINDOW_BUTTON_SETTINGS =               "Open the settings"
--- L.WINDOW_BUTTON_CLEAR =                  "Clear all items\nHold Shift to skip confirmation"
--- L.WINDOW_BUTTON_SORT1 =                  "Sort by newest first\nCurrent sorting:|cffFFFFFF alphabetical|r"
--- L.WINDOW_BUTTON_SORT2 =                  "Sort alphabetically\nCurrent sorting:|cffFFFFFF newest first|r"
--- L.WINDOW_BUTTON_CORNER =                 "Double " .. app.IconLMB .. "|cffFFFFFF: Autosize to fit the window|r"
-
--- L.WINDOW_HEADER_LOOT_DESC =              "|rAlt " .. app.IconLMB .. "|cffFFFFFF: Whisper and request the item\n" ..
---                                          "|rShift " .. app.IconLMB .. "|cffFFFFFF: Link the item\n" ..
---                                          "|rShift " .. app.IconRMB .. "|cffFFFFFF: Remove the item"
--- L.WINDOW_HEADER_FILTERED =               "Filtered"
--- L.WINDOW_HEADER_FILTERED_DESC =          "|r" .. app.IconRMB .. "|cffFFFFFF: Debug this item\n" ..
---                                          "|rShift " .. app.IconLMB .. "|cffFFFFFF: Link the item\n" ..
---                                          "|rShift " .. app.IconRMB .. "|cffFFFFFF: Remove the item"
-
+-- L.WEAPONS =                              AUCTION_CATEGORY_WEAPONS -- "Weapons"
+-- L.ARMOR =                                AUCTION_CATEGORY_ARMOR -- "Armor"
+-- L.FILTERED =                             "Filtered"
 -- L.PLAYER_COLLECTED_APPEARANCE =          "collected an appearance from this item" -- Preceded by a character name
 -- L.PLAYER_WHISPERED =                     "has been whispered by %s users" -- %s becomes the addon name
 -- L.WHISPERED_TIME =                       "time"
 -- L.WHISPERED_TIMES =                      "times"
 -- L.WHISPER_COOLDOWN =                     "You may only whisper a player once every 30 seconds per item."
-
 -- L.FILTER_REASON_UNTRADEABLE =            "Untradeable"
 -- L.FILTER_REASON_RARITY =                 "Rarity too low"
 -- L.FILTER_REASON_KNOWN =                  "Known appearance"
 
+-- Recipes
+-- L.DELETED_ENTRIES =                      "Deleted entries:"
+-- L.DELETED_REMOVED =                      "Unique collectibles removed:"
+
 -- Tweaks
--- L.INSTANT_BUTTON =                       "Get it now!"
--- L.INSTANT_TOOLTIP =                      "Hold Shift to instantly receive your item and skip the 5 second timer."
-
--- Settings
--- L.SETTINGS_TOOLTIP =                     app.NameLong .. "\n|cffFFFFFF" ..
---                                          app.IconLMB .. ": Toggle the window\n" ..
---                                          app.IconRMB .. ": " .. L.WINDOW_BUTTON_SETTINGS
-
--- L.SETTINGS_VERSION =                     GAME_VERSION_LABEL .. ":" -- "Version"
--- L.SETTINGS_SUPPORT_TEXTLONG =            "Developing this addon takes a significant amount of time and effort.\nPlease consider financially supporting the developer."
--- L.SETTINGS_SUPPORT_TEXT =                "Support"
--- L.SETTINGS_SUPPORT_BUTTON =              "Buy Me a Coffee" -- Brand name, if there isn't a localised version, keep it the way it is
--- L.SETTINGS_SUPPORT_DESC =                "Thank you!"
--- L.SETTINGS_HELP_TEXT =                   "Feedback & Help"
--- L.SETTINGS_HELP_BUTTON =                 "Discord" -- Brand name, if there isn't a localised version, keep it the way it is
--- L.SETTINGS_HELP_DESC =                   "Join the Discord server."
--- L.SETTINGS_URL_COPY =                    "Ctrl+C to copy:"
--- L.SETTINGS_URL_COPIED =                  "Link copied to clipboard"
-
--- L.SETTINGS_KEYSLASH_TITLE =              SETTINGS_KEYBINDINGS_LABEL .. " & Slash Commands" -- "Keybindings"
--- _G["BINDING_NAME_TLH_TOGGLEWINDOW"] =    app.NameShort .. ": Toggle Window"
--- L.SETTINGS_SLASH_TOGGLE =                "Toggle the tracking window"
--- L.SETTINGS_SLASH_RESETPOS =              "Reset the tracking window position"
--- L.SETTINGS_SLASH_WHISPER_DEFAULT =       "Set the whisper message to its default"
--- L.SETTINGS_SLASH_DELETE_DESC =           "Mark a character's unique recipes etc. as unlearned"
--- L.SETTINGS_SLASH_CHARREALM =             "Character-Realm"
-
--- L.REQUIRES_RELOAD =                      REQUIRES_RELOAD -- "Requires Reload"
-
--- L.GENERAL =                              GENERAL -- "General"
--- L.SETTINGS_ITEM_OVERLAY =                "Item Overlay"
--- L.SETTINGS_BAGANATOR =                   "For Baganator users this is managed by Baganator's own settings."
--- L.SETTINGS_ITEM_OVERLAY_DESC =           "Show an icon and text on items, to indicate collection status and more."
--- L.SETTINGS_ICON_POSITION =               "Icon Position"
--- L.SETTINGS_ICON_POSITION_DESC =          "On which corner the icon appears."
--- L.SETTINGS_ICONPOS_TL =                  "Top Left"
--- L.SETTINGS_ICONPOS_TR =                  "Top Right"
--- L.SETTINGS_ICONPOS_BL =                  "Bottom Left"
--- L.SETTINGS_ICONPOS_BR =                  "Bottom Right"
--- L.SETTINGS_ICONPOS_OVERLAP0 =            "No known overlap issues."
--- L.SETTINGS_ICONPOS_OVERLAP1 =            "This may overlap with a crafted item's quality."
--- L.SETTINGS_ICON_STYLE =                  "Icon Style"
--- L.SETTINGS_ICON_STYLE_DESC =             "The style of the status icon."
--- L.SETTINGS_ICON_STYLE1 =                 "Fancy Circle"
--- L.SETTINGS_ICON_STYLE1_DESC =            "Type icon with round status border on corner"
--- L.SETTINGS_ICON_STYLE2 =                 "Simple Circle"
--- L.SETTINGS_ICON_STYLE2_DESC =            "Status icon with plain round background on corner"
--- L.SETTINGS_ICON_STYLE3 =                 "Simple Icon"
--- L.SETTINGS_ICON_STYLE3_DESC =            "Status icon in corner"
--- L.SETTINGS_ICON_STYLE4 =                 "Cosmetic Icon"
--- L.SETTINGS_ICON_STYLE4_DESC =            "Status border in corner (no animation)"
--- L.SETTINGS_ICON_ANIMATE =                "Icon Animation"
--- L.SETTINGS_ICON_ANIMATE_DESC =           "Show a pretty animated swirl on icons for learnable and usable items."
--- L.SETTINGS_ICONLEARNED =                 "Learned Icon"
--- L.SETTINGS_ICONLEARNED_DESC =            "Show an icon to indicate the below tracked collectibles are learned."
--- L.DEFAULT =                              CHAT_DEFAULT -- "Default"
--- L.SETTINGS_ICONLEARNED_DESC2 =           "You can set a separate style for learned icons."
--- L.SETTINGS_BINDTEXT =                    "Binding Text"
--- L.SETTINGS_BINDTEXT_DESC =               "Show a text indicator for Bind-on-Equip items (BoE), Warbound items (BoA), and Warbound-until-Equipped (WuE) items."
--- L.SETTINGS_PREVIEW =                     "Preview:"
--- L.SETTINGS_UNLEARNED =                   PROFESSIONS_CATEGORY_UNLEARNED -- "Unlearned"
--- L.SETTINGS_USABLE =                      "Usable"
--- L.SETTINGS_LEARNED =                     PROFESSIONS_CATEGORY_LEARNED -- "Learned"
--- L.SETTINGS_UNUSABLE =                    MOUNT_JOURNAL_FILTER_UNUSABLE -- "Unusable"
--- L.SETTINGS_PREVIEWTOOLTIP = {}
--- L.SETTINGS_PREVIEWTOOLTIP[1] =           "Unlearned items are completely new to your collection."
--- L.SETTINGS_PREVIEWTOOLTIP[2] =           "Usable items are things like containers, new sources for known appearances, etc."
--- L.SETTINGS_PREVIEWTOOLTIP[3] =           "Learned items are already in your collection."
--- L.SETTINGS_PREVIEWTOOLTIP[4] =           "Unusable items are things like locked containers, recipes for a profession you don't know, etc."
-
--- L.SETTINGS_HEADER_COLLECTION =           "Collection Info"
--- L.SETTINGS_ICON_NEW_MOG =                "Appearances"
--- L.SETTINGS_ICON_NEW_MOG_DESC =           "Show an icon to indicate an item's appearance is unlearned."
--- L.SETTINGS_ICON_NEW_SOURCE =             "Sources"
--- L.SETTINGS_ICON_NEW_SOURCE_DESC =        "Show an icon to indicate an item's appearance source is unlearned."
--- L.SETTINGS_ICON_NEW_CATALYST =           "From Catalyzing"
--- L.SETTINGS_ICON_NEW_CATALYST_DESC =      "Show an icon when catalyzing an item grants a new appearance."
--- L.SETTINGS_ICON_NEW_UPGRADE =            "From Upgrading"
--- L.SETTINGS_ICON_NEW_UPGRADE_DESC =       "Show an icon when upgrading an item grants a new appearance."
--- L.SETTINGS_ICON_NEW_ILLUSION =           "Illusions"
--- L.SETTINGS_ICON_NEW_ILLUSION_DESC =      "Show an icon to indicate an illusion is unlearned."
--- L.SETTINGS_ICON_NEW_MOUNT =              "Mounts"
--- L.SETTINGS_ICON_NEW_MOUNT_DESC =         "Show an icon to indicate a mount is unlearned."
--- L.SETTINGS_ICON_NEW_PET =                "Pets"
--- L.SETTINGS_ICON_NEW_PET_DESC =           "Show an icon to indicate a pet is unlearned."
--- L.SETTINGS_ICON_NEW_PET_MAX =            "Collect 3/3"
--- L.SETTINGS_ICON_NEW_PET_MAX_DESC =       "Also take the maximum number of pets you can own into account (usually 3)."
--- L.SETTINGS_ICON_NEW_TOY =                "Toys"
--- L.SETTINGS_ICON_NEW_TOY_DESC =           "Show an icon to indicate a toy is unlearned."
--- L.SETTINGS_ICON_NEW_RECIPE =             "Recipes"
--- L.SETTINGS_ICON_NEW_RECIPE_DESC =        "Show an icon to indicate a recipe is unlearned."
--- L.SETTINGS_RECIPE_PERCHAR =              "Track per Character"
--- L.SETTINGS_RECIPE_PERCHAR_DESC =         "Show learned recipes as learnable for alts."
--- L.SETTINGS_ICON_NEW_DECOR =              "Decor"
--- L.SETTINGS_ICON_NEW_DECOR_DESC =         "Show an icon to indicate you don't own a housing decor."
--- L.SETTINGS_ICON_NEW_DECORXP =            "Only with House XP"
--- L.SETTINGS_ICON_NEW_DECORXP_DESC =       "Only show the icon for housing decor that grants House XP."
-
--- L.SETTINGS_HEADER_OTHER_INFO =           "Other Information"
--- L.SETTINGS_ICON_QUEST_GOLD =             "Quest Reward Sell Value"
--- L.SETTINGS_ICON_QUEST_GOLD_DESC =        "Show an icon to indicate which quest reward has the highest vendor sell value, if there are multiple."
--- L.SETTINGS_ICON_USABLE =                 "Usable Items"
--- L.SETTINGS_ICON_USABLE_DESC =            "Show an icon to indicate an item can be used (profession knowledge, unlockable customisations, and spellbooks)."
--- L.SETTINGS_ICON_OPENABLE =               "Openable Items"
--- L.SETTINGS_ICON_OPENABLE_DESC =          "Show an icon to indicate an item can be opened, such as lockboxes and holiday boss bags."
-
--- L.SETTINGS_HEADER_LOOT_TRACKER =         "Loot Tracker"
--- L.SETTINGS_MINIMAP_TITLE =               "Show Minimap Icon"
--- L.SETTINGS_MINIMAP_DESC =                "Show the minimap icon. If you disable this, %s is still available from the Addon Compartment." -- %s becomes the addon name
--- L.SETTINGS_AUTO_OPEN =                   "Auto Open Window"
--- L.SETTINGS_AUTO_OPEN_DESC =              "Automatically show the %s window when an eligible item is looted." -- %s becomes the addon name
--- L.SETTINGS_COLLECTION_MODE =             "Collection Mode"
--- L.SETTINGS_COLLECTION_MODE_DESC =        "Set when %s should show new transmog looted by others." -- %s becomes the addon name
--- L.SETTINGS_MODE_APPEARANCES =            "Appearances"
--- L.SETTINGS_MODE_APPEARANCES_DESC =       "Show items only if they have a new appearance."
--- L.SETTINGS_MODE_SOURCES =                "Sources"
--- L.SETTINGS_MODE_SOURCES_DESC =           "Show items if they are a new source, including for known appearances."
--- L.SETTINGS_RARITY =                      "Rarity"
--- L.SETTINGS_RARITY_DESC =                 "Set from what quality and up %s should show loot." -- %s becomes the addon name
--- L.SETTINGS_WHISPER =                     "Whisper Message"
--- L.SETTINGS_WHISPER_CUSTOMIZE =           "Customize"
--- L.SETTINGS_WHISPER_CUSTOMIZE_DESC =      "Customize the whisper message"
--- L.WHISPER_POPUP_CUSTOMIZE =              "Customize your whisper message:"
--- L.WHISPER_POPUP_ERROR =                  "Message does not include %s. Message is not updated." -- %s becomes %item
--- L.WHISPER_POPUP_SUCCESS =                "Message is updated."
-
--- L.SETTINGS_HEADER_TWEAKS =               "Tweaks"
--- L.SETTINGS_CATALYST =                    "Instant Catalyst"
--- L.SETTINGS_CATALYST_DESC =               "Hold Shift to instantly catalyze an item, skipping the 5 second timer."
--- L.SETTINGS_VAULT =                       "Instant Great Vault"
--- L.SETTINGS_VAULT_DESC =                  "Hold Shift to instantly receive your reward from the Great Vault and skip the 5 second timer."
--- L.SETTINGS_INSTANT_TOOLTIP =             "Show Tooltip"
--- L.SETTINGS_INSTANT_TOOLTIP_DESC =        "Show the tooltip explaining how this feature works. The button text still changes when this is disabled."
--- L.SETTINGS_VENDOR_ALL =                  "Disable Vendor Filter"
--- L.SETTINGS_VENDOR_ALL_DESC =             "Automatically set all vendor filters to \"All\" to display items normally not shown to your class."
--- L.SETTINGS_HIDE_LOOT_ROLL_WINDOW =       "Hide Loot Roll Window"
--- L.SETTINGS_HIDE_LOOT_ROLL_WINDOW_DESC =  "Hide the window that shows loot rolls and their results. You can show the window again with %s." -- %s becomes /loot
+-- L.GET_IT_NOW =                           "Get it now!"
+-- L.HOLD_SHIFT_TOOLTIP =                   "Hold Shift to instantly receive your item and skip the 5 second timer."
