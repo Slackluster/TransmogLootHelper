@@ -95,27 +95,39 @@ function app:ApplyItemOverlay(overlay, itemLink, itemLocation, containerInfo, ba
 			scaleUp:SetScale(scale, scale)
 			scaleUp:SetOrder(1)
 
-			local alphaUp = overlay.animation2:CreateAnimation("Alpha")
-			alphaUp:SetDuration(1)
-			alphaUp:SetToAlpha(0)
-			alphaUp:SetToAlpha(1)
-			alphaUp:SetOrder(1)
+			local alphaUp1 = overlay.animation2:CreateAnimation("Alpha")
+			alphaUp1:SetDuration(2)
+			alphaUp1:SetFromAlpha(0)
+			alphaUp1:SetToAlpha(0.6)
+			alphaUp1:SetOrder(1)
+
+			local alphaUp2 = overlay.animation2:CreateAnimation("Alpha")
+			alphaUp2:SetDuration(0.5)
+			alphaUp2:SetFromAlpha(0.6)
+			alphaUp2:SetToAlpha(1)
+			alphaUp2:SetOrder(2)
+
+			local alphaDown1 = overlay.animation2:CreateAnimation("Alpha")
+			alphaDown1:SetDuration(0.5)
+			alphaDown1:SetFromAlpha(1)
+			alphaDown1:SetToAlpha(0.6)
+			alphaDown1:SetOrder(3)
 
 			local scaleDown = overlay.animation2:CreateAnimation("Scale")
 			scaleDown:SetDuration(2)
 			scaleDown:SetScale(1/scale, 1/scale)
-			scaleDown:SetOrder(2)
+			scaleDown:SetOrder(4)
 
-			local alphaDown = overlay.animation2:CreateAnimation("Alpha")
-			alphaDown:SetDuration(3)
-			alphaDown:SetFromAlpha(1)
-			alphaDown:SetToAlpha(0)
-			alphaDown:SetOrder(2)
+			local alphaDown2 = overlay.animation2:CreateAnimation("Alpha")
+			alphaDown2:SetDuration(2)
+			alphaDown2:SetFromAlpha(0.6)
+			alphaDown2:SetToAlpha(0)
+			alphaDown2:SetOrder(4)
 
-			local pause2 = overlay.animation2:CreateAnimation("Scale")
-			pause2:SetDuration(1)
-			pause2:SetScale(1, 1)
-			pause2:SetOrder(3)
+			local pause = overlay.animation2:CreateAnimation("Scale")
+			pause:SetDuration(1)
+			pause:SetScale(1, 1)
+			pause:SetOrder(5)
 
 			overlay.animation2:SetLooping("REPEAT")
 		end
@@ -793,8 +805,10 @@ function app:ApplyItemOverlay(overlay, itemLink, itemLocation, containerInfo, ba
 			end
 		else
 			overlay.icon:Hide()
-			overlay.animation:Stop()
-			overlay.animationTexture:Hide()
+			overlay.animation1:Stop()
+			overlay.animationTexture1:Hide()
+			overlay.animation2:Stop()
+			overlay.animationTexture2:Hide()
 		end
 
 		overlay.text:SetText("")
