@@ -55,34 +55,69 @@ function app:ApplyItemOverlay(overlay, itemLink, itemLocation, containerInfo, ba
 			frame:SetSize(10, 10)
 			frame:SetPoint("CENTER", overlay.texture)
 			frame:SetFrameLevel(overlay.icon:GetFrameLevel() - 1)
-			overlay.animationTexture = frame:CreateTexture(nil, "ARTWORK")
-			overlay.animationTexture:SetAllPoints(frame)
-			overlay.animationTexture:SetAtlas("ArtifactsFX-SpinningGlowys-Purple", true)
 
-			overlay.animation = overlay.animationTexture:CreateAnimationGroup()
+			overlay.animationTexture1 = frame:CreateTexture(nil, "ARTWORK")
+			overlay.animationTexture1:SetAllPoints(frame)
+			overlay.animationTexture1:SetAtlas("ArtifactsFX-SpinningGlowys-Purple", true)
+			overlay.animation1 = overlay.animationTexture1:CreateAnimationGroup()
 
-			local spin = overlay.animation:CreateAnimation("Rotation")
+			local spin = overlay.animation1:CreateAnimation("Rotation")
 			spin:SetDuration(2.5)
 			spin:SetDegrees(-360)
 			spin:SetOrder(1)
 
 			local scale = 2.5
-			local scaleUp = overlay.animation:CreateAnimation("Scale")
+			local scaleUp = overlay.animation1:CreateAnimation("Scale")
 			scaleUp:SetDuration(1)
 			scaleUp:SetScale(scale, scale)
 			scaleUp:SetOrder(1)
 
-			local spin2 = overlay.animation:CreateAnimation("Rotation")
+			local spin2 = overlay.animation1:CreateAnimation("Rotation")
 			spin2:SetDuration(2.5)
 			spin2:SetDegrees(-360)
 			spin2:SetOrder(2)
 
-			local scaleDown = overlay.animation:CreateAnimation("Scale")
+			local scaleDown = overlay.animation1:CreateAnimation("Scale")
 			scaleDown:SetDuration(1)
 			scaleDown:SetScale(1/scale, 1/scale)
 			scaleDown:SetOrder(2)
 
-			overlay.animation:SetLooping("REPEAT")
+			overlay.animation1:SetLooping("REPEAT")
+
+			overlay.animationTexture2 = frame:CreateTexture(nil, "ARTWORK")
+			overlay.animationTexture2:SetAllPoints(frame)
+			overlay.animationTexture2:SetTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\cosmetic-icon-glow.png")
+			overlay.animation2 = overlay.animationTexture2:CreateAnimationGroup()
+
+			local scale = 2.5
+			local scaleUp = overlay.animation2:CreateAnimation("Scale")
+			scaleUp:SetDuration(2)
+			scaleUp:SetScale(scale, scale)
+			scaleUp:SetOrder(1)
+
+			local alphaUp = overlay.animation2:CreateAnimation("Alpha")
+			alphaUp:SetDuration(1)
+			alphaUp:SetToAlpha(0)
+			alphaUp:SetToAlpha(1)
+			alphaUp:SetOrder(1)
+
+			local scaleDown = overlay.animation2:CreateAnimation("Scale")
+			scaleDown:SetDuration(2)
+			scaleDown:SetScale(1/scale, 1/scale)
+			scaleDown:SetOrder(2)
+
+			local alphaDown = overlay.animation2:CreateAnimation("Alpha")
+			alphaDown:SetDuration(3)
+			alphaDown:SetFromAlpha(1)
+			alphaDown:SetToAlpha(0)
+			alphaDown:SetOrder(2)
+
+			local pause2 = overlay.animation2:CreateAnimation("Scale")
+			pause2:SetDuration(1)
+			pause2:SetScale(1, 1)
+			pause2:SetOrder(3)
+
+			overlay.animation2:SetLooping("REPEAT")
 		end
 	end
 	createOverlay()
@@ -340,7 +375,18 @@ function app:ApplyItemOverlay(overlay, itemLink, itemLocation, containerInfo, ba
 			end
 
 			overlay.border:SetTexture(nil)
-			overlay.animationTexture:Show()
+			overlay.animation1:Stop()
+			overlay.animationTexture1:Hide()
+			overlay.animation2:Stop()
+			overlay.animationTexture2:Hide()
+			if app.Settings.iconStyle == 4 then
+				overlay.animation = overlay.animation2
+				overlay.animationTexture = overlay.animationTexture2
+			else
+				overlay.animation = overlay.animation1
+				overlay.animationTexture = overlay.animationTexture1
+			end
+
 			if color == "purple" then
 				if app.Settings.animateIcon then
 					overlay.animation:Play()
@@ -412,10 +458,10 @@ function app:ApplyItemOverlay(overlay, itemLink, itemLocation, containerInfo, ba
 				end
 			end
 
-			if app.Settings.iconStyle == 4 then
-				overlay.animation:Stop()
-				overlay.animationTexture:Hide()
-			end
+			-- if app.Settings.iconStyle == 4 then
+			-- 	overlay.animation:Stop()
+			-- 	overlay.animationTexture:Hide()
+			-- end
 
 			overlay:Show()
 			overlay.icon:Show()
