@@ -459,7 +459,7 @@ function app:UpdateWindow()
 			row:SetScript("OnDragStart", function() app:MoveWindow() end)
 			row:SetScript("OnDragStop", function() app:SaveWindow() end)
 			row:SetScript("OnEnter", function()
-				app:ShowWindowTooltip(lootInfo.item, true, L.ALT .. " " .. app.IconLMB .. "|cffFFFFFF: " .. L.WHISPER_AND_REQUEST_ITEM .. "|r" .. L.SHIFT .. " " .. app.IconLMB .. "|cffFFFFFF: " .. L.LINK_ITEM .. "|r" .. L.SHIFT .. " " .. app.IconRMB .. "|cffFFFFFF: " .. L.REMOVE_ITEM .. "|r")
+				app:ShowWindowTooltip(lootInfo.item, true, L.ALT .. " " .. app.IconLMB .. "|cffFFFFFF: " .. L.WHISPER_AND_REQUEST_ITEM .. "|r\n" .. L.SHIFT .. " " .. app.IconLMB .. "|cffFFFFFF: " .. L.LINK_ITEM .. "|r\n" .. L.SHIFT .. " " .. app.IconRMB .. "|cffFFFFFF: " .. L.REMOVE_ITEM .. "|r")
 
 				local emptyLine = false
 
@@ -656,7 +656,7 @@ function app:UpdateWindow()
 			row:SetScript("OnDragStart", function() app:MoveWindow() end)
 			row:SetScript("OnDragStop", function() app:SaveWindow() end)
 			row:SetScript("OnEnter", function()
-				app:ShowWindowTooltip(lootInfo.item, true, L.ALT .. " " .. app.IconLMB .. "|cffFFFFFF: " .. L.WHISPER_AND_REQUEST_ITEM .. "|r" .. L.SHIFT .. " " .. app.IconLMB .. "|cffFFFFFF: " .. L.LINK_ITEM .. "|r" .. L.SHIFT .. " " .. app.IconRMB .. "|cffFFFFFF: " .. L.REMOVE_ITEM .. "|r")
+				app:ShowWindowTooltip(lootInfo.item, true, L.ALT .. " " .. app.IconLMB .. "|cffFFFFFF: " .. L.WHISPER_AND_REQUEST_ITEM .. "|r\n" .. L.SHIFT .. " " .. app.IconLMB .. "|cffFFFFFF: " .. L.LINK_ITEM .. "|r\n" .. L.SHIFT .. " " .. app.IconRMB .. "|cffFFFFFF: " .. L.REMOVE_ITEM .. "|r")
 
 				local emptyLine = false
 
@@ -855,7 +855,7 @@ function app:UpdateWindow()
 			row:SetScript("OnDragStart", function() app:MoveWindow() end)
 			row:SetScript("OnDragStop", function() app:SaveWindow() end)
 			row:SetScript("OnEnter", function()
-				app:ShowWindowTooltip(lootInfo.item, true, app.IconRMB .. "|cffFFFFFF: " .. L.DEBUG_ITEM .. "|r" .. L.SHIFT .. " " .. app.IconLMB .. "|cffFFFFFF: " .. L.LINK_ITEM .. "|r" .. L.SHIFT .. " " .. app.IconRMB .. "|cffFFFFFF: " .. L.REMOVE_ITEM .. "|r")
+				app:ShowWindowTooltip(lootInfo.item, true, app.IconRMB .. "|cffFFFFFF: " .. L.DEBUG_ITEM .. "|r\n" .. L.SHIFT .. " " .. app.IconLMB .. "|cffFFFFFF: " .. L.LINK_ITEM .. "|r\n" .. L.SHIFT .. " " .. app.IconRMB .. "|cffFFFFFF: " .. L.REMOVE_ITEM .. "|r")
 			end)
 			row:SetScript("OnLeave", function()
 				GameTooltip:ClearLines()
