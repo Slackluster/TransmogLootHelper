@@ -470,11 +470,6 @@ function app:ApplyItemOverlay(overlay, itemLink, itemLocation, containerInfo, ba
 				end
 			end
 
-			-- if app.Settings.iconStyle == 4 then
-			-- 	overlay.animation:Stop()
-			-- 	overlay.animationTexture:Hide()
-			-- end
-
 			overlay:Show()
 			overlay.icon:Show()
 		end
@@ -482,8 +477,10 @@ function app:ApplyItemOverlay(overlay, itemLink, itemLocation, containerInfo, ba
 		local function hideOverlay()
 			overlay:Hide()
 			overlay.icon:Hide()
-			overlay.animation:Stop()
-			overlay.animationTexture:Hide()
+			overlay.animation1:Stop()
+			overlay.animationTexture1:Hide()
+			overlay.animation2:Stop()
+			overlay.animationTexture2:Hide()
 		end
 
 		if app.Texture[itemEquipLoc] then
@@ -1352,8 +1349,10 @@ function app:HookItemOverlay()
 							if v.link then
 								app:ApplyItemOverlay(v.TLHOverlay, v.link)
 								v.TLHOverlay.text:SetText("")
-								v.TLHOverlay.animation:Stop()
-								v.TLHOverlay.animationTexture:Hide()
+								v.TLHOverlay.animation1:Stop()
+								v.TLHOverlay.animationTexture1:Hide()
+								v.TLHOverlay.animation2:Stop()
+								v.TLHOverlay.animationTexture2:Hide()
 							end
 						end
 					end)
@@ -1388,8 +1387,10 @@ function app:HookItemOverlay()
 									C_Timer.After(0.2, function()
 										v.TLHOverlay.icon:ClearAllPoints()
 										v.TLHOverlay.icon:SetPoint("RIGHT", v)
-										v.TLHOverlay.animation:Stop()
-										v.TLHOverlay.animationTexture:Hide()
+										v.TLHOverlay.animation1:Stop()
+										v.TLHOverlay.animationTexture1:Hide()
+										v.TLHOverlay.animation2:Stop()
+										v.TLHOverlay.animationTexture2:Hide()
 									end)
 								end
 							end
@@ -1421,8 +1422,10 @@ function app:HookItemOverlay()
 										v.TLHOverlay.text:SetText("")
 										v.TLHOverlay.icon:ClearAllPoints()
 										v.TLHOverlay.icon:SetPoint("LEFT", v, 134, 0)
-										v.TLHOverlay.animation:Stop()
-										v.TLHOverlay.animationTexture:Hide()
+										v.TLHOverlay.animation1:Stop()
+										v.TLHOverlay.animationTexture1:Hide()
+										v.TLHOverlay.animation2:Stop()
+										v.TLHOverlay.animationTexture2:Hide()
 									end
 
 									local speciesID
