@@ -98,6 +98,7 @@ function app:ShowWindowTooltip(text, hyperlink, secondary, position)
 end
 
 function app:MoveWindow()
+	app.Gravity:StartDragging(app.Window)
 	if app.Settings.windowLocked then
 		app.UnlockButton:LockHighlight()
 	else
@@ -110,6 +111,7 @@ function app:MoveWindow()
 end
 
 function app:SaveWindow()
+	app.Gravity:StopDragging(app.Window)
 	app.UnlockButton:UnlockHighlight()
 	app.Window:StopMovingOrSizing()
 
@@ -140,6 +142,7 @@ function app:CreateWindow()
 	app.Window:RegisterForDrag("LeftButton")
 	app.Window:SetScript("OnDragStart", function() app:MoveWindow() end)
 	app.Window:SetScript("OnDragStop", function() app:SaveWindow() end)
+	app.Window:SetScript("OnShow", function() C_Timer.After(1, function() app.Gravity:StartGravity(app.Window) end) end)
 	app.Window:Hide()
 
 	local corner = CreateFrame("Button", nil, app.Window)
