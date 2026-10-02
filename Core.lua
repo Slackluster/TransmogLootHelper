@@ -38,6 +38,12 @@ end)
 
 app.Event:Register("ADDON_LOADED", function(addOnName, containsBindings)
 	if addOnName == appName then
+		if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then
+			app.Retail = true
+		elseif WOW_PROJECT_ID == WOW_PROJECT_CAMELOT then
+			app.Forever = true
+		end
+
 		TransmogLootHelper_Cache = TransmogLootHelper_Cache or {}
 		TransmogLootHelper_Settings = TransmogLootHelper_Settings or {}
 
