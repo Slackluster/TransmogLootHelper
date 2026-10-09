@@ -874,24 +874,10 @@ end
 
 function app:HookItemOverlay()
 	if app.Settings.overlay then
-		local function bagsOverlay(container) -- Thank you Plusmouse!
-			if (ContainerFrame1 and ContainerFrame1:IsVisible()) or (ContainerFrame2 and ContainerFrame2:IsVisible()) or (ContainerFrame3 and ContainerFrame3:IsVisible()) or (ContainerFrame4 and ContainerFrame4:IsVisible()) or (ContainerFrame5 and ContainerFrame5:IsVisible()) or (ContainerFrame6 and ContainerFrame6:IsVisible()) or (ContainerFrameCombinedBags and ContainerFrameCombinedBags:IsVisible()) then
-				app.BagThrottle = app.BagThrottle or {}
-				if not app.BagThrottle[container] then
-					app.BagThrottle[container] = 0
-					C_Timer.After(0.1, function()
-						if app.BagThrottle[container] >= 1 then
-							app.BagThrottle[container] = nil
-							bagsOverlay(container)
-						else
-							app.BagThrottle[container] = nil
-						end
-					end)
-				else
-					app.BagThrottle[container] = 1
-					return
-				end
+		local function bagsOverlay(container)
+			if not container or not container:IsVisible() then return end
 
+			RunNextFrame(function()
 				for _, itemButton in ipairs(container.Items) do
 					if itemButton and not itemButton.TLHOverlay then
 						itemButton.TLHOverlay = CreateFrame("Frame", nil, itemButton)
@@ -907,64 +893,45 @@ function app:HookItemOverlay()
 						itemButton.TLHOverlay:Hide()
 					end
 				end
-			end
+			end)
 		end
 
 		for i = 1, 6 do
-			if _G["ContainerFrame" .. i] then
-				hooksecurefunc(_G["ContainerFrame" .. i], "UpdateItems", bagsOverlay)
+			local container = _G["ContainerFrame" .. i]
+			if container then
+				hooksecurefunc(container, "UpdateItems", bagsOverlay)
+				app.Event:Register("BAG_UPDATE_DELAYED", function() bagsOverlay(container) end)
 			end
 		end
 		hooksecurefunc(ContainerFrameCombinedBags, "UpdateItems", bagsOverlay)
+		app.Event:Register("BAG_UPDATE_DELAYED", function() bagsOverlay(ContainerFrameCombinedBags) end)
 
 		function app:BankOverlay()
-			if BankFrame and BankFrame:IsVisible() then
-				if not app.Flag.BankThrottle then
-					app.Flag.BankThrottle = 0
-					C_Timer.After(0.1, function()
-						if app.Flag.BankThrottle >= 1 then
-							app.Flag.BankThrottle = nil
-							app:BankOverlay()
+			if not BankFrame or not BankFrame:IsVisible() then return end
+
+			RunNextFrame(function()
+				for i = 1, 98 do
+					local itemButton = BankPanel:FindItemButtonByContainerSlotID(i)
+					if itemButton and not itemButton.TLHOverlay then
+						itemButton.TLHOverlay = CreateFrame("Frame", nil, itemButton)
+						itemButton.TLHOverlay:SetAllPoints(itemButton)
+					end
+
+					if itemButton and itemButton.TLHOverlay then
+						local itemLocation
+						if BankPanel.selectedTabID then
+							itemLocation = ItemLocation:CreateFromBagAndSlot(BankPanel.selectedTabID, i)
+						end
+						if itemLocation and C_Item.DoesItemExist(itemLocation) then
+							local itemLink = C_Item.GetItemLink(itemLocation)
+							local containerInfo = C_Container.GetContainerItemInfo(BankPanel.selectedTabID, i)
+							app:ApplyItemOverlay(itemButton.TLHOverlay, itemLink, itemLocation, containerInfo)
 						else
-							app.Flag.BankThrottle = nil
-						end
-					end)
-				else
-					app.Flag.BankThrottle = 1
-					return
-				end
-
-				local function bank()
-					for i = 1, 98 do
-						local itemButton = BankPanel:FindItemButtonByContainerSlotID(i)
-						if itemButton and not itemButton.TLHOverlay then
-							itemButton.TLHOverlay = CreateFrame("Frame", nil, itemButton)
-							itemButton.TLHOverlay:SetAllPoints(itemButton)
-						end
-
-						if itemButton and itemButton.TLHOverlay then
-							local itemLocation
-							if BankPanel.selectedTabID then
-								itemLocation = ItemLocation:CreateFromBagAndSlot(BankPanel.selectedTabID, i)
-							end
-							if itemLocation and C_Item.DoesItemExist(itemLocation) then
-								local itemLink = C_Item.GetItemLink(itemLocation)
-								local containerInfo = C_Container.GetContainerItemInfo(BankPanel.selectedTabID, i)
-								app:ApplyItemOverlay(itemButton.TLHOverlay, itemLink, itemLocation, containerInfo)
-							else
-								itemButton.TLHOverlay:Hide()
-							end
+							itemButton.TLHOverlay:Hide()
 						end
 					end
 				end
-
-				if not app.BankHook then
-					C_Timer.After(1, bank)
-					app.BankHook = true
-				else
-					bank()
-				end
-			end
+			end)
 		end
 
 		hooksecurefunc(BankPanel, "RefreshBankPanel", function() app:BankOverlay() end)
