@@ -1,4 +1,4 @@
-## Interface: 16001, 120100
+## Interface: 16001, 120105
 ## Title: |cff3FC7EBTransmog Loot Helper|r
 ## Author: Slackluster
 ## Notes: Adds icons to your items to show their collection status
