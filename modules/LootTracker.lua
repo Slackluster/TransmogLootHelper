@@ -1111,8 +1111,7 @@ app.Event:Register("CHAT_MSG_LOOT", function(text, playerName, languageName, cha
 					app:AddFilteredLoot(itemLink, itemID, itemTexture, playerName, itemType, L.FILTER_REASON_KNOWN)
 				end
 			end
-		else
-		-- elseif app:GetBonding(itemLink) == "BoP" then
+		elseif app:GetBonding(itemLink) ~= "BoE" then
 			local function findItem(itemID)
 				local tradeable = false
 				local found = false
