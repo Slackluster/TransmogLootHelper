@@ -248,31 +248,40 @@ function app:ApplyItemOverlay(overlay, itemLink, itemLocation, containerInfo, ba
 
 				local localeOtherContainers = {
 					ITEM_OPENABLE, -- <Right Click to Open>
+					"Benutzen: Öffnet den Behälter",
+					"Benutzen: Sammelt",
+					"Benutzen: Sichert",
+					"Usa: Apri il contenitore",
+					"Usa: Fornisce",
+					"Usa: Riscatta",
+					"Use: Claim",
 					"Use: Collect",
 					"Use: Open the container",
-					"Benutzen: Sammelt",
-					"Benutzen: Öffnet den Behälter",
-					"Uso: Recoges",
 					"Uso: Abre el contenedor",
-					"Uso: Recolecta",
-					"Uso: Abrir el contenedor",
-					"Utilise: Récupère",
-					"Utilise: Ouvre le conteneur",
-					"Usa: Fornisce",
-					"Usa: Apri il contenitore",
-					"Uso: Coleta",
 					"Uso: Abre o recipiente",
-					"Использование: Получить",
+					"Uso: Abrir el contenedor",
+					"Uso: Coleta",
+					"Uso: Recibe",
+					"Uso: Reclama",
+					"Uso: Recoges",
+					"Uso: Recolecta",
+					"Uso: Reivindica",
+					"Utilise: Ouvre le conteneur",
+					"Utilise: Récupère",
+					"Utilise: Vous récupérez",
+					"Использование: Забрать",
 					"Использование: Открыть контейнер",
-					"사용 효과:",
+					"Использование: Получить",
 					"사용 효과: 상자를 엽니다",
-					"使用: 收集",
+					"사용 효과:",
 					"使用: 打开箱子",
+					"使用: 收集",
 					"使用: 開啟容器",
+					"使用: 领取",
 				}
 				for k, v in pairs(localeOtherContainers) do
 					-- Exception for the Korean string, as it contains two parts that aren't directly concatenated
-					if app:GetTooltipText(itemLink, v) and (v ~= "사용 효과:" or app:GetTooltipText(itemLink, "획득합니다")) then
+					if app:GetTooltipText(itemLink, v) and (v ~= "사용 효과:" or app:GetTooltipText(itemLink, "획득합니다") or app:GetTooltipText(itemLink, "챙깁니다")) then
 						itemEquipLoc = "Container"
 						break
 					end
