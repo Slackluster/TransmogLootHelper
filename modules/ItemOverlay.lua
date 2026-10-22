@@ -1480,6 +1480,7 @@ function api:UpdateOverlay()
 		if C_AddOns.IsAddOnLoaded("Baganator") and Baganator.API then Baganator.API.RequestItemButtonsRefresh() end
 		if C_AddOns.IsAddOnLoaded("Bagforge") and Bagforge.API then Bagforge.API:RequestItemButtonsRefresh() end
 		if C_AddOns.IsAddOnLoaded("ElvUI") then app:UpdateElvUIOverlay() end
+		if C_AddOns.IsAddOnLoaded("Krowi_ExtendedVendorUI") then app:UpdateKrowiOverlay() end
 		app.Flag.RefreshPending = false
 	end)
 end
