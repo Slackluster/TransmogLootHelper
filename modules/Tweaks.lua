@@ -11,7 +11,7 @@ local L = app.locales
 ----------------------
 
 app.Event:Register("PLAYER_INTERACTION_MANAGER_FRAME_SHOW", function(type)
-	if app.Settings.instantCatalyst and type == 44 then
+	if app.Settings.instantCatalyst and type == 44 and not app.Flag.CatalystHook then
 		ItemInteractionFrame.ButtonFrame.ActionButton:HookScript("OnClick", function()
 			if IsShiftKeyDown() then
 				ItemInteractionFrame:CompleteItemInteraction()
@@ -45,6 +45,8 @@ app.Event:Register("PLAYER_INTERACTION_MANAGER_FRAME_SHOW", function(type)
 			ItemInteractionFrame.ButtonFrame.ActionButton:SetText(buttonText)
 			self:UnregisterEvent("MODIFIER_STATE_CHANGED")
 		end)
+
+		app.Flag.CatalystHook = true
 	end
 end)
 
@@ -53,7 +55,7 @@ end)
 -------------------------
 
 app.Event:Register("WEEKLY_REWARDS_UPDATE", function()
-	if app.Settings.instantVault and WeeklyRewardsFrame and WeeklyRewardsFrame:IsVisible() then
+	if app.Settings.instantVault and WeeklyRewardsFrame and WeeklyRewardsFrame:IsVisible() and not app.Flag.VaultHook then
 		WeeklyRewardsFrame.SelectRewardButton:HookScript("OnClick", function()
 			if IsShiftKeyDown() then
 				StaticPopupDialogs["CONFIRM_SELECT_WEEKLY_REWARD"].OnAccept(StaticPopup1, StaticPopup1.data)
@@ -86,6 +88,8 @@ app.Event:Register("WEEKLY_REWARDS_UPDATE", function()
 			WeeklyRewardsFrame.SelectRewardButton:SetText(WEEKLY_REWARDS_SELECT_REWARD)
 			self:UnregisterEvent("MODIFIER_STATE_CHANGED")
 		end)
+
+		app.Flag.VaultHook = true
 	end
 end)
 
