@@ -1047,7 +1047,8 @@ end
 
 function app:MoveItemToFiltered(itemID, reason, sender)
 	local function processTable(tableName)
-		for k, v in ipairs(tableName) do
+		for k = #tableName, 1, -1 do
+			local v = tableName[k]
 			if v.itemID == itemID and (not sender or v.player == sender) then
 				app:AddFilteredLoot(v.item, v.itemID, v.icon, v.player, v.itemType, reason)
 				table.remove(tableName, k)
