@@ -1,4 +1,5 @@
 local appName, app = ...
+local api = app.api
 
 app.Event:Register("ADDON_LOADED", function(addOnName, containsBindings)
 	if addOnName == appName and app.Settings.overlay then
@@ -31,6 +32,7 @@ app.Event:Register("ADDON_LOADED", function(addOnName, containsBindings)
 			end
 
 			API:RegisterItemButtonCallback("TransmogLootHelper", UpdateItemButton)
+			hooksecurefunc(api, "UpdateOverlay", function() Bagforge.API:RequestItemButtonsRefresh() end)
 		end)
 	end
 end)

@@ -1471,16 +1471,12 @@ function api:UpdateOverlay()
 	assert(self == api, "Call TransmogLootHelper:UpdateOverlay(), not TransmogLootHelper.UpdateOverlay()")
 	if not app.Settings.overlay or app.Flag.RefreshPending then return end
 	app.Flag.RefreshPending = true
-	C_Timer.After(0.5, function()
+	RunNextFrame(function()
 		app:BankOverlay()
 		app:GuildBankOverlay()
 		app:MerchantOverlay()
 		app:TradeskillOverlay()
 		app:AuctionHouseOverlay()
-		if C_AddOns.IsAddOnLoaded("Baganator") and Baganator.API then Baganator.API.RequestItemButtonsRefresh() end
-		if C_AddOns.IsAddOnLoaded("Bagforge") and Bagforge.API then Bagforge.API:RequestItemButtonsRefresh() end
-		if C_AddOns.IsAddOnLoaded("ElvUI") then app:UpdateElvUIOverlay() end
-		if C_AddOns.IsAddOnLoaded("Krowi_ExtendedVendorUI") then app:UpdateKrowiOverlay() end
 		app.Flag.RefreshPending = false
 	end)
 end

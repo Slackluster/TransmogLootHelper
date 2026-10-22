@@ -23,6 +23,7 @@ app.Event:Register("ADDON_LOADED", function(addOnName, containsBindings)
 				{ corner = "top_right", priority = 1 }
 			)
 
+			hooksecurefunc(api, "UpdateOverlay", function() Baganator.API.RequestItemButtonsRefresh() end)
 			C_Timer.After(5, function()
 				local skin = Baganator.API.Skins.GetCurrentSkin()
 				local frame1 = _G["Baganator_SingleViewBackpackViewFrame" .. skin]

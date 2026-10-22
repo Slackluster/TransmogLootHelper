@@ -1,4 +1,5 @@
 local appName, app = ...
+local api = app.api
 
 app.Event:Register("ADDON_LOADED", function(addOnName, containsBindings)
 	if addOnName == appName and app.Settings.overlay then
@@ -93,6 +94,7 @@ app.Event:Register("ADDON_LOADED", function(addOnName, containsBindings)
 				-- end)
 			end
 
+			hooksecurefunc(api, "UpdateOverlay", function() app:UpdateElvUIOverlay() end)
 			app.Event:Register("BAG_UPDATE_DELAYED", function() app:UpdateElvUIOverlay() end)
 			app.Event:Register("BANKFRAME_OPENED", function() app:UpdateElvUIOverlay() end)
 			app.Event:Register("GUILDBANKBAGSLOTS_CHANGED", function() app:UpdateElvUIOverlay() end)

@@ -1,4 +1,5 @@
 local appName, app = ...
+local api = app.api
 
 app.Event:Register("ADDON_LOADED", function(addOnName, containsBindings)
 	if addOnName == appName and app.Settings.overlay then
@@ -28,6 +29,7 @@ app.Event:Register("ADDON_LOADED", function(addOnName, containsBindings)
 			end
 
 			app.Event:Register("MERCHANT_SHOW", function() C_Timer.After(0.1, function() app:UpdateKrowiOverlay() end) end)
+			hooksecurefunc(api, "UpdateOverlay", function() app:UpdateKrowiOverlay() end)
 		end)
 	end
 end)
