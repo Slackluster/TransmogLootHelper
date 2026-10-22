@@ -27,8 +27,11 @@ function app:CacheRecipe(spellID, isSpell, isLearned)
 		app.Cache.Recipes[spellID] = { learned = false, knownBy = {} }
 	end
 
-	local categoryID = C_TradeSkillUI.GetRecipeInfo(spellID).categoryID
-	if isLearned or (isSpell and categoryID == 0 and C_SpellBook.IsSpellKnown(spellID)) or (categoryID ~= 0 and C_TradeSkillUI.GetRecipeInfo(spellID).learned) then
+	local recipeInfo = C_TradeSkillUI.GetRecipeInfo(spellID)
+	local categoryID = recipeInfo and recipeInfo.categoryID
+	if not categoryID then return end
+
+	if isLearned or (isSpell and categoryID == 0 and C_SpellBook.IsSpellKnown(spellID)) or (categoryID ~= 0 and recipeInfo.learned) then
 		app.Cache.Recipes[spellID].learned = true
 
 		local exists = false
