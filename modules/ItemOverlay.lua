@@ -134,6 +134,15 @@ function app:ApplyItemOverlay(overlay, itemLink, itemLocation, containerInfo, ba
 	end
 	createOverlay()
 
+	local function hideOverlay()
+		overlay:Hide()
+		overlay.icon:Hide()
+		overlay.animation1:Stop()
+		overlay.animationTexture1:Hide()
+		overlay.animation2:Stop()
+		overlay.animationTexture2:Hide()
+	end
+
 	local function processOverlay(itemID)
 		local hasItemLocation = false
 		if itemLocation or bagAddon then
@@ -481,15 +490,6 @@ function app:ApplyItemOverlay(overlay, itemLink, itemLocation, containerInfo, ba
 
 			overlay:Show()
 			overlay.icon:Show()
-		end
-
-		local function hideOverlay()
-			overlay:Hide()
-			overlay.icon:Hide()
-			overlay.animation1:Stop()
-			overlay.animationTexture1:Hide()
-			overlay.animation2:Stop()
-			overlay.animationTexture2:Hide()
 		end
 
 		if app.Texture[itemEquipLoc] then
@@ -858,9 +858,11 @@ function app:ApplyItemOverlay(overlay, itemLink, itemLocation, containerInfo, ba
 		elseif itemLink == "item:1" or itemLink == "item:2" or itemLink == "item:3" or itemLink == "item:4" then
 			processOverlay(tonumber(itemLink:match(":(%d+)")))
 		else
+			hideOverlay()
 			return
 		end
 	elseif ignore[itemID] then
+		hideOverlay()
 		return
 	else
 		C_Item.RequestLoadItemDataByID(itemID)
