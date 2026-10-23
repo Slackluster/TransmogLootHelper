@@ -329,7 +329,7 @@ function api:IsAppearanceCollected(itemLink, sourceID) -- Thank you Plusmouse!
 		if app:GetTransmogText(itemLink, TRANSMOGRIFY_TOOLTIP_APPEARANCE_UNKNOWN) then
 			return false
 		else
-			return true
+			return C_TransmogCollection.PlayerHasTransmogByItemInfo(itemLink)
 		end
 	else
 		local subClass = select(7, C_Item.GetItemInfoInstant(itemLink))
