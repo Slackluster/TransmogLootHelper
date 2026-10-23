@@ -46,6 +46,7 @@ integrations\BetterBags.lua
 integrations\ElvUI.lua
 integrations\Krowi_ExtendedVendorUI.lua
 integrations\OneWoW_Bags.lua
+integrations\SlackersTweakSuite.lua
 integrations\WorldQuestTab.lua
 locales\enUS.lua
 locales\deDE.lua
