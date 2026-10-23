@@ -571,7 +571,7 @@ function app:CreateSettings()
 
 	local parentSetting, parentCheckbox = checkbox("iconNewRecipe", L.RECIPES, L.RECIPES_ICON_DESC, true, function() app:SettingsChanged() end)
 
-	checkbox("recipesPerChar", L.TRACK_PER_CHARACTER, L.TRACK_PER_CHARACTER_ICON_DESC, false, function() app:SettingsChanged() end, parentSetting, parentCheckbox, true)
+	checkbox("recipesPerChar", L.TRACK_PER_CHARACTER, L.TRACK_PER_CHARACTER_ICON_DESC, false, function() app:SettingsChanged() end, parentSetting, parentCheckbox)
 
 	if app.Retail then
 
