@@ -102,8 +102,3 @@ function app:RecipeTooltipInfo()
 	end
 	TooltipDataProcessor.AddTooltipPostCall(Enum.TooltipDataType.Item, OnTooltipSetItem)
 end
-
--- MoneyFrame taint fix, courtesy of Galehad's MoneyFrameFix
-function SetTooltipMoney(frame, money, type, prefixText, suffixText)
-	frame:AddLine((prefixText or "") .. "  " .. GetCoinTextureString(money) .. " " .. (suffixText or ""), 1, 1, 1)
-end
