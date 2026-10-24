@@ -1150,6 +1150,7 @@ function app:HookItemOverlay()
 				MerchantFrame.FilterDropdown:RegisterCallback("OnMenuClose", function() app:MerchantOverlay() C_Timer.After(0.1, function() app:MerchantOverlay() end) end)
 				app.MerchantHook = true
 			end
+			if not MerchantFrame:IsVisible() then return end
 
 			for i = 1, 99 do -- Works for addons that expand the vendor frame up to 99 slots
 				local itemButton = _G["MerchantItem" .. i .. "ItemButton"]
@@ -1160,7 +1161,10 @@ function app:HookItemOverlay()
 					end
 
 					if i == 1 and itemButton.hasItem == nil then
-						RunNextFrame(function() app:MerchantOverlay() end)
+						RunNextFrame(function()
+							if not itemButton:IsVisible() then return end
+							app:MerchantOverlay()
+						end)
 						return
 					end
 

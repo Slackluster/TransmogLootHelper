@@ -5,6 +5,8 @@ app.Event:Register("ADDON_LOADED", function(addOnName, containsBindings)
 	if addOnName == appName and app.Settings.overlay then
 		EventUtil.ContinueOnAddOnLoaded("Krowi_ExtendedVendorUI", function()
 			function app:UpdateKrowiOverlay()
+				if not MerchantFrame:IsVisible() then return end
+
 				for i = 1, 99 do
 					local itemButton = _G["KrowiEVU_MerchantItem" .. i .. "ItemButton"]
 					if itemButton then
@@ -14,7 +16,10 @@ app.Event:Register("ADDON_LOADED", function(addOnName, containsBindings)
 						end
 
 						if i == 1 and itemButton.hasItem == nil then
-							RunNextFrame(function() app:UpdateKrowiOverlay() end)
+							RunNextFrame(function()
+								if not itemButton:IsVisible() then return end
+								app:UpdateKrowiOverlay()
+							end)
 							return
 						end
 
