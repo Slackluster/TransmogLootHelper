@@ -124,6 +124,7 @@ app.Texture = {
 	["INVTYPE_SHIELD"] = "Interface\\Icons\\inv_shield_06",
 	["INVTYPE_HOLDABLE"] = "Interface\\Icons\\inv_shield_06",
 	["INVTYPE_QUANTUM"] = "Interface\\Icons\\inv_misc_questionMark",
+	["INVTYPE_SPECIAL"] = "Interface\\Icons\\inv_misc_questionMark",
 
 	["Ensemble"] = "Interface\\Icons\\inv_chest_cloth_17",
 	["Arsenal"] = "Interface\\Icons\\achievement_arena_3v3_4",
@@ -1239,4 +1240,21 @@ app.Container = {
 	[206574] = true, -- Dented Raider's Leggings
 	[206571] = true, -- Dented Raider's Bracers
 	[206572] = true, -- Dented Raider's Gauntlets
+}
+
+app.Learnable = {
+	[162661] = true, -- Battered Skull
+	[162671] = true, -- Broken Crossbow
+	[162663] = true, -- Broken Spearhead
+	[162660] = true, -- Burnished Shield
+	[162674] = true, -- Cracked Helmet
+	[162678] = true, -- Crimson Flail
+	[162677] = true, -- Dull Throwing Knives
+	[162662] = true, -- Etched Mask
+	[162679] = true, -- Misfired Pistol
+	[162676] = true, -- Ragged Furs
+	[162680] = true, -- Ruined Collar
+	[162651] = true, -- Rusted Chains
+	[162682] = true, -- Tarnished Longsword
+	[162659] = true, -- Worn Mace
 }

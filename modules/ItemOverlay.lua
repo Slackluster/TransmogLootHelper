@@ -236,6 +236,8 @@ function app:ApplyItemOverlay(overlay, itemLink, itemLocation, containerInfo, ba
 						break
 					end
 				end
+			elseif app.Learnable[itemID] then
+				itemEquipLoc = "INVTYPE_SPECIAL"
 			else
 				local localeProfessionKnowledge = {
 					"Use: Study to increase your",
