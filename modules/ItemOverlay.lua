@@ -575,7 +575,7 @@ function app:ApplyItemOverlay(overlay, itemLink, itemLocation, containerInfo, ba
 					elseif app.Settings.iconNewUpgrade and ((tumInfo and (tumInfo.upgradeAppearanceMissing or tumInfo.catalystUpgradeAppearanceMissing)) or (attInfo and attInfo.filledUpgrade)) and (not tumInfo or app.Settings.iconNewSource or ((tumInfo.upgradeAppearanceMissing and not tumInfo.upgradeAppearanceLearnedFromOtherItem) or (tumInfo.catalystUpgradeAppearanceMissing and not tumInfo.catalystUpgradeAppearanceLearnedFromOtherItem))) then
 						overlay.texture:SetAtlas("CovenantSanctum-Upgrade-Icon-Available")
 						showOverlay("yellow")
-					elseif app.Settings.iconLearned and not (classID == 15 and subclassID == 0) then
+					elseif app.Settings.iconLearned then
 						showOverlay("green")
 					else
 						hideOverlay()
