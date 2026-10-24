@@ -26,17 +26,16 @@ app.Event:Register("ADDON_LOADED", function(addOnName, containsBindings)
 			hooksecurefunc(api, "UpdateOverlay", function() Baganator.API.RequestItemButtonsRefresh() end)
 			C_Timer.After(5, function()
 				local skin = Baganator.API.Skins.GetCurrentSkin()
-				local frame1 = _G["Baganator_SingleViewBackpackViewFrame" .. skin]
-				local frame2 = _G["Baganator_CategoryViewBackpackViewFrame" .. skin]
-				if frame1 then
-					frame1:HookScript("OnShow", function()
-						Baganator.API.RequestItemButtonsRefresh()
-					end)
-				end
-				if frame2 then
-					frame2:HookScript("OnShow", function()
-						Baganator.API.RequestItemButtonsRefresh()
-					end)
+				local frame = {}
+				frame[1] = _G["Baganator_SingleViewBackpackViewFrame" .. skin]
+				frame[2] = _G["Baganator_CategoryViewBackpackViewFrame" .. skin]
+
+				for i = 1, 4 do
+					if frame[i] then
+						frame[i]:HookScript("OnShow", function()
+							Baganator.API.RequestItemButtonsRefresh()
+						end)
+					end
 				end
 			end)
 		end)
