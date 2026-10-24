@@ -883,6 +883,7 @@ function app:ApplyItemOverlay(overlay, itemLink, itemLocation, containerInfo, ba
 				local spell = Spell:CreateFromSpellID(spellID)
 				spell:ContinueOnSpellLoad(function() RunNextFrame(function()
 					app.OverlayCache[itemLink] = nil
+					app.Tooltip[itemLink] = nil
 					processOverlay(itemID)
 				end) end)
 			else
