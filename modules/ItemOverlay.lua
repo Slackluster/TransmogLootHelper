@@ -737,17 +737,18 @@ function app:ApplyItemOverlay(overlay, itemLink, itemLocation, containerInfo, ba
 				end
 
 				if recordID then
-					if not app.Cache.Decor[recordID] and decorInfo then
+					if not app.Cache.Decor[recordID] then
 						app.Cache.Decor[recordID] = { owned = 0 }
 						app.Cache.Decor[recordID].grantsXP = false
-						app.Cache.Decor[recordID].xp = decorInfo.firstAcquisitionBonus
 						if decorInfo.firstAcquisitionBonus > 0 then
 							app.Cache.Decor[recordID].grantsXP = true
 						end
 					end
 
-					if app.Cache.Decor[recordID].xp and app.Cache.Decor[recordID].xp > 0 then
-						overlay.texture:SetTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\ui_homestone-64-blue.blp")
+					app.Cache.Decor[recordID].xp = nil -- Cleanup
+
+					if app.Cache.Decor[recordID].owned > 0 and decorInfo.firstAcquisitionBonus == 0 then
+						app.Cache.Decor[recordID].grantsXP = false
 					end
 
 					-- Double-check quantity if zero, because decor placed in your other house doesn't return via API
@@ -766,22 +767,15 @@ function app:ApplyItemOverlay(overlay, itemLink, itemLocation, containerInfo, ba
 						end
 					end
 
-					if app.Settings.iconNewDecorXP then
-						if app.Cache.Decor[recordID].grantsXP then
-							showOverlay("purple")
-						elseif app.Settings.iconLearned and app.Cache.Decor[recordID].xp > 0 then
-							showOverlay("green")
-						else
-							hideOverlay()
-						end
-					elseif app.Cache.Decor[recordID].owned > 0 then
-						if app.Settings.iconLearned then
-							showOverlay("green")
-						else
-							hideOverlay()
-						end
-					else
+					if app.Settings.iconNewDecorXP and app.Cache.Decor[recordID].grantsXP then
+						overlay.texture:SetTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\ui_homestone-64-blue.blp")
 						showOverlay("purple")
+					elseif app.Cache.Decor[recordID].owned <= 0 then
+						showOverlay("purple")
+					elseif app.Settings.iconLearned then
+						showOverlay("green")
+					else
+						hideOverlay()
 					end
 				else
 					showOverlay("yellow")
