@@ -896,18 +896,20 @@ function app:HookItemOverlay()
 
 			RunNextFrame(function()
 				for _, itemButton in ipairs(container.Items) do
-					if itemButton and not itemButton.TLHOverlay then
-						itemButton.TLHOverlay = CreateFrame("Frame", nil, itemButton)
-						itemButton.TLHOverlay:SetAllPoints(itemButton)
-					end
+					if itemButton then
+						if not itemButton.TLHOverlay then
+							itemButton.TLHOverlay = CreateFrame("Frame", nil, itemButton)
+							itemButton.TLHOverlay:SetAllPoints(itemButton)
+						end
 
-					local itemLocation = ItemLocation:CreateFromBagAndSlot(itemButton:GetBagID(), itemButton:GetID())
-					if C_Item.DoesItemExist(itemLocation) then
-						local itemLink = C_Item.GetItemLink(itemLocation)
-						local containerInfo = C_Container.GetContainerItemInfo(itemButton:GetBagID(), itemButton:GetID())
-						app:ApplyItemOverlay(itemButton.TLHOverlay, itemLink, itemLocation, containerInfo)
-					else
-						itemButton.TLHOverlay:Hide()
+						local itemLocation = ItemLocation:CreateFromBagAndSlot(itemButton:GetBagID(), itemButton:GetID())
+						if C_Item.DoesItemExist(itemLocation) then
+							local itemLink = C_Item.GetItemLink(itemLocation)
+							local containerInfo = C_Container.GetContainerItemInfo(itemButton:GetBagID(), itemButton:GetID())
+							app:ApplyItemOverlay(itemButton.TLHOverlay, itemLink, itemLocation, containerInfo)
+						else
+							itemButton.TLHOverlay:Hide()
+						end
 					end
 				end
 			end)
@@ -929,12 +931,12 @@ function app:HookItemOverlay()
 			RunNextFrame(function()
 				for i = 1, 98 do
 					local itemButton = BankPanel:FindItemButtonByContainerSlotID(i)
-					if itemButton and not itemButton.TLHOverlay then
-						itemButton.TLHOverlay = CreateFrame("Frame", nil, itemButton)
-						itemButton.TLHOverlay:SetAllPoints(itemButton)
-					end
+					if itemButton then
+						if not itemButton.TLHOverlay then
+							itemButton.TLHOverlay = CreateFrame("Frame", nil, itemButton)
+							itemButton.TLHOverlay:SetAllPoints(itemButton)
+						end
 
-					if itemButton and itemButton.TLHOverlay then
 						local itemLocation
 						if BankPanel.selectedTabID then
 							itemLocation = ItemLocation:CreateFromBagAndSlot(BankPanel.selectedTabID, i)
