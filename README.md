@@ -29,7 +29,7 @@ Currently supported addons:
 - Baganator
 - Bagforge
 - BetterBags
-- ElvUI (bags, not bank)
+- ElvUI
 - Krowi's Extended Vendor UI
 - World Quest Tab
 - World Quests List

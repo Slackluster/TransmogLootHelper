@@ -43,7 +43,6 @@ integrations\ArkInventory.lua
 integrations\Baganator.lua
 integrations\Bagforge.lua
 integrations\BetterBags.lua
-integrations\ElvUI.lua
 integrations\Krowi_ExtendedVendorUI.lua
 integrations\OneWoW_Bags.lua
 integrations\SlackersTweakSuite.lua
