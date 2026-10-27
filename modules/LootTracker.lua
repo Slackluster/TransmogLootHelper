@@ -1079,7 +1079,9 @@ app.Event:Register("CHAT_MSG_LOOT", function(text, playerName, languageName, cha
 		local itemType = classID .. "." .. subclassID
 
 		if playerName ~= selfName then
-			if not api:IsAppearanceCollected(itemLink) or (not api:IsSourceCollected(itemLink) and app.Settings.collectMode == 2) then
+			if itemEquipLoc == "INVTYPE_FINGER" or itemEquipLoc == "INVTYPE_NECK" or itemEquipLoc == "INVTYPE_TRINKET" then
+				app:AddFilteredLoot(itemLink, itemID, itemTexture, playerName, itemType, L.FILTER_REASON_KNOWN)
+			elseif not api:IsAppearanceCollected(itemLink) or (not api:IsSourceCollected(itemLink) and app.Settings.collectMode == 2) then
 				local bonding = app:GetBonding(itemLink)
 				if bonding == "BoA" or bonding == "WuE" then
 					app:AddFilteredLoot(itemLink, itemID, itemTexture, playerName, itemType, L.FILTER_REASON_UNTRADEABLE)
@@ -1108,9 +1110,7 @@ app.Event:Register("CHAT_MSG_LOOT", function(text, playerName, languageName, cha
 					app:AddFilteredLoot(itemLink, itemID, itemTexture, playerName, itemType, L.FILTER_REASON_RARITY)
 				end
 			else
-				if itemType ~= app.Type["General"] or (itemType == app.Type["General"] and itemEquipLoc ~= "INVTYPE_FINGER"	and itemEquipLoc ~= "INVTYPE_TRINKET" and itemEquipLoc ~= "INVTYPE_NECK") then
-					app:AddFilteredLoot(itemLink, itemID, itemTexture, playerName, itemType, L.FILTER_REASON_KNOWN)
-				end
+				app:AddFilteredLoot(itemLink, itemID, itemTexture, playerName, itemType, L.FILTER_REASON_KNOWN)
 			end
 		elseif app:GetBonding(itemLink) ~= "BoE" then
 			local function findItem(itemID)
