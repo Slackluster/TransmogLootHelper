@@ -326,8 +326,11 @@ function api:IsAppearanceCollected(itemLink, sourceID) -- Thank you Plusmouse!
 
 	local sourceID = sourceID or app:GetSourceID(itemLink)
 	if not sourceID then
+		local _, _, itemQuality = C_Item.GetItemInfo(itemLink)
 		if app:GetTransmogText(itemLink, TRANSMOGRIFY_TOOLTIP_APPEARANCE_UNKNOWN) then
 			return false
+		elseif itemQuality == Enum.ItemQuality.Artifact then
+			return true
 		else
 			return C_TransmogCollection.PlayerHasTransmogByItemInfo(itemLink)
 		end
