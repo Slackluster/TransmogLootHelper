@@ -731,10 +731,7 @@ function app:ApplyItemOverlay(overlay, itemLink, itemLocation, containerInfo, ba
 				end
 			elseif app.Settings.iconNewDecor and itemEquipLoc == "Decor" then
 				local decorInfo = C_HousingCatalog.GetCatalogEntryInfoByItem(itemID, true)
-				local recordID
-				if decorInfo then
-					recordID = decorInfo.entryID.recordID
-				end
+				local recordID = decorInfo and decorInfo.entryID.recordID
 
 				if recordID then
 					app.Cache.Decor[recordID] = app.Cache.Decor[recordID] or {}
