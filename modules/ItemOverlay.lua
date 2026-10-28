@@ -737,39 +737,10 @@ function app:ApplyItemOverlay(overlay, itemLink, itemLocation, containerInfo, ba
 				end
 
 				if recordID then
-					if not app.Cache.Decor[recordID] then
-						app.Cache.Decor[recordID] = { owned = 0 }
-						app.Cache.Decor[recordID].grantsXP = false
-						if decorInfo.firstAcquisitionBonus > 0 then
-							app.Cache.Decor[recordID].grantsXP = true
-						end
-					end
-
+					app.Cache.Decor[recordID] = app.Cache.Decor[recordID] or {}
 					app.Cache.Decor[recordID].xp = nil -- Cleanup
-
-					if app.Cache.Decor[recordID].owned <= 0 then
-						local owned = math.max(decorInfo.totalNumStored + decorInfo.totalNumPlaced, decorInfo.quantity, decorInfo.remainingRedeemable)
-						if owned > 0 then
-							app.Cache.Decor[recordID].owned = owned
-						else
-							local tooltip = C_TooltipInfo.GetHyperlink(itemLink)
-							if tooltip and tooltip.lines then
-								for k, v in ipairs(tooltip.lines) do
-									if v.type == 0 and v.leftText then
-										local compareText = v.leftText:gsub("%d+", "%%d")
-										if compareText == HOUSING_DECOR_OWNED_COUNT_FORMAT then
-											app.Cache.Decor[recordID].owned = tonumber(v.leftText:match("%d+")) or 0
-											break
-										end
-									end
-								end
-							end
-						end
-					end
-
-					if app.Cache.Decor[recordID].owned > 0 and decorInfo.firstAcquisitionBonus == 0 then
-						app.Cache.Decor[recordID].grantsXP = false
-					end
+					app.Cache.Decor[recordID].owned = decorInfo.totalNumStored + decorInfo.totalNumPlaced + decorInfo.remainingRedeemable
+					app.Cache.Decor[recordID].grantsXP = decorInfo.firstAcquisitionBonus > 0
 
 					if app.Settings.iconNewDecorXP and app.Cache.Decor[recordID].grantsXP then
 						overlay.texture:SetTexture("Interface\\AddOns\\TransmogLootHelper\\assets\\ui_homestone-64-blue.blp")
