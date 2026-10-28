@@ -747,24 +747,28 @@ function app:ApplyItemOverlay(overlay, itemLink, itemLocation, containerInfo, ba
 
 					app.Cache.Decor[recordID].xp = nil -- Cleanup
 
-					if app.Cache.Decor[recordID].owned > 0 and decorInfo.firstAcquisitionBonus == 0 then
-						app.Cache.Decor[recordID].grantsXP = false
-					end
-
-					-- Double-check quantity if zero, because decor placed in your other house doesn't return via API
-					if app.Cache.Decor[recordID].owned == 0 then
-						local tooltip = C_TooltipInfo.GetHyperlink(itemLink)
-						if tooltip and tooltip.lines then
-							for k, v in ipairs(tooltip.lines) do
-								if v.type == 0 and v.leftText then
-									local compareText = v.leftText:gsub("%d+", "%%d")
-									if compareText == HOUSING_DECOR_OWNED_COUNT_FORMAT then
-										app.Cache.Decor[recordID].owned = tonumber(v.leftText:match("%d+")) or 0
-										break
+					if app.Cache.Decor[recordID].owned <= 0 then
+						local owned = math.max(decorInfo.totalNumStored + decorInfo.totalNumPlaced, decorInfo.quantity, decorInfo.remainingRedeemable)
+						if owned > 0 then
+							app.Cache.Decor[recordID].owned = owned
+						else
+							local tooltip = C_TooltipInfo.GetHyperlink(itemLink)
+							if tooltip and tooltip.lines then
+								for k, v in ipairs(tooltip.lines) do
+									if v.type == 0 and v.leftText then
+										local compareText = v.leftText:gsub("%d+", "%%d")
+										if compareText == HOUSING_DECOR_OWNED_COUNT_FORMAT then
+											app.Cache.Decor[recordID].owned = tonumber(v.leftText:match("%d+")) or 0
+											break
+										end
 									end
 								end
 							end
 						end
+					end
+
+					if app.Cache.Decor[recordID].owned > 0 and decorInfo.firstAcquisitionBonus == 0 then
+						app.Cache.Decor[recordID].grantsXP = false
 					end
 
 					if app.Settings.iconNewDecorXP and app.Cache.Decor[recordID].grantsXP then
