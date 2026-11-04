@@ -423,7 +423,7 @@ function app:UpdateWindow()
 			"|cnIQ3", -- Rare
 			"|cnIQ2", -- Uncommon
 			"|cnIQ1", -- Common
-			"|cnIQ0", -- Poor (quantity 0)
+			"|cnIQ0", -- Poor
 		}
 		local function customSort(a, b)
 			for _, v in ipairs(customSortList) do
@@ -620,7 +620,7 @@ function app:UpdateWindow()
 			"|cnIQ3", -- Rare
 			"|cnIQ2", -- Uncommon
 			"|cnIQ1", -- Common
-			"|cnIQ0", -- Poor (quantity 0)
+			"|cnIQ0", -- Poor
 		}
 		local function customSort(a, b)
 			for _, v in ipairs(customSortList) do
@@ -815,7 +815,7 @@ function app:UpdateWindow()
 			"|cnIQ3", -- Rare
 			"|cnIQ2", -- Uncommon
 			"|cnIQ1", -- Common
-			"|cnIQ0", -- Poor (quantity 0)
+			"|cnIQ0", -- Poor
 		}
 		local function customSort(a, b)
 			if a.playerShort ~= b.playerShort then
