@@ -17,9 +17,6 @@ app.Event:Register("ADDON_LOADED", function(addOnName, containsBindings)
 		app.OverlayCache = {}
 
 		app:HookItemOverlay()
-
-		-- Midnight cleanup
-		app.Cache.Midnight = nil
 	end
 end)
 
