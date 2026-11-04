@@ -311,7 +311,7 @@ function app:IsUnusable(itemLink)
 	end
 end
 
-function app:GetSourceID(itemLink) -- Thank you Plusmouse!
+function app:GetSourceID(itemLink) -- Thank you, Plusmouse!
 	local _, sourceID = C_TransmogCollection.GetItemInfo(itemLink)
 	if sourceID then
 		return sourceID
@@ -321,7 +321,7 @@ function app:GetSourceID(itemLink) -- Thank you Plusmouse!
 	return sourceID
 end
 
-function api:IsAppearanceCollected(itemLink, sourceID) -- Thank you Plusmouse!
+function api:IsAppearanceCollected(itemLink, sourceID) -- Thank you, Plusmouse!
 	assert(self == api, "Call TransmogLootHelper:IsAppearanceCollected(), not TransmogLootHelper.IsAppearanceCollected()")
 
 	local sourceID = sourceID or app:GetSourceID(itemLink)
@@ -354,7 +354,7 @@ function api:IsAppearanceCollected(itemLink, sourceID) -- Thank you Plusmouse!
 	end
 end
 
-function api:IsSourceCollected(itemLink, sourceID) -- Thank you Plusmouse!
+function api:IsSourceCollected(itemLink, sourceID) -- Thank you, Plusmouse!
 	assert(self == api, "Call TransmogLootHelper:IsSourceCollected(), not TransmogLootHelper.IsSourceCollected()")
 
 	local sourceID = sourceID or app:GetSourceID(itemLink)

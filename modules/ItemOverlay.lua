@@ -983,7 +983,7 @@ function app:HookItemOverlay()
 		local function blackMarketOverlay()
 			if BlackMarketFrame and BlackMarketFrame:IsVisible() then
 				if not app.BlackMarketFrameHook then
-					BlackMarketFrame.ScrollBox:RegisterCallback("OnAcquiredFrame", function(_, v, data) -- Thank you Plusmouse!
+					BlackMarketFrame.ScrollBox:RegisterCallback("OnAcquiredFrame", function(_, v, data) -- Thank you, Plusmouse!
 						C_Timer.After(0.1, function()
 							if not v.TLHOverlay then
 								v.TLHOverlay = CreateFrame("Frame", nil, v)
@@ -1071,7 +1071,7 @@ function app:HookItemOverlay()
 		app.Event:Register("MAIL_SHOW", function() C_Timer.After(0.1, mailboxOverlay) end)
 		app.Event:Register("MAIL_INBOX_UPDATE", function() C_Timer.After(0.1, mailboxOverlay) end)
 
-		LootFrame:HookScript("OnShow", function() -- Thank you LS!
+		LootFrame:HookScript("OnShow", function() -- Thank you, LS!
 			for _, frame in next, LootFrame.ScrollBox.view.frames do
 				if frame.Item then
 					if not frame.TLHOverlay then
@@ -1328,7 +1328,7 @@ function app:HookItemOverlay()
 		function app:TradeskillOverlay()
 			if ProfessionsFrame and ProfessionsFrame:IsVisible() then
 				if not app.TradeskillHook then
-					ProfessionsFrame.CraftingPage.RecipeList.ScrollBox:RegisterCallback("OnAcquiredFrame", function(_, v, data) -- Thank you Plusmouse!
+					ProfessionsFrame.CraftingPage.RecipeList.ScrollBox:RegisterCallback("OnAcquiredFrame", function(_, v, data) -- Thank you, Plusmouse!
 						if not v.TLHOverlay then
 							v.TLHOverlay = CreateFrame("Frame", nil, v)
 						end
@@ -1367,7 +1367,7 @@ function app:HookItemOverlay()
 
 		function app:AuctionHouseOverlay()
 			if AuctionHouseFrame and AuctionHouseFrame:IsVisible() and not app.Flag.AuctionHouseHook then
-				AuctionHouseFrame.BrowseResultsFrame.ItemList.ScrollBox:RegisterCallback("OnAcquiredFrame", function(_, v) -- Thank you Plusmouse!
+				AuctionHouseFrame.BrowseResultsFrame.ItemList.ScrollBox:RegisterCallback("OnAcquiredFrame", function(_, v) -- Thank you, Plusmouse!
 					C_Timer.After(0.1, function()
 						if not v.TLHOverlay then
 							v.TLHOverlay = CreateFrame("Frame", nil, v)
