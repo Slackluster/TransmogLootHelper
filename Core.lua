@@ -328,7 +328,7 @@ function api:IsAppearanceCollected(itemLink, sourceID) -- Thank you, Plusmouse!
 	if not sourceID then
 		if app:GetTransmogText(itemLink, TRANSMOGRIFY_TOOLTIP_APPEARANCE_UNKNOWN) then
 			return false
-		elseif C_Item.IsEquippableItem(itemLink) then
+		elseif app.Retail and C_Item.IsEquippableItem(itemLink) then
 			return true
 		else
 			return C_TransmogCollection.PlayerHasTransmogByItemInfo(itemLink)
