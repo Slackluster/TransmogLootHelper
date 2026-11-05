@@ -898,24 +898,45 @@ function app:HookItemOverlay()
 			if not BankFrame or not BankFrame:IsVisible() then return end
 
 			RunNextFrame(function()
-				for i = 1, 98 do
-					local itemButton = BankPanel:FindItemButtonByContainerSlotID(i)
-					if itemButton then
+				if app.Forever then
+					for itemButton in BankPanel:EnumerateValidItems() do
 						if not itemButton.TLHOverlay then
 							itemButton.TLHOverlay = CreateFrame("Frame", nil, itemButton)
 							itemButton.TLHOverlay:SetAllPoints(itemButton)
 						end
 
-						local itemLocation
-						if BankPanel.selectedTabID then
-							itemLocation = ItemLocation:CreateFromBagAndSlot(BankPanel.selectedTabID, i)
-						end
-						if itemLocation and C_Item.DoesItemExist(itemLocation) then
+						local bagID = itemButton:GetBankTabID()
+						local slotID = itemButton:GetContainerSlotID()
+						local itemLocation = ItemLocation:CreateFromBagAndSlot(bagID, slotID)
+
+						if C_Item.DoesItemExist(itemLocation) then
 							local itemLink = C_Item.GetItemLink(itemLocation)
-							local containerInfo = C_Container.GetContainerItemInfo(BankPanel.selectedTabID, i)
+							local containerInfo = C_Container.GetContainerItemInfo(bagID, slotID)
 							app:ApplyItemOverlay(itemButton.TLHOverlay, itemLink, itemLocation, containerInfo)
 						else
 							itemButton.TLHOverlay:Hide()
+						end
+					end
+				elseif app.Retail then
+					for i = 1, 98 do
+						local itemButton = BankPanel:FindItemButtonByContainerSlotID(i)
+						if itemButton then
+							if not itemButton.TLHOverlay then
+								itemButton.TLHOverlay = CreateFrame("Frame", nil, itemButton)
+								itemButton.TLHOverlay:SetAllPoints(itemButton)
+							end
+
+							local itemLocation
+							if BankPanel.selectedTabID then
+								itemLocation = ItemLocation:CreateFromBagAndSlot(BankPanel.selectedTabID, i)
+							end
+							if itemLocation and C_Item.DoesItemExist(itemLocation) then
+								local itemLink = C_Item.GetItemLink(itemLocation)
+								local containerInfo = C_Container.GetContainerItemInfo(BankPanel.selectedTabID, i)
+								app:ApplyItemOverlay(itemButton.TLHOverlay, itemLink, itemLocation, containerInfo)
+							else
+								itemButton.TLHOverlay:Hide()
+							end
 						end
 					end
 				end
@@ -923,7 +944,7 @@ function app:HookItemOverlay()
 		end
 
 		hooksecurefunc(BankPanel, "RefreshBankPanel", function() app:BankOverlay() end)
-		hooksecurefunc(BankPanel, "OnUpdate", function() app:BankOverlay() end)
+		hooksecurefunc(BankPanel, "OnUpdate", function() app:BankOverlay() print("hemlo") end)
 		app.Event:Register("BANKFRAME_OPENED", function() app:BankOverlay() end)
 		app.Event:Register("BAG_UPDATE_DELAYED", function() app:BankOverlay() end)
 
