@@ -1102,6 +1102,7 @@ function app:HookItemOverlay()
 						frame.TLHOverlay = CreateFrame("Frame", nil, frame.Item)
 						frame.TLHOverlay:SetAllPoints(frame.Item)
 					end
+					frame.TLHOverlay:Hide()
 
 					local itemLink = GetLootSlotLink(frame:GetSlotIndex())
 					if itemLink then
@@ -1117,6 +1118,7 @@ function app:HookItemOverlay()
 					frame.TLHOverlay = CreateFrame("Frame", nil, frame)
 					frame.TLHOverlay:SetAllPoints(frame.IconFrame)
 				end
+				frame.TLHOverlay:Hide()
 
 				if not frame.rollID then return end
 				local itemLink = GetLootRollItemLink(frame.rollID)
