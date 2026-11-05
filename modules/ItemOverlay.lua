@@ -1025,8 +1025,13 @@ function app:HookItemOverlay()
 
 		local function mailboxOverlay()
 			if not app.MailboxHook then
-				InboxPrevPageButton:HookScript("OnClick", function() mailboxOverlay() C_Timer.After(0.1, mailboxOverlay) end)
-				InboxNextPageButton:HookScript("OnClick", function() mailboxOverlay() C_Timer.After(0.1, mailboxOverlay) end)
+				if app.Forever then
+					hooksecurefunc(InboxFrame, "Update", mailboxOverlay)
+					hooksecurefunc(OpenMailFrame, "Update", mailboxOverlay)
+				elseif app.Retail then
+					InboxPrevPageButton:HookScript("OnClick", function() mailboxOverlay() C_Timer.After(0.1, mailboxOverlay) end)
+					InboxNextPageButton:HookScript("OnClick", function() mailboxOverlay() C_Timer.After(0.1, mailboxOverlay) end)
+				end
 
 				for i = 1, 7 do
 					local itemButton = _G["MailItem" .. i .. "Button"]
@@ -1076,7 +1081,8 @@ function app:HookItemOverlay()
 						itemButton.TLHOverlay:SetAllPoints(itemButton)
 					end
 
-					local itemLink = GetInboxItemLink(app.SelectedMail, i)
+					local mailID = app.Forever and InboxFrame.openMailID or app.SelectedMail
+					local itemLink = mailID and mailID > 0 and GetInboxItemLink(mailID, i)
 					if itemLink then
 						app:ApplyItemOverlay(itemButton.TLHOverlay, itemLink)
 					else
