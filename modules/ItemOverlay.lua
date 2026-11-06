@@ -944,7 +944,7 @@ function app:HookItemOverlay()
 		end
 
 		hooksecurefunc(BankPanel, "RefreshBankPanel", function() app:BankOverlay() end)
-		hooksecurefunc(BankPanel, "OnUpdate", function() app:BankOverlay() print("hemlo") end)
+		hooksecurefunc(BankPanel, "OnUpdate", function() app:BankOverlay() end)
 		app.Event:Register("BANKFRAME_OPENED", function() app:BankOverlay() end)
 		app.Event:Register("BAG_UPDATE_DELAYED", function() app:BankOverlay() end)
 
