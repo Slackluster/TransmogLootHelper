@@ -1409,7 +1409,11 @@ function app:HookItemOverlay()
 									local function setPos()
 										v.TLHOverlay.text:SetText("")
 										v.TLHOverlay.icon:ClearAllPoints()
-										v.TLHOverlay.icon:SetPoint("LEFT", v, 134, 0)
+										if app.Retail then
+											v.TLHOverlay.icon:SetPoint("LEFT", v, 134, 0)
+										else
+											v.TLHOverlay.icon:SetPoint("LEFT", v, 154, 0)
+										end
 										v.TLHOverlay.animation1:Stop()
 										v.TLHOverlay.animationTexture1:Hide()
 										v.TLHOverlay.animation2:Stop()
