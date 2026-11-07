@@ -503,8 +503,7 @@ function app:UpdateWindow()
 						if app.WeaponLoot[lootInfo.index].recentlyWhispered == 0 then
 							local msg = string.gsub(app.Settings.message, "%%item", lootInfo.item)
 							C_ChatInfo.SendChatMessage(msg, "WHISPER", nil, lootInfo.player)
-							local message = "player:" .. lootInfo.player
-							app:SendAddonMessage(message)
+							app:SendAddonMessage({ player = lootInfo.player })
 
 							local whisperTime = GetServerTime()
 							app.WeaponLoot[lootInfo.index].recentlyWhispered = whisperTime
@@ -700,8 +699,7 @@ function app:UpdateWindow()
 						if app.ArmourLoot[lootInfo.index].recentlyWhispered == 0 then
 							local msg = string.gsub(app.Settings.message, "%%item", lootInfo.item)
 							C_ChatInfo.SendChatMessage(msg, "WHISPER", nil, lootInfo.player)
-							local message = "player:" .. lootInfo.player
-							app:SendAddonMessage(message)
+							app:SendAddonMessage({ player = lootInfo.player })
 
 							local whisperTime = GetServerTime()
 							app.ArmourLoot[lootInfo.index].recentlyWhispered = whisperTime
@@ -1151,7 +1149,7 @@ app.Event:Register("CHAT_MSG_LOOT", function(text, playerName, languageName, cha
 				end
 
 				if found and not tradeable then
-					app:SendAddonMessage("itemID:" .. itemID .. ":untradeable")
+					app:SendAddonMessage({ itemID = tonumber(itemID), key = "untradeable" })
 				end
 			end
 			findItem(itemID)
@@ -1162,43 +1160,37 @@ end)
 app.Event:Register("TRANSMOG_COLLECTION_SOURCE_ADDED", function(itemModifiedAppearanceID)
 	local itemID = C_TransmogCollection.GetSourceInfo(itemModifiedAppearanceID).itemID
 	app:MoveItemToFiltered(itemID, L.FILTER_REASON_KNOWN)
-
-	local message = "itemID:" .. itemID .. ":learned"
-	app:SendAddonMessage(message)
+	app:SendAddonMessage({ itemID = tonumber(itemID), key = "learned" })
 end)
 
 app.Event:Register("CHAT_MSG_ADDON", function(prefix, text, channel, sender, target, zoneChannelID, localID, name, instanceID)
-	if prefix == app.NamePrefix then
-		if text:find("^itemID:") then
-			local itemID, key, value = text:match("^itemID:(%d+):([^:]+):?(.*)$")
-			itemID = tonumber(itemID)
+	if prefix ~= app.NamePrefix then return end
 
-			if key and (key == "upgrade" or key == "untradeable") then -- upgrade == old, remove after a while
-				app:MoveItemToFiltered(itemID, L.FILTER_REASON_UNTRADEABLE, sender)
-				app.Flag.LastUpdate = GetServerTime()
-				app:Stagger(1, false)
-			elseif (key and key == "learned") or not key then -- not key == old, remove after a while
-				for k, v in ipairs(app.WeaponLoot) do
-					if v.player == sender and v.itemID == itemID then
-						app.WeaponLoot[k].icon = app.IconMaybeReady
-					end
-				end
-				for k, v in ipairs(app.ArmourLoot) do
-					if v.player == sender and v.itemID == itemID then
-						app.ArmourLoot[k].icon = app.IconMaybeReady
-					end
-				end
-				app.Flag.LastUpdate = GetServerTime()
-				app:Stagger(1, false)
-			end
-		elseif text:find("^player:") then
-			local player = text:match("^player:(.+)$")
-			app.Whispered[player] = app.Whispered[player] or 0
-			for k, v in pairs(app.Whispered) do
-				if k == player then
-					app.Whispered[k] = app.Whispered[k] + 1
+	local ok, message = pcall(function()
+		return C_EncodingUtil.DeserializeCBOR(C_EncodingUtil.DecodeBase64(text))
+	end)
+	if not ok or type(message) ~= "table" then return end
+
+	if message.itemID and message.key then
+		if message.key == "untradeable" then
+			app:MoveItemToFiltered(message.itemID, L.FILTER_REASON_UNTRADEABLE, sender)
+			app.Flag.LastUpdate = GetServerTime()
+			app:Stagger(1, false)
+		elseif message.key == "learned" then
+			for k, v in ipairs(app.WeaponLoot) do
+				if v.player == sender and v.itemID == message.itemID then
+					app.WeaponLoot[k].icon = app.IconMaybeReady
 				end
 			end
+			for k, v in ipairs(app.ArmourLoot) do
+				if v.player == sender and v.itemID == message.itemID then
+					app.ArmourLoot[k].icon = app.IconMaybeReady
+				end
+			end
+			app.Flag.LastUpdate = GetServerTime()
+			app:Stagger(1, false)
 		end
+	elseif message.player then
+		app.Whispered[message.player] = (app.Whispered[message.player] or 0) + 1
 	end
 end)
