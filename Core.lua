@@ -63,12 +63,14 @@ end)
 -------------------
 
 function app:SendAddonMessage(message, versionCheck)
+	local messageString = C_EncodingUtil.EncodeBase64(C_EncodingUtil.SerializeCBOR(message))
+
 	if IsInRaid(2) or IsInGroup(2) then
-		ChatThrottleLib:SendAddonMessage("NORMAL", app.NamePrefix, message, "INSTANCE_CHAT")
+		ChatThrottleLib:SendAddonMessage("NORMAL", app.NamePrefix, messageString, "INSTANCE_CHAT")
 	elseif IsInGroup() or IsInRaid() then
-		ChatThrottleLib:SendAddonMessage("NORMAL", app.NamePrefix, message, "RAID")
+		ChatThrottleLib:SendAddonMessage("NORMAL", app.NamePrefix, messageString, "RAID")
 	elseif versionCheck and IsInGuild() then
-		ChatThrottleLib:SendAddonMessage("NORMAL", app.NamePrefix, message, "GUILD")
+		ChatThrottleLib:SendAddonMessage("NORMAL", app.NamePrefix, messageString, "GUILD")
 	end
 end
 
