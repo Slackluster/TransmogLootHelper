@@ -26,7 +26,10 @@ function app:AddTooltipInfo()
 		local itemID = C_Item.GetItemInfoInstant(itemLink)
 		if not itemLink then return end
 
-		local emptyLine = false
+		local previousLine = tooltip:GetLeftLine(tooltip:NumLines())
+		local previousText = previousLine and previousLine:GetText()
+		local emptyLine = previousText and previousText:find("inv_enchant_formulasuperior_01", 1, true) -- Detect PSL tooltip line
+
 		if app.Settings.iconNewRecipe then
 			local recipeID = app:GetLearnedSpell(itemLink)
 			if recipeID and C_TradeSkillUI.GetProfessionInfoByRecipeID(recipeID).professionID ~= 0 and not app.Cache.Recipes[recipeID] then
