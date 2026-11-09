@@ -126,6 +126,7 @@ app.Texture = {
 	["INVTYPE_AMMO"] = "Interface\\Icons\\inv_throwingknife_02",
 	["INVTYPE_PROJECTILE"] = "Interface\\Icons\\inv_throwingknife_02",
 	["INVTYPE_THROWN"] = "Interface\\Icons\\inv_throwingknife_02",
+	["INVTYPE_BAG"] = "Interface\\Icons\\inv_throwingknife_02", -- Quivers
 	["INVTYPE_QUANTUM"] = "Interface\\Icons\\inv_misc_questionMark",
 	["INVTYPE_SPECIAL"] = "Interface\\Icons\\inv_misc_questionMark",
 

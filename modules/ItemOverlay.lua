@@ -569,8 +569,10 @@ function app:ApplyItemOverlay(overlay, itemLink, itemLocation, containerInfo, ba
 						showOverlay("purple")
 						app.Tooltip[itemID] = "unlearnedMog"
 					elseif api:IsAppearanceCollected(itemLink) == nil then
+						local _, _, _, _, _, _, _, _, _, _, _, classID, subclassID  = C_Item.GetItemInfo(itemLink)
+						if itemID == 11362 then print(classID, Enum.ItemClass.Quiver) end
 						if itemEquipLoc == "INVTYPE_AMMO" or itemEquipLoc == "INVTYPE_PROJECTILE" or itemEquipLoc == "INVTYPE_THROWN"
-						or itemSubType == Enum.ItemWeaponSubclass.Fishingpole
+						or (classID == Enum.ItemClass.Quiver and subclassID == 2) or subclassID == Enum.ItemWeaponSubclass.Fishingpole
 						or itemID == 5956 or itemID == 2901 or itemID == 7005 then -- Fishing Poles, Blacksmith Hammer, Mining Pick, Skinning Knife
 							showOverlay("purple")
 							app.Tooltip[itemID] = "unlearnedMog"
