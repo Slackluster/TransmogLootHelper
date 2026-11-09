@@ -567,20 +567,20 @@ function app:ApplyItemOverlay(overlay, itemLink, itemLocation, containerInfo, ba
 
 					if api:IsAppearanceCollected(itemLink) == false then
 						showOverlay("purple")
-						app.OverlayCache[itemLink].tooltipInfo = "unlearnedMog"
+						app.Tooltip[itemID] = "unlearnedMog"
 					elseif api:IsAppearanceCollected(itemLink) == nil then
 						if (itemLocation and C_Item.IsBound(itemLocation)) or (bagAddon and additionalInfo and type(additionalInfo) == "table" and additionalInfo.isBound) then
 							hideOverlay()
 						else
 							overlay.texture:SetTexture(app.Texture["Unknown"])
 							showOverlay("yellow")
-							app.OverlayCache[itemLink].tooltipInfo = "unlearnedMog"
+							app.Tooltip[itemID] = "unlearnedMog"
 							overlay.animation:Stop()
 							overlay.animationTexture:Hide()
 						end
 					elseif app.Settings.iconNewSource and not api:IsSourceCollected(itemLink) then
 						showOverlay("yellow")
-						app.OverlayCache[itemLink].tooltipInfo = "unlearnedMog"
+						app.Tooltip[itemID] = "unlearnedMog"
 					elseif app.Settings.iconNewCatalyst and ((tumInfo and tumInfo.catalystAppearanceMissing) or (attInfo and attInfo.filledCatalyst)) and (not tumInfo or app.Settings.iconNewSource or not tumInfo.catalystAppearanceLearnedFromOtherItem) then
 						overlay.texture:SetAtlas("CreationCatalyst-32x32")
 						showOverlay("yellow")

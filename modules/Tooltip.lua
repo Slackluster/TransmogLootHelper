@@ -23,6 +23,7 @@ end)
 function app:AddTooltipInfo()
 	local function OnTooltipSetItem(tooltip, itemData)
 		local _, itemLink = app:GetTooltipItem(tooltip, itemData)
+		local itemID = C_Item.GetItemInfoInstant(itemLink)
 		if not itemLink then return end
 
 		local emptyLine = false
@@ -34,7 +35,7 @@ function app:AddTooltipInfo()
 				tooltip:AddLine(CreateSimpleTextureMarkup(app.Icon) .. " " .. L.RECIPE_UNCACHED)
 			end
 		end
-		if app.Forever and app.OverlayCache[itemLink] and app.OverlayCache[itemLink].tooltipInfo and app.OverlayCache[itemLink].tooltipInfo == "unlearnedMog" then
+		if app.Forever and app.Tooltip[itemID] and app.Tooltip[itemID] == "unlearnedMog" then
 			local bindType = select(14, C_Item.GetItemInfo(itemLink))
 			if bindType and bindType == Enum.ItemBind.None and C_Item.GetItemCount(itemLink) >= 1 then
 				if not emptyLine then
