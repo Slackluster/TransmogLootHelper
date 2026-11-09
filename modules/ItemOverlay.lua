@@ -152,7 +152,7 @@ function app:ApplyItemOverlay(overlay, itemLink, itemLocation, containerInfo, ba
 			app.OverlayCache["item:3"] = { itemEquipLoc = "Recipe", bindType = 8, itemQuality = 4, hasItemLocation = false, color = "green" }
 			app.OverlayCache["item:4"] = { itemEquipLoc = "Container", bindType = 0, itemQuality = 4, hasItemLocation = false, color = "red" }
 		elseif not app.OverlayCache[itemLink] or (hasItemLocation and app.OverlayCache[itemLink].hasItemLocation == false) then
-			local _, _, itemQuality, _, _, _, _, _, itemEquipLoc, _, _, classID, subclassID, bindType, _, _, _ = C_Item.GetItemInfo(itemLink)
+			local _, _, itemQuality, _, _, _, itemSubType, _, itemEquipLoc, _, _, classID, subclassID, bindType, _, _, _ = C_Item.GetItemInfo(itemLink)
 
 			if containerInfo and containerInfo.hasLoot then
 				itemEquipLoc = "Container"
@@ -565,18 +565,17 @@ function app:ApplyItemOverlay(overlay, itemLink, itemLocation, containerInfo, ba
 						tumInfo = TransmogUpgradeMaster_API.GetAppearanceMissingData(itemLink)
 					end
 
-					if api:IsAppearanceCollected(itemLink) == false then
+					if (app.Retail and not api:IsAppearanceCollected(itemLink)) or (app.Forever and api:IsAppearanceCollected(itemLink) == false) then
 						showOverlay("purple")
 						app.Tooltip[itemID] = "unlearnedMog"
 					elseif api:IsAppearanceCollected(itemLink) == nil then
-						if (itemLocation and C_Item.IsBound(itemLocation)) or (bagAddon and additionalInfo and type(additionalInfo) == "table" and additionalInfo.isBound) then
-							hideOverlay()
-						else
-							overlay.texture:SetTexture(app.Texture["Unknown"])
-							showOverlay("yellow")
+						if itemEquipLoc == "INVTYPE_AMMO" or itemEquipLoc == "INVTYPE_PROJECTILE" or itemEquipLoc == "INVTYPE_THROWN"
+						or itemSubType == Enum.ItemWeaponSubclass.Fishingpole
+						or itemID == 5956 or itemID == 2901 or itemID == 7005 then -- Fishing Poles, Blacksmith Hammer, Mining Pick, Skinning Knife
+							showOverlay("purple")
 							app.Tooltip[itemID] = "unlearnedMog"
-							overlay.animation:Stop()
-							overlay.animationTexture:Hide()
+						else
+							hideOverlay()
 						end
 					elseif app.Settings.iconNewSource and not api:IsSourceCollected(itemLink) then
 						showOverlay("yellow")
