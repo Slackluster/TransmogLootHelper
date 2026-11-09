@@ -123,9 +123,9 @@ app.Texture = {
 	["INVTYPE_WEAPON"] = "Interface\\Icons\\inv_sword_04",
 	["INVTYPE_SHIELD"] = "Interface\\Icons\\inv_shield_06",
 	["INVTYPE_HOLDABLE"] = "Interface\\Icons\\inv_shield_06",
-	["INVTYPE_AMMO"] = "Interface\\Icons\\inv_misc_questionMark",
-	["INVTYPE_PROJECTILE"] = "Interface\\Icons\\inv_misc_questionMark",
-	["INVTYPE_THROWN"] = "Interface\\Icons\\inv_misc_questionMark",
+	["INVTYPE_AMMO"] = "Interface\\Icons\\inv_throwingknife_02",
+	["INVTYPE_PROJECTILE"] = "Interface\\Icons\\inv_throwingknife_02",
+	["INVTYPE_THROWN"] = "Interface\\Icons\\inv_throwingknife_02",
 	["INVTYPE_QUANTUM"] = "Interface\\Icons\\inv_misc_questionMark",
 	["INVTYPE_SPECIAL"] = "Interface\\Icons\\inv_misc_questionMark",
 
