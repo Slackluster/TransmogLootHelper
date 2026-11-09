@@ -152,7 +152,7 @@ function app:ApplyItemOverlay(overlay, itemLink, itemLocation, containerInfo, ba
 			app.OverlayCache["item:3"] = { itemEquipLoc = "Recipe", bindType = 8, itemQuality = 4, hasItemLocation = false, color = "green" }
 			app.OverlayCache["item:4"] = { itemEquipLoc = "Container", bindType = 0, itemQuality = 4, hasItemLocation = false, color = "red" }
 		elseif not app.OverlayCache[itemLink] or (hasItemLocation and app.OverlayCache[itemLink].hasItemLocation == false) then
-			local _, _, itemQuality, _, _, _, itemSubType, _, itemEquipLoc, _, _, classID, subclassID, bindType, _, _, _ = C_Item.GetItemInfo(itemLink)
+			local itemName, _, itemQuality, _, _, _, _, _, itemEquipLoc, _, _, classID, subclassID, bindType, _, _, _ = C_Item.GetItemInfo(itemLink)
 
 			if containerInfo and containerInfo.hasLoot then
 				itemEquipLoc = "Container"
@@ -179,8 +179,6 @@ function app:ApplyItemOverlay(overlay, itemLink, itemLocation, containerInfo, ba
 			elseif app.Container[itemID] then
 				itemEquipLoc = "Container"
 			elseif classID == Enum.ItemClass.Consumable and subclassID == Enum.ItemConsumableSubclass.Other then
-				local itemName = C_Item.GetItemInfo(itemLink)
-
 				local localeIllusion = {
 					"Illusion:",
 					"Illusion :",
@@ -305,12 +303,15 @@ function app:ApplyItemOverlay(overlay, itemLink, itemLocation, containerInfo, ba
 				end
 			end
 
-			app.OverlayCache[itemLink] = { itemEquipLoc = itemEquipLoc, bindType = bindType, itemQuality = itemQuality, hasItemLocation = hasItemLocation }
+			app.OverlayCache[itemLink] = { itemEquipLoc = itemEquipLoc, bindType = bindType, itemQuality = itemQuality, hasItemLocation = hasItemLocation, itemName = itemName, classID = classID, subclassID = subclassID }
 		end
 
 		local itemEquipLoc = app.OverlayCache[itemLink].itemEquipLoc
 		local icon = app.Texture[itemEquipLoc]
 		local bindType = app.OverlayCache[itemLink].bindType
+		local itemName = app.OverlayCache[itemLink].itemName
+		local classID = app.OverlayCache[itemLink].classID
+		local subclassID = app.OverlayCache[itemLink].subclassID
 
 		app.OverlayCache[itemLink].tooltipInfo = nil
 		overlay.texture:SetTexture(icon)
@@ -569,8 +570,6 @@ function app:ApplyItemOverlay(overlay, itemLink, itemLocation, containerInfo, ba
 						showOverlay("purple")
 						app.Tooltip[itemID] = "unlearnedMog"
 					elseif api:IsAppearanceCollected(itemLink) == nil then
-						local _, _, _, _, _, _, _, _, _, _, _, classID, subclassID  = C_Item.GetItemInfo(itemLink)
-						if itemID == 11362 then print(classID, Enum.ItemClass.Quiver) end
 						if itemEquipLoc == "INVTYPE_AMMO" or itemEquipLoc == "INVTYPE_PROJECTILE" or itemEquipLoc == "INVTYPE_THROWN"
 						or (classID == Enum.ItemClass.Quiver and subclassID == 2) or subclassID == Enum.ItemWeaponSubclass.Fishingpole
 						or itemID == 5956 or itemID == 2901 or itemID == 7005 then -- Fishing Poles, Blacksmith Hammer, Mining Pick, Skinning Knife
