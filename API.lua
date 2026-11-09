@@ -8,7 +8,7 @@ TransmogLootHelper:ToggleWindow()
 -- Update TLH's item overlay
 TransmogLootHelper:UpdateOverlay()
 
--- Check if an item's appearance is collected; returns true or false
+-- Check if an item's appearance is collected; returns true or false when collection status can be confirmed, returns nil otherwise
 TransmogLootHelper:IsAppearanceCollected(itemLink)
 
 -- Check if an item's source is collected; returns true or false

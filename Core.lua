@@ -314,13 +314,15 @@ function api:IsAppearanceCollected(itemLink, sourceID) -- Thank you, Plusmouse!
 
 	local sourceID = sourceID or app:GetSourceID(itemLink)
 	if not sourceID then
-		if app:GetTransmogText(itemLink, TRANSMOGRIFY_TOOLTIP_APPEARANCE_UNKNOWN) then
+		local known = C_TransmogCollection.PlayerHasTransmogByItemInfo(itemLink)
+		if known then
+			return true
+		elseif app:GetTransmogText(itemLink, TRANSMOGRIFY_TOOLTIP_APPEARANCE_UNKNOWN) then
 			return false
 		elseif app.Retail and C_Item.IsEquippableItem(itemLink) then
 			return true
-		else
-			return C_TransmogCollection.PlayerHasTransmogByItemInfo(itemLink)
 		end
+		return nil
 	else
 		local subClass = select(7, C_Item.GetItemInfoInstant(itemLink))
 		local sourceInfo = C_TransmogCollection.GetSourceInfo(sourceID)
