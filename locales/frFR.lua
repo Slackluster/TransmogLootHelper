@@ -150,6 +150,7 @@ L.BINDTEXT_BOP =                         "LqR" -- Lié quand Ramassé
 L.BINDTEXT_BOE =                         "LqÉ" -- Lié quand équipé
 L.BINDTEXT_BOA =                         "LaC" -- Lié au Compte
 L.RECIPE_UNCACHED =                      "Veuillez ouvrir ce métier pour mettre à jour le statut de la recette."
+-- L.LEARN_UNBOUND =                        "Sell, destroy, or disenchant this item to learn its appearance."
 
 -- Loot tracker
 L.DEFAULT_MESSAGE =                      "As-tu besoin de %item que tu as récupéré ? Sinon, je le veux bien pour transmogrification. :)"

@@ -150,6 +150,7 @@ local L = app.locales
 -- L.BINDTEXT_BOE =                         "BoE" -- Abbreviation for "Binds on Equip"
 -- L.BINDTEXT_BOA =                         "BoA" -- Abbreviation for "Binds to Account" (Warbound)
 -- L.RECIPE_UNCACHED =                      "Please open this profession to update the recipe's collection status."
+-- L.LEARN_UNBOUND =                        "Sell, destroy, or disenchant this item to learn its appearance."
 
 -- Loot tracker
 -- L.DEFAULT_MESSAGE =                      "Do you need the %item you looted? If not, I'd like to have it for transmog. :)"

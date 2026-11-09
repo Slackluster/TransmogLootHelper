@@ -38,6 +38,7 @@ modules\Decor.lua [AllowLoadGameType standard]
 modules\Recipes.lua
 modules\ItemOverlay.lua
 modules\LootTracker.lua [AllowLoadGameType standard]
+modules\Tooltip.lua
 modules\Tweaks.lua [AllowLoadGameType standard]
 integrations\ArkInventory.lua
 integrations\Baganator.lua

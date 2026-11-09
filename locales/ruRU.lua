@@ -150,6 +150,7 @@ L.BINDTEXT_BOP =                         "BoP" -- Abbreviation for "Binds on Pic
 L.BINDTEXT_BOE =                         "BoE" -- Abbreviation for "Binds on Equip"
 L.BINDTEXT_BOA =                         "BoA" -- Abbreviation for "Binds to Account" (Warbound)
 L.RECIPE_UNCACHED =                      "Пожалуйста, откройте эту профессию, чтобы обновить статус коллекции рецепта."
+-- L.LEARN_UNBOUND =                        "Sell, destroy, or disenchant this item to learn its appearance."
 
 -- Loot tracker
 L.DEFAULT_MESSAGE =                      "Нужен ли вам предмет %item, который вы добыли? Если нет, я хотел бы взять его для трансмога. :)"
