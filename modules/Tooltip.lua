@@ -23,8 +23,8 @@ end)
 function app:AddTooltipInfo()
 	local function OnTooltipSetItem(tooltip, itemData)
 		local _, itemLink = app:GetTooltipItem(tooltip, itemData)
-		local itemID = C_Item.GetItemInfoInstant(itemLink)
 		if not itemLink then return end
+		local itemID = C_Item.GetItemInfoInstant(itemLink)
 
 		local previousLine = tooltip:GetLeftLine(tooltip:NumLines())
 		local previousText = previousLine and previousLine:GetText()
