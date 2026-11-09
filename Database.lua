@@ -4,7 +4,23 @@
 
 local appName, app = ...
 
--- Strings
+------------
+-- ON LOAD --
+-------------
+
+app.Event:Register("ADDON_LOADED", function(addOnName, containsBindings)
+	if addOnName == appName then
+		if app.Forever then
+			app.Texture["INVTYPE_RANGED"] = "Interface\\Icons\\inv_weapon_bow_02"
+			app.Texture["INVTYPE_RANGEDRIGHT"] = "Interface\\Icons\\inv_weapon_bow_02"
+		end
+	end
+end)
+
+----------
+-- DATA --
+----------
+
 app.Name = "Transmog Loot Helper"
 app.NameLong = app:Colour("Transmog Loot Helper")
 app.NameShort = app:Colour("TLH")
@@ -12,7 +28,6 @@ app.NamePrefix = "TransmogLootHelp"
 _G["BINDING_NAME_TRANSMOGLOOTHELPER"] = app.Name
 _G["BINDING_NAME_SLACKWARE"] = "Slackware"
 
--- Textures
 app.Icon = "Interface\\Icons\\ui_itemupgrade"
 app.IconReady = CreateSimpleTextureMarkup("Interface\\RaidFrame\\ReadyCheck-Ready")
 app.IconNotReady = CreateSimpleTextureMarkup("Interface\\RaidFrame\\ReadyCheck-NotReady")
@@ -20,7 +35,6 @@ app.IconMaybeReady = "Interface\\AddOns\\TransmogLootHelper\\assets\\readycheck-
 app.IconLMB = CreateAtlasMarkup("housing-hotkey-icon-leftclick")
 app.IconRMB = CreateAtlasMarkup("housing-hotkey-icon-rightclick")
 
--- ItemEquipLoc to key
 app.Slot = {
 	["INVTYPE_HEAD"] = 1,
 	["INVTYPE_NECK"] = 2,
@@ -47,7 +61,6 @@ app.Slot = {
 	["INVTYPE_WEAPON"] = 16, -- Can be main hand or off hand, if char can Dual Wield
 }
 
--- Type.Subtype -> item type
 app.Type = {
 	["General"] = "4.0", -- Neck, Ring, Trinket, Off-Hand (and shirts and tabards, yay)
 	["Cloth"] = "4.1",
@@ -72,7 +85,6 @@ app.Type = {
 	["Wand"] = "2.19",
 }
 
--- Armor -> Class
 app.Armor = {
 	["Cloth"] = { 5, 8, 9 }, -- Priest, Mage, Warlock
 	["Leather"] = { 4, 10, 11, 12 }, -- Rogue, Monk, Druid, Demon Hunter
@@ -80,7 +92,6 @@ app.Armor = {
 	["Plate"] = { 1, 2, 6 }, -- Warrior, Paladin, Death Knight
 }
 
--- Weapon -> Class
 app.Weapon = {
 	["General"] = { 5, 8, 9, 4, 10, 11, 12, 3, 7, 13, 1, 2, 6 }, -- Priest, Mage, Warlock, Rogue, Monk, Druid, Demon Hunter, Hunter, Shaman, Evoker, Warrior, Paladin, Death Knight
 	["Shield"] = { 7, 1, 2, 1, 2 }, -- Shaman, Warrior, Paladin, Warrior, Paladin
@@ -101,7 +112,6 @@ app.Weapon = {
 	["Wand"] = { 5, 8, 9 }, -- Priest, Mage, Warlock
 }
 
--- Item type -> Icon
 app.Texture = {
 	["INVTYPE_HEAD"] = "Interface\\Icons\\inv_helmet_03",
 	["INVTYPE_SHOULDER"] = "Interface\\Icons\\inv_shoulder_09",
@@ -123,10 +133,10 @@ app.Texture = {
 	["INVTYPE_WEAPON"] = "Interface\\Icons\\inv_sword_04",
 	["INVTYPE_SHIELD"] = "Interface\\Icons\\inv_shield_06",
 	["INVTYPE_HOLDABLE"] = "Interface\\Icons\\inv_shield_06",
-	["INVTYPE_AMMO"] = "Interface\\Icons\\inv_throwingknife_02",
-	["INVTYPE_PROJECTILE"] = "Interface\\Icons\\inv_throwingknife_02",
-	["INVTYPE_THROWN"] = "Interface\\Icons\\inv_throwingknife_02",
-	["INVTYPE_BAG"] = "Interface\\Icons\\inv_throwingknife_02", -- Quivers
+	["INVTYPE_AMMO"] = "Interface\\Icons\\inv_weapon_bow_02",
+	["INVTYPE_PROJECTILE"] = "Interface\\Icons\\inv_weapon_bow_02",
+	["INVTYPE_THROWN"] = "Interface\\Icons\\inv_weapon_bow_02",
+	["INVTYPE_BAG"] = "Interface\\Icons\\inv_weapon_bow_02", -- Quivers
 	["INVTYPE_QUANTUM"] = "Interface\\Icons\\inv_misc_questionMark",
 	["INVTYPE_SPECIAL"] = "Interface\\Icons\\inv_misc_questionMark",
 
@@ -232,8 +242,7 @@ app.QuantumMount = {
 	1481, -- Cartel Master's Gearglider
 }
 
--- ItemID -> QuestID (sourced from ATT's "Mount Mods.lua" and "CharacterItemDB.lua" among others)
-app.QuestItem = {
+app.QuestItem = { -- Sourced from ATT's "Mount Mods.lua" and "CharacterItemDB.lua" among others)
 	-- Class books
 	[264895] = 87421, -- Trials of the Florafaun Hunter
 
