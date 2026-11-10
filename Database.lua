@@ -12,8 +12,8 @@ app.Event:Register("ADDON_LOADED", function(addOnName, containsBindings)
 	if addOnName ~= appName then return end
 
 	if app.Forever then
-		app.Texture["INVTYPE_RANGED"] = "Interface\\Icons\\inv_weapon_bow_02"
-		app.Texture["INVTYPE_RANGEDRIGHT"] = "Interface\\Icons\\inv_weapon_bow_02"
+		app.Texture["INVTYPE_RANGED"] = "Interface\\AddOns\\TransmogLootHelper\\assets\\ranged_colorised.png"
+		app.Texture["INVTYPE_RANGEDRIGHT"] = "Interface\\AddOns\\TransmogLootHelper\\assets\\ranged_colorised.png"
 	end
 end)
 
@@ -133,10 +133,10 @@ app.Texture = {
 	["INVTYPE_WEAPON"] = "Interface\\Icons\\inv_sword_04",
 	["INVTYPE_SHIELD"] = "Interface\\Icons\\inv_shield_06",
 	["INVTYPE_HOLDABLE"] = "Interface\\Icons\\inv_shield_06",
-	["INVTYPE_AMMO"] = "Interface\\Icons\\inv_weapon_bow_02",
-	["INVTYPE_PROJECTILE"] = "Interface\\Icons\\inv_weapon_bow_02",
-	["INVTYPE_THROWN"] = "Interface\\Icons\\inv_weapon_bow_02",
-	["INVTYPE_BAG"] = "Interface\\Icons\\inv_weapon_bow_02", -- Quivers
+	["INVTYPE_AMMO"] = "Interface\\AddOns\\TransmogLootHelper\\assets\\ranged_colorised.png",
+	["INVTYPE_PROJECTILE"] = "Interface\\AddOns\\TransmogLootHelper\\assets\\ranged_colorised.png",
+	["INVTYPE_THROWN"] = "Interface\\AddOns\\TransmogLootHelper\\assets\\ranged_colorised.png",
+	["INVTYPE_BAG"] = "Interface\\AddOns\\TransmogLootHelper\\assets\\ranged_colorised.png", -- Quivers
 	["INVTYPE_QUANTUM"] = "Interface\\Icons\\inv_misc_questionMark",
 	["INVTYPE_SPECIAL"] = "Interface\\Icons\\inv_misc_questionMark",
 
