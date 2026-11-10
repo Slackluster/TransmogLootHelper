@@ -39,16 +39,16 @@ function app:CacheRecipe(spellID, isSpell, isLearned)
 end
 
 app.Event:Register("TRADE_SKILL_SHOW", function()
-	if not InCombatLockdown() then
-		C_Timer.After(2, function()
-			if not C_TradeSkillUI.IsTradeSkillLinked() and not C_TradeSkillUI.IsTradeSkillGuild() then
-				for _, recipeID in pairs(C_TradeSkillUI.GetAllRecipeIDs()) do
-					app:CacheRecipe(recipeID)
-				end
-				api:UpdateOverlay()
+	if InCombatLockdown() then return end
+
+	C_Timer.After(2, function()
+		if not C_TradeSkillUI.IsTradeSkillLinked() and not C_TradeSkillUI.IsTradeSkillGuild() then
+			for _, recipeID in pairs(C_TradeSkillUI.GetAllRecipeIDs()) do
+				app:CacheRecipe(recipeID)
 			end
-		end)
-	end
+			api:UpdateOverlay()
+		end
+	end)
 end)
 
 function api:DeleteCharacter(characterName)

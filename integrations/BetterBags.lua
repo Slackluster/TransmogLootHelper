@@ -1,49 +1,49 @@
 local appName, app = ...
 
 app.Event:Register("ADDON_LOADED", function(addOnName, containsBindings)
-	if addOnName == appName and app.Settings.overlay then
-		EventUtil.ContinueOnAddOnLoaded("BetterBags", function()
-			local betterbags = LibStub("AceAddon-3.0"):GetAddon("BetterBags")
-			local events = betterbags:GetModule("Events")
+	if not (addOnName == appName and app.Settings.overlay) then return end
 
-			local function UpdateButton(_, item)
-				if not item then return end
+	EventUtil.ContinueOnAddOnLoaded("BetterBags", function()
+		local betterbags = LibStub("AceAddon-3.0"):GetAddon("BetterBags")
+		local events = betterbags:GetModule("Events")
 
-				local containerInfo, itemLocation, itemLink
+		local function UpdateButton(_, item)
+			if not item then return end
 
-				local bag, slot = string.match(item.slotkey, "(%d+)_(%d+)")
-				bag = tonumber(bag)
-				slot = tonumber(slot)
+			local containerInfo, itemLocation, itemLink
 
-				if not item.isFreeSlot then
-					containerInfo = C_Container.GetContainerItemInfo(bag, slot)
-					itemLocation = ItemLocation:CreateFromBagAndSlot(bag, slot)
-					itemLink = C_Container.GetContainerItemLink(bag, slot)
-					if not C_Item.DoesItemExist(itemLocation) then
-						itemLocation = nil
-					end
-				end
+			local bag, slot = string.match(item.slotkey, "(%d+)_(%d+)")
+			bag = tonumber(bag)
+			slot = tonumber(slot)
 
-				if not item.TLHOverlay then
-					local frame
-					if bag <= 5 then
-						frame = betterbags.Bags.Backpack.frame
-					else
-						frame = betterbags.Bags.Bank.frame
-					end
-
-					item.TLHOverlay = CreateFrame("Frame", nil, frame)
-					item.TLHOverlay:SetAllPoints(item.button)
-					item.TLHOverlay:SetFrameStrata("TOOLTIP")
-				end
-
-				if itemLink then
-					app:ApplyItemOverlay(item.TLHOverlay, itemLink, itemLocation, containerInfo, true)
-				elseif item.isFreeSlot or not itemLink then
-					item.TLHOverlay:Hide()
+			if not item.isFreeSlot then
+				containerInfo = C_Container.GetContainerItemInfo(bag, slot)
+				itemLocation = ItemLocation:CreateFromBagAndSlot(bag, slot)
+				itemLink = C_Container.GetContainerItemLink(bag, slot)
+				if not C_Item.DoesItemExist(itemLocation) then
+					itemLocation = nil
 				end
 			end
-			events:RegisterMessage("item/Updated", UpdateButton)
-		end)
-	end
+
+			if not item.TLHOverlay then
+				local frame
+				if bag <= 5 then
+					frame = betterbags.Bags.Backpack.frame
+				else
+					frame = betterbags.Bags.Bank.frame
+				end
+
+				item.TLHOverlay = CreateFrame("Frame", nil, frame)
+				item.TLHOverlay:SetAllPoints(item.button)
+				item.TLHOverlay:SetFrameStrata("TOOLTIP")
+			end
+
+			if itemLink then
+				app:ApplyItemOverlay(item.TLHOverlay, itemLink, itemLocation, containerInfo, true)
+			elseif item.isFreeSlot or not itemLink then
+				item.TLHOverlay:Hide()
+			end
+		end
+		events:RegisterMessage("item/Updated", UpdateButton)
+	end)
 end)

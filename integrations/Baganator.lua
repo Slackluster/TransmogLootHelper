@@ -2,42 +2,42 @@ local appName, app = ...
 local api = app.api
 
 app.Event:Register("ADDON_LOADED", function(addOnName, containsBindings)
-	if addOnName == appName and app.Settings.overlay then
-		EventUtil.ContinueOnAddOnLoaded("Baganator", function()
-			Baganator.API.RegisterCornerWidget("Transmog Loot Helper", "transmogloothelper",
-				function(icon, itemDetails)
-					if not C_Item.IsItemDataCachedByID(itemDetails.itemID) then
-						C_Item.RequestLoadItemDataByID(itemDetails.itemID)
-						return
-					end
-					app:ApplyItemOverlay(icon.overlay, itemDetails.itemLink, nil, { hasLoot = itemDetails.hasLoot }, true, itemDetails)
-					return icon:IsShown()
-				end,
-				function(itemButton)
-					local overlay = CreateFrame("Frame", nil, itemButton)
-					app:ApplyItemOverlay(overlay, "item:65500")
-					overlay.icon.padding = -2
-					overlay.icon.overlay = overlay
-					return overlay.icon
-				end,
-				{ corner = "top_right", priority = 1 }
-			)
+	if not (addOnName == appName and app.Settings.overlay) then return end
 
-			hooksecurefunc(api, "UpdateOverlay", function() Baganator.API.RequestItemButtonsRefresh() end)
-			C_Timer.After(5, function()
-				local skin = Baganator.API.Skins.GetCurrentSkin()
-				local frame = {}
-				frame[1] = _G["Baganator_SingleViewBackpackViewFrame" .. skin]
-				frame[2] = _G["Baganator_CategoryViewBackpackViewFrame" .. skin]
-
-				for i = 1, 4 do
-					if frame[i] then
-						frame[i]:HookScript("OnShow", function()
-							Baganator.API.RequestItemButtonsRefresh()
-						end)
-					end
+	EventUtil.ContinueOnAddOnLoaded("Baganator", function()
+		Baganator.API.RegisterCornerWidget("Transmog Loot Helper", "transmogloothelper",
+			function(icon, itemDetails)
+				if not C_Item.IsItemDataCachedByID(itemDetails.itemID) then
+					C_Item.RequestLoadItemDataByID(itemDetails.itemID)
+					return
 				end
-			end)
+				app:ApplyItemOverlay(icon.overlay, itemDetails.itemLink, nil, { hasLoot = itemDetails.hasLoot }, true, itemDetails)
+				return icon:IsShown()
+			end,
+			function(itemButton)
+				local overlay = CreateFrame("Frame", nil, itemButton)
+				app:ApplyItemOverlay(overlay, "item:65500")
+				overlay.icon.padding = -2
+				overlay.icon.overlay = overlay
+				return overlay.icon
+			end,
+			{ corner = "top_right", priority = 1 }
+		)
+
+		hooksecurefunc(api, "UpdateOverlay", function() Baganator.API.RequestItemButtonsRefresh() end)
+		C_Timer.After(5, function()
+			local skin = Baganator.API.Skins.GetCurrentSkin()
+			local frame = {}
+			frame[1] = _G["Baganator_SingleViewBackpackViewFrame" .. skin]
+			frame[2] = _G["Baganator_CategoryViewBackpackViewFrame" .. skin]
+
+			for i = 1, 4 do
+				if frame[i] then
+					frame[i]:HookScript("OnShow", function()
+						Baganator.API.RequestItemButtonsRefresh()
+					end)
+				end
+			end
 		end)
-	end
+	end)
 end)

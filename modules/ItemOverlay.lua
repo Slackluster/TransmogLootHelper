@@ -11,13 +11,13 @@ local L = app.locales
 -------------
 
 app.Event:Register("ADDON_LOADED", function(addOnName, containsBindings)
-	if addOnName == appName then
-		app.Cache.Recipes = app.Cache.Recipes or {}
-		app.Cache.Decor = app.Cache.Decor or {}
-		app.OverlayCache = {}
+	if addOnName ~= appName then return end
 
-		app:HookItemOverlay()
-	end
+	app.Cache.Recipes = app.Cache.Recipes or {}
+	app.Cache.Decor = app.Cache.Decor or {}
+	app.OverlayCache = {}
+
+	app:HookItemOverlay()
 end)
 
 ------------------
@@ -872,628 +872,627 @@ function app:ApplyItemOverlay(overlay, itemLink, itemLocation, containerInfo, ba
 end
 
 function app:HookItemOverlay()
-	if app.Settings.overlay then
-		local function bagsOverlay(container)
-			if not container or not container:IsVisible() then return end
+	if not app.Settings.overlay then return end
 
-			RunNextFrame(function()
-				for _, itemButton in ipairs(container.Items) do
+	local function bagsOverlay(container)
+		if not container or not container:IsVisible() then return end
+
+		RunNextFrame(function()
+			for _, itemButton in ipairs(container.Items) do
+				if itemButton then
+					if not itemButton.TLHOverlay then
+						itemButton.TLHOverlay = CreateFrame("Frame", nil, itemButton)
+						itemButton.TLHOverlay:SetAllPoints(itemButton)
+					end
+
+					local itemLocation = ItemLocation:CreateFromBagAndSlot(itemButton:GetBagID(), itemButton:GetID())
+					if C_Item.DoesItemExist(itemLocation) then
+						local itemLink = C_Item.GetItemLink(itemLocation)
+						local containerInfo = C_Container.GetContainerItemInfo(itemButton:GetBagID(), itemButton:GetID())
+						app:ApplyItemOverlay(itemButton.TLHOverlay, itemLink, itemLocation, containerInfo)
+					else
+						itemButton.TLHOverlay:Hide()
+					end
+				end
+			end
+		end)
+	end
+
+	for i = 1, 6 do
+		local container = _G["ContainerFrame" .. i]
+		if container then
+			hooksecurefunc(container, "UpdateItems", bagsOverlay)
+			app.Event:Register("BAG_UPDATE_DELAYED", function() bagsOverlay(container) end)
+		end
+	end
+	hooksecurefunc(ContainerFrameCombinedBags, "UpdateItems", bagsOverlay)
+	app.Event:Register("BAG_UPDATE_DELAYED", function() bagsOverlay(ContainerFrameCombinedBags) end)
+
+	function app:BankOverlay()
+		if not BankFrame or not BankFrame:IsVisible() then return end
+
+		RunNextFrame(function()
+			if app.Forever then
+				for itemButton in BankPanel:EnumerateValidItems() do
+					if not itemButton.TLHOverlay then
+						itemButton.TLHOverlay = CreateFrame("Frame", nil, itemButton)
+						itemButton.TLHOverlay:SetAllPoints(itemButton)
+					end
+
+					local bagID = itemButton:GetBankTabID()
+					local slotID = itemButton:GetContainerSlotID()
+					local itemLocation = ItemLocation:CreateFromBagAndSlot(bagID, slotID)
+
+					if C_Item.DoesItemExist(itemLocation) then
+						local itemLink = C_Item.GetItemLink(itemLocation)
+						local containerInfo = C_Container.GetContainerItemInfo(bagID, slotID)
+						app:ApplyItemOverlay(itemButton.TLHOverlay, itemLink, itemLocation, containerInfo)
+					else
+						itemButton.TLHOverlay:Hide()
+					end
+				end
+			elseif app.Retail then
+				for i = 1, 98 do
+					local itemButton = BankPanel:FindItemButtonByContainerSlotID(i)
 					if itemButton then
 						if not itemButton.TLHOverlay then
 							itemButton.TLHOverlay = CreateFrame("Frame", nil, itemButton)
 							itemButton.TLHOverlay:SetAllPoints(itemButton)
 						end
 
-						local itemLocation = ItemLocation:CreateFromBagAndSlot(itemButton:GetBagID(), itemButton:GetID())
-						if C_Item.DoesItemExist(itemLocation) then
+						local itemLocation
+						if BankPanel.selectedTabID then
+							itemLocation = ItemLocation:CreateFromBagAndSlot(BankPanel.selectedTabID, i)
+						end
+						if itemLocation and C_Item.DoesItemExist(itemLocation) then
 							local itemLink = C_Item.GetItemLink(itemLocation)
-							local containerInfo = C_Container.GetContainerItemInfo(itemButton:GetBagID(), itemButton:GetID())
+							local containerInfo = C_Container.GetContainerItemInfo(BankPanel.selectedTabID, i)
 							app:ApplyItemOverlay(itemButton.TLHOverlay, itemLink, itemLocation, containerInfo)
 						else
 							itemButton.TLHOverlay:Hide()
 						end
 					end
 				end
-			end)
-		end
-
-		for i = 1, 6 do
-			local container = _G["ContainerFrame" .. i]
-			if container then
-				hooksecurefunc(container, "UpdateItems", bagsOverlay)
-				app.Event:Register("BAG_UPDATE_DELAYED", function() bagsOverlay(container) end)
 			end
-		end
-		hooksecurefunc(ContainerFrameCombinedBags, "UpdateItems", bagsOverlay)
-		app.Event:Register("BAG_UPDATE_DELAYED", function() bagsOverlay(ContainerFrameCombinedBags) end)
+		end)
+	end
 
-		function app:BankOverlay()
-			if not BankFrame or not BankFrame:IsVisible() then return end
+	hooksecurefunc(BankPanel, "RefreshBankPanel", function() app:BankOverlay() end)
+	hooksecurefunc(BankPanel, "OnUpdate", function() app:BankOverlay() end)
+	app.Event:Register("BANKFRAME_OPENED", function() app:BankOverlay() end)
+	app.Event:Register("BAG_UPDATE_DELAYED", function() app:BankOverlay() end)
 
-			RunNextFrame(function()
-				if app.Forever then
-					for itemButton in BankPanel:EnumerateValidItems() do
-						if not itemButton.TLHOverlay then
-							itemButton.TLHOverlay = CreateFrame("Frame", nil, itemButton)
-							itemButton.TLHOverlay:SetAllPoints(itemButton)
-						end
+	function app:GuildBankOverlay()
+		if not GuildBankFrame or not GuildBankFrame:IsVisible() then return end
 
-						local bagID = itemButton:GetBankTabID()
-						local slotID = itemButton:GetContainerSlotID()
-						local itemLocation = ItemLocation:CreateFromBagAndSlot(bagID, slotID)
-
-						if C_Item.DoesItemExist(itemLocation) then
-							local itemLink = C_Item.GetItemLink(itemLocation)
-							local containerInfo = C_Container.GetContainerItemInfo(bagID, slotID)
-							app:ApplyItemOverlay(itemButton.TLHOverlay, itemLink, itemLocation, containerInfo)
-						else
-							itemButton.TLHOverlay:Hide()
-						end
-					end
-				elseif app.Retail then
-					for i = 1, 98 do
-						local itemButton = BankPanel:FindItemButtonByContainerSlotID(i)
-						if itemButton then
-							if not itemButton.TLHOverlay then
-								itemButton.TLHOverlay = CreateFrame("Frame", nil, itemButton)
-								itemButton.TLHOverlay:SetAllPoints(itemButton)
-							end
-
-							local itemLocation
-							if BankPanel.selectedTabID then
-								itemLocation = ItemLocation:CreateFromBagAndSlot(BankPanel.selectedTabID, i)
-							end
-							if itemLocation and C_Item.DoesItemExist(itemLocation) then
-								local itemLink = C_Item.GetItemLink(itemLocation)
-								local containerInfo = C_Container.GetContainerItemInfo(BankPanel.selectedTabID, i)
-								app:ApplyItemOverlay(itemButton.TLHOverlay, itemLink, itemLocation, containerInfo)
-							else
-								itemButton.TLHOverlay:Hide()
-							end
-						end
-					end
-				end
-			end)
-		end
-
-		hooksecurefunc(BankPanel, "RefreshBankPanel", function() app:BankOverlay() end)
-		hooksecurefunc(BankPanel, "OnUpdate", function() app:BankOverlay() end)
-		app.Event:Register("BANKFRAME_OPENED", function() app:BankOverlay() end)
-		app.Event:Register("BAG_UPDATE_DELAYED", function() app:BankOverlay() end)
-
-		function app:GuildBankOverlay()
-			if GuildBankFrame and GuildBankFrame:IsVisible() then
-				if not app.Flag.GuildBankThrottle then
-					app.Flag.GuildBankThrottle = 0
-					C_Timer.After(0.1, function()
-						if app.Flag.GuildBankThrottle >= 1 then
-							app.Flag.GuildBankThrottle = nil
-							app:GuildBankOverlay()
-						else
-							app.Flag.GuildBankThrottle = nil
-						end
-					end)
+		if not app.Flag.GuildBankThrottle then
+			app.Flag.GuildBankThrottle = 0
+			C_Timer.After(0.1, function()
+				if app.Flag.GuildBankThrottle >= 1 then
+					app.Flag.GuildBankThrottle = nil
+					app:GuildBankOverlay()
 				else
-					app.Flag.GuildBankThrottle = 1
-					return
+					app.Flag.GuildBankThrottle = nil
+				end
+			end)
+		else
+			app.Flag.GuildBankThrottle = 1
+			return
+		end
+
+		for i = 1, 7 do
+			for j = 1, 14 do
+				local itemButton = GuildBankFrame.Columns[i].Buttons[j]
+				if not itemButton.TLHOverlay then
+					itemButton.TLHOverlay = CreateFrame("Frame", nil, itemButton)
+					itemButton.TLHOverlay:SetAllPoints(itemButton)
 				end
 
-				for i = 1, 7 do
-					for j = 1, 14 do
-						local itemButton = GuildBankFrame.Columns[i].Buttons[j]
-						if not itemButton.TLHOverlay then
-							itemButton.TLHOverlay = CreateFrame("Frame", nil, itemButton)
-							itemButton.TLHOverlay:SetAllPoints(itemButton)
-						end
-
-						local tab = GetCurrentGuildBankTab()
-						local slot = itemButton:GetID()
-						local itemLink = GetGuildBankItemLink(tab, slot)
-						if itemLink then
-							app:ApplyItemOverlay(itemButton.TLHOverlay, itemLink)
-						else
-							itemButton.TLHOverlay:Hide()
-						end
-					end
-				end
-
-				if not app.Flag.GuildBankHook then
-					for i = 1, 8 do
-						local tab = _G["GuildBankTab" .. i]
-						if tab and tab.Button then
-							tab.Button:HookScript("OnClick", function() app:GuildBankOverlay() end)
-						end
-					end
-					app.Flag.GuildBankHook = true
+				local tab = GetCurrentGuildBankTab()
+				local slot = itemButton:GetID()
+				local itemLink = GetGuildBankItemLink(tab, slot)
+				if itemLink then
+					app:ApplyItemOverlay(itemButton.TLHOverlay, itemLink)
+				else
+					itemButton.TLHOverlay:Hide()
 				end
 			end
 		end
 
-		app.Event:Register("GUILDBANKBAGSLOTS_CHANGED", function() app:GuildBankOverlay() end)
-
-		local function blackMarketOverlay()
-			if BlackMarketFrame and BlackMarketFrame:IsVisible() then
-				if not app.BlackMarketFrameHook then
-					BlackMarketFrame.ScrollBox:RegisterCallback("OnAcquiredFrame", function(_, v, data) -- Thank you, Plusmouse!
-						C_Timer.After(0.1, function()
-							if not v.TLHOverlay then
-								v.TLHOverlay = CreateFrame("Frame", nil, v)
-								v.TLHOverlay:SetAllPoints(v.Item)
-							end
-							v.TLHOverlay:Hide()
-
-							local itemLink = v.itemLink
-							if itemLink then
-								app:ApplyItemOverlay(v.TLHOverlay, itemLink)
-								v.TLHOverlay.text:SetText("")
-							end
-						end)
-					end)
-					app.BlackMarketFrameHook = true
+		if not app.Flag.GuildBankHook then
+			for i = 1, 8 do
+				local tab = _G["GuildBankTab" .. i]
+				if tab and tab.Button then
+					tab.Button:HookScript("OnClick", function() app:GuildBankOverlay() end)
 				end
 			end
+			app.Flag.GuildBankHook = true
 		end
+	end
 
-		app.Event:Register("BLACK_MARKET_OPEN", function() C_Timer.After(0.1, blackMarketOverlay) end)
+	app.Event:Register("GUILDBANKBAGSLOTS_CHANGED", function() app:GuildBankOverlay() end)
 
-		local function mailboxOverlay()
-			if not app.MailboxHook then
-				if app.Forever then
-					hooksecurefunc(InboxFrame, "Update", mailboxOverlay)
-					hooksecurefunc(OpenMailFrame, "Update", mailboxOverlay)
-				elseif app.Retail then
-					InboxPrevPageButton:HookScript("OnClick", function() mailboxOverlay() C_Timer.After(0.1, mailboxOverlay) end)
-					InboxNextPageButton:HookScript("OnClick", function() mailboxOverlay() C_Timer.After(0.1, mailboxOverlay) end)
-				end
+	local function blackMarketOverlay()
+		if not BlackMarketFrame or not BlackMarketFrame:IsVisible() then return end
 
-				for i = 1, 7 do
-					local itemButton = _G["MailItem" .. i .. "Button"]
-					if itemButton then
-						itemButton:HookScript("OnClick", function()
-							app.SelectedMail = itemButton.index
-							mailboxOverlay()
-						end)
+		if not app.BlackMarketFrameHook then
+			BlackMarketFrame.ScrollBox:RegisterCallback("OnAcquiredFrame", function(_, v, data) -- Thank you, Plusmouse!
+				C_Timer.After(0.1, function()
+					if not v.TLHOverlay then
+						v.TLHOverlay = CreateFrame("Frame", nil, v)
+						v.TLHOverlay:SetAllPoints(v.Item)
 					end
-				end
+					v.TLHOverlay:Hide()
 
-				app.MailboxHook = true
+					local itemLink = v.itemLink
+					if itemLink then
+						app:ApplyItemOverlay(v.TLHOverlay, itemLink)
+						v.TLHOverlay.text:SetText("")
+					end
+				end)
+			end)
+			app.BlackMarketFrameHook = true
+		end
+	end
+
+	app.Event:Register("BLACK_MARKET_OPEN", function() C_Timer.After(0.1, blackMarketOverlay) end)
+
+	local function mailboxOverlay()
+		if not app.MailboxHook then
+			if app.Forever then
+				hooksecurefunc(InboxFrame, "Update", mailboxOverlay)
+				hooksecurefunc(OpenMailFrame, "Update", mailboxOverlay)
+			elseif app.Retail then
+				InboxPrevPageButton:HookScript("OnClick", function() mailboxOverlay() C_Timer.After(0.1, mailboxOverlay) end)
+				InboxNextPageButton:HookScript("OnClick", function() mailboxOverlay() C_Timer.After(0.1, mailboxOverlay) end)
 			end
 
 			for i = 1, 7 do
 				local itemButton = _G["MailItem" .. i .. "Button"]
 				if itemButton then
-					if not itemButton.TLHOverlay then
-						itemButton.TLHOverlay = CreateFrame("Frame", nil, itemButton)
-						itemButton.TLHOverlay:SetAllPoints(itemButton)
-					end
+					itemButton:HookScript("OnClick", function()
+						app.SelectedMail = itemButton.index
+						mailboxOverlay()
+					end)
+				end
+			end
 
-					if itemButton.hasItem == 1 then
-						local _, itemID = GetInboxItem(i, 1)
-						if itemID then
-							local _, itemLink = C_Item.GetItemInfo(itemID)
+			app.MailboxHook = true
+		end
 
-							if itemLink then
-								app:ApplyItemOverlay(itemButton.TLHOverlay, itemLink)
-							else
-								itemButton.TLHOverlay:Hide()
-							end
+		for i = 1, 7 do
+			local itemButton = _G["MailItem" .. i .. "Button"]
+			if itemButton then
+				if not itemButton.TLHOverlay then
+					itemButton.TLHOverlay = CreateFrame("Frame", nil, itemButton)
+					itemButton.TLHOverlay:SetAllPoints(itemButton)
+				end
+
+				if itemButton.hasItem == 1 then
+					local _, itemID = GetInboxItem(i, 1)
+					if itemID then
+						local _, itemLink = C_Item.GetItemInfo(itemID)
+
+						if itemLink then
+							app:ApplyItemOverlay(itemButton.TLHOverlay, itemLink)
 						else
 							itemButton.TLHOverlay:Hide()
 						end
 					else
 						itemButton.TLHOverlay:Hide()
 					end
-				end
-			end
-
-			for i = 1, ATTACHMENTS_MAX_RECEIVE do
-				local itemButton = _G["OpenMailAttachmentButton" .. i]
-				if itemButton and app.SelectedMail then
-					if not itemButton.TLHOverlay then
-						itemButton.TLHOverlay = CreateFrame("Frame", nil, itemButton)
-						itemButton.TLHOverlay:SetAllPoints(itemButton)
-					end
-
-					local mailID = app.Forever and InboxFrame.openMailID or app.SelectedMail
-					local itemLink = mailID and mailID > 0 and GetInboxItemLink(mailID, i)
-					if itemLink then
-						app:ApplyItemOverlay(itemButton.TLHOverlay, itemLink)
-					else
-						itemButton.TLHOverlay:Hide()
-					end
+				else
+					itemButton.TLHOverlay:Hide()
 				end
 			end
 		end
 
-		app.Event:Register("MAIL_SHOW", function() C_Timer.After(0.1, mailboxOverlay) end)
-		app.Event:Register("MAIL_INBOX_UPDATE", function() C_Timer.After(0.1, mailboxOverlay) end)
+		for i = 1, ATTACHMENTS_MAX_RECEIVE do
+			local itemButton = _G["OpenMailAttachmentButton" .. i]
+			if itemButton and app.SelectedMail then
+				if not itemButton.TLHOverlay then
+					itemButton.TLHOverlay = CreateFrame("Frame", nil, itemButton)
+					itemButton.TLHOverlay:SetAllPoints(itemButton)
+				end
 
-		LootFrame:HookScript("OnShow", function() -- Thank you, LS!
-			for _, frame in next, LootFrame.ScrollBox.view.frames do
-				if frame.Item then
-					if not frame.TLHOverlay then
-						frame.TLHOverlay = CreateFrame("Frame", nil, frame.Item)
-						frame.TLHOverlay:SetAllPoints(frame.Item)
-					end
-					frame.TLHOverlay:Hide()
-
-					local itemLink = GetLootSlotLink(frame:GetSlotIndex())
-					if itemLink then
-						app:ApplyItemOverlay(frame.TLHOverlay, itemLink)
-					end
+				local mailID = app.Forever and InboxFrame.openMailID or app.SelectedMail
+				local itemLink = mailID and mailID > 0 and GetInboxItemLink(mailID, i)
+				if itemLink then
+					app:ApplyItemOverlay(itemButton.TLHOverlay, itemLink)
+				else
+					itemButton.TLHOverlay:Hide()
 				end
 			end
-		end)
+		end
+	end
 
-		local function lootOverlay()
-			local function applyToLootFrame(frame)
+	app.Event:Register("MAIL_SHOW", function() C_Timer.After(0.1, mailboxOverlay) end)
+	app.Event:Register("MAIL_INBOX_UPDATE", function() C_Timer.After(0.1, mailboxOverlay) end)
+
+	LootFrame:HookScript("OnShow", function() -- Thank you, LS!
+		for _, frame in next, LootFrame.ScrollBox.view.frames do
+			if frame.Item then
 				if not frame.TLHOverlay then
-					frame.TLHOverlay = CreateFrame("Frame", nil, frame)
-					frame.TLHOverlay:SetAllPoints(frame.IconFrame)
+					frame.TLHOverlay = CreateFrame("Frame", nil, frame.Item)
+					frame.TLHOverlay:SetAllPoints(frame.Item)
 				end
 				frame.TLHOverlay:Hide()
 
-				if not frame.rollID then return end
-				local itemLink = GetLootRollItemLink(frame.rollID)
+				local itemLink = GetLootSlotLink(frame:GetSlotIndex())
 				if itemLink then
 					app:ApplyItemOverlay(frame.TLHOverlay, itemLink)
 				end
 			end
+		end
+	end)
 
-			if GroupLootFrame1 then applyToLootFrame(GroupLootFrame1) end
-			if GroupLootFrame2 then applyToLootFrame(GroupLootFrame2) end
-			if GroupLootFrame3 then applyToLootFrame(GroupLootFrame3) end
-			if GroupLootFrame4 then applyToLootFrame(GroupLootFrame4) end
+	local function lootOverlay()
+		local function applyToLootFrame(frame)
+			if not frame.TLHOverlay then
+				frame.TLHOverlay = CreateFrame("Frame", nil, frame)
+				frame.TLHOverlay:SetAllPoints(frame.IconFrame)
+			end
+			frame.TLHOverlay:Hide()
+
+			if not frame.rollID then return end
+			local itemLink = GetLootRollItemLink(frame.rollID)
+			if itemLink then
+				app:ApplyItemOverlay(frame.TLHOverlay, itemLink)
+			end
 		end
 
-		app.Event:Register("START_LOOT_ROLL", function() RunNextFrame(lootOverlay) end)
-		app.Event:Register("MAIN_SPEC_NEED_ROLL", function() RunNextFrame(lootOverlay) end)
-		app.Event:Register("CANCEL_LOOT_ROLL", function() RunNextFrame(lootOverlay) end)
-		app.Event:Register("CONFIRM_LOOT_ROLL", function() RunNextFrame(lootOverlay) end)
+		if GroupLootFrame1 then applyToLootFrame(GroupLootFrame1) end
+		if GroupLootFrame2 then applyToLootFrame(GroupLootFrame2) end
+		if GroupLootFrame3 then applyToLootFrame(GroupLootFrame3) end
+		if GroupLootFrame4 then applyToLootFrame(GroupLootFrame4) end
+	end
 
-		function app:MerchantOverlay()
-			if not app.MerchantHook then
-				MerchantPrevPageButton:HookScript("OnClick", function() app:MerchantOverlay() C_Timer.After(0.1, function() app:MerchantOverlay() end) end)
-				MerchantNextPageButton:HookScript("OnClick", function() app:MerchantOverlay() C_Timer.After(0.1, function() app:MerchantOverlay() end) end)
-				MerchantFrame:HookScript("OnMouseWheel", function() app:MerchantOverlay() C_Timer.After(0.1, function() app:MerchantOverlay() end) end)
-				MerchantFrame.FilterDropdown:RegisterCallback("OnMenuClose", function() app:MerchantOverlay() C_Timer.After(0.1, function() app:MerchantOverlay() end) end)
-				app.MerchantHook = true
+	app.Event:Register("START_LOOT_ROLL", function() RunNextFrame(lootOverlay) end)
+	app.Event:Register("MAIN_SPEC_NEED_ROLL", function() RunNextFrame(lootOverlay) end)
+	app.Event:Register("CANCEL_LOOT_ROLL", function() RunNextFrame(lootOverlay) end)
+	app.Event:Register("CONFIRM_LOOT_ROLL", function() RunNextFrame(lootOverlay) end)
+
+	function app:MerchantOverlay()
+		if not MerchantFrame or not MerchantFrame:IsVisible() then return end
+
+		if not app.MerchantHook then
+			MerchantPrevPageButton:HookScript("OnClick", function() app:MerchantOverlay() C_Timer.After(0.1, function() app:MerchantOverlay() end) end)
+			MerchantNextPageButton:HookScript("OnClick", function() app:MerchantOverlay() C_Timer.After(0.1, function() app:MerchantOverlay() end) end)
+			MerchantFrame:HookScript("OnMouseWheel", function() app:MerchantOverlay() C_Timer.After(0.1, function() app:MerchantOverlay() end) end)
+			MerchantFrame.FilterDropdown:RegisterCallback("OnMenuClose", function() app:MerchantOverlay() C_Timer.After(0.1, function() app:MerchantOverlay() end) end)
+			app.MerchantHook = true
+		end
+
+		for i = 1, 99 do -- Works for addons that expand the vendor frame up to 99 slots
+			local itemButton = _G["MerchantItem" .. i .. "ItemButton"]
+			if itemButton then
+				if not itemButton.TLHOverlay then
+					itemButton.TLHOverlay = CreateFrame("Frame", nil, itemButton)
+					itemButton.TLHOverlay:SetAllPoints(itemButton)
+				end
+
+				if i == 1 and itemButton.hasItem == nil then
+					RunNextFrame(function()
+						if not itemButton:IsVisible() then return end
+						app:MerchantOverlay()
+					end)
+					return
+				end
+
+				local itemLink = itemButton.link
+				if itemLink then
+					app:ApplyItemOverlay(itemButton.TLHOverlay, itemLink)
+				else
+					itemButton.TLHOverlay:Hide()
+				end
 			end
-			if not MerchantFrame:IsVisible() then return end
+		end
+	end
 
-			for i = 1, 99 do -- Works for addons that expand the vendor frame up to 99 slots
-				local itemButton = _G["MerchantItem" .. i .. "ItemButton"]
-				if itemButton then
-					if not itemButton.TLHOverlay then
-						itemButton.TLHOverlay = CreateFrame("Frame", nil, itemButton)
-						itemButton.TLHOverlay:SetAllPoints(itemButton)
+	app.Event:Register("MERCHANT_SHOW", function() C_Timer.After(0.1, function() app:MerchantOverlay() end) end)
+
+	function app:QuestOverlay(mode)
+		local function rewardOverlay(rewardsFrame)
+			local sellPrice = {}
+
+			for k, v in pairs(rewardsFrame.RewardButtons) do
+				local itemButton = QuestInfo_GetRewardButton(rewardsFrame, k)
+				if not itemButton.TLHOverlay then
+					itemButton.TLHOverlay = CreateFrame("Frame", nil, itemButton)
+					itemButton.TLHOverlay:SetAllPoints(itemButton)
+				end
+				itemButton.TLHOverlay:Hide() -- Hide our overlay initially, updating doesn't work like for regular itemButtons
+				if itemButton.TLHOverlay.gold then itemButton.TLHOverlay.gold:Hide() end
+
+				local itemLink
+
+				if v.type then
+					if mode == "turnin" then
+						-- Set our map quest log to the currently displayed quest, stuff is being weird on quest turn-in
+						if GetQuestID() then
+							C_QuestLog.SetSelectedQuest(GetQuestID())
+						end
+
+						itemLink = GetQuestLogItemLink(v.type, k)
+					elseif rewardsFrame == QuestInfoRewardsFrame then
+						itemLink = GetQuestItemLink(v.type, k)
+					elseif rewardsFrame == MapQuestInfoRewardsFrame then
+						itemLink = GetQuestLogItemLink(v.type, k)
 					end
 
-					if i == 1 and itemButton.hasItem == nil then
-						RunNextFrame(function()
-							if not itemButton:IsVisible() then return end
-							app:MerchantOverlay()
-						end)
-						return
-					end
-
-					local itemLink = itemButton.link
-					if itemLink then
+					if v.objectType == "currency" then
+						itemButton.TLHOverlay:Hide()
+					elseif itemLink then
+						table.insert(sellPrice, { price = select(11, C_Item.GetItemInfo(itemLink)), itemButton = itemButton})
 						app:ApplyItemOverlay(itemButton.TLHOverlay, itemLink)
+						itemButton.TLHOverlay:SetAllPoints(itemButton.IconBorder)
 					else
 						itemButton.TLHOverlay:Hide()
+					end
+				else
+					itemButton.TLHOverlay:Hide()
+				end
+			end
+
+			if app.Settings.iconQuestGold and #sellPrice > 1 then
+				local highestPrice = 0
+				local highestItem = nil
+				local diff = -1
+
+				for k, v in ipairs(sellPrice) do
+					if v.price > 1 and v.price ~= highestPrice then
+						diff = diff + 1
+					end
+
+					if v.price > 1 and v.price > highestPrice then
+						highestPrice = v.price
+						highestItem = v.itemButton
+					end
+				end
+
+				if highestItem and diff > 0 then
+					local overlay = highestItem.TLHOverlay
+
+					if not overlay.gold then
+						overlay.gold = CreateFrame("Frame", nil, overlay)
+						overlay.gold:SetSize(16, 16)
+
+						local goldIcon = overlay.gold:CreateTexture(nil, "ARTWORK")
+						goldIcon:SetAllPoints(overlay.gold)
+						goldIcon:SetTexture("interface\\buttons\\ui-grouploot-coin-up")
+					end
+
+					overlay.gold:Show()
+					if app.Settings.iconPosition == 0 then
+						overlay.gold:SetPoint("CENTER", overlay, "TOPRIGHT", -4, -4)
+					elseif app.Settings.iconPosition == 1 then
+						overlay.gold:SetPoint("CENTER", overlay, "TOPLEFT", 4, -4)
+					elseif app.Settings.iconPosition == 2 then
+						overlay.gold:SetPoint("CENTER", overlay, "BOTTOMLEFT", 4, 4)
+					elseif app.Settings.iconPosition == 3 then
+						overlay.gold:SetPoint("CENTER", overlay, "BOTTOMRIGHT", -4, 4)
 					end
 				end
 			end
 		end
 
-		app.Event:Register("MERCHANT_SHOW", function() C_Timer.After(0.1, function() app:MerchantOverlay() end) end)
-
-		function app:QuestOverlay(mode)
-			local function rewardOverlay(rewardsFrame)
-				local sellPrice = {}
-
-				for k, v in pairs(rewardsFrame.RewardButtons) do
-					local itemButton = QuestInfo_GetRewardButton(rewardsFrame, k)
-					if not itemButton.TLHOverlay then
-						itemButton.TLHOverlay = CreateFrame("Frame", nil, itemButton)
-						itemButton.TLHOverlay:SetAllPoints(itemButton)
-					end
-					itemButton.TLHOverlay:Hide() -- Hide our overlay initially, updating doesn't work like for regular itemButtons
-					if itemButton.TLHOverlay.gold then itemButton.TLHOverlay.gold:Hide() end
-
-					local itemLink
-
-					if v.type then
-						if mode == "turnin" then
-							-- Set our map quest log to the currently displayed quest, stuff is being weird on quest turn-in
-							if GetQuestID() then
-								C_QuestLog.SetSelectedQuest(GetQuestID())
-							end
-
-							itemLink = GetQuestLogItemLink(v.type, k)
-						elseif rewardsFrame == QuestInfoRewardsFrame then
-							itemLink = GetQuestItemLink(v.type, k)
-						elseif rewardsFrame == MapQuestInfoRewardsFrame then
-							itemLink = GetQuestLogItemLink(v.type, k)
-						end
-
-						if v.objectType == "currency" then
-							itemButton.TLHOverlay:Hide()
-						elseif itemLink then
-							table.insert(sellPrice, { price = select(11, C_Item.GetItemInfo(itemLink)), itemButton = itemButton})
-							app:ApplyItemOverlay(itemButton.TLHOverlay, itemLink)
-							itemButton.TLHOverlay:SetAllPoints(itemButton.IconBorder)
-						else
-							itemButton.TLHOverlay:Hide()
-						end
-					else
-						itemButton.TLHOverlay:Hide()
-					end
-				end
-
-				if app.Settings.iconQuestGold and #sellPrice > 1 then
-					local highestPrice = 0
-					local highestItem = nil
-					local diff = -1
-
-					for k, v in ipairs(sellPrice) do
-						if v.price > 1 and v.price ~= highestPrice then
-							diff = diff + 1
-						end
-
-						if v.price > 1 and v.price > highestPrice then
-							highestPrice = v.price
-							highestItem = v.itemButton
-						end
-					end
-
-					if highestItem and diff > 0 then
-						local overlay = highestItem.TLHOverlay
-
-						if not overlay.gold then
-							overlay.gold = CreateFrame("Frame", nil, overlay)
-							overlay.gold:SetSize(16, 16)
-
-							local goldIcon = overlay.gold:CreateTexture(nil, "ARTWORK")
-							goldIcon:SetAllPoints(overlay.gold)
-							goldIcon:SetTexture("interface\\buttons\\ui-grouploot-coin-up")
-						end
-
-						overlay.gold:Show()
-						if app.Settings.iconPosition == 0 then
-							overlay.gold:SetPoint("CENTER", overlay, "TOPRIGHT", -4, -4)
-						elseif app.Settings.iconPosition == 1 then
-							overlay.gold:SetPoint("CENTER", overlay, "TOPLEFT", 4, -4)
-						elseif app.Settings.iconPosition == 2 then
-							overlay.gold:SetPoint("CENTER", overlay, "BOTTOMLEFT", 4, 4)
-						elseif app.Settings.iconPosition == 3 then
-							overlay.gold:SetPoint("CENTER", overlay, "BOTTOMRIGHT", -4, 4)
-						end
-					end
-				end
-			end
-
-			if QuestInfoRewardsFrame and not WorldMapFrame:IsVisible() then
-				rewardOverlay(QuestInfoRewardsFrame)
-				C_Timer.After(1, function()
-					rewardOverlay(QuestInfoRewardsFrame)
-				end)
-			end
-
-			if MapQuestInfoRewardsFrame and WorldMapFrame:IsVisible() then
-				rewardOverlay(MapQuestInfoRewardsFrame)
-			end
-		end
-
-		app.Event:Register("QUEST_DETAIL", function() app:QuestOverlay() end)
-		app.Event:Register("QUEST_COMPLETE", function() app:QuestOverlay("turnin") end)
-		app.Event:Register("QUEST_LOG_UPDATE", function()
+		if QuestInfoRewardsFrame and not WorldMapFrame:IsVisible() then
+			rewardOverlay(QuestInfoRewardsFrame)
 			C_Timer.After(1, function()
-				if not app.RefreshTimerQuest then
+				rewardOverlay(QuestInfoRewardsFrame)
+			end)
+		end
+
+		if MapQuestInfoRewardsFrame and WorldMapFrame:IsVisible() then
+			rewardOverlay(MapQuestInfoRewardsFrame)
+		end
+	end
+
+	app.Event:Register("QUEST_DETAIL", function() app:QuestOverlay() end)
+	app.Event:Register("QUEST_COMPLETE", function() app:QuestOverlay("turnin") end)
+	app.Event:Register("QUEST_LOG_UPDATE", function()
+		C_Timer.After(1, function()
+			if not app.RefreshTimerQuest then
+				app:QuestOverlay()
+			end
+			app.RefreshTimerQuest = app.RefreshTimerQuest or 0
+			C_Timer.After(5, function()
+				if GetServerTime() > app.RefreshTimerQuest + 5 then
 					app:QuestOverlay()
+					app.RefreshTimerQuest = GetServerTime()
 				end
-				app.RefreshTimerQuest = app.RefreshTimerQuest or 0
-				C_Timer.After(5, function()
-					if GetServerTime() > app.RefreshTimerQuest + 5 then
-						app:QuestOverlay()
-						app.RefreshTimerQuest = GetServerTime()
-					end
-				end)
 			end)
 		end)
+	end)
 
-		function app:WorldQuestOverlay()
-			if C_AddOns.IsAddOnLoaded("WorldQuestTab") then return end
+	function app:WorldQuestOverlay()
+		if C_AddOns.IsAddOnLoaded("WorldQuestTab") then return end
 
-			C_Timer.After(0.1, function()
-				for pin in WorldMapFrame:EnumeratePinsByTemplate("WorldMap_WorldQuestPinTemplate") do
-					if not pin.TLHOverlay then
-						pin.TLHOverlay = CreateFrame("Frame", nil, pin)
-						pin.TLHOverlay:SetAllPoints(pin)
-						pin.TLHOverlay:SetScale(0.8)
-					end
-					pin.TLHOverlay:Hide() -- Hide our overlay initially, updating doesn't work like for regular itemButtons
+		C_Timer.After(0.1, function()
+			for pin in WorldMapFrame:EnumeratePinsByTemplate("WorldMap_WorldQuestPinTemplate") do
+				if not pin.TLHOverlay then
+					pin.TLHOverlay = CreateFrame("Frame", nil, pin)
+					pin.TLHOverlay:SetAllPoints(pin)
+					pin.TLHOverlay:SetScale(0.8)
+				end
+				pin.TLHOverlay:Hide() -- Hide our overlay initially, updating doesn't work like for regular itemButtons
 
-					local bestIndex, bestType = QuestUtils_GetBestQualityItemRewardIndex(pin.questID)
-					if bestIndex and bestType then
-						local itemLink = GetQuestLogItemLink(bestType, bestIndex, pin.questID)
-						if itemLink then
-							app:ApplyItemOverlay(pin.TLHOverlay, itemLink)
-							pin.TLHOverlay.text:SetText("")
-						else
-							pin.TLHOverlay:Hide()
-						end
+				local bestIndex, bestType = QuestUtils_GetBestQualityItemRewardIndex(pin.questID)
+				if bestIndex and bestType then
+					local itemLink = GetQuestLogItemLink(bestType, bestIndex, pin.questID)
+					if itemLink then
+						app:ApplyItemOverlay(pin.TLHOverlay, itemLink)
+						pin.TLHOverlay.text:SetText("")
 					else
 						pin.TLHOverlay:Hide()
 					end
+				else
+					pin.TLHOverlay:Hide()
+				end
+			end
+		end)
+	end
+
+	WorldMapFrame:HookScript("OnShow", function() app:WorldQuestOverlay() end)
+	EventRegistry:RegisterCallback("MapCanvas.MapSet", function() app:WorldQuestOverlay() end)
+
+	local function encounterJournalOverlay()
+		if app.Flag.EncounterJournalHook or not EncounterJournal or not EncounterJournal:IsVisible() then return end
+
+		EncounterJournalEncounterFrameInfo.LootContainer.ScrollBox:RegisterCallback("OnAcquiredFrame", function(_, v)
+			RunNextFrame(function()
+				if v then
+					if not v.TLHOverlay then
+						v.TLHOverlay = CreateFrame("Frame", nil, v)
+						local inset = 4
+						v.TLHOverlay:SetPoint("TOPLEFT", v.icon, "TOPLEFT", inset, -inset)
+						v.TLHOverlay:SetPoint("BOTTOMRIGHT", v.icon, "BOTTOMRIGHT", -inset, inset)
+					end
+					v.TLHOverlay:Hide()
+
+					if v.link then
+						app:ApplyItemOverlay(v.TLHOverlay, v.link)
+						v.TLHOverlay.text:SetText("")
+						v.TLHOverlay.animation1:Stop()
+						v.TLHOverlay.animationTexture1:Hide()
+						v.TLHOverlay.animation2:Stop()
+						v.TLHOverlay.animationTexture2:Hide()
+					end
 				end
 			end)
-		end
+		end)
+		app.Flag.EncounterJournalHook = true
+	end
 
-		WorldMapFrame:HookScript("OnShow", function() app:WorldQuestOverlay() end)
-		EventRegistry:RegisterCallback("MapCanvas.MapSet", function() app:WorldQuestOverlay() end)
+	app.Event:Register("UPDATE_INSTANCE_INFO", encounterJournalOverlay)
 
-		local function encounterJournalOverlay()
-			if EncounterJournal and EncounterJournal:IsVisible() and not app.Flag.EncounterJournalHook then
-				EncounterJournalEncounterFrameInfo.LootContainer.ScrollBox:RegisterCallback("OnAcquiredFrame", function(_, v)
-					RunNextFrame(function()
-						if v then
-							if not v.TLHOverlay then
-								v.TLHOverlay = CreateFrame("Frame", nil, v)
-								local inset = 4
-								v.TLHOverlay:SetPoint("TOPLEFT", v.icon, "TOPLEFT", inset, -inset)
-								v.TLHOverlay:SetPoint("BOTTOMRIGHT", v.icon, "BOTTOMRIGHT", -inset, inset)
-							end
-							v.TLHOverlay:Hide()
+	function app:TradeskillOverlay()
+		if app.Flag.TradeskillHook or not ProfessionsFrame or not ProfessionsFrame:IsVisible() then return end
 
-							if v.link then
-								app:ApplyItemOverlay(v.TLHOverlay, v.link)
+		ProfessionsFrame.CraftingPage.RecipeList.ScrollBox:RegisterCallback("OnAcquiredFrame", function(_, v, data) -- Thank you, Plusmouse!
+			if not v.TLHOverlay then
+				v.TLHOverlay = CreateFrame("Frame", nil, v)
+			end
+			v.TLHOverlay:Hide()
+
+			local recipeInfo = data.data.recipeInfo
+			if recipeInfo then
+				local recipeID = recipeInfo.recipeID
+				if recipeID then
+					local itemLink = C_TradeSkillUI.GetRecipeItemLink(recipeID)
+					if itemLink then
+						app:ApplyItemOverlay(v.TLHOverlay, itemLink)
+						v.TLHOverlay.text:SetText("")
+
+						v.TLHOverlay.icon:ClearAllPoints()
+						v.TLHOverlay.icon:SetPoint("RIGHT", v)
+
+						C_Timer.After(0.2, function()
+							v.TLHOverlay.icon:ClearAllPoints()
+							v.TLHOverlay.icon:SetPoint("RIGHT", v)
+							v.TLHOverlay.animation1:Stop()
+							v.TLHOverlay.animationTexture1:Hide()
+							v.TLHOverlay.animation2:Stop()
+							v.TLHOverlay.animationTexture2:Hide()
+						end)
+					end
+				end
+			end
+		end)
+		app.Flag.TradeskillHook = true
+	end
+
+	app.Event:Register("TRADE_SKILL_SHOW", function() app:TradeskillOverlay() end)
+
+	function app:AuctionHouseOverlay()
+		if app.Flag.AuctionHouseHook or not AuctionHouseFrame or not AuctionHouseFrame:IsVisible() then return end
+
+		AuctionHouseFrame.BrowseResultsFrame.ItemList.ScrollBox:RegisterCallback("OnAcquiredFrame", function(_, v) -- Thank you, Plusmouse!
+			C_Timer.After(0.1, function()
+				if not v.TLHOverlay then
+					v.TLHOverlay = CreateFrame("Frame", nil, v)
+					v.TLHOverlay:Hide()
+				end
+
+				local rowData = v.rowData
+				if rowData then
+					local itemID = rowData.itemKey.itemID
+					if itemID then
+						local _, itemLink = C_Item.GetItemInfo(itemID)
+						if itemLink then
+							local function setPos()
 								v.TLHOverlay.text:SetText("")
+								v.TLHOverlay.icon:ClearAllPoints()
+								if app.Retail then
+									v.TLHOverlay.icon:SetPoint("LEFT", v, 134, 0)
+								else
+									v.TLHOverlay.icon:SetPoint("LEFT", v, 154, 0)
+								end
 								v.TLHOverlay.animation1:Stop()
 								v.TLHOverlay.animationTexture1:Hide()
 								v.TLHOverlay.animation2:Stop()
 								v.TLHOverlay.animationTexture2:Hide()
 							end
-						end
-					end)
-				end)
-				app.Flag.EncounterJournalHook = true
-			end
-		end
 
-		app.Event:Register("UPDATE_INSTANCE_INFO", encounterJournalOverlay)
-
-		function app:TradeskillOverlay()
-			if ProfessionsFrame and ProfessionsFrame:IsVisible() then
-				if not app.TradeskillHook then
-					ProfessionsFrame.CraftingPage.RecipeList.ScrollBox:RegisterCallback("OnAcquiredFrame", function(_, v, data) -- Thank you, Plusmouse!
-						if not v.TLHOverlay then
-							v.TLHOverlay = CreateFrame("Frame", nil, v)
-						end
-						v.TLHOverlay:Hide()
-
-						local recipeInfo = data.data.recipeInfo
-						if recipeInfo then
-							local recipeID = recipeInfo.recipeID
-							if recipeID then
-								local itemLink = C_TradeSkillUI.GetRecipeItemLink(recipeID)
-								if itemLink then
-									app:ApplyItemOverlay(v.TLHOverlay, itemLink)
-									v.TLHOverlay.text:SetText("")
-
-									v.TLHOverlay.icon:ClearAllPoints()
-									v.TLHOverlay.icon:SetPoint("RIGHT", v)
-
-									C_Timer.After(0.2, function()
-										v.TLHOverlay.icon:ClearAllPoints()
-										v.TLHOverlay.icon:SetPoint("RIGHT", v)
-										v.TLHOverlay.animation1:Stop()
-										v.TLHOverlay.animationTexture1:Hide()
-										v.TLHOverlay.animation2:Stop()
-										v.TLHOverlay.animationTexture2:Hide()
-									end)
-								end
+							local speciesID
+							if itemID == 82800 and rowData.itemKey.battlePetSpeciesID then -- Can't extract pet info from this preview cage
+								speciesID = rowData.itemKey.battlePetSpeciesID
 							end
-						end
-					end)
-					app.TradeskillHook = true
-				end
-			end
-		end
-
-		app.Event:Register("TRADE_SKILL_SHOW", function() app:TradeskillOverlay() end)
-
-		function app:AuctionHouseOverlay()
-			if AuctionHouseFrame and AuctionHouseFrame:IsVisible() and not app.Flag.AuctionHouseHook then
-				AuctionHouseFrame.BrowseResultsFrame.ItemList.ScrollBox:RegisterCallback("OnAcquiredFrame", function(_, v) -- Thank you, Plusmouse!
-					C_Timer.After(0.1, function()
-						if not v.TLHOverlay then
-							v.TLHOverlay = CreateFrame("Frame", nil, v)
-							v.TLHOverlay:Hide()
-						end
-
-						local rowData = v.rowData
-						if rowData then
-							local itemID = rowData.itemKey.itemID
-							if itemID then
-								local _, itemLink = C_Item.GetItemInfo(itemID)
-								if itemLink then
-									local function setPos()
-										v.TLHOverlay.text:SetText("")
-										v.TLHOverlay.icon:ClearAllPoints()
-										if app.Retail then
-											v.TLHOverlay.icon:SetPoint("LEFT", v, 134, 0)
-										else
-											v.TLHOverlay.icon:SetPoint("LEFT", v, 154, 0)
-										end
-										v.TLHOverlay.animation1:Stop()
-										v.TLHOverlay.animationTexture1:Hide()
-										v.TLHOverlay.animation2:Stop()
-										v.TLHOverlay.animationTexture2:Hide()
-									end
-
-									local speciesID
-									if itemID == 82800 and rowData.itemKey.battlePetSpeciesID then -- Can't extract pet info from this preview cage
-										speciesID = rowData.itemKey.battlePetSpeciesID
-									end
-									return app:ApplyItemOverlay(v.TLHOverlay, itemLink, nil, nil, nil, speciesID, setPos)
-								end
-							end
-						end
-						v.TLHOverlay:Hide()
-					end)
-				end)
-				app.Flag.AuctionHouseHook = true
-			end
-		end
-
-		app.Event:Register("AUCTION_HOUSE_THROTTLED_SYSTEM_READY", function() app:AuctionHouseOverlay() end)
-
-		local function greatVaultOverlay()
-			local function doTheThing()
-				if WeeklyRewardsFrame and WeeklyRewardsFrame:IsVisible() then
-					local children = { WeeklyRewardsFrame:GetChildren() }
-					for k, v in pairs(children) do
-						if type(v) == "table" and v.hasRewards and v.ItemFrame then
-							if v.info and v.info.rewards then
-								if not v.TLHOverlay then
-									v.TLHOverlay = CreateFrame("Frame", nil, v.ItemFrame)
-									v.TLHOverlay:SetAllPoints(v.ItemFrame.Icon)
-								end
-
-								local itemLink
-								if v.info.rewards[2] and v.info.rewards[2].itemDBID then
-									itemLink = C_WeeklyRewards.GetItemHyperlink(v.info.rewards[2].itemDBID)
-								elseif v.info.rewards[1].itemDBID then
-									itemLink = C_WeeklyRewards.GetItemHyperlink(v.info.rewards[1].itemDBID)
-								end
-								app:ApplyItemOverlay(v.TLHOverlay, itemLink)
-							end
+							return app:ApplyItemOverlay(v.TLHOverlay, itemLink, nil, nil, nil, speciesID, setPos)
 						end
 					end
 				end
-			end
-			doTheThing()
-			C_Timer.After(2, doTheThing)
-		end
-
-		app.Event:Register("WEEKLY_REWARDS_UPDATE", greatVaultOverlay)
-
-		app.Event:Register("TRANSMOG_COLLECTION_UPDATED", function()
-			api:UpdateOverlay()
+				v.TLHOverlay:Hide()
+			end)
 		end)
-
-		app.Event:Register("NEW_RECIPE_LEARNED", function(recipeID, recipeLevel, baseRecipeID)
-			app:CacheRecipe(recipeID, false, true)
-			api:UpdateOverlay()
-		end)
-
-		app.Event:Register("LEARNED_SPELL_IN_SKILL_LINE", function(spellID, skillLineIndex, isGuildPerkSpell)
-			app:CacheRecipe(spellID, true, true)
-			api:UpdateOverlay()
-		end)
+		app.Flag.AuctionHouseHook = true
 	end
+
+	app.Event:Register("AUCTION_HOUSE_THROTTLED_SYSTEM_READY", function() app:AuctionHouseOverlay() end)
+
+	local function greatVaultOverlay()
+		local function doTheThing()
+			if not WeeklyRewardsFrame or not WeeklyRewardsFrame:IsVisible() then return end
+
+			local children = { WeeklyRewardsFrame:GetChildren() }
+			for k, v in pairs(children) do
+				if type(v) == "table" and v.hasRewards and v.ItemFrame then
+					if v.info and v.info.rewards then
+						if not v.TLHOverlay then
+							v.TLHOverlay = CreateFrame("Frame", nil, v.ItemFrame)
+							v.TLHOverlay:SetAllPoints(v.ItemFrame.Icon)
+						end
+
+						local itemLink
+						if v.info.rewards[2] and v.info.rewards[2].itemDBID then
+							itemLink = C_WeeklyRewards.GetItemHyperlink(v.info.rewards[2].itemDBID)
+						elseif v.info.rewards[1].itemDBID then
+							itemLink = C_WeeklyRewards.GetItemHyperlink(v.info.rewards[1].itemDBID)
+						end
+						app:ApplyItemOverlay(v.TLHOverlay, itemLink)
+					end
+				end
+			end
+		end
+		doTheThing()
+		C_Timer.After(2, doTheThing)
+	end
+
+	app.Event:Register("WEEKLY_REWARDS_UPDATE", greatVaultOverlay)
+
+	app.Event:Register("TRANSMOG_COLLECTION_UPDATED", function()
+		api:UpdateOverlay()
+	end)
+
+	app.Event:Register("NEW_RECIPE_LEARNED", function(recipeID, recipeLevel, baseRecipeID)
+		app:CacheRecipe(recipeID, false, true)
+		api:UpdateOverlay()
+	end)
+
+	app.Event:Register("LEARNED_SPELL_IN_SKILL_LINE", function(spellID, skillLineIndex, isGuildPerkSpell)
+		app:CacheRecipe(spellID, true, true)
+		api:UpdateOverlay()
+	end)
 end
 
 function api:UpdateOverlay()

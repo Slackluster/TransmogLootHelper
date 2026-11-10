@@ -10,17 +10,17 @@ local L = app.locales
 -------------
 
 app.Event:Register("ADDON_LOADED", function(addOnName, containsBindings)
-	if addOnName == appName then
-		app.Settings.hide = app.Settings.hide or false
-		app.Settings.message = app.Settings.message or L.DEFAULT_MESSAGE
-		app.Settings.windowPosition = app.Settings.windowPosition or { left = 1295, bottom = 836, width = 200, height = 200, }
-		app.Settings.windowLocked = app.Settings.windowLocked or false
-		app.Settings.windowSort = app.Settings.windowSort or 1
-		app.Settings.seen = app.Settings.seen or {}
+	if addOnName ~= appName then return end
 
-		app:CreateMinimapButton()
-		app:CreateSettings()
-	end
+	app.Settings.hide = app.Settings.hide or false
+	app.Settings.message = app.Settings.message or L.DEFAULT_MESSAGE
+	app.Settings.windowPosition = app.Settings.windowPosition or { left = 1295, bottom = 836, width = 200, height = 200, }
+	app.Settings.windowLocked = app.Settings.windowLocked or false
+	app.Settings.windowSort = app.Settings.windowSort or 1
+	app.Settings.seen = app.Settings.seen or {}
+
+	app:CreateMinimapButton()
+	app:CreateSettings()
 end)
 
 --------------

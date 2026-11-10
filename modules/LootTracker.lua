@@ -11,24 +11,24 @@ local L = app.locales
 -------------
 
 app.Event:Register("ADDON_LOADED", function(addOnName, containsBindings)
-	if addOnName == appName then
-		app.ArmourLoot = {}
-		app.ArmourRow = {}
-		app.ClassID = PlayerUtil.GetClassID()
-		app.FilteredLoot = {}
-		app.FilteredRow = {}
-		app.Flag.LastUpdate = 0
-		app.Hidden = CreateFrame("Frame")
-		app.ShowArmour = true
-		app.ShowFiltered = false
-		app.ShowWeapons = true
-		app.WeaponLoot = {}
-		app.WeaponRow = {}
-		app.Whispered = {}
+	if addOnName ~= appName then return end
 
-		app:CreateWindow()
-		app:UpdateWindow()
-	end
+	app.ArmourLoot = {}
+	app.ArmourRow = {}
+	app.ClassID = PlayerUtil.GetClassID()
+	app.FilteredLoot = {}
+	app.FilteredRow = {}
+	app.Flag.LastUpdate = 0
+	app.Hidden = CreateFrame("Frame")
+	app.ShowArmour = true
+	app.ShowFiltered = false
+	app.ShowWeapons = true
+	app.WeaponLoot = {}
+	app.WeaponRow = {}
+	app.Whispered = {}
+
+	app:CreateWindow()
+	app:UpdateWindow()
 end)
 
 ------------

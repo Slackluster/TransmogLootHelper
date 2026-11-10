@@ -9,11 +9,11 @@ local appName, app = ...
 -------------
 
 app.Event:Register("ADDON_LOADED", function(addOnName, containsBindings)
-	if addOnName == appName then
-		if app.Forever then
-			app.Texture["INVTYPE_RANGED"] = "Interface\\Icons\\inv_weapon_bow_02"
-			app.Texture["INVTYPE_RANGEDRIGHT"] = "Interface\\Icons\\inv_weapon_bow_02"
-		end
+	if addOnName ~= appName then return end
+
+	if app.Forever then
+		app.Texture["INVTYPE_RANGED"] = "Interface\\Icons\\inv_weapon_bow_02"
+		app.Texture["INVTYPE_RANGEDRIGHT"] = "Interface\\Icons\\inv_weapon_bow_02"
 	end
 end)
 
