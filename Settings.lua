@@ -561,9 +561,9 @@ function app:CreateSettings()
 
 	checkbox("iconNewPetMax", L.PETS_COLLECT_MAX, L.SETTINGS_ICON_NEW_PET_MAX_DESC, false, function() app:SettingsChanged() end, parentSetting, parentCheckbox)
 
-	checkbox("iconNewToy", L.TOYS, L.TOYS_ICON_DESC, true, function() app:SettingsChanged() end)
-
 	end
+
+	checkbox("iconNewToy", L.TOYS, L.TOYS_ICON_DESC, true, function() app:SettingsChanged() end)
 
 	local parentSetting, parentCheckbox = checkbox("iconNewRecipe", L.RECIPES, L.RECIPES_ICON_DESC, true, function() app:SettingsChanged() end)
 
