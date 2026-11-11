@@ -36,8 +36,6 @@ function app:OpenSettings()
 end
 
 function app:CreateMinimapButton()
-	if app.Forever then return end
-
 	local miniButton = LibStub("LibDataBroker-1.1"):NewDataObject(app.NameLong, {
 		type = "data source",
 		text = app.NameLong,
@@ -485,36 +483,22 @@ function app:CreateSettings()
 
 	local _, isExpanded = expandableHeader(L.KEYBINDINGS_AND_SLASH_COMMANDS, true)
 
-		if app.Retail then
-
 		keybind("TLH_TOGGLEWINDOW", isExpanded)
 
-		end
-
-		local leftText, middleText
-		if app.Retail then
-			leftText = { "|cffFFFFFF" ..
-				"/tlh",
-				"/tlh resetpos",
-				"/tlh settings",
-				"/tlh delete " .. app:Colour(L.CHARACTER_REALM),
-				"/tlh msg ",
-				"/tlh default " }
-			middleText = {
-				L.TOGGLE_TRACKING_WINDOW,
-				L.RESET_WINDOW_POSITION,
-				L.OPEN_SETTINGS,
-				L.DELETE_CHAR_RECIPES,
-				L.WHISPER_CUSTOMIZE_DESC1,
-				L.WHISPER_SET_DEFAULT }
-		elseif app.Forever then
-			leftText = { "|cffFFFFFF" ..
-				"/tlh",
-				"/tlh delete " .. app:Colour(L.CHARACTER_REALM) }
-			middleText = {
-				L.OPEN_SETTINGS,
-				L.DELETE_CHAR_RECIPES }
-		end
+		local leftText = { "|cffFFFFFF" ..
+			"/tlh",
+			"/tlh resetpos",
+			"/tlh settings",
+			"/tlh delete " .. app:Colour(L.CHARACTER_REALM),
+			"/tlh msg ",
+			"/tlh default " }
+		local middleText = {
+			L.TOGGLE_TRACKING_WINDOW,
+			L.RESET_WINDOW_POSITION,
+			L.OPEN_SETTINGS,
+			L.DELETE_CHAR_RECIPES,
+			L.WHISPER_CUSTOMIZE_DESC1,
+			L.WHISPER_SET_DEFAULT }
 		leftText = table.concat(leftText, "\n\n")
 		middleText = table.concat(middleText, "\n\n")
 		text(leftText, middleText, nil, nil, isExpanded)
@@ -601,8 +585,6 @@ function app:CreateSettings()
 
 	checkbox("iconContainer", L.CONTAINERS, L.CONTAINERS_ICON_DESC, true)
 
-	if app.Retail then
-
 	category, layout = Settings.RegisterVerticalLayoutSubcategory(app.SettingsCategory, L.LOOT_TRACKER)
 	Settings.RegisterAddOnCategory(category)
 
@@ -639,6 +621,4 @@ function app:CreateSettings()
 	checkbox("vendorAll", L.DISABLE_VENDOR_FILTER, L.DISABLE_VENDOR_FILTER_DESC, true)
 
 	checkbox("hideGroupRolls", L.HIDE_LOOT_ROLL_WINDOW, string.format(L.HIDE_LOOT_ROLL_WINDOW_DESC, "|cff00CCFF/loot|r"), false)
-
-	end
 end
