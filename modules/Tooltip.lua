@@ -28,7 +28,11 @@ function app:AddTooltipInfo()
 
 		local previousLine = tooltip:GetLeftLine(tooltip:NumLines())
 		local previousText = previousLine and previousLine:GetText()
-		local emptyLine = previousText and previousText:find("inv_enchant_formulasuperior_01", 1, true) -- Detect PSL tooltip line
+		local emptyLine = false
+
+		if not issecretvalue(previousText) and previousText then
+			emptyLine = previousText:find("inv_enchant_formulasuperior_01", 1, true) ~= nil -- Detect PSL tooltip line
+		end
 
 		if app.Settings.iconNewRecipe then
 			local recipeID = app:GetLearnedSpell(itemLink)
