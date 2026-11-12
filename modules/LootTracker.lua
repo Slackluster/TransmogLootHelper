@@ -1065,9 +1065,7 @@ app.Event:Register("CHAT_MSG_LOOT", function(text, playerName, languageName, cha
 	local itemString = string.match(text, "(|cnIQ.-|h%[.-%]|h)")
 
 	if itemString and C_Item.IsEquippableItem(itemString) and guid ~= nil then
-		local playerNameShort = string.match(playerName, "^(.-)-")
-		local ownName, ownRealm = UnitName("player")
-		local selfName = ownName .. "-" .. (ownRealm or GetNormalizedRealmName())
+		local playerNameShort = string.match(playerName, "^[^%s%-]+")
 
 		local className, classFilename, classId = UnitClass(playerName)
 		local _, _, _, classColor = GetClassColor(classFilename)
@@ -1076,7 +1074,7 @@ app.Event:Register("CHAT_MSG_LOOT", function(text, playerName, languageName, cha
 		local itemID = C_Item.GetItemInfoInstant(itemString)
 		local itemType = classID .. "." .. subclassID
 
-		if playerName ~= selfName then
+		if guid ~= UnitGUID("player") then
 			if itemEquipLoc == "INVTYPE_FINGER" or itemEquipLoc == "INVTYPE_NECK" or itemEquipLoc == "INVTYPE_TRINKET" then
 				app:AddFilteredLoot(itemLink, itemID, itemTexture, playerName, itemType, L.FILTER_REASON_KNOWN)
 			elseif not api:IsAppearanceCollected(itemLink) or (not api:IsSourceCollected(itemLink) and app.Settings.collectMode == 2) then
