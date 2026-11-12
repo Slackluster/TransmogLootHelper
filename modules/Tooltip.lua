@@ -37,8 +37,10 @@ function app:AddTooltipInfo()
 		if app.Settings.iconNewRecipe then
 			local recipeID = app:GetLearnedSpell(itemLink)
 			if recipeID and C_TradeSkillUI.GetProfessionInfoByRecipeID(recipeID).professionID ~= 0 and not app.Cache.Recipes[recipeID] then
-				emptyline = true
-				tooltip:AddLine(" ")
+				if not emptyLine then
+					emptyLine = true
+					tooltip:AddLine(" ")
+				end
 				tooltip:AddLine(CreateSimpleTextureMarkup(app.Icon) .. " " .. L.RECIPE_UNCACHED)
 			end
 		end
