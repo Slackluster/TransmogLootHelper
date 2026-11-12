@@ -149,6 +149,7 @@ app.Texture = {
 	["Recipe"] = "Interface\\Icons\\inv_misc_note_01",
 	["Decor"] = "Interface\\Icons\\ui_homestone-64",
 
+	[129] = "Interface\\Icons\\spell_holy_sealofsacrifice",
 	[164] = "Interface\\Icons\\ui_profession_blacksmithing",
 	[165] = "Interface\\Icons\\ui_profession_leatherworking",
 	[171] = "Interface\\Icons\\ui_profession_alchemy",
@@ -162,6 +163,8 @@ app.Texture = {
 	[393] = "Interface\\Icons\\ui_profession_skinning",
 	[755] = "Interface\\Icons\\ui_profession_jewelcrafting",
 	[773] = "Interface\\Icons\\ui_profession_inscription",
+	[2984] = "Interface\\Icons\\housing-dye-bonewhite",
+	[2950] = "Interface\\Icons\\ui_profession_alchemy",
 
 	["ProfessionKnowledge"] = "Interface\\Icons\\inv_cosmicvoid_orb",
 	["Customisation"] = "Interface\\Icons\\inv_10_jewelcrafting_gem1leveling_uncut_transparent",
