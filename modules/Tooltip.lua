@@ -45,13 +45,17 @@ function app:AddTooltipInfo()
 			end
 		end
 		if app.Forever and app.Tooltip[itemID] and app.Tooltip[itemID] == "unlearnedMog" then
-			local bindType = select(14, C_Item.GetItemInfo(itemLink))
-			if bindType and bindType == Enum.ItemBind.None and C_Item.GetItemCount(itemLink) >= 1 then
-				if not emptyLine then
-					emptyLine = true
-					tooltip:AddLine(" ")
+			if api:IsSourceCollected(itemLink) then
+				app.Tooltip[itemID] = nil
+			else
+				local bindType = select(14, C_Item.GetItemInfo(itemLink))
+				if bindType and bindType == Enum.ItemBind.None and C_Item.GetItemCount(itemLink) >= 1 then
+					if not emptyLine then
+						emptyLine = true
+						tooltip:AddLine(" ")
+					end
+					tooltip:AddLine(CreateSimpleTextureMarkup(app.Icon) .. " " .. L.LEARN_UNBOUND)
 				end
-				tooltip:AddLine(CreateSimpleTextureMarkup(app.Icon) .. " " .. L.LEARN_UNBOUND)
 			end
 		end
 	end
