@@ -29,6 +29,12 @@ function app:AddTooltipInfo()
 		local previousLine = tooltip:GetLeftLine(tooltip:NumLines())
 		local previousText = previousLine and previousLine:GetText()
 		local emptyLine = false
+		local function addEmptyLine()
+			if not emptyLine then
+				emptyLine = true
+				tooltip:AddLine(" ")
+			end
+		end
 
 		if not issecretvalue(previousText) and previousText then
 			emptyLine = previousText:find("inv_enchant_formulasuperior_01", 1, true) ~= nil -- Detect PSL tooltip line
@@ -37,10 +43,7 @@ function app:AddTooltipInfo()
 		if app.Settings.iconNewRecipe then
 			local recipeID = app:GetLearnedSpell(itemLink)
 			if recipeID and C_TradeSkillUI.GetProfessionInfoByRecipeID(recipeID).professionID ~= 0 and not app.Cache.Recipes[recipeID] then
-				if not emptyLine then
-					emptyLine = true
-					tooltip:AddLine(" ")
-				end
+				addEmptyLine()
 				tooltip:AddLine(CreateSimpleTextureMarkup(app.Icon) .. " " .. L.RECIPE_UNCACHED)
 			end
 		end
@@ -50,13 +53,14 @@ function app:AddTooltipInfo()
 			else
 				local bindType = select(14, C_Item.GetItemInfo(itemLink))
 				if bindType and bindType == Enum.ItemBind.None and C_Item.GetItemCount(itemLink) >= 1 then
-					if not emptyLine then
-						emptyLine = true
-						tooltip:AddLine(" ")
-					end
+					addEmptyLine()
 					tooltip:AddLine(CreateSimpleTextureMarkup(app.Icon) .. " " .. L.LEARN_UNBOUND)
 				end
 			end
+		end
+		if itemID == 160513 then
+			addEmptyLine()
+			tooltip:AddLine(CreateSimpleTextureMarkup(app.Icon) .. " " .. L.BUGGED_ITEM)
 		end
 	end
 	TooltipDataProcessor.AddTooltipPostCall(Enum.TooltipDataType.Item, OnTooltipSetItem)

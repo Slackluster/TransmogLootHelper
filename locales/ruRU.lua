@@ -151,6 +151,7 @@ L.BINDTEXT_BOE =                         "BoE" -- Abbreviation for "Binds on Equ
 L.BINDTEXT_BOA =                         "BoA" -- Abbreviation for "Binds to Account" (Warbound)
 L.RECIPE_UNCACHED =                      "Пожалуйста, откройте эту профессию, чтобы обновить статус коллекции рецепта."
 L.LEARN_UNBOUND =                        "Продайте, уничтожьте или распылите этот предмет, чтобы изучить его модель."
+-- L.BUGGED_ITEM =                          "This item is bugged and may not be learnable."
 
 -- Loot tracker
 L.DEFAULT_MESSAGE =                      "Нужен ли вам предмет %item, который вы добыли? Если нет, я хотел бы взять его для трансмога. :)"
