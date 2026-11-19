@@ -47,7 +47,10 @@ function app:AddTooltipInfo()
 				tooltip:AddLine(CreateSimpleTextureMarkup(app.Icon) .. " " .. L.RECIPE_UNCACHED)
 			end
 		end
-		if app.Forever and app.Tooltip[itemID] and app.Tooltip[itemID] == "unlearnedMog" then
+		if app.Bugged[itemID] then
+			addEmptyLine()
+			tooltip:AddLine(CreateSimpleTextureMarkup(app.Icon) .. " " .. L.BUGGED_ITEM)
+		elseif app.Tooltip[itemID] and app.Tooltip[itemID] == "unlearnedMog" and not app.Unlearnable[itemID] then
 			if api:IsSourceCollected(itemLink) then
 				app.Tooltip[itemID] = nil
 			else
@@ -57,10 +60,6 @@ function app:AddTooltipInfo()
 					tooltip:AddLine(CreateSimpleTextureMarkup(app.Icon) .. " " .. L.LEARN_UNBOUND)
 				end
 			end
-		end
-		if itemID == 160513 then
-			addEmptyLine()
-			tooltip:AddLine(CreateSimpleTextureMarkup(app.Icon) .. " " .. L.BUGGED_ITEM)
 		end
 	end
 	TooltipDataProcessor.AddTooltipPostCall(Enum.TooltipDataType.Item, OnTooltipSetItem)

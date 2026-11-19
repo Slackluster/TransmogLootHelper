@@ -11,6 +11,16 @@ local appName, app = ...
 app.Event:Register("ADDON_LOADED", function(addOnName, containsBindings)
 	if addOnName ~= appName then return end
 
+	app.Unlearnable = {
+		[19295] = app.Forever, -- Darkmoon Flower
+		[37011] = true, -- Magic Broom
+		[286733] = app.Forever, -- Fightin' Fish
+	}
+
+	app.Bugged = {
+		[160513] = true, -- Illidari Warglaive
+	}
+
 	if app.Forever then
 		app.Texture["INVTYPE_RANGED"] = "Interface\\AddOns\\TransmogLootHelper\\assets\\ranged_colorised.png"
 		app.Texture["INVTYPE_RANGEDRIGHT"] = "Interface\\AddOns\\TransmogLootHelper\\assets\\ranged_colorised.png"

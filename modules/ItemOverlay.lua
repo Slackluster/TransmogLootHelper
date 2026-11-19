@@ -828,9 +828,6 @@ function app:ApplyItemOverlay(overlay, itemLink, itemLocation, containerInfo, ba
 		if callback then callback() end
 	end
 
-	local ignore = {
-		[37011] = true, -- Magic Broom
-	}
 	local itemID = C_Item.GetItemInfoInstant(itemLink)
 	-- Caged pets don't return this info, except this one magical pet cage
 	if not itemID or itemID == 82800 then
@@ -848,7 +845,7 @@ function app:ApplyItemOverlay(overlay, itemLink, itemLocation, containerInfo, ba
 			hideOverlay()
 			return
 		end
-	elseif ignore[itemID] then
+	elseif app.Unlearnable[itemID] then
 		hideOverlay()
 		return
 	else
