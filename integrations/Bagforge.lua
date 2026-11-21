@@ -26,9 +26,11 @@ app.Event:Register("ADDON_LOADED", function(addOnName, containsBindings)
 				local containerInfo = C_Container.GetContainerItemInfo(bagID, slotID)
 				if itemLink and containerInfo then
 					app:ApplyItemOverlay(button.TLHOverlay, itemLink, itemLocation, containerInfo, true)
+				else
+					app:ApplyItemOverlay(button.TLHOverlay, nil)
 				end
 			else
-				button.TLHOverlay:Hide()
+				app:ApplyItemOverlay(button.TLHOverlay, nil)
 			end
 		end
 

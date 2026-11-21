@@ -24,7 +24,7 @@ app.Event:Register("ADDON_LOADED", function(addOnName, containsBindings)
 			if data.h then
 				app:ApplyItemOverlay(itemButton.TLHOverlay, data.h, itemLocation, containerInfo, true)
 			else
-				itemButton.TLHOverlay:Hide()
+				app:ApplyItemOverlay(itemButton.TLHOverlay, nil)
 			end
 		end
 

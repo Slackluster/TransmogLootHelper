@@ -25,6 +25,21 @@ end)
 ------------------
 
 function app:ApplyItemOverlay(overlay, itemLink, itemLocation, containerInfo, bagAddon, additionalInfo, callback)
+	if not itemLink then
+		overlay.itemLink = nil
+		overlay:Hide()
+		if overlay.animation1 then
+			overlay.animation1:Stop()
+			overlay.animation2:Stop()
+		end
+		return
+	end
+
+	if overlay.itemLink ~= itemLink then
+		overlay.itemLink = itemLink
+		overlay:Hide()
+	end
+
 	local function createOverlay()
 		if not overlay.text then
 			overlay.text = overlay:CreateFontString(nil, "OVERLAY", "GameFontNormalOutline")
@@ -141,6 +156,8 @@ function app:ApplyItemOverlay(overlay, itemLink, itemLocation, containerInfo, ba
 	end
 
 	local function processOverlay(itemID)
+		if overlay.itemLink ~= itemLink then return end
+
 		local hasItemLocation = false
 		if itemLocation or bagAddon then
 			hasItemLocation = true
@@ -315,12 +332,8 @@ function app:ApplyItemOverlay(overlay, itemLink, itemLocation, containerInfo, ba
 
 		app.OverlayCache[itemLink].tooltipInfo = nil
 		overlay.texture:SetTexture(icon)
-		overlay:Show()
 
 		local function showOverlay(color)
-			if overlay.color and overlay.color == color and overlay.texture:GetTexture() == icon then return end
-			overlay.color = color
-
 			local function setCorner(style)
 				overlay.texture:ClearAllPoints()
 				if style == 1 then
@@ -797,6 +810,7 @@ function app:ApplyItemOverlay(overlay, itemLink, itemLocation, containerInfo, ba
 				hideOverlay()
 			end
 		else
+			overlay:Show()
 			overlay.icon:Hide()
 			overlay.animation1:Stop()
 			overlay.animationTexture1:Hide()
@@ -853,10 +867,12 @@ function app:ApplyItemOverlay(overlay, itemLink, itemLocation, containerInfo, ba
 		local item = Item:CreateFromItemID(itemID)
 
 		item:ContinueOnItemLoad(function() RunNextFrame(function()
+			if overlay.itemLink ~= itemLink then return end
 			local spellID = select(2, C_Item.GetItemSpell(itemLink))
 			if spellID then
 				local spell = Spell:CreateFromSpellID(spellID)
 				spell:ContinueOnSpellLoad(function() RunNextFrame(function()
+					if overlay.itemLink ~= itemLink then return end
 					app.OverlayCache[itemLink] = nil
 					app.Tooltip[itemLink] = nil
 					processOverlay(itemID)
@@ -888,7 +904,7 @@ function app:HookItemOverlay()
 						local containerInfo = C_Container.GetContainerItemInfo(itemButton:GetBagID(), itemButton:GetID())
 						app:ApplyItemOverlay(itemButton.TLHOverlay, itemLink, itemLocation, containerInfo)
 					else
-						itemButton.TLHOverlay:Hide()
+						app:ApplyItemOverlay(itemButton.TLHOverlay, nil)
 					end
 				end
 			end
@@ -925,7 +941,7 @@ function app:HookItemOverlay()
 						local containerInfo = C_Container.GetContainerItemInfo(bagID, slotID)
 						app:ApplyItemOverlay(itemButton.TLHOverlay, itemLink, itemLocation, containerInfo)
 					else
-						itemButton.TLHOverlay:Hide()
+						app:ApplyItemOverlay(itemButton.TLHOverlay, nil)
 					end
 				end
 			elseif app.Retail then
@@ -946,7 +962,7 @@ function app:HookItemOverlay()
 							local containerInfo = C_Container.GetContainerItemInfo(BankPanel.selectedTabID, i)
 							app:ApplyItemOverlay(itemButton.TLHOverlay, itemLink, itemLocation, containerInfo)
 						else
-							itemButton.TLHOverlay:Hide()
+							app:ApplyItemOverlay(itemButton.TLHOverlay, nil)
 						end
 					end
 				end
@@ -988,11 +1004,7 @@ function app:HookItemOverlay()
 				local tab = GetCurrentGuildBankTab()
 				local slot = itemButton:GetID()
 				local itemLink = GetGuildBankItemLink(tab, slot)
-				if itemLink then
-					app:ApplyItemOverlay(itemButton.TLHOverlay, itemLink)
-				else
-					itemButton.TLHOverlay:Hide()
-				end
+				app:ApplyItemOverlay(itemButton.TLHOverlay, itemLink)
 			end
 		end
 
@@ -1019,13 +1031,10 @@ function app:HookItemOverlay()
 						v.TLHOverlay = CreateFrame("Frame", nil, v)
 						v.TLHOverlay:SetAllPoints(v.Item)
 					end
-					v.TLHOverlay:Hide()
-
 					local itemLink = v.itemLink
-					if itemLink then
-						app:ApplyItemOverlay(v.TLHOverlay, itemLink)
+					app:ApplyItemOverlay(v.TLHOverlay, itemLink, nil, nil, nil, nil, function()
 						v.TLHOverlay.text:SetText("")
-					end
+					end)
 				end)
 			end)
 			app.BlackMarketFrameHook = true
@@ -1070,16 +1079,12 @@ function app:HookItemOverlay()
 					if itemID then
 						local _, itemLink = C_Item.GetItemInfo(itemID)
 
-						if itemLink then
-							app:ApplyItemOverlay(itemButton.TLHOverlay, itemLink)
-						else
-							itemButton.TLHOverlay:Hide()
-						end
+						app:ApplyItemOverlay(itemButton.TLHOverlay, itemLink)
 					else
-						itemButton.TLHOverlay:Hide()
+						app:ApplyItemOverlay(itemButton.TLHOverlay, nil)
 					end
 				else
-					itemButton.TLHOverlay:Hide()
+					app:ApplyItemOverlay(itemButton.TLHOverlay, nil)
 				end
 			end
 		end
@@ -1094,11 +1099,7 @@ function app:HookItemOverlay()
 
 				local mailID = app.Forever and InboxFrame.openMailID or app.SelectedMail
 				local itemLink = mailID and mailID > 0 and GetInboxItemLink(mailID, i)
-				if itemLink then
-					app:ApplyItemOverlay(itemButton.TLHOverlay, itemLink)
-				else
-					itemButton.TLHOverlay:Hide()
-				end
+				app:ApplyItemOverlay(itemButton.TLHOverlay, itemLink)
 			end
 		end
 	end
@@ -1113,12 +1114,8 @@ function app:HookItemOverlay()
 					frame.TLHOverlay = CreateFrame("Frame", nil, frame.Item)
 					frame.TLHOverlay:SetAllPoints(frame.Item)
 				end
-				frame.TLHOverlay:Hide()
-
 				local itemLink = GetLootSlotLink(frame:GetSlotIndex())
-				if itemLink then
-					app:ApplyItemOverlay(frame.TLHOverlay, itemLink)
-				end
+				app:ApplyItemOverlay(frame.TLHOverlay, itemLink)
 			end
 		end
 	end)
@@ -1129,13 +1126,8 @@ function app:HookItemOverlay()
 				frame.TLHOverlay = CreateFrame("Frame", nil, frame)
 				frame.TLHOverlay:SetAllPoints(frame.IconFrame)
 			end
-			frame.TLHOverlay:Hide()
-
-			if not frame.rollID then return end
-			local itemLink = GetLootRollItemLink(frame.rollID)
-			if itemLink then
-				app:ApplyItemOverlay(frame.TLHOverlay, itemLink)
-			end
+			local itemLink = frame.rollID and GetLootRollItemLink(frame.rollID)
+			app:ApplyItemOverlay(frame.TLHOverlay, itemLink)
 		end
 
 		if GroupLootFrame1 then applyToLootFrame(GroupLootFrame1) end
@@ -1177,11 +1169,7 @@ function app:HookItemOverlay()
 				end
 
 				local itemLink = itemButton.link
-				if itemLink then
-					app:ApplyItemOverlay(itemButton.TLHOverlay, itemLink)
-				else
-					itemButton.TLHOverlay:Hide()
-				end
+				app:ApplyItemOverlay(itemButton.TLHOverlay, itemLink)
 			end
 		end
 	end
@@ -1198,7 +1186,6 @@ function app:HookItemOverlay()
 					itemButton.TLHOverlay = CreateFrame("Frame", nil, itemButton)
 					itemButton.TLHOverlay:SetAllPoints(itemButton)
 				end
-				itemButton.TLHOverlay:Hide() -- Hide our overlay initially, updating doesn't work like for regular itemButtons
 				if itemButton.TLHOverlay.gold then itemButton.TLHOverlay.gold:Hide() end
 
 				local itemLink
@@ -1218,16 +1205,16 @@ function app:HookItemOverlay()
 					end
 
 					if v.objectType == "currency" then
-						itemButton.TLHOverlay:Hide()
+						app:ApplyItemOverlay(itemButton.TLHOverlay, nil)
 					elseif itemLink then
 						table.insert(sellPrice, { price = select(11, C_Item.GetItemInfo(itemLink)), itemButton = itemButton})
 						app:ApplyItemOverlay(itemButton.TLHOverlay, itemLink)
 						itemButton.TLHOverlay:SetAllPoints(itemButton.IconBorder)
 					else
-						itemButton.TLHOverlay:Hide()
+						app:ApplyItemOverlay(itemButton.TLHOverlay, nil)
 					end
 				else
-					itemButton.TLHOverlay:Hide()
+					app:ApplyItemOverlay(itemButton.TLHOverlay, nil)
 				end
 			end
 
@@ -1312,19 +1299,15 @@ function app:HookItemOverlay()
 					pin.TLHOverlay:SetAllPoints(pin)
 					pin.TLHOverlay:SetScale(0.8)
 				end
-				pin.TLHOverlay:Hide() -- Hide our overlay initially, updating doesn't work like for regular itemButtons
 
 				local bestIndex, bestType = QuestUtils_GetBestQualityItemRewardIndex(pin.questID)
 				if bestIndex and bestType then
 					local itemLink = GetQuestLogItemLink(bestType, bestIndex, pin.questID)
-					if itemLink then
-						app:ApplyItemOverlay(pin.TLHOverlay, itemLink)
+					app:ApplyItemOverlay(pin.TLHOverlay, itemLink, nil, nil, nil, nil, function()
 						pin.TLHOverlay.text:SetText("")
-					else
-						pin.TLHOverlay:Hide()
-					end
+					end)
 				else
-					pin.TLHOverlay:Hide()
+					app:ApplyItemOverlay(pin.TLHOverlay, nil)
 				end
 			end
 		end)
@@ -1345,16 +1328,13 @@ function app:HookItemOverlay()
 						v.TLHOverlay:SetPoint("TOPLEFT", v.icon, "TOPLEFT", inset, -inset)
 						v.TLHOverlay:SetPoint("BOTTOMRIGHT", v.icon, "BOTTOMRIGHT", -inset, inset)
 					end
-					v.TLHOverlay:Hide()
-
-					if v.link then
-						app:ApplyItemOverlay(v.TLHOverlay, v.link)
+					app:ApplyItemOverlay(v.TLHOverlay, v.link, nil, nil, nil, nil, function()
 						v.TLHOverlay.text:SetText("")
 						v.TLHOverlay.animation1:Stop()
 						v.TLHOverlay.animationTexture1:Hide()
 						v.TLHOverlay.animation2:Stop()
 						v.TLHOverlay.animationTexture2:Hide()
-					end
+					end)
 				end
 			end)
 		end)
@@ -1370,26 +1350,17 @@ function app:HookItemOverlay()
 			if not v.TLHOverlay then
 				v.TLHOverlay = CreateFrame("Frame", nil, v)
 			end
-			v.TLHOverlay:Hide()
-
-			local recipeInfo = data.data.recipeInfo
-			if recipeInfo then
-				local recipeID = recipeInfo.recipeID
-				if recipeID then
-					local itemLink = C_TradeSkillUI.GetRecipeItemLink(recipeID)
-					if itemLink then
-						app:ApplyItemOverlay(v.TLHOverlay, itemLink, nil, nil, nil, nil, function()
-							v.TLHOverlay.text:SetText("")
-							v.TLHOverlay.icon:ClearAllPoints()
-							v.TLHOverlay.icon:SetPoint("RIGHT", v)
-							v.TLHOverlay.animation1:Stop()
-							v.TLHOverlay.animationTexture1:Hide()
-							v.TLHOverlay.animation2:Stop()
-							v.TLHOverlay.animationTexture2:Hide()
-						end)
-					end
-				end
-			end
+			local recipeInfo = data.data and data.data.recipeInfo
+			local itemLink = recipeInfo and recipeInfo.recipeID and C_TradeSkillUI.GetRecipeItemLink(recipeInfo.recipeID)
+			app:ApplyItemOverlay(v.TLHOverlay, itemLink, nil, nil, nil, nil, function()
+				v.TLHOverlay.text:SetText("")
+				v.TLHOverlay.icon:ClearAllPoints()
+				v.TLHOverlay.icon:SetPoint("RIGHT", v)
+				v.TLHOverlay.animation1:Stop()
+				v.TLHOverlay.animationTexture1:Hide()
+				v.TLHOverlay.animation2:Stop()
+				v.TLHOverlay.animationTexture2:Hide()
+			end)
 		end)
 		app.Flag.TradeskillHook = true
 	end
@@ -1434,7 +1405,7 @@ function app:HookItemOverlay()
 						end
 					end
 				end
-				v.TLHOverlay:Hide()
+				app:ApplyItemOverlay(v.TLHOverlay, nil)
 			end)
 		end)
 		app.Flag.AuctionHouseHook = true

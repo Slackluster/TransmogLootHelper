@@ -25,11 +25,7 @@ app.Event:Register("ADDON_LOADED", function(addOnName, containsBindings)
 					end
 
 					local itemLink = itemButton.link
-					if itemLink then
-						app:ApplyItemOverlay(itemButton.TLHOverlay, itemLink)
-					else
-						itemButton.TLHOverlay:Hide()
-					end
+					app:ApplyItemOverlay(itemButton.TLHOverlay, itemLink)
 				end
 			end
 		end

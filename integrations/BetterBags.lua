@@ -41,7 +41,7 @@ app.Event:Register("ADDON_LOADED", function(addOnName, containsBindings)
 			if itemLink then
 				app:ApplyItemOverlay(item.TLHOverlay, itemLink, itemLocation, containerInfo, true)
 			elseif item.isFreeSlot or not itemLink then
-				item.TLHOverlay:Hide()
+				app:ApplyItemOverlay(item.TLHOverlay, nil)
 			end
 		end
 		events:RegisterMessage("item/Updated", UpdateButton)
