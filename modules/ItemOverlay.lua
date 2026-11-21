@@ -1207,7 +1207,7 @@ function app:HookItemOverlay()
 					if v.objectType == "currency" then
 						app:ApplyItemOverlay(itemButton.TLHOverlay, nil)
 					elseif itemLink then
-						table.insert(sellPrice, { price = select(11, C_Item.GetItemInfo(itemLink)), itemButton = itemButton})
+						table.insert(sellPrice, { price = select(11, C_Item.GetItemInfo(itemLink)) or 0, itemButton = itemButton})
 						app:ApplyItemOverlay(itemButton.TLHOverlay, itemLink)
 						itemButton.TLHOverlay:SetAllPoints(itemButton.IconBorder)
 					else
@@ -1429,7 +1429,7 @@ function app:HookItemOverlay()
 						local itemLink
 						if v.info.rewards[2] and v.info.rewards[2].itemDBID then
 							itemLink = C_WeeklyRewards.GetItemHyperlink(v.info.rewards[2].itemDBID)
-						elseif v.info.rewards[1].itemDBID then
+						elseif v.info.rewards[1] and v.info.rewards[1].itemDBID then
 							itemLink = C_WeeklyRewards.GetItemHyperlink(v.info.rewards[1].itemDBID)
 						end
 						app:ApplyItemOverlay(v.TLHOverlay, itemLink)
