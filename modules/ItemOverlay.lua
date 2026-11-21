@@ -1378,13 +1378,8 @@ function app:HookItemOverlay()
 				if recipeID then
 					local itemLink = C_TradeSkillUI.GetRecipeItemLink(recipeID)
 					if itemLink then
-						app:ApplyItemOverlay(v.TLHOverlay, itemLink)
-						v.TLHOverlay.text:SetText("")
-
-						v.TLHOverlay.icon:ClearAllPoints()
-						v.TLHOverlay.icon:SetPoint("RIGHT", v)
-
-						C_Timer.After(0.2, function()
+						app:ApplyItemOverlay(v.TLHOverlay, itemLink, nil, nil, nil, nil, function()
+							v.TLHOverlay.text:SetText("")
 							v.TLHOverlay.icon:ClearAllPoints()
 							v.TLHOverlay.icon:SetPoint("RIGHT", v)
 							v.TLHOverlay.animation1:Stop()
