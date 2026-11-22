@@ -128,6 +128,17 @@ function app:CreateSlashCommands()
 			api:DeleteCharacter(rest)
 		elseif command == "" then
 			api:ToggleWindow()
+		elseif command == "decor" then
+			if not app.Cache or not app.Cache.Decor then return end
+			local count = 0
+			for recordID in pairs(app.Cache.Decor) do
+				local decorInfo = C_HousingCatalog.GetCatalogEntryInfoByRecordID(Enum.HousingCatalogEntryType.Decor, recordID)
+				if decorInfo and decorInfo.remainingRedeemable > 0 and (decorInfo.totalNumStored + decorInfo.totalNumPlaced) == 0 then
+					count = count + 1
+					app:Print(decorInfo.name)
+				end
+			end
+			app:Print("DFA should be missing " ..  count .. " decor.")
 		else
 			app:Print(L.INVALID_COMMAND)
 		end
