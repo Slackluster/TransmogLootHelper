@@ -150,8 +150,8 @@ L.BINDTEXT_BOP =                         "BoP"
 L.BINDTEXT_BOE =                         "BoE"
 L.BINDTEXT_BOA =                         "BoA"
 L.RECIPE_UNCACHED =                      "请打开此专业以更新配方的收集状态。"
--- L.LEARN_UNBOUND =                        "Sell, destroy, or disenchant this item to learn its appearance."
--- L.BUGGED_ITEM =                          "This item is bugged and may not be learnable."
+L.LEARN_UNBOUND =                        "出售、摧毁或分解此物品，以解锁其外观。"
+L.BUGGED_ITEM =                          "此物品可能存在错误，导致无法解锁外观。"
 
 -- Loot tracker
 L.DEFAULT_MESSAGE =                      "需要追踪拾取列表里的%item吗？如果不需要，但仍希望能获取它用于幻化。:)"
