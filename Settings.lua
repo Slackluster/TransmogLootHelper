@@ -541,7 +541,7 @@ function app:CreateSettings()
 
 	local parentSetting, parentCheckbox = checkbox("iconNewMog", L.APPEARANCES, L.APPEARANCES_ICON_DESC, true, function() app:SettingsChanged() end)
 
-	checkbox("iconNewSource", L.APPEARANCE_SOURCES, L.APPEARANCE_SOURCES_ICON_DESC, false, function() app:SettingsChanged() end, parentSetting, parentCheckbox)
+	checkbox("iconNewSource", L.APPEARANCES_SOURCES, L.APPEARANCES_SOURCES_ICON_DESC, false, function() app:SettingsChanged() end, parentSetting, parentCheckbox)
 
 	if app.Retail then
 
@@ -559,7 +559,7 @@ function app:CreateSettings()
 
 	if app.Retail then
 
-	checkbox("iconNewPetMax", L.PETS_COLLECT_MAX, L.SETTINGS_ICON_NEW_PET_MAX_DESC, false, function() app:SettingsChanged() end, parentSetting, parentCheckbox)
+	checkbox("iconNewPetMax", L.PETS_COLLECT_MAX, L.PETS_COLLECT_MAX_ICON_DESC, false, function() app:SettingsChanged() end, parentSetting, parentCheckbox)
 
 	end
 
@@ -581,7 +581,7 @@ function app:CreateSettings()
 
 	checkbox("iconQuestGold", L.QUEST_REWARD_SELL_VALUE, L.QUEST_REWARD_SELL_VALUE_ICON_DESC, true)
 
-	checkbox("iconUsable", L.USABLE_ITEMS, L.SETTINGS_ICON_USABLE_DESC, true)
+	checkbox("iconUsable", L.USABLE_ITEMS, L.USABLE_ITEMS_ICON_DESC, true)
 
 	checkbox("iconContainer", L.CONTAINERS, L.CONTAINERS_ICON_DESC, true)
 
@@ -594,7 +594,7 @@ function app:CreateSettings()
 
 	dropdown("collectMode", L.COLLECTION_MODE, string.format(L.COLLECTION_MODE_DESC, app.NameShort), 1, {
 		{ value = 1, name = L.APPEARANCES, description = L.COLLECTION_MODE_APPEARANCES_DESC },
-		{ value = 2, name = L.APPEARANCE_SOURCES, description = L.COLLECTION_MODE_SOURCES_DESC },
+		{ value = 2, name = L.APPEARANCES_SOURCES, description = L.COLLECTION_MODE_SOURCES_DESC },
 	})
 
 	dropdown("rarity", L.RARITY, string.format(L.RARITY_SETTING_DESC, app.NameShort), 3, {
@@ -612,11 +612,11 @@ function app:CreateSettings()
 
 	local parentSetting, parentCheckbox = checkbox("instantCatalyst", L.INSTANT_CATALYST, L.INSTANT_CATALYST_DESC, true)
 
-	checkbox("instantCatalystTooltip", L.SHOW_TOOLTIP,L.SETTINGS_INSTANT_TOOLTIP_DESC, true, nil, parentSetting, parentCheckbox)
+	checkbox("instantCatalystTooltip", L.SHOW_TOOLTIP,L.SHOW_TOOLTIP_SETTING_DESC, true, nil, parentSetting, parentCheckbox)
 
 	local parentSetting, parentCheckbox = checkbox("instantVault", L.INSTANT_VAULT, L.INSTANT_VAULT_DESC, true)
 
-	checkbox("instantVaultTooltip", L.SHOW_TOOLTIP,L.SETTINGS_INSTANT_TOOLTIP_DESC, true, nil, parentSetting, parentCheckbox)
+	checkbox("instantVaultTooltip", L.SHOW_TOOLTIP,L.SHOW_TOOLTIP_SETTING_DESC, true, nil, parentSetting, parentCheckbox)
 
 	checkbox("vendorAll", L.DISABLE_VENDOR_FILTER, L.DISABLE_VENDOR_FILTER_DESC, true)
 
