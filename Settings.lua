@@ -607,6 +607,8 @@ function app:CreateSettings()
 
 	button(L.WHISPER_MESSAGE, L.CUSTOMIZE, L.WHISPER_CUSTOMIZE_DESC1, function() app.RenamePopup:Show() end)
 
+	if app.Retail then
+
 	category, layout = Settings.RegisterVerticalLayoutSubcategory(app.SettingsCategory, L.TWEAKS)
 	Settings.RegisterAddOnCategory(category)
 
@@ -621,4 +623,6 @@ function app:CreateSettings()
 	checkbox("vendorAll", L.DISABLE_VENDOR_FILTER, L.DISABLE_VENDOR_FILTER_DESC, true)
 
 	checkbox("hideGroupRolls", L.HIDE_LOOT_ROLL_WINDOW, string.format(L.HIDE_LOOT_ROLL_WINDOW_DESC, "|cff00CCFF/loot|r"), false)
+
+	end
 end
